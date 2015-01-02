@@ -1,0 +1,557 @@
+/*table*/
+table {
+padding:0px;
+width: 100%;
+font-size: 10px;
+}
+table.bodyTable th, table.bodyTable td {
+padding: 2px 4px 2px 4px;
+vertical-align: middle;
+font-size: 11px;
+}
+
+table.bodyTable th {
+color: white;
+background-color: #bbb;
+text-align: left;
+font-weight: bold;
+}
+
+table.bodyTable tr.a {
+background-color: #ddd;
+}
+
+table.bodyTable tr.b {
+background-color: #eee;
+}
+/*end table*/
+
+/*tips*/
+div.clear{
+clear:both;
+visibility: hidden;
+}
+div.clear hr{
+display: none;
+}
+/*tips*/
+
+acronym {
+cursor: help;
+border-bottom: 1px dotted #feb;
+}
+
+#legend {
+padding: 8px 0 8px 0;
+}
+
+#poweredBy {
+text-align: center;
+}
+#poweredBy img {
+display:block;
+margin: 20px 0 20px 17px;
+}
+/*search*/
+#gsearch  {
+width:250px;
+}
+#gsearchinput {
+padding:0;
+width:150px;
+display:inline;
+font-size:100%;
+margin:0;
+}
+#gsearchbutton {
+padding:0;
+display:inline;
+font-size:100%;
+margin:0;
+}
+
+#search img {
+margin: 0px;
+display: block;
+}
+#search #q, #search #btnG {
+border: 1px solid #999;
+margin-bottom:10px;
+}
+#search form {
+margin: 0px;
+}
+/*search*/
+
+#lastPublished {
+font-size: x-small;
+}
+
+.source {
+padding: 12px;
+margin: 1em 7px 1em 7px;
+border: 1px solid #999;
+overflow: auto
+}
+.source pre {
+margin: 0px;
+padding: 0px;
+}
+
+/*html*/
+h1{
+/*text-indent:30px;*/
+color: #B4C24B;
+margin:0 auto;
+font-size:2em;
+padding-top:10px;
+padding-bottom:10px;
+}
+h2 {
+text-indent:20px;
+font-size: 1.3em;
+}
+
+.mainsection {
+text-decoration: underline;
+}
+
+/*h3 {
+padding: 4px 4px 4px 24px;
+color: #333333;
+background-color: #efefef;
+border-bottom:1px solid #ccc;
+font-weight: bold;
+font-size: 14px;
+background-image: url(../images/h3.jpg);
+background-repeat: no-repeat;
+background-position: left bottom;
+}
+
+h4 {
+padding: 4px 4px 4px 40px;
+border-bottom: 1px solid #aaaaaa;
+color: #49635a;
+}
+*/
+p {
+line-height: 1.3em;
+font-size: 1em;
+}
+
+
+dt {
+padding: 4px 4px 4px 24px;
+color: #333333;
+background-color: #efefef;
+border-bottom:1px solid #ccc;
+font-weight: bold;
+font-size: 14px;
+/*background-image: url(../images/h3.jpg);*/
+background-repeat: no-repeat;
+background-position: left bottom;
+}
+
+
+/*html*/
+
+
+
+body{
+background-color: #F5F5F5;
+font-family: Arial,Verdana,sans-serif;
+font-size:13px;
+/*text-align: justify;*/
+margin: 0;
+color:#333333
+}
+
+a {
+text-decoration: none;
+}
+
+a:link {
+color: #47a;
+}
+
+a:visited {
+color: #47a;
+}
+
+a:active,a:hover {
+color: #990000;
+}
+
+div#wrapper_main {
+background: #F5F5F5 url(http://gisgraphy.com/images/background.gif) top left repeat-x;
+margin:0 auto;
+/*position:static !important;*/
+width:1000px;
+
+
+}
+
+#banner {
+padding-top:10px;
+padding-bottom: 20px;
+padding-left:10px;
+padding-right: 10px;
+}
+#banner img {
+border: none;
+padding-bottom:5px;
+}
+
+#brand{
+float:left;
+}
+
+.gisgraphy{
+color : #4477AA;
+font-size:3em;
+vertical-align: middle;
+font-family: tahoma,arial,helvetica,sans-serif;
+
+
+}
+.tagline{
+border-top:1px black solid;
+color: #777777;
+font-size:1em;
+line-height:1em;
+width : 260px;
+}
+
+#gsearch{
+float:right;
+}
+.footerelmt {
+float:right;
+padding-bottom:10px;
+}
+
+#breadcrumbs {
+height:33px;
+background-color : #3C78B5;
+margin: 0;
+width:100%;
+}
+
+#bodyColumn {
+padding: 15px;
+background:#FFFFFF;
+min-height:700px;
+padding-bottom:70px;
+}
+
+#footer {
+padding: 10px;
+margin: 20px 0px 20px 0px;
+border-top: solid #ccc 1px;
+color: #333333;
+}
+
+
+code{
+font-style: italic;
+}
+.code {
+background-color:#F0F0F0;
+border:1px dashed #4477AA;
+padding:3px;
+width: 82%;
+margin-left: auto;
+margin-right: auto;
+margin-top : 10px;
+margin-bottom : 10px;
+text-align: left;
+}
+.tip {
+text-align:left;
+width : 80%;
+margin-left: auto;
+margin-right: auto;
+padding : 10px;
+padding-left: 20px;
+margin-top : 10px;
+margin-bottom : 10px;
+}
+
+.greentip{
+background-color:#DDFFDD;
+border:1px solid #009900;
+}
+
+.redtip{
+background-color:#FFCCCC;
+border:1px solid #CC0000;
+}
+
+.yellowtip{
+background-color:#FFFFCE;
+border:1px solid #F0C000;
+}
+
+img {
+border : 0px;
+vertical-align: middle;
+}
+#logos{
+width : 100%;
+text-align: center;
+}
+.logo {
+padding: 3px;
+border : 0px;
+}
+
+#logos{
+width : 100%;
+text-align: center;
+}
+.mediumsizetable{
+margin : 15px; 
+width : 80%;
+border:1px solid #AAAAAA;
+}
+
+.smallsizetable{
+margin : 15px; 
+width : 40%;
+border:1px solid #AAAAAA;
+}
+
+
+
+.smartborder th,td {
+border:1px solid #AAAAAA;
+padding-left : 5px;
+}
+
+.smartborder th {
+background-color : #DDFFDD;
+}
+
+
+.smallsizetable{
+
+width: 20%;
+border:1px solid #AAAAAA;
+}
+
+
+
+.imagethumb{
+padding : 10px;
+padding-left : 50px;
+width: 500px;
+}
+
+
+.center{
+margin:auto auto;
+text-align: center;
+width:100%;
+}
+.feedback {
+background:url("/images/feedbacks.png") repeat scroll 0 0 transparent;
+border:0 none;
+height:81px;
+width:81px;
+}
+
+#feedback-box {
+bottom:0 !important;
+position:fixed !important;
+right:0 !important;
+z-index:10001 !important;
+}
+
+
+/*tab of content*/
+
+
+.navSection {
+margin-bottom: 2px;
+padding: 8px;
+}
+.navSectionHead {
+font-weight: bold;
+}
+.section {
+padding: 4px;
+}
+.subsectionTitle {
+font-size: 1.3em;
+font-weight: bold;
+color: #666;
+}
+
+.subsection {
+margin-left: 3px;
+color: #333333;
+}
+
+.subsection p {
+font-size: 2em;
+
+
+.section p a {
+color: #539126;
+font-weight: bolder;
+}
+
+.section p a:hover {
+text-decoration: underline;
+}
+
+}
+/*end tab of content*/
+
+
+.serviceslist{
+float:left;
+width:1000px;
+}
+
+.servicewraper{
+float:left;
+width:350px;
+padding-left:20px;
+padding-right:20px;
+padding-bottom:45px;
+list-style:none;
+}
+
+.serviceheader{
+padding:0;
+margin:0;
+color:#17397D
+}
+
+.servicedescription{
+padding:0;
+margin:0;
+}
+
+.servicelinks {
+padding-top:5px;
+margin:0;
+}
+
+.maindescription{
+font-size:1em;
+padding:25px;
+text-indent:10px;
+text-align: left;
+background-color: #EBF5FC;
+}
+
+.masterTopic{
+padding-top:10px;
+padding-bottom:10px;
+font-size:1.2em;
+text-decoration: underline;
+text-indent:10px;
+text-align: left;
+}
+
+.asterisk{
+font-size:1.1em;
+text-decoration:none;
+color:red;
+}
+
+.price_container {
+font-weight: bold;
+font-family: "Trebuchet MS",helvetica,arial,verdana,sans-serif;
+width: 620px;
+margin : 0 auto;
+padding-bottom:20px;
+padding-top:10px;
+}
+
+.price_col {
+vertical-align:middle;
+float: left;
+margin:0 auto;
+width: 150px;
+background-color:#d9d9d9;
+border:2px solid #FFFFFF;
+}
+
+
+.price_cell {
+padding-top:7px;
+text-align:center;
+font-size:0.9em;
+color:#111111;
+height:23px;
+width: 150px;
+vertical-align:middle;
+}
+
+.pricestrike{
+color:#000000;
+text-decoration: line-through;
+padding-right:5px;
+font-size:15px;
+}
+
+.odd {
+background-color:#e8e8e7;
+}
+.even {
+background-color:#d9d9d8;
+}
+.price{
+color:#FF0000;
+font-weight: bold;
+font-size:20px;
+}
+
+.priceinfo {
+color:#000000;
+font-weight: bold;
+font-size:15px;
+}
+
+.first_col{
+text-align:left;
+text-indent:5px;
+}
+.price_header{
+margin:0 auto;
+color:#000000;
+font-size:1.2em;
+background: url("/images/icons/price_bg.png") no-repeat scroll 0 0 transparent;
+}
+.bigheight{
+height:4em;
+}
+
+a.roundbluebutton {
+background: url("/images/icons/blue_button.png") no-repeat scroll 0 0 transparent;
+color:#FFFFFF;
+font-size: 16px;
+display:block;
+font-weight: bold;
+height: 32px;
+margin-left: auto;
+margin-right: auto;
+margin-top: 3px;
+padding-top: 8px;
+text-align: center;
+text-decoration: none;
+width:122px;
+}
+
+.sidebar {
+    background-color: #F4F4F4;
+    border: 1px solid black;
+    float: right;
+    font-size: 14px;
+    margin: 10px 0 10px 30px;
+    padding: 10px 20px 20px;
+    width: 33%;
+}

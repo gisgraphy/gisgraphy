@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" default-autowire="byName"
+       default-lazy-init="false" >
+
+    <!-- AOP Advisor -->
+     <bean id="userSecurityInterceptor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="userSecurityAdvice"/>
+        <property name="patterns">
+            <list>
+                <value>.*saveUser</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Advice Class -->
+     <bean id="userSecurityAdvice" class="com.gisgraphy.service.UserSecurityAdvice"/>
+
+    <bean id="userManager" class="com.gisgraphy.service.impl.UserManagerImpl"/>
+
+    <bean id="targeted" class="org.springframework.aop.framework.ProxyFactoryBean">
+      <property name="proxyInterfaces" value="com.gisgraphy.service.UserManager"/>
+      <property name="interceptorNames">
+         <list>
+            <idref local="userSecurityInterceptor"/>
+            <idref local="userManager"/>
+         </list>
+      </property>
+    </bean>
+    
+    <bean id="geolocTestHelper" class="com.gisgraphy.test.GisgraphyTestHelper"/>
+    
+    <bean id="applicationResourcesSourceTest" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="ApplicationResourcesTest" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="cacheSeconds" value="-1" />
+        <property name="fallbackToSystemLocale" value="false" />
+    </bean>
+    
+</beans>    

@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+/* ----- FIRST LEVEL */
+ul.dropdown {
+text-align: left;
+}
+ul.dropdown li {
+ padding: 7px 12px;
+/* couleur de fond*/	
+ background-color: #3C78B5;
+ color: #fff;
+}
+
+ul.dropdown li.hover,
+ul.dropdown li:hover {
+ background-color: #3C78B5;
+}
+
+ul.dropdown a:link,
+ul.dropdown a:visited { color: #fff; text-decoration: none; }
+ul.dropdown a:hover { color: #fff; text-decoration: underline; }
+ul.dropdown a:active { color: #fff; }
+.importantmenu  {text-shadow:1px 1px 1px #CC0000; }
+/* ----- END LEVEL */
+
+/* ----- NON-FIRST LEVEL */
+ul.dropdown ul {
+	text-align: left;
+	margin-left: -6px;
+	width: 170px;
+	padding-bottom: 9px;
+	background: url(../../../../images/dropdown/dropdown_pane.png) 0 100% no-repeat;
+	color: #000;
+	font-weight: normal;
+}
+
+ul.dropdown ul li {
+background-color: transparent;
+color: #000;
+}
+
+ul.dropdown ul li.hover,
+ul.dropdown ul li:hover {
+background-color: transparent;
+}
+
+ul.dropdown ul li.empty {
+padding: 0px 0px 0px !important;
+font-weight: bold;
+}
+
+ul.dropdown ul a:link,
+ul.dropdown ul a:visited { color: #000; }
+ul.dropdown ul a:hover { color: #000; text-decoration: none; }
+ul.dropdown ul a:active { color: #000; }
+
+ul.dropdown ul ul {
+ display: none;
+}
+
+ul.dropdown ul ul li {}
+
+/* ----- END LEVEL */
+
+
+
+/*------------------------------------------------------------------------------------------------------/
+* @section	Support Class 'dir'
+* @level sep	ul, .class
+*/
+
+
+/* ----- ALL LEVELS (incl. first) */
+
+ul.dropdown *.dir {
+padding-right: 12px;
+background-image: none;
+background-position: 100% 50%;
+background-repeat: no-repeat;
+}
+
+/* ----- END LEVEL */

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="391.85000pt" id="svg1646" inkscape:version="0.39" sodipodi:docbase="/home/cschalle/clipart/openclipart-0.10/signs_and_symbols/flags/america" sodipodi:docname="panama.svg" sodipodi:version="0.32" width="594.28000pt" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title> panama</dc:title>
+        <dc:description>HASH(0x85a0ae8)</dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>hash</rdf:li>
+            <rdf:li></rdf:li>
+            <rdf:li>america</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title> Sigge Kotliar</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Sigge Kotliar</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title> Sigge Kotliar</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs1648"/>
+  <sodipodi:namedview id="base" inkscape:cx="333.67599" inkscape:cy="187.99073" inkscape:grid-bbox="true" inkscape:window-height="639" inkscape:window-width="877" inkscape:window-x="238" inkscape:window-y="390" inkscape:zoom="0.92058202" showgrid="true"/>
+  <rect height="489.13525" id="rect555" style="font-size:12.000000;fill:#ffffff;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:1.0000000pt;" width="744.09448" x="0.97989178" y="1.0410968"/>
+  <rect height="241.03221" id="rect1649" style="font-size:12.000000;fill:#db0000;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:1.0000000pt;" width="373.02713" x="372.04724" y="1.3374463"/>
+  <rect height="247.69577" id="rect1650" style="font-size:12.000000;fill:#0000ab;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:1.0000000pt;" width="372.02338" x="0.066382132" y="242.36954"/>
+  <path d="M 230.99851,169.72536 L 186.23739,141.59242 L 141.69560,170.00170 L 158.26168,123.83520 L 113.80161,95.327506 L 168.80687,94.930041 L 185.86753,48.903606 L 203.29375,94.824050 L 258.29901,94.884616 L 214.06687,123.66108 L 230.99851,169.72536 z " id="path205" style="font-size:12.000000;fill:#0000ab;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:0.11287200;"/>
+  <path d="M 611.07531,420.75236 L 566.31419,392.61942 L 521.77240,421.02870 L 538.33848,374.86220 L 493.87841,346.35451 L 548.88367,345.95704 L 565.94433,299.93061 L 583.37055,345.85105 L 638.37581,345.91162 L 594.14367,374.68808 L 611.07531,420.75236 z " id="path1660" style="font-size:12.000000;fill:#d80000;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:0.11287200;"/>
+</svg>

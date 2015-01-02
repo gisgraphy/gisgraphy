@@ -1,0 +1,422 @@
+#gissearch {
+	margin: 0 auto;
+	margin-bottom: 20px;
+}
+
+#searchlinks {
+	display: block;
+	font-size: 1.5em;
+	margin: 5px 5px 30px 5px;
+	text-align: center;
+}
+
+#simplesearch  {
+	margin: 0 auto;
+	width: 520px;
+}
+
+#searchleftblock {
+	float: left;
+	margin: 0 auto;
+}
+
+#searchbuttonbar {
+	margin: 0 auto;
+	padding-top: 5px;
+	text-align: center;
+}
+
+#searchexample {
+	
+}
+
+#tooltip {
+	margin: 0 auto;
+	padding-left: 10px;
+	float: left;
+	text-align: left;
+	width: 180px;
+}
+
+#advancedsearch {
+	text-align: left;
+	width: 70%;
+	margin: 40px auto;
+	clear: both;
+}
+
+#advancedsearch legend {
+	font-size: 1.2em;
+}
+
+.searchfield {
+	margin-top: 15px;
+	margin: 10px;
+	display: block;
+ 	float: left;
+}
+
+.searchfieldlabel {
+	display: inline;
+	float: left;
+	width: 150px;
+}
+
+.advancedsearchcat {
+	font-size: 1.4em;
+	clear: both;
+}
+
+/* END SEARCH */
+.divider {
+	margin: 0 0 4px 0;
+	border-top: 1px solid #CCCCCC;
+}
+
+.divider div {
+	border-top: 6px solid #EBF5FC;
+	margin: 1px 0 0 0;
+}
+
+.tip {
+	line-height : 1.2em;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	padding: 10px;
+	padding-left: 20px;
+	text-align: left;
+	width: 80%;
+}
+
+.yellowtip {
+	background-color: #FFFFCE;
+	border: 1px solid #F0C000;
+}
+
+.bluetip {
+background-color:#EBF5FC;
+border:1px solid #000099;
+}
+
+.greentip{
+background-color:#DDFFDD;
+border:1px solid #009900;
+}
+
+.redtip{
+background-color:#FFCCCC;
+border:1px solid #CC0000;
+}
+
+div#footer {
+	color: #444;
+	font-size: 0.9em;
+	padding: 0 39px;
+	text-align: left;
+}
+
+div#footer .left {
+	float: left;
+}
+
+div#footer .right {
+	float: right;
+}
+
+form {
+	font-size: .9em;
+}
+
+fieldset {
+	color: #444;
+	margin: 0 0 5px 0;
+	padding: 10px 10px 5px 10px;
+}
+
+legend {
+	color: #444;
+	font-weight: bold;
+	margin: 0 0 0 0;
+}
+
+#popupResults{
+	
+}
+
+
+#popupContainer {
+	background-color: #EEEEEE;
+	border:3px double #000;
+	height: auto;
+	left : 150px;
+	position: absolute;
+	top: -50px;
+	width:700px;
+	z-index: 500;
+	}
+
+div#searchResults {
+/*background-color: #EEEEEE;
+height: 300px;*/
+margin:0px auto;
+/*overflow: auto;*/
+padding:0px;
+width:700px;
+}
+
+.headerResults{
+background: white url(images/background.gif) top left repeat-x;
+border:1px solid #000;
+clear : both;
+font-size: 1.3em;
+height: 20px;
+margin:0px auto;
+padding-left : 5px;
+padding-top: 10px;
+width :693px;
+}
+
+ .headerResultsLabel{
+float : left;
+font-size: 1.3em;
+margin:0px auto;
+}
+
+.closeLabel{
+float: right;
+padding-right: 5px;
+}
+
+.closeButton {
+	background-color: #DDDDDD;
+	border : 1px solid;
+	font-weight: bold;
+	margin : 0;
+	padding:  0;
+}
+
+
+div#searchResults .bodyResults{
+/*background-color: #EEEEEE;*/
+height: auto;
+margin:10px auto;
+padding:5px;
+width:600px;
+}
+div#searchResults .flag{
+float:left;
+height: 80px;
+}
+
+.flag img{
+vertical-align:middle;
+width:50px;
+}
+
+div#searchResults .resultblock{
+float:left;
+margin-left:5px;
+margin-top:5px;
+width:540px;
+}
+
+div#searchResults .resultheaderleft{
+float:left;
+font-size: 1.3em;
+}
+
+div#searchResults .resultheaderright{
+float:right;
+}
+
+div#searchResults .separator {
+float:left;
+width:540px;
+}
+
+div#searchResults .summary {
+float:left;
+width:540px;
+}
+
+a.greenlink ,a.greenlink:visited,a.greenlink:hover{
+color:#008000;
+}
+
+
+.importantMessage{
+font-size:2em;
+margin-left:5px;
+}
+
+.bigText {
+font-size:1.5em;
+line-height: 1em;
+}
+
+.spell{
+font-size:1.3em;
+color:#FF0000;
+margin-left : 40px;
+}
+
+.spellLink ,.spellLink:Hover,.spellLink:active, .spellLink:visited {
+color :#0000FF;
+font-size:1.6em;
+font-style: italic;
+text-decoration: underline ;
+}
+
+.biggertext {
+font-size: 1.2em;
+margin : auto auto;
+}
+
+.center{
+margin:auto auto;
+text-align: center;
+width:100%;
+}
+
+.donateBtn {
+vertical-align:middle;
+width:55px
+}
+
+.forminstructions{
+clear:left;
+font-size: 1.2em;
+margin : auto auto;
+text-align: left;
+}
+
+.error{
+font-weight: bold;
+font-size: 1.4em;
+color:#CC0000;
+display: inline;
+float: left;
+}
+
+.importantred{
+font-size: 1.4em;
+color:#CC0000;
+display: inline;
+}
+
+.red{
+color:#CC0000;
+}
+
+.underline {
+text-decoration: underline ;
+}
+
+.imagenumberlist {
+vertical-align:middle;
+width:25px;
+margin : 5px;
+}
+
+.streetautocompleteerror {
+	float:none;
+	display:block;
+	border-left: 10px 
+	margin-left: 10px;
+	margin-bottom : 10px;
+}
+
+.googlemapInfoWindowHtml {
+width: 250px; 
+height: 190px;
+text-align:center;background:white url(images/background.gif) repeat-x scroll left top;
+color:#444444;
+font-family:verdana,arial,helvetica,sans-serif;
+line-height:1em;
+margin:0;
+padding:0;
+text-align:center;
+padding-top:5px;
+}
+
+.listspace {
+line-height:1.3em;
+margin-bottom:15px;
+}
+
+#navbar {
+padding-left:25px;
+padding-bottom:40px;}
+
+.yellowbutton {
+	margin: 10px 20px 0 0;
+	/*width:220px;*/
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	color: black;	
+	background: #FFF7AA  top left repeat-x;
+	border: 2px solid #E3CA4B;
+	/*vert*/
+	/*background-color:#CEE3AC;
+	border-color:#B8DA83;*/
+	/*jaune*/
+	/*background-color:#FFF7AA;
+	border-color:#E3CA4B;*/
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: rgba(0,0,0,0.5) 2px 2px 2px; 
+	-moz-box-shadow: rgba(0,0,0,0.5) 2px 2px 2px; /* FF 3.5+ */
+}
+
+.imgAlign{
+	vertical-align:middle;
+}
+
+.bluebutton{
+	margin: 0 20px 0 0;
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	color: black;	
+	background: #c3eafb  top left repeat-x;
+	border: 2px solid #b5d9ea;
+	/*vert*/
+	/*background-color:#CEE3AC;
+	border-color:#B8DA83;*/
+	/*jaune*/
+	/*background-color:#FFF7AA;
+	border-color:#E3CA4B;*/
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: rgba(0,0,0,0.5) 2px 2px 2px; 
+	-moz-box-shadow: rgba(0,0,0,0.5) 2px 2px 2px; /* FF 3.5+ */
+}
+
+.inputsearch{
+background:url("/images/search.gif") no-repeat scroll 5px 5px #FFFFFF;
+border:1px solid #BBC5CD;
+padding:7px 3px 8px 35px;
+}
+
+.inputsearchsimple{
+border:1px solid #BBC5CD;
+padding:4px 3px 5px 5px;
+}
+
+.searchlabel{
+width : 250px;
+display : block;
+margin-top : 10px;
+margin-bottom : 3px;
+}
+
+.about {
+width:1000px;
+color:#777777;
+font-size:11px;
+}

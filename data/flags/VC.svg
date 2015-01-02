@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="140mm" id="svg940" sodipodi:docbase="/home/yemu/clipart/new" sodipodi:docname="/home/yemu/clipart/new/saintvincentandgrenadines.svg" sodipodi:version="0.33pre" width="210mm" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Saint Vincent and the Grenadines</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>caribbean</rdf:li>
+            <rdf:li>america</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs942"/>
+  <sodipodi:namedview id="base" showgrid="false" snaptogrid="false" snaptoguides="false">
+    <sodipodi:guide id="guide945" orientation="horizontal" position="-3.351472"/>
+  </sodipodi:namedview>
+  <rect height="496.062958" id="rect953" style="font-size:12;fill:#f4f100;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="translate(0.000000,-4.187027)" width="744.094482" x="0.000000" y="4.187008"/>
+  <rect height="496.063019" id="rect951" style="font-size:12;fill:#199a00;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="translate(0.000000,-4.189354)" width="184.251955" x="562.209539" y="4.189332"/>
+  <rect height="496.062988" id="rect952" style="font-size:12;fill:#0058aa;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="translate(0.000000,-4.189354)" width="184.251957" x="0.000000" y="4.189332"/>
+  <path d="M 289.613 118.91 L 226.176 216.565 L 287.386 318.324 L 347.327 217.462 L 289.613 118.91 z " id="path954" sodipodi:nodetypes="ccccc" style="fill:#199a00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <path d="M 455.511 118.91 L 392.074 216.565 L 453.284 318.324 L 513.225 217.462 L 455.511 118.91 z " id="path955" sodipodi:nodetypes="ccccc" style="fill:#199a00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <path d="M 371.724 252.131 L 308.287 349.786 L 369.497 451.545 L 429.438 350.683 L 371.724 252.131 z " id="path956" sodipodi:nodetypes="ccccc" style="fill:#199a00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+</svg>

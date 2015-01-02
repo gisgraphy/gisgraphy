@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Inkscape (http://www.inkscape.org/) --><svg height="493.56250" id="svg548" version="1.0" width="825.59052" x="0.0000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0.0000000">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title></dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>america</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title></dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title></dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title></dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource=""/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs550"/>
+  <rect height="466.66895" id="rect672" style="font-size:12.000000;fill:#399408;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:1.0000000pt;" transform="matrix(0.982748,0.000000,0.000000,1.059601,-5.762370e-2,-4.013513)" width="840.36536" x="-0.12282400" y="3.8933680"/>
+  <path d="M -1.7997800e-16,-4.4408900e-14 C -0.67194300,0.090498500 498.47900,233.44500 498.47900,233.44500 L 3.7358100,487.27500 L -1.7997800e-16,-4.4408900e-14 z " id="path555" style="font-size:12.000000;fill:#ffffff;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.2260300pt;" transform="matrix(1.622321,2.426931e-2,-1.290070e-2,1.020334,-3.114563,-2.918980)"/>
+  <path d="M 5.7679600e-17,2.1815900e-14 C 3.1330300,2.1815900e-14 506.09200,241.60400 503.22600,243.97800 L 1.4327400,491.31500 L 5.7679600e-17,2.1815900e-14 z " id="path671" style="font-size:12.000000;fill:#ffde08;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.2260300pt;" transform="matrix(1.436423,0.000000,0.000000,0.934734,-2.968109,18.00347)"/>
+  <path d="M -2.7743475,-0.10954299 C -0.36008868,-0.10954299 377.41379,248.59080 377.41379,248.59080 L -2.7743475,491.46872 L -2.7743475,-0.10954299 z " id="path556" style="fill:#000000;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"/>
+  <path d="M 1.3270600e-16,-7.8263200 C 2.0843000,-26.087700 328.02400,246.11700 328.02400,246.11700 L -3.1149300e-06,501.28000 L 1.3270600e-16,-7.8263200 z " id="path670" style="fill:#de2110;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;" transform="matrix(1.034277,0.000000,0.000000,0.850579,-2.968100,38.87686)"/>
+</svg>

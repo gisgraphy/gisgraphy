@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+
+
+    <http auto-config="false" lowercase-comparisons="false">
+        <intercept-url pattern="/**/*.html*" access="ROLE_ADMIN,ROLE_USER"/>
+	<intercept-url pattern="/images/**" filters="none"/>
+        <intercept-url pattern="/styles/**" filters="none"/>
+        <intercept-url pattern="/scripts/**" filters="none"/>
+        <intercept-url pattern="/public/**" filters="none"/>
+        <intercept-url pattern="/static/**" filters="none"/>
+        <intercept-url pattern="/*search*.html*" filters="none"/>
+        <intercept-url pattern="/google*.html" filters="none"/>
+        <intercept-url pattern="/displayfeature.html*" filters="none"/>
+        <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?error=true"
+                    login-processing-url="/j_security_check"/>
+        <logout logout-url="/logout.jsp"/>
+    </http>
+
+
+    <authentication-provider user-service-ref="userDao">
+        <password-encoder hash="sha"/>
+       <!-- <user-service>
+            <user name="user" password="12dea96fec20593566ab75692c9949596833adc9" authorities="ROLE_USER"/>
+            <user name="admin" password="d033e22ae348aeb5660fc2140aec35850c4da997" authorities="ROLE_ADMIN"/>
+        </user-service>-->
+    </authentication-provider>
+
+    <global-method-security>
+        <protect-pointcut expression="execution(* *..service.UserManager.removeUser(..))" access="ROLE_ADMIN"/>
+    </global-method-security>
+
+    <beans:bean id="userSecurityAdvice" class="com.gisgraphy.service.UserSecurityAdvice"/>
+</beans:beans>

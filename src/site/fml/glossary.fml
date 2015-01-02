@@ -1,0 +1,21 @@
+<faqs title="Glossary">
+  <part id="Glossary">
+    <faq id="placetype">
+      <question>Placetype</question>
+      <answer>
+        <p>
+           A placetype groups feature codes that are nearly the same. Find more info <a href="http://www.gisgraphy.com/placetype.htm">here</a>.
+        </p>
+      </answer>
+    </faq>
+	<faq id="geonames">
+      <question>Geonames</question>
+      <answer>
+        <p>
+         Geonames is a freely available geographical database (see <a href="http://en.wikipedia.org/wiki/GeoNames">wikipedia</a> or the <a href="http://www.geonames.org">official site</a>).
+        </p>
+      </answer>
+    </faq>
+  </part>
+</faqs>
+

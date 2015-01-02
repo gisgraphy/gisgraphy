@@ -1,0 +1,149 @@
+<faqs title="Frequently Asked Questions">
+  <part id="General">
+    <faq id="project-start">
+      <question>When was the Gisgraphy project launched?</question>
+      <answer>
+        <p>
+           It was launched in June 2008.
+        </p>
+      </answer>
+    </faq>
+<faq id="name-gisgraphy">
+      <question>What does Gisgraphy stands for ?</question>
+      <answer>
+        <p>
+          It is geography for GIS (aka Geographic Information System).
+        </p>
+      </answer>
+    </faq>
+    <faq id="choose dataset">
+      <question>Is it possible to import geonames and not Openstreetmap dataset and vice et versa ?</question>
+      <answer>
+        <p>
+          Yes! Just choose the dataset(s) you are interested in on the confirm import page. If you want to import an other dataset later, a <a href="http://www.gisgraphy.com/forum/viewtopic.php?f=3&amp;t=219">workaround is possible</a>
+        </p>
+      </answer>
+    </faq>
+ <faq id="how-long-import">
+      <question>How long does it take to import all of the data ?</question>
+      <answer>
+        <p>
+          It depends on the machine and the memory. 
+          On a core2 Duo it takes about 40 hours .
+           The importer is useful if you are interested on an custom import(specific placetypes, countries, dataset...), If you don't want to run an import by yourself, because you are interested in all placetypes for all countries, a Postgres dump and a Solr dump can be found <a href="http://download.gisgraphy.com/dump/">here</a>.
+           it will takes only the time to inject the dump into Postgres and copy the Solr dump into the solr directory (~1 hours)
+        </p>
+      </answer>
+      </faq>
+     <faq id="why-import-long">
+      <question>Why the import takes so long ?</question>
+      <answer>
+        <p>
+          The import is long because :
+          <ul>
+          <li>There are a lot of features to import (more than 100 Million)</li> 
+          <li>Gisgraphy tries to do error correction to detect the correct ADM, and a lot of request is made to the database for each line. this is the "price to pay" to have a parent/child ADM tree</li>
+          <li>For each feature or alternate names imported, the fulltext engine is synchronized.</li>
+          <li>A lot of request to the fulltext engine (45 000 000 to search the nearest city for each streets) and the geoloc one (to search the nearest city for each zipcode) </li>
+          </ul>  
+          The openstreetmap import take less time because data are pre-processed (length, middle point,...) to CSV. so no error correction is necessary.
+          <br/>
+          Some improvements have been made in V 3.0 to decrease the time the import takes (25% less).since V 3.0. <br/>
+          You should take care of the options you choose when importing, you may not need all the functionnalities. read the explanations on options and choose them according your needs cn drastically decrease the time the importer takes.
+          If you've got some suggestions to improve the importer, feel free to contribute.
+        </p>
+      </answer>
+      </faq>
+    <faq id="tested">
+     <question>how can i be sure the project is production ready ?</question>
+      <answer>
+        <p>
+		It has been tested on several machines using linux, Windows and various JVMs. Gisgraphy has a high unit/integration test coverage. it is scalable, and heve no memory leak (
+        </p>
+      </answer>
+    </faq>
+    <faq id="goon">
+     <question>Will the project go on?</question>
+      <answer>
+        <p>
+			Yes, I plan to keep the development going.
+        </p>
+      </answer>
+    </faq>
+     <faq id="dev">
+     <question>Who are the developers ?</question>
+      <answer>
+        <p>
+		Me and myself : <a href="mailto:david.masclet@gisgraphy.com">David Masclet </a>:) 
+        </p>
+      </answer>
+    </faq>
+    <faq id="techno">
+     <question>What technologies are used ?</question>
+      <answer>
+        <p>
+		Java / Spring / Hibernate / Hibernate Spatial / Maven 2 / PostGIS / PostgreSQL / struts2 / SolR-Lucene. 
+        </p>
+      </answer>
+    </faq>
+     <faq id="mysql">
+     <question>Is Gisgraphy available for MySQL or Oracle 10g ?</question>
+      <answer>
+        <p>
+		No (and it will never be). Oracle is commercial and it does not follow opensource philosophy, and MySQL needs MyISAM database.
+		You can not do GIS with MySQL and InnoDB. There is a real limitation because foreign keys are missing in MyISAM.
+        </p>
+      </answer>
+    </faq>
+    <faq id="jvm14">
+     <question>Can Gisgraphy run on Java 1.4?</question>
+      <answer>
+        <p>
+		Gisgraphy is designed and have been tested for Java 1.5 and later .
+        </p>
+      </answer>
+    </faq>
+   <faq id="housenumber">
+     <question>Is Gisgraphy manage housenumber ?</question>
+      <answer>
+        <p>
+		Not yet, but probably in v 4.0 (no date)
+        </p>
+      </answer>
+    </faq>
+    <faq id="importcountries">
+     <question>Is it possible to only Import the countries I'm interested in ?</question>
+      <answer>
+        <p>
+		Edit the importer.filesToDownload option in the env.properties file. Set the country you want to download, then start gisgraphy, go to the admin menu=>run import . Or, if you don't want Gisgraphy to download files; set the importer.retrieveFiles option to false and put the files you want to process in the <code>'importer.geonames.dir'</code> directory.
+        </p>
+      </answer>
+    </faq>
+    <faq id="openstreetmapdatadownload">
+     <question>Why Openstreetmap data are downloaded from the download server and not from the openstreetmap one ?</question>
+      <answer>
+        <p>
+		Because the data are pre-processed : we extract streets, calculate the length, the middle point, clean some values, improve names (especially for fleet tracking), and so on. an other reason : we thought that it is simple to import csv, instead of a complicated XML one ;) 
+        </p>
+      </answer>
+    </faq>
+    <faq id="customizeplacetype">
+     <question>Is it possible to customize placetype?</question>
+      <answer>
+        <p>
+		Yes, you can find some information <a href="http://www.gisgraphy.com/placetype.htm">here</a>. 
+        </p>
+      </answer>
+    </faq>
+    <faq id="toomanyopenfiles">
+     <question>On Linux / Unix, I get the messge "Too many open files", what does it mean?</question>
+      <answer>
+        <p>
+		It is due to SolR &lt; = &gt; Unix, you need to update the max numbers of open files on your system.
+		See <a href="http://www.xenoclast.org/doc/benchmark/HTTP-benchmarking-HOWTO/node7.html">this link</a> and <a href="http://issues.apache.org/jira/browse/SOLR-4#action_12370001">this one</a> for help.
+        </p>
+      </answer>
+    </faq>
+  </part>
+</faqs>
+

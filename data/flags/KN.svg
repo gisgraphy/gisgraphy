@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="210mm" id="svg378" sodipodi:docbase="/home/yemu/clipart/flags" sodipodi:docname="/home/yemu/clipart/flags/saint-kitts-and-nevis.svg" sodipodi:version="0.32-hydra1" version="1" width="299.999mm" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Saint Kitts and Nevis</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>caribbean</rdf:li>
+            <rdf:li>america</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base">
+    <sodipodi:guide id="guide626" orientation="vertical" position="194.875336"/>
+    <sodipodi:guide id="guide627" orientation="vertical" position="521.178223"/>
+  </sodipodi:namedview>
+  <defs id="defs380"/>
+  <rect height="744.094482" id="rect628" style="font-size:12;fill:#ffe900;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;stroke:none;stroke-opacity:1;" transform="translate(-1149.589,-145.8458)" width="1073.513794" x="1144.326050" y="145.845791"/>
+  <path d="M -2.66219 -3.5704 L -1.41625 532.839 L 833.908 -3.91769 L -2.66219 -3.5704 z " id="path623" sodipodi:nodetypes="cccc" style="font-size:12;fill:#35a100;fill-rule:evenodd;stroke:none;stroke-width:1.02152pt;stroke-opacity:1;" transform="translate(-3.175735,3.570496)"/>
+  <path d="M 1069.54 744.094 L 1067.58 186.34 L 224.975 744.506 L 1069.54 744.094 z " id="path624" sodipodi:nodetypes="cccc" style="font-size:12;fill:#c70000;fill-rule:evenodd;stroke:none;stroke-width:1.03875pt;fill-opacity:1;stroke-opacity:1;"/>
+  <path d="M -2.12437 573.282 L -1.41625 741.204 L 180.867 740.964 L 1071.17 144.084 L 1070.17 -1.91483 L 890.056 -3.5704 L -2.12437 573.282 z " id="path625" sodipodi:nodetypes="ccccccc" style="font-size:12;fill-rule:evenodd;stroke:none;stroke-width:1.02152pt;stroke-opacity:1;" transform="translate(-3.175735,3.570496)"/>
+  <polygon id="polygon136" points="591.041,433.161 533.774,391.476 476.501,433.151 498.449,365.806 441.115,324.214 511.946,324.278 533.785,256.897 555.613,324.281 626.445,324.23 569.104,365.812 591.041,433.161 " style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;stroke:none;stroke-opacity:1;" transform="matrix(0.781395,-0.505656,0.467245,0.748595,153.8185,243.6948)"/>
+  <polygon id="polygon638" points="591.041,433.161 533.774,391.476 476.501,433.151 498.449,365.806 441.115,324.214 511.946,324.278 533.785,256.897 555.613,324.281 626.445,324.23 569.104,365.812 591.041,433.161 " style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;stroke:none;stroke-opacity:1;" transform="matrix(0.781395,-0.505656,0.467245,0.748595,-246.7561,504.0683)"/>
+</svg>

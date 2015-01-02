@@ -1,0 +1,3 @@
+645692	Adm1 with last missing field	Adm1 with last missing field		48.9	2.3	A	ADM1	FR		645692				0		33	Europe/Paris	2007-04-01
+3012874	Région Île-de-France	 Region Ile-de-France 	Ile-de-France,Region parisienne,Région parisienne,Île-de-France	48.5	2.5	A	ADM1	FR		A8				11341257		75	Europe/Paris	2007-08-03
+3672874	Duplicate adm1	 Region Ile-de-France 	Ile-de-France,Region parisienne,Région parisienne,Île-de-France	48.5	2.5	A	ADM1	FR		A8				11341257		75	Europe/Paris	2007-08-03

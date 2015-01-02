@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="137.00000pt" id="svg704" inkscape:version="0.39" sodipodi:docbase="/home/cschalle/clipart/openclipart-0.10/signs_and_symbols/flags/oceania" sodipodi:docname="palau.svg" sodipodi:version="0.32" width="241.00000pt" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Palau</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>micronesia</rdf:li>
+            <rdf:li></rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>oceania</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Tobias Jakobs</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Tobias Jakobs</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Tobias Jakobs</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs706"/>
+  <sodipodi:namedview gridspacingx="10mm" gridspacingy="10mm" id="base" inkscape:cx="121.00000" inkscape:cy="69.999997" inkscape:window-height="802" inkscape:window-width="977" inkscape:window-x="0" inkscape:window-y="28" inkscape:zoom="2.2644628" showgrid="true" snaptogrid="false"/>
+  <g id="g910" transform="translate(0.552007,-3.864051)">
+    <rect height="496.06299" id="rect721" style="font-size:12.000000;fill:#4aadd6;fill-rule:evenodd;stroke-width:1.0000000pt;" transform="matrix(0.404762,0.000000,0.000000,0.344350,0.000000,4.180889)" width="744.09448" x="0.0000000" y="0.0000000"/>
+    <path d="M 372.72247 248.93179 A 125.59128 125.59128 0 1 0 121.53992,248.93179 A 125.59128 125.59128 0 1 0 372.72247 248.93179 z" id="path719" sodipodi:cx="247.13120" sodipodi:cy="248.93179" sodipodi:rx="125.59128" sodipodi:ry="125.59128" sodipodi:type="arc" style="font-size:12.000000;fill:#ffde00;fill-rule:evenodd;stroke-width:1.0000000pt;" transform="matrix(0.422448,0.000000,0.000000,0.404534,28.40659,-13.91720)"/>
+  </g>
+</svg>

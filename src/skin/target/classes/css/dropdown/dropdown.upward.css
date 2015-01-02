@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+/**
+ * Horizontal Upward CSS Drop-Down Menu Component
+ *
+ * @file		dropdown.upward.css
+ * @package		Dropdown
+ * @version		0.1.1
+ * @type		Transitional
+ * @requires	dropdown.upward.css
+ * @browsers	Windows: IE5+, Opera7+, Firefox1+
+ *				Mac OS: Safari2+, Firefox2+
+ *
+ * @link		http://www.lwis.net/
+ * @copyright	2006-2008 Live Web Institute
+ *
+ */
+
+@import "dropdown.css";
+
+ul.dropdown-upward ul {
+ top: auto !important;
+ bottom: 100%;
+}
+
+ul.dropdown-upward ul ul {
+ bottom: 1px;
+}

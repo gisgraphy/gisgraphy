@@ -1,0 +1,32 @@
+<project name="gisgraphy">
+  <bannerLeft>
+    <name>gisgraphy</name>
+    <src>http://www.gisgraphy.com/images/logos/logo.png</src>
+    <href>http://gisgraphy.com</href>
+  </bannerLeft>
+  <publishDate format="dd MMM yyyy" />
+  <skin>
+  <groupId>com.gisgraphy</groupId>
+  <artifactId>gisgraphy-skin</artifactId>
+  <version>1.0</version>
+  </skin>
+   <body>
+   <!-- <head>
+      <link href="http://dev.example.com/sites/hello-world/feeds/news"
+            type="application/atom+xml" 
+            id="auto-discovery" 
+            rel="alternate" 
+            title="Hello-World News"/>
+    </head>
+    -->
+    <breadcrumbs>
+    </breadcrumbs>
+
+    <links>
+    </links>
+
+    <menu ref="parent"/>
+   
+  </body>
+</project>
+

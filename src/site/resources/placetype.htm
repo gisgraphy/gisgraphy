@@ -1,0 +1,171 @@
+<h1>Place Type</h1>
+
+<h2>What is a place type?</h2>
+Gisgraphy is based on the Geonames features which are grouped by <a href="http://download.geonames.org/export/dump/featureCodes.txt">feature codes</a>. Because there are more than 650 feature codes, Gisgraphy simplifies this and groups the feature codes in an abstraction level called place type. A place type groups feature codes that are nearly the same.
+
+<h2>What place types are available ?</h2>
+
+Actually there are 130 different place types:
+<ul>
+ <li>Adm</li>
+<li>AdmBuilding</li>
+<li>Airport</li>
+<li>Ambulance</li>
+<li>AmusePark</li>
+<li>Aqueduc</li>
+<li>ATM</li>
+<li>Bank</li>
+<li>Bar</li>
+<li>Bay</li>
+<li>Beach</li>
+<li>Bridge</li>
+<li>Building</li>
+<li>BusStation</li>
+<li>Camp</li>
+<li>Canyon</li>
+<li>Casino</li>
+<li>Castle</li>
+<li>Cemetery</li>
+<li>Cirque</li>
+<li>City</li>
+<li>CitySubdivision</li>
+<li>Cliff</li>
+<li>Coast</li>
+<li>Continent</li>
+<li>Country</li>
+<li>CourtHouse</li>
+<li>CustomsPost</li>
+<li>Dam</li>
+<li>Desert</li>
+<li>Factory</li>
+<li>Falls</li>
+<li>Farm</li>
+<li>Field</li>
+<li>FishingArea</li>
+<li>Fjord</li>
+<li>Forest</li>
+<li>Garden</li>
+<li>Golf</li>
+<li>Gorge</li>
+<li>GrassLand</li>
+<li>Gulf</li>
+<li>Hill</li>
+<li>Hospital</li>
+<li>Hotel</li>
+<li>House</li>
+<li>Ice</li>
+<li>Island</li>
+<li>Lake</li>
+<li>Library</li>
+<li>LightHouse</li>
+<li>Mall</li>
+<li>Marsh</li>
+<li>MetroStation</li>
+<li>Military</li>
+<li>Mill</li>
+<li>Mine</li>
+<li>Mole</li>
+<li>Monument</li>
+<li>Mound</li>
+<li>Mountain</li>
+<li>Museum</li>
+<li>Oasis</li>
+<li>ObservatoryPoint</li>
+<li>Ocean</li>
+<li>OperaHouse</li>
+<li>Park</li>
+<li>Parking</li>
+<li>Plantation</li>
+<li>PolicePost</li>
+<li>PoliticalEntity</li>
+<li>Pond</li>
+<li>Port</li>
+<li>PostOffice</li>
+<li>Prison</li>
+<li>Pyramid</li>
+<li>Quay</li>
+<li>Rail</li>
+<li>RailRoadStation</li>
+<li>Ranch</li>
+<li>Ravin</li>
+<li>Reef</li>
+<li>Religious</li>
+<li>Reserve</li>
+<li>Restaurant</li>
+<li>Road</li>
+<li>School</li>
+<li>Sea</li>
+<li>Spring</li>
+<li>Stadium</li>
+<li>Strait</li>
+<li>Stream</li>
+<li>Street</li>
+<li>Theater</li>
+<li>Tower</li>
+<li>Tree</li>
+<li>Tunnel</li>
+<li>UnderSea</li>
+<li>Vineyard</li>
+<li>Volcano</li>
+<li>WaterBody</li>
+<li>Zoo</li>
+</ul>
+
+Since Gisgraphy 4.0 some new placetypes has been added to reflect the OSM POIs :
+<ul>
+		<li>Bench</li>
+		<li>Cinema</li>
+		<li>Dentist</li>
+		<li>Doctor</li>
+		<li>EmergencyPhone</li>
+		<li>FerryTerminal</li>
+		<li>FireStation</li>
+		<li>Fountain</li>
+		<li>Fuel</li>
+		<li>NightClub</li>
+		<li>Pharmacy</li>
+		<li>Rental</li>
+		<li>Shop</li>
+		<li>SwimmingPool</li>
+		<li>Taxi</li>
+		<li>Telephone</li>
+		<li>Toilet</li>
+		<li>VendingMachine</li>
+		<li>Veterinary</li>
+        <li>Camping</li>
+        <li>Cave</li>
+        <li>CityHall</li>
+        <li>Craft</li>
+        <li>Picnic</li>
+        <li>RestArea</li>
+        <li>Sport</li>
+        <li>Tourism</li>
+        <li>TourismInfo</li>
+</ul>
+
+<h2>I want to add my own feature class, what should I do?</h2>
+
+Place types are Java classes and they are associated with a Hibernate Data Access Object (aka : DAO). There is no configuration file for place types, so you have to build your own Gisgraphy version:
+<ul>
+<li> Download the Gisgraphy sources <a href="http://www.gisgraphy.com/source-repository.html">here</a>.</li>
+<li> Edit the FeatureCode class in the 'com.gisgraphy.domain.valueobject' package.</li>
+<li> Put the mapping in hibernate.cfg.xml.</li>
+<li> Add an entry in the placetype.properties file (and in the other localised placetype files, <a href="#localized">see here</a>).</li>
+<li> Create a DAO by creating a class that extends GenericGisDao. You can find examples in any of the placetype classes (example : com.gisgraphy.domain.valueobject.Forest.</li>
+<li> Then you need to build your own Gisgraphy version with the command in the /src/main/assembly/dist.xml file. There is no developer guide yet but if you're familiar with Maven projects, it should be easy.</li>
+</ul>
+
+<h2>There are too many place types and i want to remove some of them</h2>
+ There is no Configuration file for the placetype, so you have to build your own Gisgraphy version. If you don't want to use all of the features:
+ <ul>
+ <li> Edit the hibernate.cfg.xml and remove the ones you don't want to use.</li>
+ <li> Remove the deleted objects from the featureCode.class (it is not necessary to delete the classes themselves and the DAO and the entry in placetype.properties but it is cleaner).</li>
+ <li> Then you need to build your own Gisgraphy version with the command in the /src/main/assembly/dist.xml file. There is no developer guide yet but if you're familiar with Maven projects, it should be easy.</li>
+ </ul>
+ 
+ 
+ <a name="localized">
+ <h2>Are the place types localised?</h2>
+ 
+ Yes they are localized in the placetype.properties and placetype_<i>LANGUAGE</i>.properties files
+

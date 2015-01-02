@@ -1,0 +1,5 @@
+ 1\ Migration guide for version 3/0
+    1.1\Form 2.1 or 2.0 to 3.0
+ 		Drop database, and recreate all tables with the provided scripts in ths sql directory
+        Unfortunatly you have to re run the import due to bug http://code.google.com/p/gisgraphy/issues/detail?id=23.
+ 	

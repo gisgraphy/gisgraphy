@@ -1,0 +1,145 @@
+@charset "UTF-8";
+
+/** 
+ * Adobe CSS Drop-Down Menu Theme
+ *
+ * @file		default.css
+ * @name		Adobe
+ * @version		0.1
+ * @type		transitional
+ * @browsers	Windows: IE6+, Opera7+, Firefox1+
+ *				Mac OS: Safari2+, Firefox2+
+ *
+ * @link		http://www.lwis.net/
+ * @copyright	2008 Live Web Institute
+ *
+ * Module Classes: *.dir {} *.on {} *.open {} li.hover {} li.first {} li.last {}
+ * Expected directory tag - li
+ *
+ */
+
+
+/*------------------------------------------------------------------------------------------------------/
+ * @section		Base Drop-Down Styling
+ * @structure	ul (unordered list)
+ *				ul li (list item)
+ *				ul li a (links)
+ *				*(.class|:hover)
+ * @level sep	ul
+ */
+
+
+/* ----- ALL LEVELS (incl. first) */
+
+ul.dropdown {
+ font: bold 12px Verdana,Arial,Helvetica,sans-serif;
+}
+
+	ul.dropdown li {
+	 padding: 7px 12px;
+/* couleur de fond*/
+	 background-color: #3C78B5;
+	 color: #fff;
+	}
+
+	ul.dropdown li.hover,
+	ul.dropdown li:hover {
+	
+	 background-color: #3C78B5;
+	}
+
+	ul.dropdown a:link,
+	ul.dropdown a:visited { color: #fff; text-decoration: none; }
+	ul.dropdown a:hover { color: #fff; text-decoration: underline; }
+	ul.dropdown a:active { color: #fff; }
+	.importantmenu  {text-shadow:1px 1px 1px #CC0000; }
+/*clear yellow #FFFFCE*/
+/*dark yellow #F0C000*/
+/*clear red #FFCCCC*/
+/*dark red #CC0000*/
+	
+
+
+/* ----- END LEVEL */
+
+
+	/* ----- NON-FIRST LEVEL */
+
+	ul.dropdown ul {
+	 margin-left: -6px;
+	 width: 170px;
+	 padding-bottom: 9px;
+	 background: url(../../../../../images/dropdown/dropdown_pane.png) 0 100% no-repeat;
+	 color: #000;
+	 font-size: 11px;
+	 font-weight: normal;
+	}
+
+		ul.dropdown ul li {
+		 background-color: transparent;
+		 color: #000;
+		}
+
+		ul.dropdown ul li.hover,
+		ul.dropdown ul li:hover {
+		 background-color: transparent;
+		}
+
+		ul.dropdown ul li.empty {
+		 padding: 0px 0px 0px !important;
+		 font-weight: bold;
+		}
+
+		ul.dropdown ul a:link,
+		ul.dropdown ul a:visited { color: #000; }
+		ul.dropdown ul a:hover { color: #000; text-decoration: none; }
+		ul.dropdown ul a:active { color: #000; }
+
+			ul.dropdown ul ul {
+			 display: none;
+			}
+
+			ul.dropdown ul ul li {}
+
+/* ----- END LEVEL */
+
+
+
+/*------------------------------------------------------------------------------------------------------/
+ * @section	Support Class 'dir'
+ * @level sep	ul, .class
+ */
+
+
+/* ----- ALL LEVELS (incl. first) */
+
+ul.dropdown *.dir {
+ padding-right: 12px;
+ background-image: none;
+ background-position: 100% 50%;
+ background-repeat: no-repeat;
+}
+
+/* ----- END LEVEL */
+
+
+
+
+/* Components override */
+
+ul.dropdown-horizontal ul *.dir {
+ padding-right: 15px;
+ background-image: url(../../../../../images/dropdown/nav-arrow-right.png);
+ background-position: 100% 50%;
+ background-repeat: no-repeat;
+}
+
+ul.dropdown-vertical *.dir {
+ background-image: url(../../../../../images/dropdown/nav-arrow-right.png);
+}
+
+ul.dropdown-vertical-rtl *.dir {
+ padding-right: 15px;
+ background-image: url(../../../../../images/dropdown/nav-arrow-left.png);
+ background-position: 0 50%;
+}

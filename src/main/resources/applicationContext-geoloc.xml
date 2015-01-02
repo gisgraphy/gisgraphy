@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd"
+	default-lazy-init="false" default-autowire="byName">
+
+	<bean id="abstractSimpleImporterProcessor"
+		class="com.gisgraphy.importer.AbstractSimpleImporterProcessor"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="importerConfig" ref="importerConfig"></property>
+	</bean>
+	
+	<bean id="abstractAdvancedImporterProcessor"
+		class="com.gisgraphy.importer.AbstractAdvancedImporterProcessor"
+		abstract="true" parent="abstractSimpleImporterProcessor">
+	</bean>
+	
+
+	<bean id="geonamesFeatureImporter"
+		class="com.gisgraphy.importer.GeonamesFeature${classifier}Importer"
+		parent="abstract${classifier}ImporterProcessor">
+		<property name="cityDao" ref="cityDao" />
+		<property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="countryDao" ref="countryDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+	
+	<bean id="geonamesAdmExtracter"
+		class="com.gisgraphy.importer.GeonamesAdmExtracter"
+		parent="abstractSimpleImporterProcessor">
+	</bean>
+
+	<bean id="abstractFileRetriever"  
+	class="com.gisgraphy.importer.AbstractFileRetriever" abstract="true">
+		<property name="importerConfig" ref="importerConfig"/>
+	</bean>
+	
+	<bean id="geonamesFileRetriever"
+		class="com.gisgraphy.importer.GeonamesFileRetriever" parent="abstractFileRetriever" >
+	</bean>
+
+	<bean id="geonamesLanguageImporter"
+		class="com.gisgraphy.importer.GeonamesLanguageImporter"
+		parent="abstractSimpleImporterProcessor">
+		<property name="languageDao" ref="languageDao" />
+	</bean>
+	
+	<bean id="geonamesCountryImporter"
+		class="com.gisgraphy.importer.GeonamesCountryImporter"
+		parent="abstractSimpleImporterProcessor">
+		<property name="countryDao" ref="countryDao" />
+		<property name="languageDao" ref="languageDao" />
+	</bean>
+
+	<bean id="geonamesAdm1Importer"
+		class="com.gisgraphy.importer.GeonamesAdm1Importer"
+		parent="abstractSimpleImporterProcessor">
+		<property name="cityDao" ref="cityDao" />
+		<property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="countryDao" ref="countryDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+
+	<bean id="geonamesAdm2Importer"
+		class="com.gisgraphy.importer.GeonamesAdm2Importer"
+		parent="abstractSimpleImporterProcessor">
+		<property name="cityDao" ref="cityDao" />
+		<property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="countryDao" ref="countryDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+	
+	<bean id="geonamesAdm3Importer"
+		class="com.gisgraphy.importer.GeonamesAdm3Importer"
+		parent="abstractSimpleImporterProcessor">
+		<property name="cityDao" ref="cityDao" />
+		<property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="countryDao" ref="countryDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+	
+		<bean id="geonamesAdm4Importer"
+		class="com.gisgraphy.importer.GeonamesAdm4Importer"
+		parent="abstractSimpleImporterProcessor">
+		<property name="cityDao" ref="cityDao" />
+		<property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="countryDao" ref="countryDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+	
+	<bean id="geonamesAlternateNamesExtracter"
+		class="com.gisgraphy.importer.GeonamesAlternateNamesExtracter"
+		parent="abstractSimpleImporterProcessor">
+		<property name="admDao" ref="admDao" />
+		<property name="countryDao" ref="countryDao" />
+	</bean>
+
+	<bean id="geonamesAlternateNamesImporter"
+		class="com.gisgraphy.importer.GeonamesAlternateNames${classifier}Importer"
+		parent="abstract${classifier}ImporterProcessor">
+		<property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="cityDao" ref="cityDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+		<property name="spellCheckerIndexer" ref="spellCheckerIndexer"/>
+	</bean>
+	
+	<bean id="geonamesAlternateNamesAdmImporter"
+		class="com.gisgraphy.importer.GeonamesAlternateNamesAdmImporter"
+		parent="geonamesAlternateNamesImporter">
+		<!-- <property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="cityDao" ref="cityDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+		<property name="spellCheckerIndexer" ref="spellCheckerIndexer"/>-->
+	</bean>
+	
+	<bean id="geonamesDatabaseIndexer" class="com.gisgraphy.importer.GeonamesDatabaseIndexer" />
+	
+	<bean id="openStreetMapFulltextBuilder" class="com.gisgraphy.importer.OpenStreetMapFulltextBuilder" >
+		<property name="internationalisationService" ref="internationalisationService" />
+		<property name="openStreetMapDao" ref="openStreetMapDao" />
+		<property name="importerConfig" ref="importerConfig" />
+	</bean>
+	
+	<bean id="openstreetmapFileRetriever"
+		class="com.gisgraphy.importer.OpenStreetMapFileRetriever" parent="abstractFileRetriever" >
+	</bean>
+	
+	<bean id="municipalityDetector"	class="com.gisgraphy.importer.MunicipalityDetector" ></bean>
+	
+	
+	<bean id="openStreetMapImporter" class="com.gisgraphy.importer.OpenStreetMap${classifier}Importer"
+	parent="abstract${classifier}ImporterProcessor">
+		<property name="openStreetMapDao" ref= "openStreetMapDao" />
+		<property name="importerConfig" ref="importerConfig" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+		<property name="municipalityDetector" ref="municipalityDetector" />
+	</bean>
+	
+	<bean id="openStreetMapHouseNumberFileRetriever"
+		class="com.gisgraphy.importer.OpenStreetMapHouseNumberFileRetriever" >
+	</bean>
+	
+	<bean id="openStreetMapHouseNumberSimpleImporter" class="com.gisgraphy.importer.OpenStreetMapHouseNumber${classifier}Importer"
+	parent="abstract${classifier}ImporterProcessor">
+		<property name="openStreetMapDao" ref= "openStreetMapDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+		<property name="houseNumberDao" ref="houseNumberDao"></property>
+		<property name="fullTextSearchEngine" ref="fullTextSearchEngine"></property>
+	</bean>
+	
+	<bean id="geonamesZipCodeFileRetriever"
+		class="com.gisgraphy.importer.GeonamesZipCodeFileRetriever" parent="abstractFileRetriever" >
+	</bean>
+	
+	<bean id="geonamesZipCodeImporter"
+		class="com.gisgraphy.importer.GeonamesZipCode${classifier}Importer" parent="abstract${classifier}ImporterProcessor" >
+	</bean>
+	
+	<bean id="importerManager"
+		class="com.gisgraphy.importer.ImporterManager">
+		<property name="importers" ref="importers"/>
+		<property name="importerConfig" ref="importerConfig"/>
+	</bean>
+
+	
+ 	 <bean id="importers" class="java.util.ArrayList">
+		<constructor-arg>
+		<list>
+				<ref bean="geonamesFileRetriever"/>
+				<ref bean="quattroshapesFileRetriever"/>
+				<ref bean="openStreetMapCitiesFileRetriever"/>
+				<ref bean="geonamesZipCodeFileRetriever" />
+				<ref bean="openstreetmapFileRetriever" />
+				<ref bean="openStreetMapHouseNumberFileRetriever"/>
+				<ref bean="openStreetMapPoisFileRetriever"/>
+				<ref bean="geonamesLanguageImporter" />
+				<ref bean="geonamesCountryImporter" />
+				<ref bean="geonamesAdmExtracter" />
+				<ref bean="geonamesAdm1Importer" />
+				<ref bean="geonamesAdm2Importer" />
+				<ref bean="geonamesAdm3Importer" />
+				<ref bean="geonamesAdm4Importer" />
+				<ref bean="geonamesFeatureImporter" />
+				<ref bean="geonamesAlternateNamesExtracter" />
+				<ref bean="geonamesAlternateNamesAdmImporter"/>
+				<ref bean="geonamesAlternateNamesImporter" />
+				<ref bean="openStreetMapCitiesSimpleImporter"/>
+				<ref bean="quattroshapesSimpleImporter"/>
+				<ref bean="geonamesZipCodeImporter" />
+				<ref bean="geonamesDatabaseIndexer" />
+				<ref bean="openStreetMapImporter"/>
+				<ref bean="openStreetMapHouseNumberSimpleImporter"/>
+				<ref bean="openStreetMapPoisSimpleImporter"/>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="openStreetMapPoisFileRetriever"
+		class="com.gisgraphy.importer.OpenStreetMapPoisFileRetriever" parent="abstractFileRetriever" >
+	</bean>
+	
+	<bean id="quattroshapesFileRetriever"
+		class="com.gisgraphy.importer.QuattroshapesFileRetriever" parent="abstractFileRetriever" >
+	</bean>
+	
+	<bean id="quattroshapesSimpleImporter"
+		class="com.gisgraphy.importer.QuattroshapesSimpleImporter" parent="abstractSimpleImporterProcessor">
+		<property name="gisFeatureDao" ref="gisFeatureDao"/>
+		<property name="importerConfig" ref="importerConfig"/>
+	</bean>
+	
+	<bean id="openStreetMapPoisSimpleImporter"
+		class="com.gisgraphy.importer.OpenStreetMapPois${classifier}Importer" parent="abstract${classifier}ImporterProcessor" >
+	</bean>
+	
+	
+	<bean id="openStreetMapCitiesFileRetriever"
+		class="com.gisgraphy.importer.OpenStreetMapCitiesFileRetriever" parent="abstractFileRetriever" >
+	</bean>
+	
+	<bean id="openStreetMapCitiesSimpleImporter"
+		class="com.gisgraphy.importer.OpenStreetMapCitiesSimpleImporter" parent="abstractSimpleImporterProcessor" >
+	</bean>
+	
+
+	<bean id="importerConfig" class="com.gisgraphy.importer.ImporterConfig">
+		<property name="maxInsertsBeforeFlush" value="1000" /><!-- todo v2 option -->
+		<property name="wrongNumberOfFieldsThrows" value="${importerConfig.wrongNumberOfFieldsThrows}"/>
+		<property name="missingRequiredFieldThrows" value="${importerConfig.missingRequiredFieldThrows}"/>
+		<property name="acceptRegExString" value="${importerConfig.acceptRegExString}"/>
+		<property name="tryToDetectAdmIfNotFound" value="${importerConfig.tryToDetectAdmIfNotFound}"/>
+		<property name="syncAdmCodesWithLinkedAdmOnes" value="${importerConfig.syncAdmCodesWithLinkedAdmOnes}"/>
+		<property name="adm1ExtracterStrategyIfAlreadyExists">
+		<bean class="com.gisgraphy.importer.AdmExtracterStrategyOptions" factory-method="valueOf">
+				<constructor-arg>
+					<value>${importerConfig.adm1ExtracterStrategyIfAlreadyExists}</value>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="adm2ExtracterStrategyIfAlreadyExists">
+		<bean class="com.gisgraphy.importer.AdmExtracterStrategyOptions" factory-method="valueOf">
+				<constructor-arg>
+					<value>${importerConfig.adm2ExtracterStrategyIfAlreadyExists}</value>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="adm3ExtracterStrategyIfAlreadyExists">
+		<bean class="com.gisgraphy.importer.AdmExtracterStrategyOptions" factory-method="valueOf">
+				<constructor-arg>
+					<value>${importerConfig.adm3ExtracterStrategyIfAlreadyExists}</value>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="adm4ExtracterStrategyIfAlreadyExists">
+		<bean class="com.gisgraphy.importer.AdmExtracterStrategyOptions" factory-method="valueOf">
+				<constructor-arg>
+					<value>${importerConfig.adm4ExtracterStrategyIfAlreadyExists}</value>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="importGisFeatureEmbededAlternateNames"
+			value="${importerConfig.importGisFeatureEmbededAlternateNames}" />
+		<property name="geonamesDir" value="${importer.geonames.dir}"/>
+		<property name="openStreetMapDir" value="${importer.openstreetmap.dir}"/>
+		<property name="openStreetMapHouseNumberDir" value="${importer.openstreetmap.housenumbers.dir}"/>
+		<property name="openStreetMapCitiesDir" value="${importer.openstreetmap.cities.dir}"/>
+		<property name="openStreetMapPoisDir" value="${importer.openstreetmap.pois.dir}"/>
+		<property name="geonamesZipCodeDir" value="${importer.geonames.zipcode.dir}"/>
+		<property name="quattroshapesDir" value="${importer.quattroshapes.dir}"/>
+		
+		<property name="geonamesDownloadURL" value="${importer.geonames.downloadURL}"/>
+		<property name="geonamesZipCodeDownloadURL" value="${importer.geonames.zipcode.downloadURL}"/>
+		<property name="retrieveFiles" value="${importer.retrieveFiles}"/>
+		<property name="geonamesFilesToDownload" value="${importer.geonamesFilesToDownload}"/>
+		<property name="openStreetMapFilesToDownload" value="${importer.openstreetmapFilesToDownload}"/>
+		<property name="openStreetMapHouseNumberFilesToDownload" value="${importer.openstreetmapHouseNumberFilesToDownload}"/>
+		<property name="openStreetMapCitiesFilesToDownload" value="${importer.openStreetMapCitiesFilesToDownload}"/>
+		<property name="openStreetMapPoisFilesToDownload" value="${importer.openStreetMapPoisFilesToDownload}"/>
+		<property name="quattroshapesFilesToDownload" value="${importer.quattroshapesFilesToDownload}"/>
+		
+		
+		<property name="adm1FileName" value="${importerConfig.adm1FileName}"/>
+		<property name="adm2FileName" value="${importerConfig.adm2FileName}"/>
+		<property name="adm3FileName" value="${importerConfig.adm3FileName}"/>
+		<property name="adm4FileName" value="${importerConfig.adm4FileName}"/>
+		<property name="languageFileName" value="${importerConfig.languageFileName}"/>
+		<property name="countriesFileName" value="${importerConfig.countriesInfosFileName}"/>
+		<property name="alternateNamesFileName" value="${importerConfig.alternateNamesFileName}"/>
+		<property name="openstreetMapDownloadURL" value="${importer.openstreetmap.downloadURL}"/>
+		<property name="openstreetMaphouseNumbersDownloadURL" value="${importer.openstreetmap.housenumbers.downloadURL}"/>
+		<property name="openstreetMapCitiesDownloadURL" value="${importer.openstreetmap.cities.downloadURL}"/>
+		<property name="openstreetMapPoisDownloadURL" value="${importer.openstreetmap.pois.downloadURL}"/>
+		<property name="quattroshapesDownloadURL" value="${importer.quattroshapes.downloadURL}"/>
+		
+		<property name="geonamesImporterEnabled" value="${importer.geonames.enabled}"/>
+		<property name="openstreetmapImporterEnabled" value="${importer.openstreetmap.enabled}"/>
+		<property name="openstreetmapHouseNumberImporterEnabled" value="${importer.openstreetmap.housenumber.enabled}"/>
+		<property name="quattroshapesImporterEnabled" value="${importer.openstreetmap.housenumber.enabled}"/>
+		<property name="alternateNameFeaturesFileName" value="${importerConfig.alternateNameFeaturesFileName}"/>
+		<property name="alternateNameAdm1FileName" value="${importerConfig.alternateNameAdm1FileName}"/>
+		<property name="alternateNameAdm2FileName" value="${importerConfig.alternateNameAdm2FileName}"/>
+		<property name="alternateNameCountryFileName" value="${importerConfig.alternateNameCountryFileName}"/>
+		<property name="openStreetMapFillIsIn" value="${importerConfig.openstreetmap.fill.isin.field}"/>
+		<property name="renameFilesAfterProcessing" value="${importer.rename.files.after.processing}"/>
+		
+	</bean>
+	
+	<bean id="addressParser" class="${addressParser.class}">
+		<constructor-arg>
+					<value>${addressParser.url}</value>
+		</constructor-arg>
+	</bean>
+	 
+	<!-- EVENT -->
+ 	 
+	<bean id="gisFeatureEventListener" class="com.gisgraphy.domain.geoloc.entity.event.GisFeatureEventListener">
+	<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+ 
+	<bean id="listeners" class="java.util.ArrayList">
+		 <constructor-arg>
+			<list>
+				<ref bean="gisFeatureEventListener" />
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="eventManager" class="com.gisgraphy.domain.geoloc.entity.event.EventManager">
+	<property name="listeners" ref="listeners"/>
+	</bean>
+	
+	<bean name="gisgraphyConfig" class="com.gisgraphy.domain.valueobject.GisgraphyConfig">
+		<property name="defaultGeolocSearchPlaceType" value="${geolocsearch.defaultGeolocSearchPlaceType}"/>
+		<property name="googleMapAPIKey" value="${googleMapAPIKey}"/>
+		<property name="googleanalytics_uacctcode" value="${googleanalytics.uacctcode}"/>
+		<property name="useAddressParserWhenGeocoding" value="${useAddressParserWhenGeocoding}"/>
+		<property name="searchForExactMatchWhenGeocoding" value="${searchForExactMatchWhenGeocoding}"/>
+	</bean>
+
+</beans>

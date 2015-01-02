@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="140mm" id="svg378" sodipodi:docbase="/home/cschalle/sodipodi-flags/nations/" sodipodi:docname="/home/cschalle/sodipodi-flags/nations/lithuanian.svg" sodipodi:version="0.32" version="1" width="280mm" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title> lithuania</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>europe</rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title> Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title> Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base"/>
+  <defs id="defs380"/>
+  <rect height="708.661000" id="rect171" rx="0.000000" ry="0.000000" sodipodi:fill-cmyk="(1 0.55 0.967742 0)" style="font-size:12;fill:#007308;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="matrix(0.938647,0.000000,0.000000,0.696856,0.000000,-1.525879e-5)" width="1062.990000" x="0.000000" y="0.000000"/>
+  <rect height="236.220000" id="rect256" rx="0.000000" ry="0.000000" sodipodi:fill-cmyk="(0.25 1 1 0)" style="font-size:12;fill:#bf0000;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="matrix(0.938647,0.000000,0.000000,0.696856,0.000000,-1.525879e-5)" width="1062.990000" x="0.000000" y="475.558554"/>
+  <rect height="164.611330" id="rect255" sodipodi:fill-cmyk="(0 0.3 1 0)" style="font-size:12;fill:#ffb300;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="997.772272" x="0.000000" y="-0.000015"/>
+</svg>

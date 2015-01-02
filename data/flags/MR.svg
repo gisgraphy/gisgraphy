@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="210mm" id="svg378" sodipodi:docbase="/home/yemu/clipart/flags" sodipodi:docname="/home/yemu/clipart/flags/mauritania.svg" sodipodi:version="0.32-hydra1" version="1" width="299.999mm" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title> mauritania</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>africa</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title> Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title> Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base"/>
+  <defs id="defs380"/>
+  <rect height="744.094421" id="rect149" style="font-size:12;fill:#2d9c4b;fill-rule:evenodd;stroke:none;stroke-width:1.0247pt;fill-opacity:1;" transform="scale(-1.000000,-1.000000)" width="1062.989990" x="-1062.989227" y="-744.094467"/>
+  <path d="M 260 222.093 C 367.083 518.813 690.417 529.702 807.5 222.093 C 806.667 633.146 267.083 652.201 260 222.093 z " id="path673" sodipodi:nodetypes="ccc" style="fill:#ffe900;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <polygon id="polygon638" points="591.041,433.161 533.774,391.476 476.501,433.151 498.449,365.806 441.115,324.214 511.946,324.278 533.785,256.897 555.613,324.281 626.445,324.23 569.104,365.812 591.041,433.161 " style="font-size:12;fill:#ffe900;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;stroke:none;stroke-opacity:1;" transform="matrix(0.891971,-3.359505e-2,1.680064e-2,0.879788,49.11288,-38.03725)"/>
+</svg>

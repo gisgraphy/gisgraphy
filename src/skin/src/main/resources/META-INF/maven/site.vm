@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Free opensource geocoder and webservices for geonames and openstreetmap data</title>
+    <style type="text/css" media="all">
+      @import url("/css/dropdown/dropdown.css");
+      @import url("/css/dropdown/themes/gisgraphy/default.advanced.css");
+      @import url("/css/site.css");
+    </style>
+     <link rel="alternate" type="application/atom+xml" title="download changes" href="http://code.google.com/feeds/p/gisgraphy/downloads/basic" />
+     <link rel="alternate" type="application/atom+xml" title="Project updates" href="http://code.google.com/feeds/p/gisgraphy/updates/basic" />
+     <link rel="alternate" type="application/atom+xml" title="Issues updates" href="http://code.google.com/feeds/p/gisgraphy/issueupdates/basic" />
+     <link rel="alternate" type="application/atom+xml" title="Sources changes" href="http://code.google.com/feeds/p/gisgraphy/svnchanges/basic" />
+ 
+        <META NAME="Author" CONTENT="David Masclet"/>
+		<META NAME="Keywords" CONTENT="geocoding, webservices, find nearby,geonames,openstreetmap, geolocalisation"/>
+		<META NAME="Description" CONTENT="Since 2006, Gisgraphy is a free, open source framework that offers the possibility to do geolocalisation and geocoding via Java APIs or REST webservices. Results can be output in XML, Atom, RSS, JSON, PHP, Ruby, and Python."/>
+    	<META http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    	<script type="text/javascript" src="/scripts/jquery-1.6.1.min.js" ></script>
+    	
+      </head>
+      <body>
+	<div id="wrapper_main">
+		<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+	    	<div id="banner">
+			<span id="brand">
+		     		<a href="http://www.gisgraphy.com"><img src="/images/logos/logo_48.png" alt="Gisgraphy" title="gisgraphy" /><span class="gisgraphy">Gisgraphy</span></a><br/>
+		     		<span class="tagline"> Free opensource geocoder and webservices for geonames and openstreetmap data
+				</span>
+			</span>
+			<div style="float:right;">
+				<span class="addthis_toolbox addthis_default_style ">
+					<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+					<a class="addthis_button_preferred_1"></a>
+					<a class="addthis_button_preferred_2"></a>
+					<a class="addthis_button_preferred_4"></a>
+					<a class="addthis_button_compact"></a>
+					<a class="addthis_button_google_plusone" ></a>
+				</span>
+				<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4e8300a9101fc359"></script>
+			</div>
+			<br/><br/>
+			<span id="gsearch">
+				<form action="http://www.gisgraphy.com/sitesearch.htm" id="cse-search-box">
+				    <input type="hidden" name="cx" value="partner-pub-7203216364107204:d614hs-anxp" />
+				    <input type="hidden" name="cof" value="FORID:10" />
+				    <input type="text" name="q" id="gsearchinput" size="18" />
+				    <input type="submit" name="sa" value="Search" id="gsearchbutton" />
+				</form>
+	      	</span>
+	     		<div class="clear"/></div>
+	      	</div>
+		<div id="breadcrumbs">
+			   <ul id="nav" class="dropdown dropdown-horizontal">
+				<li><a href="http://www.gisgraphy.com/index.htm">Home</a></li>
+				<li><a href="#" class="dir">Download &nbsp;&#x25BC;&nbsp;</a>
+					<ul>
+						<li><a href="http://www.gisgraphy.com/download/index.htm">Gisgraphy</a></li>
+						<li><a href="http://www.gisgraphy.com/gisgraphoid.htm#download">Gisgraphoid</a></li>
+						<li><a href="http://www.gisgraphy.com/download/download_data.htm">Data</a></li>
+						<li><a href="http://www.gisgraphy.com/dump.htm">Dumps</a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="dir">Documentation &nbsp;&#x25BC;&nbsp;</a>
+					<ul>
+						<li><a href="http://www.gisgraphy.com/documentation/index.htm">Documentation</a></li>
+						<li><a href="http://www.gisgraphy.com/documentation/quick-start.htm">Quick start</a></li>
+						<li><a href="http://www.gisgraphy.com/documentation/user-guide.htm">User guide</a></li>
+						<li><a href="http://www.gisgraphy.com/documentation/relevance-and-performance.htm">Relevance & perfs</a>
+						<li><a href="http://www.gisgraphy.com/documentation/addressparser.htm">Address parser</a></li>
+						<li><a href="http://www.gisgraphy.com/leaflet.htm">Leaflet plugins</a></li>
+						<li><a href="http://www.gisgraphy.com/gisgraphoid.htm">Gisgraphoid</a></li>
+						<li><a href="http://www.gisgraphy.com/documentation/installation/index.htm">Installation</a></li>
+						<li><a href="http://www.gisgraphy.com/forum/"  target="gisgraphyservices">Forum</a></li>
+						<li><a href="http://www.gisgraphy.com/faq.html">FAQ</a></li>
+						<li><a href="mailto:davidmasclet@gisgraphy.com">Contact</a></li>
+						<li><a href="http://www.gisgraphy.com/changes-report.html">Changes Report</a></li>
+						<li><a href="http://www.gisgraphy.com/license.html">License</a></li>
+						<li><a href="http://www.gisgraphy.com/documentation/client-libraries.htm">Client libraries</a></li>
+						<li><a href="http://www.gisgraphy.com/documentation/addons.htm">OpenSearch</a></li>
+						<li><a href="http://www.gisgraphy.com/screenshots.htm">Screenshots</a></li>
+						<li><a href="http://www.gisgraphy.com/glossary.html">Glossary</a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="dir">Community &nbsp;&#x25BC;&nbsp;</a>
+					<ul>
+						<li><a href="http://www.gisgraphy.com/forum/">Forum</a></li>
+						<li><a href="http://www.gisgraphy.com/aboutme.htm">About me</a></li>
+						<li><a href="http://www.gisgraphy.com/what-s-new.htm">What's new</a></li>
+						<li><a href="http://www.gisgraphy.com/logos.htm">Logos</a></li>
+						<li><a href="http://www.gisgraphy.com/feedback/index.htm">Feedbacks</a></li>
+						<li><a href="http://www.gisgraphy.com/benefactors.htm">Donations</a></li>
+						<li><a href="https://www.facebook.com/#!/pages/gisgraphy/273250136033585" target="gisgraphy"><img src="/images/externallogos/icon_facebook.gif" alt ="Gisgraphy on Facebook" title="Gisgraphy on Facebook"/> &nbsp;Facebook</a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="dir">Free online webservices &nbsp;&#x25BC;&nbsp;</a>
+					<ul>
+						<li><a href="http://www.gisgraphy.com/free-access.htm" >Free access</a></li>
+						<li><a href="http://services.gisgraphy.com/static/leaflet/index.html" >Demo on map (leaflet plugin)</a></li>
+						<li class="empty"><a href="#" >Geocoding</a></li>
+							<li><a href="http://services.gisgraphy.com/public/geocoding.html" target="gisgraphyservices">Geocoding</a></li>
+							<li><a href="http://services.gisgraphy.com/static/leaflet/index.html"  target="gisgraphyservices">With autocompletion</a></li>
+						<li class="empty"><a href="#" >Reverse Geocoding</a></li>
+							<li><a href="http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html"  target="gisgraphyservices">Reverse geocoding</a></li>
+						<li class="empty"><a href="#" >Address Parser</a></li>
+							<li><a href="http://services.gisgraphy.com/public/addressparser.html"  target="gisgraphyservices">Address parser</a></li>
+						<li class="empty"><a href="#" >Street search</a></li>
+							<li><a href="http://services.gisgraphy.com/ajaxfulltextsearch.html?placetype=street"  target="gisgraphyservices">By name</a></li>
+							<li><a href="http://services.gisgraphy.com/ajaxfulltextsearch.html?placetype=street&advancedSearch=true"  target="gisgraphyservices">By name and GPS</a></li>
+							<li><a href="http://services.gisgraphy.com/public/streetSearch.html"  target="gisgraphyservices">By GPS position</a></li>
+							<li><a href="http://services.gisgraphy.com/static/leaflet/index.html"  target="gisgraphyservices">With autocopmletion</a></li>
+						<li class="empty"><a href="#">Place search</a></li>
+							<li><a href="http://services.gisgraphy.com/ajaxfulltextsearch.html"  target="gisgraphyservices">By text</a></li>
+							<li><a href="http://services.gisgraphy.com/ajaxfulltextsearch.html?advancedSearch=true"  target="gisgraphyservices">By text and GPS</a></li>
+							<li><a href="http://services.gisgraphy.com/fulltextsearch.html"  target="gisgraphyservices">Webservice UI</a></li>
+						<li class="empty"><a href="#" >Find nearby</a></li>
+							<li><a href="http://services.gisgraphy.com/ajaxgeolocsearch.html"  target="gisgraphyservices">Around a GPS point</a></li>
+							<li><a href="http://services.gisgraphy.com/geolocsearch.html"  target="gisgraphyservices">Webservice UI</a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="dir">Developer zone &nbsp;&#x25BC;&nbsp;</a>
+					<ul>
+					<li><a href="http://www.gisgraphy.com/developer-guide.htm"  >Developer guide</a></li>
+						<li><a href="http://www.gisgraphy.com/xref/index.html"  target="gisgraphy">Browse Sources</a></li>
+						<li><a href="http://www.gisgraphy.com/source-repository.html">Checkout sources</a></li>
+						<li><a href="http://www.gisgraphy.com/issue-tracking.html">Issue tracker</a></li>
+						<li><a href="http://www.gisgraphy.com/apidocs/index.html"  target="gisgraphy">Javadocs</a></li>
+						<li><a href="http://gisgraphy.free.fr/mavenrepo" target="gisgraphy">Maven Repository</a></li>
+						<li><a href="http://www.gisgraphy.com/bench.htm">Benchs</a></li>
+						<li><a href="http://www.gisgraphy.com/changes-report.html">Changes Report</a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="dir importantmenu">Premium &nbsp;&#x25BC;&nbsp;</a>
+					<ul>
+						<li><a href="http://www.gisgraphy.com/premium/index.htm">What's this</a></li>
+						<li><a href="http://www.gisgraphy.com/premium/index.htm#installation">Installation</a></li>
+						<li><a href="http://www.gisgraphy.com/premium/index.htm#dump">Dump</a></li>
+						<li><a href="http://www.gisgraphy.com/premium/index.htm#data">Openstreetmap data extraction</a></li>
+						<li><a href="http://www.gisgraphy.com/premium/index.htm#sla">Premium webservice</a></li>
+						<li><a href="http://www.gisgraphy.com/premium/index.htm#developement">Developement</a></li>
+						<li><a href="http://www.gisgraphy.com/faq-premium.html">FAQ</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		
+      <div class="clear">
+        <hr/>
+      </div>
+   
+
+    <div id="bodyColumn">
+      <div id="contentBox">
+      <!-- end header -->
+        $bodyContent
+                   <!-- start footer-->
+      </div>
+    </div>
+    <div class="clear">
+      <hr/>
+    </div>
+    <div id="footer">
+      <div class="footerelmt"> &copy gisgraphy 2011  | Logo by <a href="http://www.icondrawer.com/">icondrawer</a> | <a href="mailto:davidmasclet@gisgraphy.com">Contact</a> | <a href="http://davidmasclet.gisgraphy.com">Blog</a> (in french) </div>
+<br/>
+      <div class="clear">
+        <hr/>
+      </div>
+      <div id="logos">
+		<span class="license">Copyrights : Data © OpenStreetMap contributors, <a href="http://www.openstreetmap.org/copyright" target="license">ODbL 1.0</a> | Geonames : <a href="http://creativecommons.org/licenses/by/3.0/" target="license">Creative Commons Attribution 3.0 License</a> | Includes data from <a href="https://github.com/foursquare/quattroshapes/blob/master/LICENSE.md">foursquare quattroshapes</a></span>
+      </div>
+    </div>
+
+<div id="feedback-box">
+<a id="feedback" title="Please give us some feedbacks" href="http://www.gisgraphy.com/feedback/">
+<img class="feedback" width="81" height="81" border="0" alt="feedbacks" src="/images/feedbacks.png"/>
+</a>
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1919557-2");
+pageTracker._trackPageview();
+</script>
+</div>
+  </body>
+</html>

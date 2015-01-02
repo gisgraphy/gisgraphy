@@ -1,0 +1,162 @@
+<h1>Quick start</h1>
+
+<h2>Yet an other Geocoder ?</h2>
+<p>
+
+<b>Yes but No :) Gisgraphy has a different philosophy : An Address is not a string !</b>
+
+After more than 7 years of doing geocoding, that's the conclusion : An address is not a string ! it is tha cardinality of all of their possible names of the different parts :
+'3355 S Las Vegas Blvd, Las Vegas ' and 'the venitian, the strip NV 89109 USA' is the same address but there is no common word between the two addresses
+
+Gisgraphy has its own importer and mix the bests open source gazeteers / databases : <a href="http://wiki.openstreetmap.org" target="gisgraphy">Openstreetmap</a> of course, but also <a href="http://www.geonames.org">Geonames</a> and <a href="http://quattroshapes.com/" target="gisgraphy">Quattroshapes</a>, and it transform them into an address and Poi databases. it links each house to their streets, each streets to their city / zipcodes, and each city to their administrative divisions. and all of them are associated to alternate their names.
+
+Gisgraphy has a different philosophy than the other geocoder. it use a fulltext engine but it use an <a href="/documentation/addressparser.htm">address parser</a> to separate the several parts of the address, then it is simpler to do geocoding and remove ambiguity : streets that have city names, unit informations that can disturb the fulltext search , house numbers that looks like zipcodes,... to have better relevance it use the shapes when possible, it avoid to put a street in a city that its center is closer than the center of the city it belongs. ...<a href="/documentation/relevance-and-performance.htm">Read more</a>
+</p>
+
+<p>
+You want to go a little bit further ? First if you haven't read it yet, please read a short webservices descriptions on the <a href="/">The home page</a> or consult the <a href="#functionalitiesmatrix">webservice functionalities matrix</a>. It will give you a good overview.
+Then you will find here several sections that will help you to start.
+ 
+<h2>Does Gisgraphy fit my needs ?</h2>
+It is the first question to answer :) you're 'lost ? you don't know what webservice to use ? Don't panic :) Here is some studycase that will help you !
+All those study cases are not for a specific language or framework, you can do them with you favorite framework or language, in Java, php, ruby, python, in a browser with json, or anything else, because XML is readable by almost any language.
+<br/><br/>
+<h3>Study cases : </h3>
+<ul>
+	<li>You have a list of hotels (or anything else,e.g shops,...) and you want to offer the possibility to get the nearest(s) hotel(s) from a given GPS position :
+		<ul><li>
+		Add your own hotels via the web admin interface (a list of hotels is already included in Geonames but you can add / edit yours), then simply call the find nearby service with the GPS position (and an optional radius) and specify the placetype to 'hotel'. Note that you can add your own placetype, but plactetypes already availables are, most often, enough. (see <a href="http://services.gisgraphy.com/ajaxgeolocsearch.html?advancedSearch=true" target="gisgraphy">example</a>)
+		</li></ul>
+	</li>
+	<li>
+	You still have a list of places and want to get the nearest(s) from a given address :
+		<ul><li>
+			Call the geocoder to get the GPS position of the address and then call the find nearby. (see <a href="http://services.gisgraphy.com/public/geocoding.html" target="gisgraphy">example</a>)
+		</ul></li>
+	</li>
+	<li>A user to enter a zipcode and you want to display a drop down menu if there is more than one city corresponding to that zip code :
+		<ul><li>
+		Use the full text engine and restrict the placetype to city and / or citySubdivision. (see <a href="http://services.gisgraphy.com/ajaxfulltextsearch.html?advancedSearch=true" target="gisgraphy">example</a>)
+		</li></ul>
+	</li>
+	<li>
+	You are a trip advisor and want to propose some travels for a given destination :
+		<ul><li>
+			Use the fulltext engine to search for city, state, country, lake, mountains, and so on. Many facilities are offered : spellchecker, all words required or not, pagination, place type, GPS position, spoken language, or country restriction. A lot of <a href="/documentation/user-guide.htm#fulltextserviceoutputfieldsdescription">informations availables</a>. (see <a href="http://services.gisgraphy.com/ajaxfulltextsearch.html?advancedSearch=true" target="gisgraphy">example</a>)
+		</ul></li>
+	</li>
+	<li>
+		You want to display in real time the name of the street where a given user is (and a list of streets around) :
+		<ul><li>
+			Use the street service to get the nearest streets for a given GPS position.(see <a href="http://services.gisgraphy.com/public/streetSearch.html" target="gisgraphy">example</a>)
+		</ul></li>
+	</li>
+	<li>
+		You got a real estate agency and want to offer a web form with streets auto-completion
+		<ul><li>
+				Use the street service to get a list of streets that contains the given sentence.(see <a href="http://services.gisgraphy.com/public/geocoding_worldwide.html" target="gisgraphy">example</a>)
+		</ul></li>
+	</li>
+	<li>
+		You want to parse an address (as string) to extract the useful informations and then use them in a specific way
+			<ul><li>
+				Use the address parser service to get individual component parts : house number, street type (bd, street, ..), street name, unit (apt, batiment, ...), zipcode, state, country, city.<(see <a href="http://services.gisgraphy.com/public/addressparser.html" target="gisgraphy">example</a>)
+			</ul></li>
+	</li>
+</ul>
+<a name="functionalitiesmatrix"></a>
+<h3>Webservice functionalities matrix</h3>
+You're lost between all the webservices ? they seem to all do the same things ? Not at all, they all have their own role. Choose the right web service for the right use, will give you the best performances and user experience. 
+Here is a matrix that will help you to choose the right webservice for the right needs.
+<br/><br/>
+<table>
+	<tr>
+		<th>Webservice</th>
+		<th>entry</th>
+		<th>What's for / What's not</th>
+	</tr>
+	<tr>
+		<td>Geocoding</td>
+		<td>An address, city or street</td>
+		<td><ul><li>Get GPS location, city and street for the given address</li>
+			<li>If you want to search for other place than city,
+			street or address, please use fulltext webservice </li></td>
+	</tr>
+	<tr>
+		<td>Reverse geocoding</td>
+		<td>GPS position<br />
+		</td>
+		<td><ul><li>Find an address and the distance from a GPS point</li>
+			<li>To the house level, if information available</li></ul>
+		</td>
+	</tr>
+	<tr>
+		<td>Street search</td>
+		<td>GPS position and Partial street name (optional)<br />
+		</td>
+		<td><ul><li>Find Streets and the distance around a given GPS , restrict
+			search to streets that <b>contains</b> the given partial name
+			(useful for auto-completion)</li>
+			<li>Equivalent to find nearby
+			webservice with placetype= street, but more specific (you can restrict search to oneway/two way, streettype,...)</li>
+			<li>If you want to search for streets in fulltext mode, please use
+			the fulltext webservice</li></ul>
+		</td>
+	</tr>
+	<tr>
+		<td>Address parser</td>
+		<td>A well formed address</td>
+		<td><ul><li>Divides a single address string into its individual component
+			parts : house number, street type (bd, street, ..), street name, unit
+			(apt, batiment, ...), zipcode, state, country, city, ...</li>
+			<li>If the address is not a normalized address, please use Geocoding service</li></ul>
+			</td>
+	</tr>
+	<tr>
+		<td>Find nearby</td>
+		<td>GPS, a placetype (optional) and a radius (optional)</td>
+		<td><ul><li>Find places of the given placetype and the distance to the given GPS point for the given radius</li></ul></td>
+	</tr>
+	<tr>
+		<td>Fulltext</td>
+		<td>A user given string, a GPS point (optional), one or more
+			placetypes (optional)</td>
+		<td><ul>
+		<li><b>important : </b>This webservice search for places (a street or a city or a state or a placetype) while geocoding service is specialized in address (a combination of house street city, state)</li>	
+		<li>Find <a href="/documentation/user-guide.htm#fulltextserviceoutputfieldsdescription">plenty of informations</a> for place of the given placetypes
+		<li>Autocompletion auto suggetions</li>
+			(optional), in several languages, in fulltext mode, restrict search
+			around the given point (optional)</li><li>You can set 'allwordsrequired' option to false
+			if you want a more permissive search, or find a place in a sentence</li>
+		</ul></td>
+	</tr>
+</table>
+
+<h2>Try</h2>
+Want to try it before install. find some examples of URL on the <a href="/free-access.htm">free access</a>.<br/>
+want to have some examples on how to use, go to the <a href="http://services.gisgraphy.com">Demo site</a>
+
+<h2>Premium</h2>
+<p>Don't want to install it by your self or want hosted web service? we got solutions !go to the <a href="/premium">premium page</a></p>
+
+<h2>Download</h2>
+<p>
+Download ? yes! but what ?
+
+If you want to download Gisgraphy, Go to the <a href="/download/index.htm">download page</a><br/>
+If you want to download Openstreetmap data in CSV, Go to the <a href="/download/download_data.htm">download data page</a>
+if you are intereted to download dumps (Solr/lucene dump for fulltext engine and postgres sql dump) go to the <a href="/dump.htm">dump page</a>
+if you want to download the sources, go to the <a href="/source-repository.html">source repository</a> page.
+</p>
+
+<h2>Install</h2>
+
+<p>Consult the installation guide. It can be found <a href="/documentation/index.htm">online</a> or in the 'doc' repository of the Gisgraphy distribution.</p>
+
+
+<h2>Learn</h2>
+<p>Go to the <a href="/documentation/index.htm">documentation page</a></p>
+
+
+<h2>Develop</h2>
+<p>All you need is in the developer zone. consult the <a href="/developer-guide.htm">developer guide</a></p>

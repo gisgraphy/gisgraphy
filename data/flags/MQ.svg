@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"
+[
+ <!ATTLIST svg
+  xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="333pt" id="svg734" sodipodi:docbase="/home/andrew/sodipodi-flags/work" sodipodi:docname="/home/andrew/sodipodi-flags/work/martinique.svg" sodipodi:version="0.32" width="500pt" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>France - Martinique</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>europe</rdf:li>
+            <rdf:li>caribbean</rdf:li>
+            <rdf:li>america</rdf:li>
+            <rdf:li>france</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Andrew Duhan</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Andrew Duhan</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Andrew Duhan</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs736"/>
+  <sodipodi:namedview id="base"/>
+  <rect height="416.249939" id="rect738" style="font-size:12;fill:#8dc4ef;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="625.000000" x="0.000000" y="0.000059"/>
+  <rect height="416.250000" id="rect739" style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="62.500011" x="281.250000" y="0.000007"/>
+  <rect height="62.499996" id="rect740" style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="625.000000" x="0.000000" y="176.874985"/>
+  <path d="M 90.9627 25.9907 C 83.2156 33.0954 80.1525 49.3088 96.4545 48.9922 C 104.497 48.8349 117.473 39.6495 118.838 32.7396 C 124.273 32.8717 130.831 33.6028 135.857 30.979 C 140.615 28.4378 148.234 28.0416 151.115 32.7396 C 154.33 38.0621 146.357 44.9803 140.994 48.1807 C 135.156 51.7301 131.706 56.6286 131.749 67.3641 C 131.849 74.3275 128.635 81.7239 125.881 88.4909 C 123.445 94.6387 121.697 97.7275 121.479 108.737 C 121.31 117.187 122.785 128.882 124.413 134.266 C 116.683 141.449 102.147 147.655 83.3952 147.763 C 73.4705 147.821 65.2233 141.828 56.6316 136.613 C 49.392 132.108 48.4506 138.761 51.9368 142.775 C 60.7315 152.589 78.0427 161.262 95.6575 160.968 C 115.858 160.52 127.509 154.515 136.444 149.23 C 149.716 157.12 176.838 159.067 195.313 159.058 C 209.675 158.94 230.235 154.388 230.231 135.074 C 230.227 120.339 219.361 108.728 193.956 108.737 C 177.747 108.742 152.6 114.162 142.534 123.005 C 141.195 119.708 141.493 114.772 141.066 110.791 C 140.629 104.661 146.204 99.3231 148.216 92.9684 C 149.921 87.5862 151.116 82.6268 151.665 77.0164 C 151.996 73.6283 150.445 66.3589 153.177 64.6472 C 158.496 61.2312 165.901 53.8801 167.105 46.3097 C 168.098 38.5671 167.958 30.7403 166.484 24.3822 C 165.371 17.6332 159.078 15.1995 153.463 14.547 C 146.745 13.911 144.103 17.7897 136.444 18.0682 C 133.35 17.7367 119.591 14.7615 113.332 14.8785 C 103.43 14.533 96.1424 21.4432 90.9627 25.9907 z " id="path741" sodipodi:nodetypes="cscsssssscsssscssscssssssssss" style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <path d="M 153.281 137.734 C 164.532 130.546 180.41 121.821 191.407 122.031 C 206.97 122.325 213.841 137.792 197.032 142.343 C 188.09 144.775 162.214 144.869 153.281 137.734 z " id="path742" sodipodi:nodetypes="cssc" style="fill:#8dc4ef;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <path d="M 92.8519 32.4989 C 94.4718 34.9034 102.866 31.1518 99.9612 27.1473 C 97.8674 24.2329 90.5517 29.1426 92.8519 32.4989 z " id="path743" sodipodi:nodetypes="css" style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <path d="M 90.9627 25.9907 C 83.2156 33.0954 80.1525 49.3088 96.4545 48.9922 C 104.497 48.8349 117.473 39.6495 118.838 32.7396 C 124.273 32.8717 130.831 33.6028 135.857 30.979 C 140.615 28.4378 148.234 28.0416 151.115 32.7396 C 154.33 38.0621 146.357 44.9803 140.994 48.1807 C 135.156 51.7301 131.706 56.6286 131.749 67.3641 C 131.849 74.3275 128.635 81.7239 125.881 88.4909 C 123.445 94.6387 121.697 97.7275 121.479 108.737 C 121.31 117.187 122.785 128.882 124.413 134.266 C 116.683 141.449 102.147 147.655 83.3952 147.763 C 73.4705 147.821 65.2233 141.828 56.6316 136.613 C 49.392 132.108 48.4506 138.761 51.9368 142.775 C 60.7315 152.589 78.0427 161.262 95.6575 160.968 C 115.858 160.52 127.509 154.515 136.444 149.23 C 149.716 157.12 176.838 159.067 195.313 159.058 C 209.675 158.94 230.235 154.388 230.231 135.074 C 230.227 120.339 219.361 108.728 193.956 108.737 C 177.747 108.742 152.6 114.162 142.534 123.005 C 141.195 119.708 141.493 114.772 141.066 110.791 C 140.629 104.661 146.204 99.3231 148.216 92.9684 C 149.921 87.5862 151.116 82.6268 151.665 77.0164 C 151.996 73.6283 150.445 66.3589 153.177 64.6472 C 158.496 61.2312 165.901 53.8801 167.105 46.3097 C 168.098 38.5671 167.958 30.7403 166.484 24.3822 C 165.371 17.6332 159.078 15.1995 153.463 14.547 C 146.745 13.911 144.103 17.7897 136.444 18.0682 C 133.35 17.7367 119.591 14.7615 113.332 14.8785 C 103.43 14.533 96.1424 21.4432 90.9627 25.9907 z " id="path744" sodipodi:nodetypes="cscsssssscsssscssscssssssssss" style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <path d="M 92.8519 32.4989 C 94.4718 34.9034 102.866 31.1518 99.9612 27.1473 C 97.8674 24.2329 90.5517 29.1426 92.8519 32.4989 z " id="path746" sodipodi:nodetypes="css" style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <g id="g749">
+    <path d="M 90.9627 25.9907 C 83.2156 33.0954 80.1525 49.3088 96.4545 48.9922 C 104.497 48.8349 117.473 39.6495 118.838 32.7396 C 124.273 32.8717 130.831 33.6028 135.857 30.979 C 140.615 28.4378 148.234 28.0416 151.115 32.7396 C 154.33 38.0621 146.357 44.9803 140.994 48.1807 C 135.156 51.7301 131.706 56.6286 131.749 67.3641 C 131.849 74.3275 128.635 81.7239 125.881 88.4909 C 123.445 94.6387 121.697 97.7275 121.479 108.737 C 121.31 117.187 122.785 128.882 124.413 134.266 C 116.683 141.449 102.147 147.655 83.3952 147.763 C 73.4705 147.821 65.2233 141.828 56.6316 136.613 C 49.392 132.108 48.4506 138.761 51.9368 142.775 C 60.7315 152.589 78.0427 161.262 95.6575 160.968 C 115.858 160.52 127.509 154.515 136.444 149.23 C 149.716 157.12 176.838 159.067 195.313 159.058 C 209.675 158.94 230.235 154.388 230.231 135.074 C 230.227 120.339 219.361 108.728 193.956 108.737 C 177.747 108.742 152.6 114.162 142.534 123.005 C 141.195 119.708 141.493 114.772 141.066 110.791 C 140.629 104.661 146.204 99.3231 148.216 92.9684 C 149.921 87.5862 151.116 82.6268 151.665 77.0164 C 151.996 73.6283 150.445 66.3589 153.177 64.6472 C 158.496 61.2312 165.901 53.8801 167.105 46.3097 C 168.098 38.5671 167.958 30.7403 166.484 24.3822 C 165.371 17.6332 159.078 15.1995 153.463 14.547 C 146.745 13.911 144.103 17.7897 136.444 18.0682 C 133.35 17.7367 119.591 14.7615 113.332 14.8785 C 103.43 14.533 96.1424 21.4432 90.9627 25.9907 z " id="path747" sodipodi:nodetypes="cscsssssscsssscssscssssssssss" style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 153.281 137.734 C 164.532 130.546 180.41 121.821 191.407 122.031 C 206.97 122.325 213.841 137.792 197.032 142.343 C 188.09 144.775 162.214 144.869 153.281 137.734 z " id="path745" sodipodi:nodetypes="cssc" style="fill:#8dc4ef;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 92.8519 32.4989 C 94.4718 34.9034 102.866 31.1518 99.9612 27.1473 C 97.8674 24.2329 90.5517 29.1426 92.8519 32.4989 z " id="path748" sodipodi:nodetypes="css" style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  </g>
+  <g id="g753" transform="translate(344.0251,-0.205307)">
+    <path d="M 90.9627 25.9907 C 83.2156 33.0954 80.1525 49.3088 96.4545 48.9922 C 104.497 48.8349 117.473 39.6495 118.838 32.7396 C 124.273 32.8717 130.831 33.6028 135.857 30.979 C 140.615 28.4378 148.234 28.0416 151.115 32.7396 C 154.33 38.0621 146.357 44.9803 140.994 48.1807 C 135.156 51.7301 131.706 56.6286 131.749 67.3641 C 131.849 74.3275 128.635 81.7239 125.881 88.4909 C 123.445 94.6387 121.697 97.7275 121.479 108.737 C 121.31 117.187 122.785 128.882 124.413 134.266 C 116.683 141.449 102.147 147.655 83.3952 147.763 C 73.4705 147.821 65.2233 141.828 56.6316 136.613 C 49.392 132.108 48.4506 138.761 51.9368 142.775 C 60.7315 152.589 78.0427 161.262 95.6575 160.968 C 115.858 160.52 127.509 154.515 136.444 149.23 C 149.716 157.12 176.838 159.067 195.313 159.058 C 209.675 158.94 230.235 154.388 230.231 135.074 C 230.227 120.339 219.361 108.728 193.956 108.737 C 177.747 108.742 152.6 114.162 142.534 123.005 C 141.195 119.708 141.493 114.772 141.066 110.791 C 140.629 104.661 146.204 99.3231 148.216 92.9684 C 149.921 87.5862 151.116 82.6268 151.665 77.0164 C 151.996 73.6283 150.445 66.3589 153.177 64.6472 C 158.496 61.2312 165.901 53.8801 167.105 46.3097 C 168.098 38.5671 167.958 30.7403 166.484 24.3822 C 165.371 17.6332 159.078 15.1995 153.463 14.547 C 146.745 13.911 144.103 17.7897 136.444 18.0682 C 133.35 17.7367 119.591 14.7615 113.332 14.8785 C 103.43 14.533 96.1424 21.4432 90.9627 25.9907 z " id="path754" sodipodi:nodetypes="cscsssssscsssscssscssssssssss" style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 153.281 137.734 C 164.532 130.546 180.41 121.821 191.407 122.031 C 206.97 122.325 213.841 137.792 197.032 142.343 C 188.09 144.775 162.214 144.869 153.281 137.734 z " id="path755" sodipodi:nodetypes="cssc" style="fill:#8dc4ef;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 92.8519 32.4989 C 94.4718 34.9034 102.866 31.1518 99.9612 27.1473 C 97.8674 24.2329 90.5517 29.1426 92.8519 32.4989 z " id="path756" sodipodi:nodetypes="css" style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  </g>
+  <g id="g757" transform="translate(344.0251,241.0959)">
+    <path d="M 90.9627 25.9907 C 83.2156 33.0954 80.1525 49.3088 96.4545 48.9922 C 104.497 48.8349 117.473 39.6495 118.838 32.7396 C 124.273 32.8717 130.831 33.6028 135.857 30.979 C 140.615 28.4378 148.234 28.0416 151.115 32.7396 C 154.33 38.0621 146.357 44.9803 140.994 48.1807 C 135.156 51.7301 131.706 56.6286 131.749 67.3641 C 131.849 74.3275 128.635 81.7239 125.881 88.4909 C 123.445 94.6387 121.697 97.7275 121.479 108.737 C 121.31 117.187 122.785 128.882 124.413 134.266 C 116.683 141.449 102.147 147.655 83.3952 147.763 C 73.4705 147.821 65.2233 141.828 56.6316 136.613 C 49.392 132.108 48.4506 138.761 51.9368 142.775 C 60.7315 152.589 78.0427 161.262 95.6575 160.968 C 115.858 160.52 127.509 154.515 136.444 149.23 C 149.716 157.12 176.838 159.067 195.313 159.058 C 209.675 158.94 230.235 154.388 230.231 135.074 C 230.227 120.339 219.361 108.728 193.956 108.737 C 177.747 108.742 152.6 114.162 142.534 123.005 C 141.195 119.708 141.493 114.772 141.066 110.791 C 140.629 104.661 146.204 99.3231 148.216 92.9684 C 149.921 87.5862 151.116 82.6268 151.665 77.0164 C 151.996 73.6283 150.445 66.3589 153.177 64.6472 C 158.496 61.2312 165.901 53.8801 167.105 46.3097 C 168.098 38.5671 167.958 30.7403 166.484 24.3822 C 165.371 17.6332 159.078 15.1995 153.463 14.547 C 146.745 13.911 144.103 17.7897 136.444 18.0682 C 133.35 17.7367 119.591 14.7615 113.332 14.8785 C 103.43 14.533 96.1424 21.4432 90.9627 25.9907 z " id="path758" sodipodi:nodetypes="cscsssssscsssscssscssssssssss" style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 153.281 137.734 C 164.532 130.546 180.41 121.821 191.407 122.031 C 206.97 122.325 213.841 137.792 197.032 142.343 C 188.09 144.775 162.214 144.869 153.281 137.734 z " id="path759" sodipodi:nodetypes="cssc" style="fill:#8dc4ef;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 92.8519 32.4989 C 94.4718 34.9034 102.866 31.1518 99.9612 27.1473 C 97.8674 24.2329 90.5517 29.1426 92.8519 32.4989 z " id="path760" sodipodi:nodetypes="css" style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  </g>
+  <g id="g761" transform="translate(0.193076,240.6539)">
+    <path d="M 90.9627 25.9907 C 83.2156 33.0954 80.1525 49.3088 96.4545 48.9922 C 104.497 48.8349 117.473 39.6495 118.838 32.7396 C 124.273 32.8717 130.831 33.6028 135.857 30.979 C 140.615 28.4378 148.234 28.0416 151.115 32.7396 C 154.33 38.0621 146.357 44.9803 140.994 48.1807 C 135.156 51.7301 131.706 56.6286 131.749 67.3641 C 131.849 74.3275 128.635 81.7239 125.881 88.4909 C 123.445 94.6387 121.697 97.7275 121.479 108.737 C 121.31 117.187 122.785 128.882 124.413 134.266 C 116.683 141.449 102.147 147.655 83.3952 147.763 C 73.4705 147.821 65.2233 141.828 56.6316 136.613 C 49.392 132.108 48.4506 138.761 51.9368 142.775 C 60.7315 152.589 78.0427 161.262 95.6575 160.968 C 115.858 160.52 127.509 154.515 136.444 149.23 C 149.716 157.12 176.838 159.067 195.313 159.058 C 209.675 158.94 230.235 154.388 230.231 135.074 C 230.227 120.339 219.361 108.728 193.956 108.737 C 177.747 108.742 152.6 114.162 142.534 123.005 C 141.195 119.708 141.493 114.772 141.066 110.791 C 140.629 104.661 146.204 99.3231 148.216 92.9684 C 149.921 87.5862 151.116 82.6268 151.665 77.0164 C 151.996 73.6283 150.445 66.3589 153.177 64.6472 C 158.496 61.2312 165.901 53.8801 167.105 46.3097 C 168.098 38.5671 167.958 30.7403 166.484 24.3822 C 165.371 17.6332 159.078 15.1995 153.463 14.547 C 146.745 13.911 144.103 17.7897 136.444 18.0682 C 133.35 17.7367 119.591 14.7615 113.332 14.8785 C 103.43 14.533 96.1424 21.4432 90.9627 25.9907 z " id="path762" sodipodi:nodetypes="cscsssssscsssscssscssssssssss" style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 153.281 137.734 C 164.532 130.546 180.41 121.821 191.407 122.031 C 206.97 122.325 213.841 137.792 197.032 142.343 C 188.09 144.775 162.214 144.869 153.281 137.734 z " id="path763" sodipodi:nodetypes="cssc" style="fill:#8dc4ef;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+    <path d="M 92.8519 32.4989 C 94.4718 34.9034 102.866 31.1518 99.9612 27.1473 C 97.8674 24.2329 90.5517 29.1426 92.8519 32.4989 z " id="path764" sodipodi:nodetypes="css" style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  </g>
+</svg>

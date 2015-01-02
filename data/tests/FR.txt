@@ -1,0 +1,64 @@
+0000001	Boulogne-Billancourt-crée-adm3	Boulogne-Billancourt-cree-adm3	Boulogne-sur-Seine-adm3	48.8333334	2.26	P	PPL	FR		A8	92	923		108783		30	Europe/Paris	2007-02-17
+2968555	 Villeneuve-la-Garenne  	 Villeneuve-la-Garenne 	92390,Villeneuve	48.9333333	2.3166667	P	PPL	FR		A8	92	922	92078	22036		29	Europe/Paris	2006-04-29
+2968819	Ville-d'Avray	Ville-d'Avray	92410	48.8166667	2.1833333	P	PPL	FR		A8	92	923	92077	0		125	Europe/Paris	2006-04-30
+2970540	Vaucresson	Vaucresson	92420	48.8333333	2.1666667	P	PPL	FR		A8	92	923	92076	8693		144	Europe/Paris	2006-04-30
+2973675	Suresnes	Suresnes	92150,Siren,Sjuren,Suresnes,?????,?????	48.8666667	2.2333333	P	PPL	FR		A8	92	922	92073	44697		30	Europe/Paris	2007-02-18
+2974678	Sèvres	Sevres	02310,Sevr,Sevres,Sèvres,????,????,???	48.8166667	2.2	P	PPL	FR		A8	92	923	92072	23724		95	Europe/Paris	2007-02-17
+2975469	Sceaux	Sceaux	92330,Sceaux-l'Unite,Sceaux-l'Unité	48.7833333	2.2833333	P	PPL	FR		A8	92			21511		90	Europe/Paris	2007-09-08
+2981041	Saint-Cloud	Saint-Cloud	92210,La Montagne-Cherie,La Montagne-Chérie,Pont-la-Montagne,Saint-Cloud	48.8333333	2.1833333	P	PPL	FR		A8	92	923	92064	28839		138	Europe/Paris	2007-09-08
+2982235	Rueil-Malmaison	Rueil-Malmaison	92500,Rueil,Rueil-Malmaison	48.8833333	2.2	P	PPL	FR		A8	92	922	92063	76616		90	Europe/Paris	2006-11-05
+2985034	Puteaux	Puteaux	92800,Puteaux,Puteux	48.8834145664968	2.23893642425537	P	PPL	FR		A8	92	922	92062	40646		32	Europe/Paris	2006-11-19
+2990611	Neuilly-sur-Seine	Neuilly-sur-Seine	92200,N'oj sjur Sen,Neuilly,Neuilly-sur-Seine,???? ??? ???,???????????,??????	48.8833333	2.2666667	P	PPL	FR		A8	92	922	92051	61300		38	Europe/Paris	2006-11-05
+2990970	Nanterre	Nanterre	92000,Nanter,Nanterre,??????,?????	48.9	2.2	P	PPL	FR		A8	92	922	92050	86719		40	Europe/Paris	2007-02-17
+2994144	Meudon	Meudon	92190,92360,Meudon,Rabelais	48.8166667	2.2333333	P	PPL	FR		A8	92	923	92048	44652		30	Europe/Paris	2007-09-08
+2995597	Marnes-la-Coquette	Marnes-la-Coquette	92430,Marnes	48.8333333	2.1666667	P	PPL	FR		A8	92	923	92047	1595		144	Europe/Paris	2006-04-30
+2998975	Levallois-Perret	Levallois-Perret	92300,Levallois,Levallois-Perret	48.9	2.2833333	P	PPL	FR		A8	92	922	92044	62178		30	Europe/Paris	2007-02-18
+3000751	Les Grésillons	Les Gresillons	78955	48.9166667	2.3	P	PPL	FR		A8				0		30	Europe/Paris	2006-04-30
+3009169	La Garenne-Colombes	La Garenne-Colombes	92250,La Garenne	48.9	2.25	P	PPL	FR		A8	92	922	92035	26385		30	Europe/Paris	2006-04-29
+3012649	Issy-les-Moulineaux	Issy-les-Moulineaux	92130,Issy,Issy-les-Moulineau,Issy-les-Moulineaux,L'Union	48.8166667	2.2666667	P	PPL	FR		A8	92	923	92040	61447		60	Europe/Paris	2007-09-08
+3012874	 Région Île-de-France 	 Region Ile-de-France 	Ile-de-France,Region parisienne,Région parisienne,Île-de-France	48.5	2.5	A	ADM1	FR		A8				11341257		75	Europe/Paris	2007-08-03
+3672874	 Duplicate adm1 	 Region Ile-de-France 	Ile-de-France,Region parisienne,Région parisienne,Île-de-France	48.5	2.5	A	ADM1	FR		A8				11341257		75	Europe/Paris	2007-08-03
+3013657	 Département des Hauts-de-Seine 	 Departement des Hauts-de-Seine 	Altos de Sena,Departement des Hauts-de-Seine,Département des Hauts-de-Seine,Hauts-de-Seine	48.85	2.2	A	ADM2	FR		A8	92			1475221		110	Europe/Paris	2007-05-16
+3673657	 Duplicate adm2 	 Departement des Hauts-de-Seine 	Altos de Sena,Departement des Hauts-de-Seine,Département des Hauts-de-Seine,Hauts-de-Seine	48.85	2.2	A	ADM2	FR		A8	92			1475221		110	Europe/Paris	2007-05-16
+3016321	Gennevilliers	Gennevilliers	92230,Genneville,Gennevillers,Gennevilliers	48.9333333	2.3	P	PPL	FR		A8	92	922	92036	42294		30	Europe/Paris	2007-02-18
+3025715	Chaville	Chaville	92370,Chaville	48.8	2.2	P	PPL	FR		A8	92	923	92022	18735		170	Europe/Paris	2007-08-02
+3031137	Boulogne-Billancourt	Boulogne-Billancourt	92100,Billancourt,Boulogne,Boulogne-Billancourt,Boulogne-sur-Seine,????? ????????,?????=??????	48.8333333	2.25	P	PPL	FR		A8	92	923	92012	108782		30	Europe/Paris	2007-02-17
+3032070	Bois-Colombes	Bois-Colombes	92270,Boa Kolomb,Boa Kolon,Bois-Colombes,??? ??????,??? ?????	48.9166667	2.2666667	P	PPL	FR		A8	92	922	92009	24300		30	Europe/Paris	2007-02-17
+3037423	Antony	Antony	92160,Antony,Ontoni,??????	48.75	2.3	P	PPL	FR		A8	92	921		59845		59	Europe/Paris	2007-02-17
+6451962	Boulogne-Billancourt	Boulogne-Billancourt		48.8333333	2.25	A	ADM4	FR		A8	92	923	92012	0		30	Europe/Paris	2007-03-22
+6451963	Bourg-la-Reine	Bourg-la-Reine		48.7833333	2.3166667	A	ADM4	FR		A8	92	921	92014	0		49	Europe/Paris	2007-03-22
+6451966	Clamart	Clamart		48.8	2.2666667	A	ADM4	FR		A8	92	921	92023	0		149	Europe/Paris	2007-03-22
+6451967	Fontenay-aux-Roses	Fontenay-aux-Roses		48.7833333	2.2833333	A	ADM4	FR		A8	92	921	92032	0		90	Europe/Paris	2007-03-22
+6451968	Garches	Garches		48.85	2.1833333	A	ADM4	FR		A8	92	922	92033	0		129	Europe/Paris	2007-03-22
+6451969	Gennevilliers	Gennevilliers		48.9333333	2.3	A	ADM4	FR		A8	92	922	92036	0		30	Europe/Paris	2007-03-22
+6451970	Issy-les-Moulineaux	Issy-les-Moulineaux		48.8166667	2.2666667	A	ADM4	FR		A8	92	923	92040	0		60	Europe/Paris	2007-03-22
+6451971	Levallois-Perret	Levallois-Perret		48.9	2.2833333	A	ADM4	FR		A8	92	922	92044	0		30	Europe/Paris	2007-03-22
+6451972	Malakoff	Malakoff		48.8166667	2.3	A	ADM4	FR		A8	92	921	92046	0		68	Europe/Paris	2007-03-22
+6451974	Meudon	Meudon		48.8166667	2.2333333	A	ADM4	FR		A8	92	923	92048	0		30	Europe/Paris	2007-03-22
+6451975	Montrouge	Montrouge		48.8166667	2.3166667	A	ADM4	FR		A8	92	921	92049	0		75	Europe/Paris	2007-03-22
+6451976	Nanterre	Nanterre		48.9	2.2	A	ADM4	FR		A8	92	922	92050	0		40	Europe/Paris	2007-03-22
+6451977	Neuilly-sur-Seine	Neuilly-sur-Seine		48.8833333	2.2666667	A	ADM4	FR		A8	92	922	92051	0		38	Europe/Paris	2007-03-22
+6451978	Puteaux	Puteaux		48.8834145664968	2.23893642425537	A	ADM4	FR		A8	92	922	92062	0		32	Europe/Paris	2007-03-22
+6451979	Rueil-Malmaison	Rueil-Malmaison		48.8833333	2.2	A	ADM4	FR		A8	92	922	92063	0		90	Europe/Paris	2007-03-22
+6451980	Sceaux	Sceaux		48.7833333	2.2833333	A	ADM4	FR		A8	92	921	92071	0		90	Europe/Paris	2007-03-22
+6451981	Sèvres	Sevres		48.8166667	2.2	A	ADM4	FR		A8	92	923	92072	0		95	Europe/Paris	2007-03-22
+6451982	Suresnes	Suresnes		48.8666667	2.2333333	A	ADM4	FR		A8	92	922	92073	0		30	Europe/Paris	2007-03-22
+6451985	Ville-d'Avray	Ville-d'Avray		48.8166667	2.1833333	A	ADM4	FR		A8	92	923	92077	0		125	Europe/Paris	2007-03-22
+6451986	Villeneuve-la-Garenne	Villeneuve-la-Garenne		48.9333333	2.3166667	A	ADM4	FR		A8	92	922	92078	0		29	Europe/Paris	2007-03-22
+6452604	Antony	Antony		48.75	2.3	A	ADM4	FR		A8	92	921	92002	0		59	Europe/Paris	2007-03-22
+6455338	Châtillon	Chatillon		48.8	2.2833333	A	ADM4	FR		A8	92	921	92020	0		117	Europe/Paris	2007-04-01
+6455339	Colombes	Colombes		48.9166667	2.25	A	ADM4	FR		A8	92	922	92025	0		35	Europe/Paris	2007-04-01
+6455340	Saint-Cloud	Saint-Cloud		48.8466	2.2157	A	ADM4	FR		A8	92	923	92064	0		138	Europe/Paris	2007-09-21
+6455381	 Bagneux 	 Bagneux 		48.8	2.3	A	ADM4	FR		A8	92	921	92007	0		90	Europe/Paris	2007-04-01
+6455391	Chaville	Chaville		48.8	2.2	A	ADM4	FR		A8	92	923	92022	0		170	Europe/Paris	2007-04-01
+6455396	Clichy	Clichy		48.9	2.3	A	ADM4	FR		A8	92	922	92024	0		33	Europe/Paris	2007-04-01
+6455398	Asnières-sur-Seine	Asnieres-sur-Seine		48.9166667	2.2833333	A	ADM4	FR		A8	92	922	92004	0		30	Europe/Paris	2007-04-01
+6455399	Courbevoie	Courbevoie		48.8967189248729	2.25666046142578	A	ADM4	FR		A8	92	922	92026	0		30	Europe/Paris	2007-04-01
+6457181	La Garenne-Colombes	La Garenne-Colombes		48.9	2.25	A	ADM4	FR		A8	92	922	92035	0		30	Europe/Paris	2007-04-02
+6457182	Le Plessis-Robinson	Le Plessis-Robinson		48.7833333	2.2666667	A	ADM4	FR		A8	92	921	92060	0		97	Europe/Paris	2007-04-01
+6457368	 Arrondissement d'Antony 	 Arrondissement d'Antony 		48.7617	2.3006	A	ADM3	FR		A8	92	921		0		50	Europe/Paris	2007-04-07
+6677368	 Duplicate Adm3 	 Arrondissement d'Antony 		48.7617	2.3006	A	ADM3	FR		A8	92	921		0		50	Europe/Paris	2007-04-07
+6457369	Arrondissement de Nanterre	Arrondissement de Nanterre		48.896	2.2159	A	ADM3	FR		A8	92	922		0		51	Europe/Paris	2007-04-07
+6457370	Arrondissement de Boulogne-Billancourt	Arrondissement de Boulogne-Billancourt		48.8304	2.231	A	ADM3	FR		A8	92	923		0		33	Europe/Paris	2007-04-07
+6613133	 Châtenay-Malabry 	 Chatenay-Malabry 		48.7666667	2.2666667	A	ADM4	FR		A8	92	921	92019	0		92	Europe/Paris	2007-08-02
+6613134	Marnes-la-Coquette	Marnes-la-Coquette		48.8333333	2.1666667	A	ADM4	FR		A8	92	923	92047	0		144	Europe/Paris	2007-08-02

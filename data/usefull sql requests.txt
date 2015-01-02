@@ -1,0 +1,148 @@
+//adm1
+select a.code, g.* from gisfeature g,adm1 a where a.id=g.id and g.country='FR';
+
+//adm2
+select a.code, g.*,b.code as adm1code from gisfeature g,adm2 a,adm1 b where a.id=g.id and a.adm1=b.id and g.country='FR';
+
+
+//duplicate line
+SELECT featureid, count(*) FROM gisfeature g GROUP BY featureid HAVING count(*) > 1;
+
+//gis feature
+select count(*) from gisfeature ;
+
+//city
+select g.* from gisfeature g where g.featurecode='PPL' limit 100
+
+//neighbours
+
+select level_4_na from counties where iso_code='FR';
+
+select c.level_4_na from counties c, counties d where touches (c.the_geom,d.the_geom)
+and d.the_geom && c.the_geom and d.level_4_na='France';
+
+select c.name from countiesworld c, countiesworld d where touches (c.the_geom,d.the_geom)
+and d.the_geom && c.the_geom and d.gmi_cntry='USA';
+
+select c.level_4_na from counties c, counties d where touches (c.the_geom,d.the_geom)
+and d.the_geom && c.the_geom and d.iso_code='US';
+
+//missing polygon in countryworld
+select c1.iso3166alpha3code from  country c1 where c1.iso3166alpha3code not  in (select c.iso3166alpha3code from  country c where iso3166alpha3code   in (select distinct(co.gmi_cntry) from countiesworld co))
+
+//comparer le nombre de adm1 par pays pour adm1 et countiesl4
+select g.countrycode, count(a), count(c),c.iso_code from gisfeature g,adm1 a,countiesl4 c where g.id=a.id and c.iso_code=g.countrycode group by g.countrycode,c.iso_code , c.count order by g.countrycode
+
+
+//counties world with wrong code
+select c.name,c.gmi_cntry from countiesworld c where c.gmi_cntry not in (select iso3166alpha3code from country )
+
+//adm1 with polygon (263)
+select l4.level_4_na,g.countrycode from adm1 a, countiesl4 l4 ,gisfeature g where a.id=g.id and g.name=l4.level_4_na
+
+//adm2 with polygon (32 BR)
+select l4.level_4_na,g.countrycode from adm2 a, countiesl4 l4 ,gisfeature g where a.id=g.id and g.name=l4.level_4_na
+
+//country with polygon(170)
+select l4.level_4_na from country a, countiesl4 l4 ,gisfeature g where a.id=g.id and g.name=l4.level_4_na
+
+gis with polygon
+select l4.level_4_na,g.countrycode from  countiesl4 l4 ,gisfeature g where  g.name=l4.level_4_na
+
+export csv (test with view)
+COPY gisfeature  TO 'C:\\Documents and Settings\\postgres\\extraction.csv' WITH delimiter as '\t' NULL as '';
+
+bounding box for la france
+select extent(geomunion.the_geom) from (
+select geomunion(location) as the_geom from gisfeature where countrycode='FR' 
+)as geomunion
+
+select distance((select l.location from gisFeature l where L.featureid = 1),(select l.location from gisFeature l where L.featureid = 2)) 
+
+duplicate adm2code 
+select a1.level,a1.featureid,a1.name,a1.countrycode,a1.adm1code,a1.adm2code,a2.level,a2.featureid,a2.name,a2.countrycode,a2.adm1code,a2.adm2code from adm a1, adm a2 where a1.adm2code=a2.adm2code and a1.countrycode=a2.countrycode and a1.level=a2.level and a1.level=2 and a1.featureid<>a2.featureid;
+
+/usr/bin/pg_dump -i -h 127.0.0.1 -p 5432 -U postgres -F p -O -v -f "/home/gisgraphy/bkup/dump_localhost.sql" gisgraphy
+#only data add -a
+/usr/bin/pg_dump -i -h 127.0.0.1 -p 5432 -U postgres -F p -O -a -v -f "/media/lacie/dump/v2/dump_localhost.sql" gisgraphy
+
+ psql -U postgres -h 127.0.0.1 -d gisgraphy -f ./bkup/dump.backup 
+
+
+\f ','
+\a
+\t
+\o url.csv
+select 'downloads.cloudmade.com/'||continent ||'/'||lower(replace(name,' ', '_'))||'/'||lower(replace(name,' ', '_'))||'.shapefiles.zip' from country_work order by id ;
+\q 
+
+\f ','
+\a
+\t
+\o countrycode.csv
+select countrycode||'.zip' from country_work order by id ;
+\q 
+
+  =======================================================================================
+	test index fro openstreetmap
+  =======================================================================================
+  select this_.gid as y0_, this_.name as y1_, this_.streetType as y2_, this_.oneWay as y3_, this_.location as y4_, this_.countryCode as y5_, this_.length as y6_, distance_sphere(this_.location, GeometryFromText( 'POINT(2.34879994392395 48.85340881347656)', 4326)) as y7_ from  OpenStreetMap this_ where (this_.shape && GeometryFromText( 'POLYGON((2.226746577914182 48.763576763942865,2.470853309933718 48.763576763942865,2.470853309933718 48.94324086301026,2.226746577914182 48.94324086301026,2.226746577914182 48.763576763942865))',4326) AND intersects(this_.shape, GeometryFromText( 'POLYGON((2.226746577914182 48.763576763942865,2.470853309933718 48.763576763942865,2.470853309933718 48.94324086301026,2.226746577914182 48.94324086301026,2.226746577914182 48.763576763942865))',4326)))  and this_.name ilike '%gob%' order by (y7_) asc limit 10
+  
+  fulltext :	
+ select this_.gid as y0_, this_.name as y1_, this_.streetType as y2_, this_.oneWay as y3_, this_.location as y4_, this_.countryCode as y5_, this_.length as y6_, distance_sphere(this_.location, GeometryFromText( 'POINT(2.34879994392395 48.85340881347656)', 4326)) as y7_ from  OpenStreetMap this_ where (this_.shape && GeometryFromText( 'POLYGON((2.226746577914182 48.763576763942865,2.470853309933718 48.763576763942865,2.470853309933718 48.94324086301026,2.226746577914182 48.94324086301026,2.226746577914182 48.763576763942865))',4326) AND intersects(this_.shape, GeometryFromText( 'POLYGON((2.226746577914182 48.763576763942865,2.470853309933718 48.763576763942865,2.470853309933718 48.94324086301026,2.226746577914182 48.94324086301026,2.226746577914182 48.763576763942865))',4326)))  and this_.textsearchvector @@ to_tsquery('simple','champs & elysees') order by (y7_) asc limit 10
+ fulltext wo point :
+  select this_.gid as y0_, this_.name as y1_, this_.streetType as y2_, this_.oneWay as y3_, this_.location as y4_, this_.countryCode as y5_, this_.length as y6_, distance_sphere(this_.location, GeometryFromText( 'POINT(2.34879994392395 48.85340881347656)', 4326)) as y7_ from  OpenStreetMap this_ where this_.textsearchvector @@ to_tsquery('simple','paul & vaillant & couturier') order by (y7_) asc limit 10
+        =======================================================================================
+        example of street request with line merge and distance sphere
+        =======================================================================================
+ 
+    select
+        this_.gid as y0_,
+        this_.name as y1_,
+        this_.streetType as y2_,
+        this_.oneWay as y3_,
+        this_.location as y4_,
+        this_.countryCode as y5_,
+        this_.length as y6_,
+        distance_sphere(GeometryFromText( 'POINT(  6.941274642944336 50.915584564208984)',4326),line_interpolate_point(this_.shape,
+        st_line_locate_point((this_.shape),GeometryFromText( 'POINT(  6.941274642944336 50.915584564208984)',4326)
+        )))as y7_
+    from
+        OpenStreetMap this_ 
+    where
+        (
+            this_.shape && GeometryFromText(
+            'POLYGON ((6.813893151085821 50.82575085046631, 7.068656448914179 50.82575085046631, 7.068656448914179 51.00541494953369, 6.813893151085821 51.00541494953369, 6.813893151085821 50.82575085046631))',4326) AND
+             intersects(this_.shape,  GeometryFromText( 'POLYGON ((6.813893151085821 50.82575085046631, 7.068656448914179 50.82575085046631, 7.068656448914179 51.00541494953369, 6.813893151085821 51.00541494953369, 6.813893151085821 50.82575085046631))',4326)            )
+
+        ) 
+    order by
+        (y7_) asc limit 10
+        =======================================================================================
+        osmosis
+        =======================================================================================
+        --get all node that have key=name and key = boundary
+        --bad request
+        --select id from nodes n, node_tags nt where n.id=nt.node_id and (nt.k='boundary' and nt.k='name')
+        --good request
+		select * from (select n.id from nodes n, node_tags nt where n.id=nt.node_id and nt.k='boundary') as idwithKeqname , node_tags nt2 where nt2.node_id=idwithKeqname.id and nt2.k='boundary'
+		an other beter way
+		--select n.*,nt2.v as name,nt.v as boundary from nodes n, node_tags nt, node_tags nt2 where n.id=nt.node_id and (nt.k='boundary' and nt2.k='name') and nt2.node_id=nt.node_id
+ =================================================================
+ city
+ =================================================================
+  select
+       
+        this_.name as y1_,
+        distance_sphere(GeometryFromText( 'POINT(  6.941274642944336 50.915584564208984)',4326),this_.location)
+        as y7_
+    from
+        city this_ 
+    where
+        (
+            this_.location && GeometryFromText(
+            'POLYGON ((6.813893151085821 50.82575085046631, 7.068656448914179 50.82575085046631, 7.068656448914179 51.00541494953369, 6.813893151085821 51.00541494953369, 6.813893151085821 50.82575085046631))',4326))
+
+         
+    order by
+        (y7_) asc limit 1

@@ -1,0 +1,131 @@
+<faqs title="Frequently Asked Questions on Premium Services">
+  <part id="General">
+    <faq id="free">
+      <question> If gisgraphy is free, why is there premium services ?</question>
+      <answer>
+        <p>
+           Gisgraphy is free, and so does the services hosted on <a href="http://services.gisgraphy.com" target="gisgraphy">services.gisgraphy.com</a> (see <a href="http://www.gisgraphy.com/free-access.htm">Terms And Conditions</a>). Only premium services are not. It is normal that hosting services and custom installation are not free.
+        </p>
+      </answer>
+    </faq>
+     <faq id="beta">
+      <question>I see that Gisgraphy premium services are in 'beta', what does it means ?</question>
+      <answer>
+        <p>
+           Premium services are currently in beta state, that just mean that we want to polish things before production but the services are <b><u>fully operational</u></b>.  During beta state you got 20% off on <b>ALL</b> premium services
+        </p>
+      </answer>
+    </faq>
+     <faq id="buy">
+      <question> I am interested to subscribe, what the next step ?</question>
+      <answer>
+        <p>
+           Simply click on the order button on the <a href="http://www.gisgraphy.com/premium/index.htm">premium page</a>. After you have register, we will discuss of your needs.
+           then you will get a host and an API key to use.
+        </p>
+      </answer>
+    </faq>
+    <faq id="delay">
+      <question> When will i be able to use services after i have paid ?</question>
+      <answer>
+        <p>
+        <ul><li>For installation : I give you details on when i can do the job.</li>
+        <li> For premium webservices : it depends on your needs. If you need a big number of requests/minute, i often install a new server (so it depends on the delay of my hosting provider).
+            If it can be hosted on an already installed server, the delay will be shorter. In all case i let you know.
+            </li>
+            <li>For dump : it depends on the availability of the importer server, I run dump one after the other.</li>
+       </ul>
+        </p>
+      </answer>
+    </faq>
+     <faq id="paybefore">
+      <question> Can i pay after the service is ready ?</question>
+      <answer>
+        <p>
+           No. I always ask money first. I have always do this way. I am professional and conscientious, and anybody have asked its money back :)
+        </p>
+      </answer>
+    </faq>
+    <faq id="moneyback">
+      <question> What happen if you got problems during installation and doesn't succeed ?</question>
+      <answer>
+        <p>
+           It has never happened. but i will give your money back. That's normal.
+        </p>
+      </answer>
+    </faq>
+     <faq id="receipt">
+      <question> Is it possible to have an invoice and a receipt ?</question>
+      <answer>
+        <p>
+           Of course. Simply ask it.
+        </p>
+      </answer>
+    </faq>
+     <faq id="pay">
+      <question> How can i pay?</question>
+      <answer>
+        <p>
+           We accept Paypal or bank transfer with IBAN/BIC. 
+        </p>
+      </answer>
+    </faq>
+     <faq id="installcrash">
+      <question> The server you have install Gisgraphy has crashed, what can i do ?</question>
+      <answer>
+        <p>
+           Unfortunately, you have to pay for a new installation. 
+        </p>
+      </answer>
+    </faq>
+    <faq id="rateexceeded">
+      <question> I have bought a number of requests on a specific rate, what happened if I exceed this rate or the number of requests is over ?</question>
+      <answer>
+        <p>
+            If the rate is exceeded or your counter is over, you will get an 500 HTTP error. We don't bill more than what you have bought. Note that the requests rejected because of rate exceeding doesn't increase your current rate.
+        </p>
+      </answer>
+    </faq>
+     <faq id="requestlefts">
+      <question> How can i check the number of requests left ?</question>
+      <answer>
+        <p>
+            You have an access to a supervision interface which is updated in real time. 
+        </p>
+      </answer>
+    </faq>
+     <faq id="auth">
+      <question>If i got an error during the request, is the counter incremented  ?</question>
+      <answer>
+        <p>
+            Before processing the request, we check the required parameters. Then we process the request. If there is no results or the process fails, the counter in incremented. 
+        </p>
+      </answer>
+    </faq>
+    <faq id="apikeybaduse">
+      <question> Someone else use my API key, what can i do?</question>
+      <answer>
+        <p>
+            The API key should be keep secret. if there is problems, We can restrict the access to one or more IP range. Just <a href="mailto:davidmasclet@gisgraphy.com">contact us</a>.
+        </p>
+      </answer>
+    </faq>
+     <faq id="illimited">
+      <question>I need unlimited access, is there solutions ?</question>
+      <answer>
+        <p>
+            We can give you unlimited access. Just <a href="mailto:davidmasclet@gisgraphy.com">contact us</a>, we will estimate a price according your needs. 
+        </p>
+      </answer>
+    </faq>
+     <faq id="senddump">
+      <question>How do you send me the dump ?</question>
+      <answer>
+        <p>
+            we send you to the server of your choice. SCP or FTP is privileged.... but not mail :) 
+        </p>
+      </answer>
+    </faq>
+  </part>
+</faqs>
+

@@ -1,0 +1,7 @@
+Using google's map api is not an option since it requires to include a map displaying the reverse geocoding result, and all we need is the street name.
+you can add your own places (e.g : you're CEO of burger co and you want to give the ability to find the nearest restaurant given a lat/long or street name or city, or hotel or)
+there is some information that google have not : max speed,opening hour of restaurant,
+there is some meta information elevation, population, etc, timezone
+more languages supported python, ruby,atom,georss,php : directly usable
+open source
+   

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"
+[
+ <!ATTLIST svg
+  xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><!--
+
+
+
+--><svg height="250pt" id="svg607" sodipodi:docbase="/home/andrew/sodipodi-flags/work" sodipodi:docname="/home/andrew/sodipodi-flags/work/western_sahara.svg" sodipodi:version="0.32" width="500pt" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title> western_sahara</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>africa</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title> Andrew Duhan</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Andrew Duhan</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title> Andrew Duhan</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs609"/>
+  <sodipodi:namedview id="base"/>
+  <rect height="156.250006" id="rect611" style="font-size:12;fill:#000000;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="625.000000" x="0.000000" y="1.128056"/>
+  <rect height="156.250011" id="rect612" style="font-size:12;fill:#107b00;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="625.000000" x="0.000000" y="156.250026"/>
+  <rect height="107.499994" id="rect643" style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="625.000000" x="0.000000" y="103.337649"/>
+  <path d="M 299.058 119.352 C 271.469 107.497 247.723 131.952 247.75 154.804 C 247.778 178.704 270.956 204.193 300.343 192.909 C 279.538 186.782 270.951 171.415 270.955 155.873 C 270.805 140.482 280.651 122.584 299.058 119.352 z " id="path645" sodipodi:nodetypes="cscsc" style="fill:#ff00ff;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <polygon id="polygon644" points="331.876,176.562 315.967,165.245 300.248,176.969 306.095,158.341 290.088,147.015 309.611,146.819 315.436,128.095 321.655,146.602 341.263,146.357 325.583,157.99 331.876,176.562 " sodipodi:arg1="0.92961890" sodipodi:arg2="1.55277145" sodipodi:cx="315.782318" sodipodi:cy="154.999466" sodipodi:r1="26.9064026" sodipodi:r2="10.2470560" sodipodi:sides="5" sodipodi:type="star" style="font-size:12;fill:#ff1800;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="matrix(0.999923,1.238870e-2,-1.238870e-2,0.999923,1.835551,-1.086750)"/>
+  <path d="M 301.719 192.656 C 270.886 203.359 247.67 180.156 247.266 156.367 C 246.863 132.578 270.209 108.047 301.876 119.218 C 283.959 121.875 270.802 137.578 270.645 155.332 C 270.525 168.756 278.464 187.891 301.719 192.656 z " id="path648" sodipodi:nodetypes="cscsc" style="fill:#ff0000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;"/>
+  <path d="M 73.3569 772.432 L 160.343 971.46 L -55.2426 994.811 L 72.692 773.567 L 73.3569 772.432 z " id="path615" sodipodi:nodetypes="ccccc" style="fill:#ff0000;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;" transform="matrix(1.052981,-0.608955,0.608883,1.053106,-547.5541,-768.7816)"/>
+</svg>

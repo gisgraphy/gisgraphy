@@ -1,0 +1,235 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="all" href="../css/maven-base.css" />
+<link rel="stylesheet" type="text/css" media="all" href="../css/maven-theme.css" />
+<link rel="stylesheet" type="text/css" media="all" href="../css/site.css" />
+<style type="text/css" media="all">
+h1 {
+	counter-reset: section;
+	counter-reset: subsection;
+	counter-reset: indexsection;
+	counter-reset: indexsubsection;
+	counter-reset: subsubsection;
+}
+
+h2 {
+	counter-increment: section;
+	counter-reset: subsection;
+}
+
+h2:before {
+	content: counter(section) " ";
+}
+
+h3 {
+	counter-increment: subsection;
+	counter-reset: subsubsection;
+}
+
+h3:before {
+	content: counter(section) "." counter(subsection) " ";
+}
+
+h4 {
+	counter-increment: subsubsection;
+}
+
+h4:before {
+	content: counter(section) "." counter(subsection) "."
+		counter(subsubsection) " ";
+}
+</style>
+</head>
+<body>
+
+<div><h1>Environement setup for Macintosh</h1>
+Before install and launch Gisgraphy, you must setup java, postgres, and  postgis. it is not, properly speaking, the installation of Gisgraphy, and if you already have postgres, postgis and java installed (you needs JVM &gt;= 1.5) , you can go directly to the gisgraphy <a href="installgisgraphy.htm">installation guide</a> 
+
+<h2>Install and configure java / JVM</h2>
+<div>
+Since Mac OS 8, Java is installed. You just have to check that you have, at least, java 5.0. if it is note the case, update your Mac OS.
+</div>
+<div class="tip greentip">
+To see if Java is correctly installed, open a shell and type :
+<div class="code">
+java -version
+</div>
+</div>
+<br/><br/>
+<h2>Install postgresql and postgis</h2>
+<div class="tip greentip">
+If you already have Postgresql AND Postgis installed, you can skip this section
+</div>
+<h3>Install the package</h3>
+To install Postgres and postgis, you need to download some package backport from Unix. Note that you need to download and install the package in the order bellow:
+<ul>
+<li><a href="http://www.kyngchaos.com/files/software/unixport/PROJ_Framework-4.7.0-2.dmg">PROJ_Framework 4.7.0-2</a></li>
+<li><a href="http://www.kyngchaos.com/files/software/unixport/GEOS_Framework-3.2.0-1.dmg">GEOS_Framework 3.2.0-1</a></li>
+<li><a href="http://www.kyngchaos.com/files/software/unixport/PostgreSQL-8.4.3-1.dmg">PostgreSQL 8.4.3-1</a></li>
+<li><a href="http://www.kyngchaos.com/files/software/unixport/PostGIS-1.5.1-1.dmg">PostGIS 1.5.1-1</a></li>
+</ul>
+<br/><br/>
+To make the installation easier, you can run the following lines in a terminal (it is in the Applications -> Utilities folder), it will download and install Postgres and Postgis automatically :
+<div class=code>
+<pre>
+    mkdir tempinstall
+    cd tempinstall
+    curl -O http://www.kyngchaos.com/files/software/unixport/PROJ_Framework-4.7.0-2.dmg
+    hdiutil attach PROJ_Framework-4.7.0-2.dmg
+    sudo installer -pkg /Volumes/*/*.pkg -target "/"
+    hdiutil detach /Volumes/PROJ*
+    
+    curl -O http://www.kyngchaos.com/files/software/unixport/GEOS_Framework-3.2.0-1.dmg
+    hdiutil attach GEOS_Framework-3.2.0-1.dmg
+    sudo installer -pkg /Volumes/*/*.pkg -target "/"
+    hdiutil detach /Volumes/GEOS*
+       
+      
+    curl -O http://www.kyngchaos.com/files/software/unixport/PostgreSQL-8.4.3-1.dmg
+    hdiutil attach PostgreSQL-8.4.3-1.dmg
+    sudo installer -pkg /Volumes/*/*.pkg -target "/"
+    hdiutil detach /Volumes/Postgr*
+    
+    curl -O http://www.kyngchaos.com/files/software/unixport/PostGIS-1.5.1-1.dmg
+    hdiutil attach PostGIS-1.5.1-1.dmg
+    sudo installer -pkg /Volumes/*/*.pkg -target "/"
+    hdiutil detach /Volumes/PostGIS*
+    </pre>
+ </div>
+<div>
+<br/>
+
+<br/><br/>
+<h3>Configure memory</h3>
+Postgres need a lot of shared memory to run on Macintosh (<a href="http://www.spy-hill.net/help/apple/SharedMemory.html" target="_blank">read more</a>), so you need to increase it. Run the following lines in a terminal (it is in the Applications -> Utilities folder) :
+<div class=code>
+<pre>
+sudo sysctl -w kern.sysv.shmall=65536
+sudo sysctl -w kern.sysv.shmmax=16777216
+</pre>
+</div>
+
+But this value will be back to their default values when you will startup your Mac. To make these values stick across reboots, add / modify those lines in /etc/sysctl.conf, like this:
+<div class=code>
+<pre>
+kern.sysv.shmall=65536
+kern.sysv.shmmax=16777216
+</pre>
+</div>
+</div>
+<h3>Initialize the server</h3>
+Some times The installation is partial ( it is a <a href="http://www.kyngchaos.com/software:postgres" target="_blank">known issue</a>) and you need to create a directory, give the correct rights and use this folder to store the database :
+<div class=code>
+<pre>
+#Change postgres (mac) user :
+sudo passwd postgres
+#you need to log in as "postgres" in order to initialise the database (give the password you've just typed
+su -l postgres
+#create a directory to hold postgres data
+mkdir /usr/local/pgsql/data
+#create the Database structure
+/usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data --encoding=UTF8
+#launch postgres
+/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l logfile start
+ </pre>
+</div>
+
+<div class="tip yellowtip">
+If you got the following message : "Cannot allocate memory", That's probably because there is something wrong with the step "Configure memory".
+</div>
+
+
+<h3>Configure the postgres user / password</h3>
+By default the postgres user can connect to postgres with the same password as the Mac one, but we'd like that postgres ask for a password and not use the Mac one
+<ul>
+<li>Log in with user 'postgres' :</li> 
+<div class=code>su - postgres </div>
+And give the new password you've given at the last step.
+<br/>
+<br/>
+
+<li>Define the postgres (postgresql) user's password</li>
+<div class=code>/usr/local/pgsql/bin/psql -d template1 -c "alter user postgres with password '<i>YOURPASSWORD</i>'"</div>
+Where 'YOURPASSWORD' is the password you wish to use for the user postgres of postgreSQL<br/><br/>
+
+<div class="tip yellowtip">
+if you got the following message : psql command not found, you have to had the path to your PATH : "setenv PATH ${PATH}:/usr/local/pgsql/bin" or "export PATH=$PATH:/usr/local/pgsql/bin"
+</div>
+Now you've changed the password for your postgresql user, we have to tell postgresql to use this password
+<br/><br/>
+<li>Update postgres conf </li>
+Edit the pg_hba.conf
+<div class=code> vim /usr/local/pgsql/data/pg_hba.conf</div>
+and edit in order to have (at least) those two lines (at the beginning of the file):
+<div class=code>
+<pre>
+local  all     all                                        password
+host   all     all    127.0.0.1         255.255.255.255   password
+</pre>
+</div>
+
+<li>Restart postgres</li>
+we must restart postgresql to take our changes into account :<br/>
+as postgres (Mac)'s user, type :
+<div class=code><pre>/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data reload</div>
+</ul>
+
+
+<h3>Configure Postgis</h3>
+<div> Here are the command to install a Database and init the Gisgraphy database</div> 
+
+<div class=code>
+<pre>
+# create the database
+psql -U <i>postgres</i>  -h <i>YOURIP</i> -c  "CREATE DATABASE gisgraphy ENCODING = 'UTF8';"
+
+#create language
+createlang -U postgres -h YOURIP plpgsql gisgraphy 
+
+#create postgis function
+psql -U postgres -h YOURIP -d gisgraphy -f /usr/local/pgsql/share/contrib/postgis-1.5/postgis.sql
+psql -U postgres -h YOURIP -d gisgraphy -f /usr/local/pgsql/share/contrib/postgis-1.5/spatial_ref_sys.sql
+
+</pre>
+Where YOURIP is the ip adress of your server(127.0.0.1 in most case)<br/>
+</div>
+
+<div class="tip greentip">
+Tips : Install <a href="http://www.pgadmin.org/download/macosx.php">PGAdmin</a>. It will be more user friendly than command line. 
+<br/>
+<br/>
+In order to know if Postgis is correctly install, open a PostgreSQL connection or PgAdmin and type : <br/>
+<ul>
+<li><code>select version ();</code> or <code>SHOW server_version;</code>. It will give you the PostgreSQL version</li>
+<li><code>select postgis_full_version () ;</code> It will give you the Postgis version </li>
+</ul>
+</div>
+<h2>Define Environnement settings</h2>
+<div>
+Macintosh systems define a maximum number of files that can be open. solr open a large number of files. to avoid message like "Too many open files" you must increase this limit.
+open a shell and type 
+<div class="code">
+<pre>
+sudo ulimit -n6000
+</pre>
+</div>
+<br/>
+that will set the maximum number of open files to 6000.
+<br/>
+Sometimes this is not enough. and you have to edit the /etc/security/limits.conf file and add the two following lines :
+<div class="code">
+<pre>
+* hard nofile 20000
+* soft nofile 20000
+</pre>
+</div>
+then close and re-open your Mac session to take changes into account.<br/><br/>
+<div class="tip greentip">
+type <code>ulimit -aH</code> in a shell to check if the value has been set
+</div>
+<br/>
+<h2>And now...</h2>
+Now that you environement is setup, you can go to the Gisgraphy <a href="installgisgraphy.htm">installation guide</a> 
+<br/>
+</body>
+</html>

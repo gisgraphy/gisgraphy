@@ -1,0 +1,3 @@
+645691	Adm2 with last missing field	Adm2 with last missing field		48.9	2.3	A	ADM2	FR		AA	645691			0		33	Europe/Paris	2007-04-01
+3013657	Département des Hauts-de-Seine	 Departement des Hauts-de-Seine 	Altos de Sena,Departement des Hauts-de-Seine,Département des Hauts-de-Seine,Hauts-de-Seine	48.85	2.2	A	ADM2	FR		A8	92			1475221		110	Europe/Paris	2007-05-16
+3673657	Duplicate adm2	 Departement des Hauts-de-Seine 	Altos de Sena,Departement des Hauts-de-Seine,Département des Hauts-de-Seine,Hauts-de-Seine	48.85	2.2	A	ADM2	FR		A8	92			1475221		110	Europe/Paris	2007-05-16

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
+       default-lazy-init="false">
+
+    <!-- =================================================================== -->
+    <!-- AOP: Configuration and Aspects                                      -->
+    <!-- =================================================================== -->
+  <!-- <aop:config>
+         <aop:advisor id="userManagerTx" advice-ref="userManagerTxAdvice" pointcut="execution(* *..service.UserManager.*(..))" order="0"/>        
+        <aop:advisor id="userManagerSecurity" advice-ref="userSecurityAdvice" pointcut="execution(* *..service.UserManager.saveUser(..))" order="1"/>
+        <aop:advisor id="managerTx" advice-ref="txAdvice" pointcut="execution(* *..service.*Manager.*(..))" order="2"/>
+    </aop:config>-->
+    
+    <bean id="internationalisationService" class="com.gisgraphy.service.impl.InternationalisationService">
+    	<property name="resourceBundle" ref="applicationResourcesSource" />
+    </bean>
+    
+     <!--  Messages for internationalization -->
+    <bean id="applicationResourcesSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="WEB-INF/classes/ApplicationResources" />
+        <property name="cacheSeconds" value="-1" />
+        <property name="fallbackToSystemLocale" value="false" />
+    </bean>
+    
+    <!-- Fix bug in Spring 2.0.6: http://issues.appfuse.org/browse/APF-887 -->
+   <!-- <bean class="org.springframework.transaction.aspectj.AnnotationTransactionAspect" factory-method="aspectOf" dependency-check="none" lazy-init="false">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+ -->  
+ 
+   
+     <tx:advice id="txAdvice">
+        <tx:attributes>
+           <!-- Read-only commented out to make things easier for end-users -->
+            <!-- http://issues.appfuse.org/browse/APF-556 -->
+            <!--tx:method name="get*" read-only="true"/-->
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+     <tx:advice id="userManagerTxAdvice">
+        <tx:attributes>
+            <tx:method name="save*" rollback-for="UserExistsException"/>
+        </tx:attributes>
+    </tx:advice>
+    
+     <bean id="userSecurityAdvice" class="com.gisgraphy.service.UserSecurityAdvice"/>
+    
+    <!-- =================================================================== -->
+    <!-- Mail: Sender and Velocity configuration                             -->
+    <!-- =================================================================== -->
+    <bean id="mailEngine" class="com.gisgraphy.service.MailEngine">
+        <property name="mailSender" ref="mailSender"/>
+        <property name="velocityEngine" ref="velocityEngine"/>
+    </bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.host}"/>
+        <!-- Uncomment if you need to authenticate with your SMTP Server -->
+        <!--property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="javaMailProperties">
+            <value>
+                mail.smtp.auth=true
+            </value>
+        </property-->
+    </bean>
+
+    <!-- Configure Velocity for sending e-mail -->
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <props>
+                <prop key="resource.loader">class</prop>
+                <prop key="class.resource.loader.class">
+                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+                </prop>
+                <prop key="velocimacro.library"></prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage" scope="prototype">
+        <property name="from" value="${mail.default.from}"/>
+    </bean>
+
+    <!-- =================================================================== -->
+    <!-- Managers: For accessing DAOs                                        -->
+    <!-- =================================================================== -->
+    <bean id="manager" class="com.gisgraphy.service.impl.UniversalManagerImpl">
+        <property name="dao" ref="universalDao"/>
+    </bean>
+    
+    <bean id="lookupManager" class="com.gisgraphy.service.impl.LookupManagerImpl">
+        <property name="lookupDao" ref="lookupDao"/>
+    </bean>
+
+    <bean id="userManager" class="com.gisgraphy.service.impl.UserManagerImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="roleManager" class="com.gisgraphy.service.impl.RoleManagerImpl">
+        <property name="roleDao" ref="roleDao"/>
+    </bean>
+    
+	<!-- GIS service  -->
+    <!-- service -->
+	<bean id="fullTextSearchEngine" class="com.gisgraphy.fulltext.FullTextSearchEngine">
+		<property name="solrClient" ref="solrClient"/>
+	</bean>
+	
+	<bean id="statsUsageService" class="com.gisgraphy.service.impl.StatsUsageServiceImpl"/>
+	
+	<bean id="geolocSearchEngine" class="com.gisgraphy.geoloc.GeolocSearchEngine"/>
+	
+	<bean id="gisfeatureDistanceSerializer" class="com.gisgraphy.geoloc.GeolocResultsDtoSerializer" />
+	
+	<bean id="streetSearchResultsDtoSerializer" class="com.gisgraphy.street.StreetSearchResultsDtoSerializer" />
+	
+	<bean id="streetSearchEngine" class="com.gisgraphy.street.StreetSearchEngine"/>
+	
+	
+	<bean id="fulltextSearchUrl" class="java.lang.String">
+	<constructor-arg>
+				<value>${fulltextSearchUrl}</value>
+		</constructor-arg>
+	</bean>
+
+  <bean id="multiThreadedHttpConnectionManager" class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
+	<property name="maxConnectionsPerHost" value="${fulltextsearch.maxConnectionsPerHost}"/>
+	<property name="maxTotalConnections" value="${fulltextsearch.maxTotalConnections}" />
+  </bean>
+
+  <bean id="solrClient" class="com.gisgraphy.fulltext.SolrClient"/>
+	
+
+  <bean id="solRSynchroniser" class="com.gisgraphy.domain.repository.SolRSynchroniser">
+	<constructor-arg>
+				<ref bean="solrClient" />
+	</constructor-arg>
+  </bean>
+  
+  <bean id="spellCheckerIndexer" class="com.gisgraphy.fulltext.spell.SpellCheckerIndexer">
+		<property name="solrClient" ref="solrClient"/>
+  </bean>
+  
+  	<bean id="spellCheckerConfig" class="com.gisgraphy.fulltext.spell.SpellCheckerConfig">
+		<property name="enabled" value="${spellchecker.enabled}" />
+		<property name="activeByDefault" value="${spellchecker.activeByDefault}"/>
+		<property name="numberOfSuggestion" value="${spellchecker.numberOfSuggestion}"/>
+		<property name="collateResults" value="${spellchecker.collateResults}"/>
+		<property name="spellcheckerDictionaryName">
+		<bean class="com.gisgraphy.fulltext.spell.SpellCheckerDictionaryNames" factory-method="valueOf">
+				<constructor-arg>
+					<value>${spellchecker.spellcheckerDictionaryName}</value>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	
+</beans>

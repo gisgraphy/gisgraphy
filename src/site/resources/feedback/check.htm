@@ -1,0 +1,52 @@
+<?php
+
+require 'CaptchasDotNet.php';
+
+
+$captchas = new CaptchasDotNet ('demo', 'secret',
+                                '/tmp/captchasnet-random-strings','3600',
+                                'abcdefghkmnopqrstuvwxyz','6',
+                                '240','80');
+
+// Read the form values
+$message       = stripcslashes($_REQUEST['message']);
+$mail          = stripcslashes($_REQUEST['mail']);
+$password      = $_REQUEST['password'];
+$random_string = $_REQUEST['random'];
+?>
+  <head>
+    <title>Feedback</title>
+  </head>
+  <h1>Feedback</h1>
+
+<?php
+  // Check the random string to be valid and return an error message
+  // otherwise.
+  if (!$captchas->validate ($random_string))
+  {
+    echo 'Every CAPTCHA can only be used once. The current CAPTCHA has already been used. Try again.';
+  }
+  // Check, that the right CAPTCHA password has been entered and
+  // return an error message otherwise.
+  elseif (!$captchas->verify ($password))
+  {
+    echo 'You entered the wrong password. Aren\'t you human? Please use back button and reload.';
+  }
+  // Return a success message
+  else
+  {
+   $myFile = "feedback.htm";
+    $fh = fopen($myFile, 'a');
+   $date=date(" Y M j \a\\t G:i");
+   if (strlen(strstr("davidmasclet@gisgraphy.com",$mail))>0){$color="rgb(221, 255, 221)";} else {$color="#EEE";}
+  $textToAppend="<hr/> - ".$date.", ".$mail." said : <br/><br/><table style=\"border:0; background-color:".$color.";width:600px;\">
+<tr><td valign=\"top\" style=\"border:0px;\"><img src=\"/images/apostrophe_start.gif\"/></td><td style=\"padding-top:20px;padding-bottom:20px;padding-left:10px;padding-right:10px;border:0px;\"><pre>".$message."</pre style=\"max-width:550;white-space: pre-wrap;white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;\"></td><td valign=\"bottom\"  style=\"border:0px;\"><img src=\"/images/apostrophe_end.gif\" /></td></tr>
+</table><br/>\r\n\r\n";
+
+    fwrite($fh,$textToAppend);
+    fclose($fh);
+    echo 'THANKS! Your feedback has been sent. You can see it on the <a href="/feedback/feedback.htm">feedbacks page</a>';
+}
+?>
+
+</html>

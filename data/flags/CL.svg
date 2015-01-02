@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="708.661" id="svg378" sodipodi:docbase="/home/rex/Docs/sodipodi/" sodipodi:docname="/home/rex/Docs/sodipodi/chile.svg" sodipodi:version="0.31" version="1" width="1062.99" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Chile</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>latin_america</rdf:li>
+            <rdf:li>america</rdf:li>
+            <rdf:li>south_america</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Mario Fuentes</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Mario Fuentes</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Mario Fuentes</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base"/>
+  <defs id="defs380"/>
+  <rect height="354.337494" id="rect280" style="font-size:12;fill:#fdfdfd;fill-rule:evenodd;stroke-width:1pt;fill-opacity:0.996078;" width="708.676575" x="354.313324" y="-0.001224"/>
+  <rect height="354.337494" id="rect149" style="font-size:12;fill:#5651a9;fill-opacity:0.996079;fill-rule:evenodd;stroke-width:1pt;" width="354.337494" x="0.000000" y="-0.001418"/>
+  <path d="M 266.186 534.45 L 255.778 527.018 L 245.421 534.523 L 249.273 522.327 L 238.935 514.796 L 251.725 514.691 L 255.692 502.532 L 259.744 514.663 L 272.534 514.679 L 262.249 522.281 L 266.186 534.45 z " id="path205" style="font-size:12;fill:#fdfdfd;fill-opacity:0.996078;fill-rule:evenodd;stroke-width:0.112872;" transform="matrix(5.27322,0,0,5.53808,-1171.38,-2694.48)"/>
+  <rect height="354.324982" id="rect115" style="font-size:12;fill:#ed2800;fill-opacity:0.996078;fill-rule:evenodd;stroke-width:1pt;" width="1062.987553" x="0.000000" y="354.336121"/>
+</svg>

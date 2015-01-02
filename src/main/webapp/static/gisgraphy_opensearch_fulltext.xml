@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+	xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+	<ShortName>Gisgraphy search</ShortName>
+	<Description>Free and open sources GIS services</Description>
+	<Tags>Free and open sources GIS services</Tags>
+	<Contact>davidmasclet@gisgraphy.com</Contact>	
+	<InputEncoding>UTF-8</InputEncoding>
+	<OutputEncoding>UTF-8</OutputEncoding>
+	<Image height="16" width="16" type="image/png">http://www.gisgraphy.com/images/logos/logo_16.png</Image>
+	<Image height="70" width="70" type="image/png">http://www.gisgraphy.com/images/logos/logo_70.png</Image>
+	<Image height="16" width="16" type="image/vnd.microsoft.icon">http://www.gisgraphy.com/favicon.ico</Image>
+	<Url type="text/html" method="GET" template="http://services.gisgraphy.com/ajaxfulltextsearch!search.html?q={searchTerms}&amp;placetype=&amp;country=&amp;lang=&amp;from={startPage?}&amp;sourceid=opensearch"/>
+	<Url type="application/atom+xml" method="GET" template="http://services.gisgraphy.com/fulltext/fulltextsearch?q={searchTerms}&amp;placetype=&amp;country=&amp;lang=&amp;format=ATOM&amp;style=MEDIUM&amp;from={startPage?}&amp;sourceid=opensearch"/>
+    <Url type="application/rss+xml" method="GET" template="http://services.gisgraphy.com/fulltext/fulltextsearch?q={searchTerms}&amp;placetype=&amp;country=&amp;lang=&amp;format=GEORSS&amp;style=MEDIUM&amp;from={startPage?}&amp;sourceid=opensearch"/>
+    <Url type="application/x-suggestions+json" method="GET" template="http://services.gisgraphy.com/fulltext/fulltextsearch?q={searchTerms}&amp;placetype=&amp;country=&amp;lang=&amp;format=JSON&amp;style=MEDIUM&amp;from={startPage?}&amp;sourceid=opensearch"/>
+	<AdultContent>false</AdultContent>
+	<moz:SearchForm>http://services.gisgraphy.com/ajaxfulltextsearch.html</moz:SearchForm>
+
+	<Language>en-us</Language>
+	<Query role="example" searchTerms="Paris" />
+	<Developer>David Masclet</Developer>
+	<Attribution>Gisgraphy search</Attribution>
+	<SyndicationRight>open</SyndicationRight>
+</OpenSearchDescription>

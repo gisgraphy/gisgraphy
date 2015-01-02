@@ -1,0 +1,44 @@
+- PBF format is http://wiki.openstreetmap.org/wiki/PBF_Format
+
+- About the POI CXV / TSV format
+==============================================
+1 : Node type;  N|W|R (in uppercase), wheter it is a Node, Way or Relation in the openstreetmap model
+2 : id; The openstreetmap id
+3 : name;       The default name of the city
+4 : countrycode;        The iso3166-2 country code (2 letters)
+5 : alternatenames;     the names of the POI in other languages
+6 : location;   The middle location of the POI in HEXEWKB
+7 : amenity; the  POI type
+
+- About The street names CSV / TSV format : 
+=============================================================
+1 : id; openstreetmap Id
+2 : name; The name of the street
+3 : location; The middle point of the street in HEXEWKB
+4 : length ; Length of the street in meters
+5 : countrycode; The iso3166 Alpha2 Code of the country 
+6 : is_in ; where the street is located (generally the city)
+7 : type; The type of street (see bellow)
+8 : oneway; Whether the street is a one way street
+9 : shape; The delimitation of the street in HEXEWKB
+
+- About The cities CSV /TSV format : 
+=============================================================
+1 : Node type;	N|W|R (in uppercase), wheter it is a Node, Way or Relation in the openstreetmap Model
+2 : id;	The openstreetmap id
+3 : name;	the default name of the city
+4 : countrycode;	The iso3166-2 country code (2 letters)
+5 : postcode;	The postcode / zipcode
+6 : population;	How many people lives in that city
+7 : location;	The middle location of the city in HEXEWKB
+8 : shape; The delimitation of the city in HEXEWKB
+9 : type; the type of city ('city', 'village', 'town', 'hamlet', ...) 
+10 : is_in ; where the cities is located (generally the fully qualified administrative division)
+11 : alternatenames;     the names of the city in other languages
+
+- About The house numbers CSV /TSV format : 
+============================================================
+ House numbers CSV format : complex format based on the Karlsruhe schema. You will probably learn more about this format by reading the 
+(opensource) Gisgraphy house numbers importer code.
+
+More questions ? site : http://www.gisgraphy.com/ or mail : davidmasclet@gisgraphy.com

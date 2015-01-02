@@ -1,0 +1,245 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="all" href="../css/maven-base.css" />
+<link rel="stylesheet" type="text/css" media="all" href="../css/maven-theme.css" />
+<link rel="stylesheet" type="text/css" media="all" href="../css/site.css" />
+<style type="text/css" media="all">
+h1 {
+	counter-reset: section;
+	counter-reset: subsection;
+	counter-reset: indexsection;
+	counter-reset: indexsubsection;
+	counter-reset: subsubsection;
+}
+
+h2 {
+	counter-increment: section;
+	counter-reset: subsection;
+}
+
+h2:before {
+	content: counter(section) " ";
+}
+
+h3 {
+	counter-increment: subsection;
+	counter-reset: subsubsection;
+}
+
+h3:before {
+	content: counter(section) "." counter(subsection) " ";
+}
+
+h4 {
+	counter-increment: subsubsection;
+}
+
+h4:before {
+	content: counter(section) "." counter(subsection) "."
+		counter(subsubsection) " ";
+}
+</style>
+</head>
+<body>
+
+<div>
+<h1>Environement setup for Windows</h1>
+Before install and launch Gisgraphy, you must setup java, postgres, and  postgis. it is not, properly speaking, the installation of gisgraphy, and if you already have postgres, postgis and java installed(you needs JVM &gt;= 1.5), you can go directly to the gisgraphy <a href="installgisgraphy.htm">installation guide</a>
+
+<h2>Install Java</h2>
+You can find a good tutorial on this page : <a href="http://java.sun.com/javase/6/webnotes/install/index.html"  target="gisgraphy" >http://java.sun.com/javase/6/webnotes/install/index.html</a>
+<br/>
+
+
+<h2>Install postgresql and postgis</h2>
+If you already have Postgresql installed, you can skip this section
+<h3>Install postgresql</h3>
+<div>
+This section will guide you step by step to install Postgresql on Windows.
+<br/>
+before install Postgresql 8.3 we have to download it. You can download it on the <a href="http://wwwmaster.postgresql.org/download/mirrors-ftp/binary/v8.3.8/win32/postgresql-8.3.8-1.zip">mirror page</a> 
+
+once you've download, you've got a file named postgresql-8.3.0-1.zip. you have to extract it by double clicking on it
+
+you will have the following list of files :
+<br/>
+<a href="images/image1.jpg"><img src="images/thumb/image1.jpg"  class="imagethumb" /></a>
+<br/>
+To start the installation of PostgreSQL 8.3 , double click on 'SETUP.bat' ou 'postgresql-8.3.msi'
+<br/>
+<div class="tip greentip">
+If you've already have a 8.2 PostgreSQL version, don't run upgrade.bat. this script is only present to upgrade RC (aka Release client and Beta version).
+</div>
+<br/>
+Exit all Windows programs before installation and click "Next":
+<br/>
+<a href="images/image2.jpg"><img src="images/thumb/image2.jpg"  class="imagethumb"/></a>
+<br/>
+You'll have to choose your language and click "Start". On the next screen, read the installation notes if you want (not necessary ;) ) and click "Next":
+<br/>
+<a href="images/image3.jpg"><img src="images/thumb/image3.jpg"  class="imagethumb"/></a>
+<br/>
+
+
+the next screen detailled the installation options and module.  Let the default options and click "Next"
+<br/>
+<a href="images/image4.jpg"><img src="images/thumb/image4.jpg"  class="imagethumb" /></a>
+<br/>
+
+On Windows, Posgresql is seen as a service. so it need a user account on the machine. The default user created is named 'postgres'.
+Enter the password twice and click "Next". The password you give will not be the password of the PostgreSQL user 'postgres'.
+<br/>
+<a href="images/image5.jpg"><img src="images/thumb/image5.jpg"  class="imagethumb" /></a>
+<br/>
+
+
+now you have to choose the password for the the PostgreSQL user 'postgres'. it is the database user with all rights. For this reason you have to remember the password because you'll need it to log in and create the database and tables.<br/>
+It is strongly recommended to put an other password than the windows account one.
+choose 'mdppostgres' if you want to use the default password define in Gisgraphy.
+<br/>
+Click on "Accept connections on all adresses, not just localhost" (recommended, but not necessary if you will only use postgres on the computer)
+choose your locale and choose 'UTF-8' for encoding (server)!!
+click "next".
+<br/>
+<a href="images/image6.jpg"><img src="images/thumb/image6.jpg" class="imagethumb" /></a>
+<br/>
+
+A message will prompt. it tells you that, due to the fact that you've checked Accept connections on all adresses, not just localhost" : the server will be reachable from other computers. .
+<br/>
+<a href="images/image7.jpg"><img src="images/thumb/image7.jpg" class="imagethumb" /></a>
+<br/>
+
+Some procedural languages can be installed now or later, by default 'PL/pgsql' is checked. that mean that it will be install.
+<br/>Keep the 'PL/pgsql' checked (it will be used by postgis) and click "Next".
+<br/>
+<a href="images/image8.jpg"><img src="images/thumb/image8.jpg"  class="imagethumb" /></a>
+<br/>
+
+Now you have to choose the contrib modules. Keep 'Adminpack' and 'Debugger' and click "Next".
+<br/>
+<a href="images/image9.jpg"><img src="images/thumb/image9.jpg" class="imagethumb" /></a>
+<br/>
+
+That's all we need, PostgreSQL is ready to be installed. Click "Next".
+<br/>
+<a href="images/image10.jpg"><img src="images/thumb/image10.jpg" class="imagethumb" /></a>
+<br/>
+
+You can see the installation progress.
+<br/>
+<a href="images/image11.jpg"><img src="images/thumb/image11.jpg" class="imagethumb" /></a>
+<br/>
+Here we are.PostgreSQL is installed !
+<br/>Subscribe to pgsql-announce if you want to be informed of update and bug corrections.
+<br/>Keep 'launch stack builder on exit' checked and click on "finish"
+<br/>
+<a href="images/image12.jpg"><img src="images/thumb/image12.jpg"  class="imagethumb"/></a>
+<br/>
+
+WE will install PostGIS.
+
+</div>
+
+
+<h3>Install postgis</h3>
+<div>
+
+Select your database server and click on "Next"
+<br/>
+<a href="images/image13.jpg"><img src="images/thumb/image13.jpg"  class="imagethumb"/></a>
+<br/>
+
+Check 'postgis 1.3.3' and click "Next".
+<br/>
+<a href="images/image14.jpg"><img src="images/thumb/image14.jpg" class="imagethumb" /></a>
+<br/>
+
+
+Select a connection to download PostGIS and click "Next"
+<br/>
+<a href="images/image15.jpg"><img src="images/thumb/image15.jpg" class="imagethumb" /></a>
+<br/>
+
+
+Keep The default destination folder where the installation files will be downloaded.
+<br/>
+<a href="images/image16.jpg"><img src="images/thumb/image16.jpg" class="imagethumb" /></a>
+<br/>
+
+we need to download the PostGIS installation files, click "Next" : the files will be downloaded.
+<br/>
+<a href="images/image17.jpg"><img src="images/thumb/image17.jpg" /></a>
+<br/>
+
+Then every thing is ready to launch the postgis install.click "Next" to begin the installation 
+<br/>
+<a href="images/image18.jpg"><img src="images/thumb/image18.jpg"  class="imagethumb" /></a>
+<br/>
+Read the license and click 'I Agree' if it is the case ;)
+<br/>
+<a href="images/image19.jpg"><img src="images/thumb/image19.jpg"  class="imagethumb" /></a>
+<br/>
+
+unchecked 'create spatial database' (we don't need) and click "Next"
+<br/>
+<a href="images/image20.jpg"><img src="images/thumb/image20.jpg" class="imagethumb" /></a>
+<br/>
+
+keep the default destination folder "C:\Program Files\PostgreSQL\8.3\" and click "Next"
+<br/>
+<a href="images/image21.jpg"><img src="images/thumb/image21.jpg" class="imagethumb" /></a>
+<br/>
+We need to enter the postgresql user password to initialize PostGIS (not the computer account one), keep the default port, and click "Next".
+<br/>
+<a href="images/image22.jpg"><img src="images/thumb/image22.jpg" class="imagethumb" /></a>
+<br/>
+PostGIS will be installed :
+<br/>
+<a href="images/image23.jpg"><img src="images/thumb/image23.jpg" class="imagethumb"/></a>
+<br/>
+
+
+Now postgis is installed ! Click on "Close" :
+<br/>
+<a href="images/image24.jpg"><img src="images/thumb/image24.jpg" class="imagethumb"/></a>
+<br/>
+
+if you see this screen, that mean that you've install postres and postgis
+<br/>
+<a href="images/image25.jpg"><img src="images/thumb/image25.jpg" class="imagethumb" /></a>
+<br/>
+
+
+<div class="tip greentip">
+Tips : Install PGAdmin. It will be more user friendly than command line. 
+<br/>
+<br/>
+In order to know if Postgis is correctly install, open a PostgreSQL connection (start/Programs/'PostgreSQL 8.3'/'psql to postgres') or PgAdmin and type : <br/>
+<ul>
+<li><code>select version ();</code> or <code>SHOW server_version;</code>. It will give you the PostgreSQL version</li>
+<li><code>select postgis_full_version () ;</code> It will give you the Postgis version </li>
+</ul>
+</div>
+</div>
+
+<h2>Create the database</h2>
+<div> Here are the command to create the Gisgraphy database</div> 
+
+<br/>
+<div class="tip redtip">
+Important : You have to deconnect all the users from the Template_postgis database if you want to create the gisgraphy database from the Template_postgis
+</div>
+<br/>
+
+<div class=code>
+<pre>
+# create the database
+psql -U <i>YOURUSER</i>  -h <i>YOURIP</i> -c  "CREATE DATABASE gisgraphy WITH TEMPLATE = Template_postgis ENCODING = 'UTF8';"
+
+</pre>
+</div>
+
+<h2>And now...</h2>
+ Now that you environement is setup, you can go to the Gisgraphy <a href="installgisgraphy.htm">installation guide</a> 
+</body>
+</html>

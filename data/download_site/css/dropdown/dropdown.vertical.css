@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+/**
+ * Vertical Left-to-Right Direction CSS Drop-Down Menu Component
+ *
+ * @file		dropdown.vertical.css
+ * @package		Dropdown
+ * @version		0.3.1
+ * @type		Transitional
+ * @requires	dropdown.css
+ * @browsers	Windows: IE5+, Opera7+, Firefox1+
+ *				Mac OS: Safari2+, Firefox2+
+ *
+ * @link		http://www.lwis.net/
+ * @copyright	2006-2008 Live Web Institute                      
+ *
+ */
+
+@import "dropdown.css";
+
+ul.dropdown-vertical {
+ width: 200px;
+}
+
+ul.dropdown-vertical ul {
+ top: 1px;
+ left: 99%;
+}
+
+ul.dropdown-vertical li {
+ float: none;
+}

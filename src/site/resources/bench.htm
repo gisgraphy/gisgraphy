@@ -1,0 +1,145 @@
+<h1>Benchs</h1>
+
+The benchs have been made :
+<ul>
+<li>on a core2duo 2Ghz, and gisgraphy has been launch with 2G</li>
+<li>The bench dataset have been extracted from the database, and all the data are unique to minimize cache usage</li>
+<li>before each bench I restart the server</li>
+<li>The benchs scripts are availables <a href="http://code.google.com/p/gisgraphy/source/browse/#svn/trunk/gisgraphy/src/bench/scenarios" target="blank">here</a></li>
+</ul>
+<br/><br/>
+ You can see the server configuration at the <a href="#serverconfig">end of this page</a>.
+ 
+ 
+<a name="geocoding"></a>
+<h2>Geocoding without all options enabled (nominal approach)</h2>
+<img src="/images/benchs/v3/geocoding_bench.png" alt="geocoding gisgraphy bench" tilte="geocoding gisgraphy bench"/>
+<br>
+You should note that the values above are for a specific Gisgraphy configuration, you should always do some tunning and configure Gisgraphy according your needs.  
+<br/><br/>
+
+
+<a name="Street"></a>
+<h2>Street/reverse geocoding Web service</h2>
+<img src="/images/benchs/v3/street_bench.png" alt="fulltext gisgraphy bench" tilte="fulltext gisgraphy bench"/> 
+<br/><br/>
+
+<a name="fulltext"></a>
+<h2>Fulltext Web service</h2>
+<img src="/images/benchs/v3/fulltext_bench.png" alt="fulltext gisgraphy bench" tilte="fulltext gisgraphy bench"/> 
+<br/><br/>
+
+<a name="geoloc"></a>
+<h2>Geoloc Web service</h2>
+<img src="/images/benchs/v3/geoloc_bench.png" alt="geoloc gisgraphy bench" tilte="geoloc gisgraphy bench"/>
+<br/><br/>
+
+
+<a name="addressparser"></a>
+<h2>Address parser</h2>
+<img src="/images/benchs/v3/addressparser_bench.png" alt="address parser bench" tilte="GUI gisgraphy bench"></a> 
+
+<br/><br/>
+<h2>Server configuration</h2>
+<a name="serverconfig"></a>
+
+CPU : 
+<pre>
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 15
+model name	: Intel(R) Core(TM)2 CPU         T7400  @ 2.16GHz
+stepping	: 6
+cpu MHz		: 2166.686
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm lahf_lm dts tpr_shadow
+bogomips	: 4333.37
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 15
+model name	: Intel(R) Core(TM)2 CPU         T7400  @ 2.16GHz
+stepping	: 6
+cpu MHz		: 2166.686
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm lahf_lm dts tpr_shadow
+bogomips	: 4333.95
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+</pre>
+<br/><br/>
+Memory info :
+<pre>
+MemTotal:        3089356 kB
+MemFree:           79904 kB
+Buffers:             388 kB
+Cached:           327340 kB
+SwapCached:        10528 kB
+Active:          2234256 kB
+Inactive:         664448 kB
+Active(anon):    2078776 kB
+Inactive(anon):   520876 kB
+Active(file):     155480 kB
+Inactive(file):   143572 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:       1044216 kB
+SwapFree:         915000 kB
+Dirty:              4816 kB
+Writeback:             0 kB
+AnonPages:       2564760 kB
+Mapped:            40136 kB
+Shmem:             28604 kB
+Slab:              40620 kB
+SReclaimable:      27280 kB
+SUnreclaim:        13340 kB
+KernelStack:        1568 kB
+PageTables:        13496 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     2588892 kB
+Committed_AS:    3157528 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      351296 kB
+VmallocChunk:   34359383036 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       52032 kB
+DirectMap2M:     3092480 kB
+
+
+</pre>

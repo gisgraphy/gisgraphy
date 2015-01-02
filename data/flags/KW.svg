@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="140mm" id="svg556" sodipodi:docbase="/home/tobias/Desktop/Flags" sodipodi:docname="/home/tobias/Desktop/Flags/Kuwait.svg" sodipodi:version="0.33pre" width="280mm" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Kuwait</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>asia</rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>arab</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Tobias Jakobs</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Tobias Jakobs</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Tobias Jakobs</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs558"/>
+  <sodipodi:namedview id="base"/>
+  <rect height="165.366135" id="rect563" style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="992.126038" x="0.000000" y="165.330688"/>
+  <rect height="165.366135" id="rect559" sodipodi:fill-cmyk="(0 0.9 0.8 0.05)" style="font-size:12;fill:#f31830;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="992.126038" x="0.000000" y="330.696793"/>
+  <rect height="165.366135" id="rect564" sodipodi:fill-cmyk="(1 0 0.7 0.15)" style="font-size:12;fill:#00d941;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" width="992.126038" x="0.000000" y="-0.000015"/>
+  <path d="M 0 -0.000106811 L 0 496.063 L 247.503 330.676 L 248.032 165.222 L 0 -0.000106811 z " id="path565" sodipodi:nodetypes="ccccc" style="font-size:12;fill-rule:evenodd;stroke-width:1pt;"/>
+</svg>

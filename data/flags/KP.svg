@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="140mm" id="svg378" sodipodi:docbase="/home/cschalle/sodipodi-flags/nations" sodipodi:docname="/home/cschalle/sodipodi-flags/nations/north-korea.svg" sodipodi:version="0.32" version="1" width="280mm" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>North Korea</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>asia</rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Cezary Biele</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base" showgrid="true"/>
+  <defs id="defs380"/>
+  <rect height="484.504700" id="rect149" style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.797009pt;" transform="scale(-1.000000,-1.000000)" width="987.625243" x="-991.811400" y="-492.878582"/>
+  <rect height="87.672271" id="rect148" style="font-size:12;fill:#3e5698;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="scale(-1.000000,1.000000)" width="987.625243" x="-991.811400" y="405.206361"/>
+  <rect height="268.549986" id="rect605" style="font-size:12;fill:#c60000;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="scale(-1.000000,-1.000000)" width="987.625243" x="-991.811400" y="-384.901246"/>
+  <rect height="87.672271" id="rect606" style="font-size:12;fill:#3e5698;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;" transform="scale(-1.000000,1.000000)" width="987.625243" x="-991.811400" y="8.373883"/>
+  <path d="M 495.862305 1147.964233 A 163.791611 163.791626 0 1 0 168.279068,1147.964233 A 163.792 163.792 0 1 0 495.862 1147.96 L 332.070679 1147.964233 z" id="path607" sodipodi:cx="332.070679" sodipodi:cy="1147.964233" sodipodi:rx="163.791611" sodipodi:ry="163.791626" sodipodi:type="arc" style="fill-rule:evenodd;stroke:none;fill:#ffffff;fill-opacity:1;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;" transform="matrix(0.839632,0.000000,0.000000,0.665119,56.74857,-512.9069)"/>
+  <polygon id="polygon136" points="591.041,433.161 533.774,391.476 476.501,433.151 498.449,365.806 441.115,324.214 511.946,324.278 533.785,256.897 555.613,324.281 626.445,324.23 569.104,365.812 591.041,433.161 " style="font-size:12;fill:#c40000;fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;stroke:none;stroke-opacity:1;" transform="matrix(1.163030,-4.786459e-3,-1.266332e-2,0.932450,-279.0365,-74.32138)"/>
+</svg>

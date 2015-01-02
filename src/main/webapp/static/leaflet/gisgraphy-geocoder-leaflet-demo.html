@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gisgraphy leaflet geocoder plugin demo</title>
+	<meta charset="utf-8" />
+
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	 <link href="style/gisgraphy-leaflet.css" rel="stylesheet" type="text/css">
+</head>
+<body style="margin:0 ">
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/placetype.js"></script>
+<script src="js/typeahead/jquery-1.11.1.js"></script>
+<script src="js/typeahead/typeahead.bundle.js"></script>
+<script src="js/typeahead/bloodhound.js"></script>
+<script src="js/typeahead/typeahead.jquery.js"></script>
+<script src="js/typeahead/handlebars-v1.3.0.js"></script>
+<script src="js/gisgraphy-js-api.js"></script>
+
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="js/gisgraphy-leaflet-geocoder.js"></script>
+
+<!--
+<div id="gisgraphy-leaflet">
+</div>-->
+        <div id="header" ><a href="http://www.gisgraphy.com"><img src="http://www.gisgraphy.com/images/logos/logo_48.png" style="vertical-align:middle;"/>Gisgraphy project</a> | <a href="/public/geocoding.html">Play with webservices</a> | <a href="http://www.gisgraphy.com/premium">Premium plans</a> | <a href="http://download.gisgraphy.com">Download Openstreetmap Data</a> | <a href="http://www.gisgraphy.com/documentation/index.htm">Documentation</a> | <a href="/static/leaflet/gisgraphy-reverse-geocoder-leaflet-demo.html">Try the reverse geocoding leaflet plugin</a><br/>All you see is done with Gisgraphy, Leaflet and opensource data ! this server is only a demo hosted on a small server, performances can be small if server is overloaded</div>
+	<div id="map" ></div>
+
+	<script>
+
+		var map = L.map('map',{ zoomControl:false }).setView([51.505, -0.09], 13);
+                var layerUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		L.tileLayer(layerUrl, {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ',
+			id: 'examples.map-i875mjb7'
+		}).addTo(map);
+
+
+
+		var gisgraphyGeocoder = new L.Control.gisgraphygeocoder({ELEMENT_ID:"gisgraphy-leaflet",apiKey:123});
+		map.addControl(gisgraphyGeocoder);
+//		var gg = new gisgraphyAutocomplete({ELEMENT_ID:"gisgraphy-leaflet"})
+		gisgraphyGeocoder.initAutoCompletion();
+//$('#map').on('click',function (e) {e.preventDefault; console.log('click on input') });
+// L.DomEvent
+//            .addListener(o, 'click', L.DomEvent.stopPropagation)
+  //          .addListener(o, 'click', L.DomEvent.preventDefault)
+  //      .addListener(o, 'click', function () { console.log('click') });
+	//	map.panTo(new L.LatLng(gisgraphyGeocoder.gg.userLat,gisgraphyGeocoder.gg.userLng));
+	</script>
+</body>
+</html>

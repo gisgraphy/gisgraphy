@@ -1,0 +1,17 @@
+upload webapp ROOT
+upload webapp solr
+udpade conf and  data (solr diretory)
+update solr.war if needed
+
+copy sitemaps into ROOT/
+modifier admin et user mdp
+increase stats
+rm nohup
+use script to reload tomcat and jetty
+
+deploie site=> sauvegarder feedback,
+sauvegarder forum
+updater news
+screenshots
+
+uploader le maven repo

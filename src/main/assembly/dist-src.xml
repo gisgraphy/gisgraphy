@@ -1,0 +1,44 @@
+<assembly>
+<!--  mvn clean javadoc:javadoc war:war  assembly:assembly -Dmaven.test.skip  -Dkeepdb -Pprod-->
+	<id>src</id><formats>
+		<format>tar.gz</format>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<!-- main java -->
+		<fileSet>
+			<directory>src/main/java</directory>
+			<outputDirectory>src/main/java</outputDirectory>
+			<includes>
+			</includes>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- test java-->
+		<fileSet>
+			<directory>src/test/java</directory>
+			<outputDirectory>src/test/java</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- webapp -->
+		<fileSet>
+			<directory>src/main/webapp</directory>
+			<outputDirectory>src/webapp</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- resources -->
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>src/main/resources</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- resources-test -->
+		<fileSet>
+			<directory>src/test/resources</directory>
+			<outputDirectory>src/test/resources</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		</fileSets>
+	<componentDescriptors>
+	<componentDescriptor>src/main/assembly/component.xml</componentDescriptor>
+	</componentDescriptors>
+</assembly>

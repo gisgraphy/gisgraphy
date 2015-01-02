@@ -1,0 +1,11 @@
+<assembly>
+<!--  mvn clean javadoc:javadoc war:war  assembly:assembly -Dmaven.test.skip  -Dkeepdb -Pprod -->
+	<id></id>
+	<formats>
+		<format>tar.gz</format>
+		<format>zip</format>
+	</formats>
+	<componentDescriptors>
+	<componentDescriptor>src/main/assembly/component.xml</componentDescriptor>
+	</componentDescriptors>
+</assembly>

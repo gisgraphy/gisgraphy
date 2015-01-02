@@ -1,0 +1,2 @@
+3012874	Région Île-de-France	 Region Ile-de-France 	Ile-de-France,Region parisienne,Région parisienne,Île-de-France	48.5	2.5	A	ADM1	FR		A8				11341257		75	Europe/Paris	2007-08-03
+3012874	missing	 Region Ile-de-France 	Ile-de-France,Region parisienne,Région parisienne,Île-de-France	48.5	2.5	A	ADM1							11341257		75	Europe/Paris	2007-08-03

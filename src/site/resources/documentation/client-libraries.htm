@@ -1,0 +1,103 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="all" href="./css/maven-base.css" />
+<link rel="stylesheet" type="text/css" media="all" href="./css/maven-theme.css" />
+<link rel="stylesheet" type="text/css" media="all" href="./css/site.css" />
+</head>
+<body>
+<h1>Client libraries</h1>
+<br/><br/>
+<div>Some client librairies have been developed by me or some other developers. If you have developed a library, or if you do something cool with gisgraphy, <a href="mailto:davidmasclet@gisgraphy.com" >let me know</a>, I will be glad to see it. Here are the libraries currently availables : 
+
+<a name="OpenGTS"></a>
+<h2>OpenGTS</h2>
+Gisgraphy is supported by <a href="http://opengts.sourceforge.net/">OpenGTS</a>. That means that you can do geocoding on OpenGTS via Gisgraphy. (<a href="http://www.geotelematic.com/javadocs/org/opengts/geocoder/gisgraphy/GisGraphy.html">see doc</a>)
+<br/><br/>
+
+<a name="java"></a>
+<h2>Java</h2>
+Some java clients (one per services) are available in <a href="http://code.google.com/p/gisgraphy/source/browse/#svn%2Ftrunk%2Fgisgraphy-utils%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgisgraphy%253Fstate%253Dclosed">Gisgraphy-utils package</a>.
+<a name="javascript"/>
+<br/><br/>
+
+<a name="javascript"></a>
+<h2>Javascript</h2>
+Some javascript utilities are availables. <a href="http://services.gisgraphy.com/scripts/gisgraphyapi.js">services.gisgraphy.com</a> use it.<br/>
+The code is available on the <a href="http://code.google.com/p/gisgraphy/source/browse/trunk/gisgraphy/src/main/webapp/scripts/gisgraphyapi.js">SVN</a> or in the <a href="http://code.google.com/p/gisgraphy/downloads/list">distribution</a>
+<br/><br/>
+
+<a name="python"></a>
+<h2>Python</h2>
+A client library is available. The code is available on the <a href="http://code.google.com/p/gisgraphy/source/browse/trunk/gisgraphy/src/main/python/client/gisgraphy_python_client.py">SVN</a> or in the <a href="http://code.google.com/p/gisgraphy/downloads/list">distribution</a>
+Some other contributions are also be done by the Gisgraphy community : <a href="https://github.com/JeffAMcGee/localcrawl/blob/master/gisgraphy.py">https://github.com/JeffAMcGee/localcrawl/blob/master/gisgraphy.py</a>. you can also try to use java class in python with <a href="http://www.jython.org/">jython</a>
+<br/><br/>
+
+<a name="scala"></a>
+<h2>Scala</h2>
+A client library developed by third party is available. The code is available on the <a href="https://github.com/iglootools/openplacesearch-scala/tree/master/api/src/main/scala/org/iglootools/openplacesearch/api/gisgraphy">Github repository</a>
+<br/><br/>
+
+
+<a name="php"></a>
+<h2>PHP</h2>
+I suggest to use the Restclient library available in the <a href="http://code.google.com/p/gisgraphy/source/browse/trunk/gisgraphy/src/main/php/client">SVN repository</a> or in the <a href="http://code.google.com/p/gisgraphy/downloads/list">distribution</a>. Some examples of use are also provided.
+<div class="code">. Note that <a href="http://php.net/manual/en/book.curl.php">curl</a> is required by the Restclient library.
+<pre>
+&lt;?
+// dummy examples of gisgraphy query. 
+
+//geocoding
+$query = RestClient::get("http://services.gisgraphy.com/geocoding/geocode",
+	 array('format'=>'php',
+		'address'=>'1 avenue des champs elysees 75003 paris',
+		'country'=>'FR'
+	      )
+);
+//address parser
+$query = RestClient::get("http://services.gisgraphy.com/addressparser/parse",
+	array('format'=>'php',
+	      'address'=>'1 avenue des champs elysees 75003 paris',
+	      'country'=>'FR'
+	     )
+);
+//street search
+$query = RestClient::get("http://services.gisgraphy.com/street/streetsearch",
+		array('format'=>'php',
+			'lat'=>'48.8534088134765',
+			'lng'=>'2.34879994392395',
+			'name'=>'Champs'
+			)
+);
+//fulltext
+$query = RestClient::get("http://services.gisgraphy.com/fulltext/fulltextsearch",
+		array('format'=>'php',
+			'q'=>'paris'
+			)
+);
+//geoloc-find nearby
+$query = RestClient::get("http://services.gisgraphy.com/geoloc/search",
+		array('format'=>'php',
+		'lat'=>'48.8534088134765',
+		'lng'=>'2.34879994392395',
+		'placetype'=>'city')
+);
+
+
+var_dump($query->getResponse());
+var_dump($query->getResponseCode());
+var_dump($query->getResponseContentType());
+
+//Note that 'format'=>'php' is in case you want to do something like :
+//eval("\$str =$query->getResponse()");echo (print_r($str));
+//feel free to use xml, json, any format you want.
+
+
+?&gt;
+</pre>
+</div>
+<br/><br/>
+
+
+</div>
+</body>
+</html>

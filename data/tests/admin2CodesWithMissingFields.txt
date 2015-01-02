@@ -1,0 +1,2 @@
+3013657	Département des Hauts-de-Seine	 Departement des Hauts-de-Seine 	Altos de Sena,Departement des Hauts-de-Seine,Département des Hauts-de-Seine,Hauts-de-Seine	48.85	2.2	A	ADM2	FR		A8	92			1475221		110	Europe/Paris	2007-05-16
+3013657	missing	 Departement des Hauts-de-Seine 	Altos de Sena,Departement des Hauts-de-Seine,Département des Hauts-de-Seine,Hauts-de-Seine	48.85		A	ADM2	FR			92			1475221		110	Europe/Paris	2007-05-16

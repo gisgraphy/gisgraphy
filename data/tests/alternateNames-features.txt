@@ -1,0 +1,9 @@
+1	3037423	FR	alterantony	1	1
+21	2990611	post	92201	0	0
+3	3000816	post	00001	0	0
+6	3000751	iata	gésilloniata	0	0
+7	3000751	iciao	gesilloniciao	0	0
+8	3000751	fr-1793	gesillonrevolution	0	0
+9	3031137	FR	Boulogne Billancourt0	1	1
+92	3031137		Boulogne Billancourt4	1	1
+12	3031137	XX	Boulogne Billancourt3	1	0

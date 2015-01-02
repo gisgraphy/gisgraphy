@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><!-- /Creative Commons Public Domain --><!--
+
+
+--><svg height="500" id="svg1" sodipodi:docname="uk_flag.svg" sodipodi:version="0.33pre" width="1000" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Clipart by Daniel McRae - United Kingdom</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>unitedkingdom</rdf:li>
+            <rdf:li></rdf:li>
+            <rdf:li>europe</rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Daniel McRae</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Daniel McRae</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Daniel McRae</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs3"/>
+  <sodipodi:namedview id="base"/>
+  <g id="g578" transform="scale(16.66667,16.66667)">
+    <rect height="30" id="rect124" style="font-size:12;fill:#000066;stroke-width:1pt;" width="60" x="0" y="0"/>
+    <g id="g584" style="font-size:12;">
+      <path d="M 0 0 L 0 3.3541 L 53.2918 30 L 60 30 L 60 26.6459 L 6.7082 0 L 0 0 z M 60 0 L 60 3.35405 L 6.7082 30 L 0 30 L 0 26.6458 L 53.2918 0 L 60 0 z " id="path146" style="font-size:12;fill:#ffffff;stroke-width:1pt;"/>
+      <path d="M 25 0 L 25 30 L 35 30 L 35 0 L 25 0 z M 0 10 L 0 20 L 60 20 L 60 10 L 0 10 z " id="path136" style="font-size:12;fill:#ffffff;stroke-width:1pt;"/>
+      <path d="M 0 12 L 0 18 L 60 18 L 60 12 L 0 12 z M 27 0 L 27 30 L 33 30 L 33 0 L 27 0 z " id="path141" style="font-size:12;fill:#cc0000;stroke-width:1pt;"/>
+      <path d="M 0 30 L 20 20 L 24.4721 20 L 4.47214 30 L 0 30 z M 0 0 L 20 10 L 15.5279 10 L 0 2.23607 L 0 0 z M 35.5279 10 L 55.5279 0 L 60 0 L 40 10 L 35.5279 10 z M 60 30 L 40 20 L 44.4721 20 L 60 27.7639 L 60 30 z " id="path150" style="font-size:12;fill:#cc0000;stroke-width:1pt;"/>
+    </g>
+  </g>
+</svg>

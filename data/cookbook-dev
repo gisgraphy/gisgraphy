@@ -1,0 +1,41 @@
+ #Fields
+ add a field to openstreetmap
+ =>add the same fields to street.
+ modify streetfactory +test
+ modify solr shema +fulltextfields+solrsynchronizer+test
+ solrresponsedto +solrunmarshaller+test (pour execute client 
+ car different de streaming : les champs peuvent etre present mais pas mis dans le dto)
+ modify OutputStyleHelper
+ 
+ solrsynchroniser+test
+ 
+doc
+
+#Importer
+openstreetmap importer +test
+
+#WS
++service return the field
+
+ #fulltext dto 
+ solrresponsebuilder
+ solrresponsedto =>solrunmarshallertest
+ 
+ #geoloc dto
+ gisfeaturedistance
+ GisFeatureDistanceFactory
+ 
+ #street dto
+ StreetSearchResultsDto
+ modify streetdistance
+ ResultTransformerUtil.transformToStreetDistance if necessary
+ 
+ #test
+ modify constructor of GisFeatureDistance(street) and createFullFilledGisFeatureDistanceForStreet in geolotesthelper
+ createOpenStreetMapForJohnKenedyStreet et createOpenStreetMapForPeterMartinStreet et tout les endroits ou c'est utilisé
+ fulltextsearchenginetest#testExecuteQueryForStreet
+ fulltextsearchenginetest#testExecuteAndSerializeForStreet
+ 
+# display
+add the field to macro displaystreet et display fulltextresultdto 
+add fields to client

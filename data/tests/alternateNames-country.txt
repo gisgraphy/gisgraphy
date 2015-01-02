@@ -1,0 +1,2 @@
+5	3017382	ES	FranceAlteres	1	0
+52	3017382		FranceAlter	1	0

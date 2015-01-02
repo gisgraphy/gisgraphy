@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"
+[
+ <!ATTLIST svg
+  xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="708.661011" id="svg378" version="1" width="1062.98999" x="0.00000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0.00000000">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Denmark - Greenland</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>europe</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>denmark</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Daniel McRae</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Daniel McRae</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Daniel McRae</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs380"/>
+  <rect height="708.660828" id="rect149" style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:0.999999pt;" width="1062.98743" x="0.00012200" y="0.00006100"/>
+  <rect height="354.330902" id="rect148" style="font-size:12;fill:#df0000;fill-rule:evenodd;stroke-width:1pt;" width="1062.98743" x="0.00012200" y="354.329926"/>
+  <path d="M 628.274841,506.375549 A 217.357712,217.357727 0 1 1 193.559402,506.375488" id="path567" style="font-size:12;fill:#df0000;fill-rule:evenodd;stroke-width:1pt;" transform="matrix(1.000000,0.000000,0.000000,-1.000000,0.000000,860.5060)"/>
+  <path d="M 628.274841,506.375549 A 217.357712,217.357727 0 1 1 193.559402,506.375488" id="path568" style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1pt;" transform="translate(0.000000,-152.3964)"/>
+</svg>

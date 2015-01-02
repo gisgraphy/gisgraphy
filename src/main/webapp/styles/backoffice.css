@@ -1,0 +1,39 @@
+.feedback {
+background:url("/images/feedbacks.png") repeat scroll 0 0 transparent;
+border:0 none;
+height:81px;
+width:81px;
+}
+
+#feedback-box {
+bottom:0 !important;
+position:fixed !important;
+right:0 !important;
+z-index:10001 !important;
+}
+
+.tip {
+text-align:left;
+width : 80%;
+margin-left: auto;
+margin-right: auto;
+padding : 10px;
+padding-left: 20px;
+margin-top : 10px;
+margin-bottom : 10px;
+}
+
+.greentip{
+background-color:#DDFFDD;
+border:1px solid #009900;
+}
+
+.redtip{
+background-color:#FFCCCC;
+border:1px solid #CC0000;
+}
+
+.yellowtip{
+background-color:#FFFFCE;
+border:1px solid #F0C000;
+}

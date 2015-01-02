@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="486" id="islenskifaninn" sodipodi:docbase="/home/cschalle/sodipodi-flags/Regional" sodipodi:docname="/home/cschalle/sodipodi-flags/Regional/faroe_islands_denmark.svg" sodipodi:version="0.32" version="1" width="675" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Denmark - Faroe</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>europe</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>denmark</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base"/>
+  <defs id="defs380"/>
+  <rect height="486.000000" id="blarfeldur" style="fill:#ffffff;fill-rule:evenodd;stroke-width:0pt;fill-opacity:1;" width="675.000000" x="0" y="0"/>
+  <path d="M 0 189 L 189 189 L 189 0 L 297 0 L 297 189 L 675 189 L 675 297 L 297 297 L 297 486 L 189 486 L 189 297 L 0 297 L 0 189 z " id="hviturkross" style="fill:#003897;fill-rule:evenodd;stroke-width:0pt;fill-opacity:1;"/>
+  <path d="M 0 216 L 216 216 L 216 0 L 270 0 L 270 216 L 675 216 L 675 270 L 270 270 L 270 486 L 216 486 L 216 270 L 0 270 L 0 216 z " id="raudurkross" style="fill:#d72828;fill-rule:evenodd;stroke-width:0pt;fill-opacity:1;" transform="translate(0.000000,2.014488)"/>
+</svg>

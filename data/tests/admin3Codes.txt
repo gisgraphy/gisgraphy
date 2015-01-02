@@ -1,0 +1,5 @@
+6456890	Adm3 with last missing field	Adm3 with last missing field		48.9	2.3	A	ADM3	FR		A8	92	6456890		0		33	Europe/Paris	2007-04-01
+6457368	Arrondissement d'Antony	 Arrondissement d'Antony 		48.7617	2.3006	A	ADM3	FR		A8	92	921		0		50	Europe/Paris	2007-04-07
+6677368	Duplicate Adm3	 Arrondissement d'Antony 		48.7617	2.3006	A	ADM3	FR		A8	92	921		0		50	Europe/Paris	2007-04-07
+6457369	Arrondissement de Nanterre	Arrondissement de Nanterre		48.896	2.2159	A	ADM3	FR		A8	92	922		0		51	Europe/Paris	2007-04-07
+6457370	Arrondissement de Boulogne-Billancourt	Arrondissement de Boulogne-Billancourt		48.8304	2.231	A	ADM3	FR		A8	92	923		0		33	Europe/Paris	2007-04-07

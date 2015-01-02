@@ -1,0 +1,42 @@
+
+<h1>Free access</h1>
+<h2>Terms and conditions</h2>
+The Gisgraphy project (<a href="http://www.gisgraphy.com">www.gisgraphy.com</a>) is a free open sources project under the <a href="http://www.gisgraphy.com/license.html">LGPL license V3</a>. Geonames data are under the <a href="http://www.geonames.org/about.html">creative commons attributions license</a>. <a href="http://wiki.openstreetmap.org/wiki/OpenStreetMap_License">Openstreetmap</a> data are under the creative common by SA (CC-by-SA).
+All gisgraphy webservices are deployed on a dedicated server, and can be called for free. You can use it to see if gisgraphy feet your needs. 
+The short description of all webservices is given on the <a href="/">home page</a> and the <a href="/documentation/user-guide.htm">user guide</a> give 
+People can use the webservice on their site, if it is a personnal,non commercial and non profit one AND in a smart way.
+People that abuse the service will be blacklisted.(click <a href="http://www.gisgraphy.com/abuse.txt">here</a> to see blacklisted IPs). 
+Do not use free services with site that provide cloud services (amazon, google appengine,...).
+<br/><br/>
+
+If you want to use Gisgraphy for commercial use or if you need QOS, you can :
+<ul>
+<li><a href="http://www.gisgraphy.com/download/index.htm" >download</a> and <a href="http://www.gisgraphy.com/documentation/installation/index.htm">install</a> it on your own servers (for free!)</li>
+<li><a href="/premium/index.htm">subscribe</a> to hosted premium services</li>
+</ul>
+<br/><br/>  
+Any warranty, SLA, QOS, or time response are given, The data are provided "as is" without warranty or any representation of accuracy, timeliness or completeness.
+If you have any question, and don't know if the way you want to use the free services is allowed, <a href="mailto:davidmasclet@gisgraphy.com">send a mail</a>.
+<br/><br/>
+
+<h2>URLs and demo pages</h2>
+Here are the url of the free webservices. for each one a demo page that use the webservices under the hood is available.
+<br/><br/>
+<div class="tip greentip">
+<b>You can go to the <a href="http://services.gisgraphy.com/static/leaflet/index.html">Demo page</a> that use all the webservices on a map with auto completion and auto suggetions, geocoding, reverse geocoding and find nearby.</b>
+</div>
+<br/>
+<br/>
+<table class="border:1px solid #CCCCCC">
+<tr><th>Webservice</th><th>Access URLs</th><th>Examples</th><th>Demo pages</th></tr>
+<tr><td>Geocoding</td><td>http://services.gisgraphy.com//geocoding/geocode?
+</td><td><a href="http://services.gisgraphy.com//geocoding/geocode?address='1 avenue des champs elysees 75003 paris'&country=FR" target="_blank">http://services.gisgraphy.com//geocoding/geocode?address='1 avenue des champs elysees 75003 paris'&country=FR</a></td><td><ul><a href="http://services.gisgraphy.com/public/geocoding.html" target="_blank">http://services.gisgraphy.com/public/geocoding.html</a></li><li><a href="http://services.gisgraphy.com/public/geocoding_worldwide.html" target="_blank">http://services.gisgraphy.com/public/geocoding_worldwide.html</li></ul></a></td></tr>
+
+<tr><td>Reverse geocoding</td><td>http://services.gisgraphy.com/reversegeocoding/search?</td><td><a href="http://services.gisgraphy.com/reversegeocoding/search?format=json&lat=48.8723789988&lng=2.2996401787" target="_blank">http://services.gisgraphy.com/reversegeocoding/search?format=json&lat=48.8723789988&lng=2.2996401787&from=1&to=10</a></td><td><a href="http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html" target="_blank">http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html</a></td></tr>
+
+<tr><td>Street search</td><td>http://services.gisgraphy.com/street/streetsearch?</td><td><a href="http://services.gisgraphy.com/street/streetsearch?format=XML&lat=48.85340881347656&lng=2.34879994392395&from=1&to=10" target="_blank">http://services.gisgraphy.com/street/streetsearch?format=XML&lat=48.85340881347656&lng=2.34879994392395&from=1&to=10</a></td><td><a href="http://services.gisgraphy.com/public/streetSearch.html" target="_blank">http://services.gisgraphy.com/public/streetSearch.html</a></td></tr>
+<tr><td>Address parser</td><td><ul><li>http://addressparser.appspot.com/webaddressparser?</li><li>
+http://services.gisgraphy.com/addressparser/parse?</li></ul></td><td><a href="http://addressparser.appspot.com/webaddressparser?address='1 avenue des champs elysees 75003 paris'&country=FR" target="_blank">http://addressparser.appspot.com/webaddressparser?address='1 avenue des champs elysees 75003 paris'&country=FR</a></td><td><a href="http://services.gisgraphy.com/public/addressparser.html" target="_blank">http://services.gisgraphy.com/public/addressparser.html</a></td></tr>
+<tr><td>Find nearby</td><td>http://services.gisgraphy.com/geoloc/search</td><td><a href="http://services.gisgraphy.com/geoloc/search?lat=43.00034713745117&lng=-75.4999008178711&radius=7000" target="_blank">http://services.gisgraphy.com/geoloc/search?lat=43.00034713745117&lng=-75.4999008178711&radius=7000</a></td></td><td><a href="http://services.gisgraphy.com/ajaxgeolocsearch.html" target="_blank">http://services.gisgraphy.com/ajaxgeolocsearch.html</a></td></tr>
+<tr><td>Fulltext/zipcode (with autocompletion / auto suggetions)</td><td>http://services.gisgraphy.com/fulltext/fulltextsearch?</td><td><a href="http://services.gisgraphy.com/fulltext/fulltextsearch?q=paris" target="_blank">http://services.gisgraphy.com/fulltext/fulltextsearch?q=paris</a></td><td><a href="http://services.gisgraphy.com/ajaxfulltextsearch.html" target="_blank">http://services.gisgraphy.com/ajaxfulltextsearch.html</a></td></tr>
+</table>

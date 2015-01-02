@@ -1,0 +1,349 @@
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    
+    <display-name>gisgraphy</display-name>
+    <distributable/>
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>/WEB-INF/classes/log4j.xml</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>gisgraphy.root</param-value>
+    </context-param>
+
+    <!-- precompiled jsp mappings -->
+
+    <!-- Define the default CSS Theme -->
+    <context-param>
+        <param-name>csstheme</param-name>
+        <param-value>simplicity</param-value>
+    </context-param>
+    <!-- Define the basename for a resource bundle for I18N -->
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>ApplicationResources</param-value>
+    </context-param>
+    <!-- Fallback locale if no bundles found for browser's preferred locale -->
+    <!-- Force a single locale using param-name 'javax.servlet.jsp.jstl.fmt.locale' -->
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
+        <param-value>en</param-value>
+    </context-param>
+    <!-- Context Configuration locations for Spring XML files -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath*:/applicationContext.xml
+            classpath:/applicationContext-resources.xml
+            classpath:/applicationContext-repository.xml
+            classpath:/applicationContext-dao.xml
+            classpath:/applicationContext-service.xml
+            classpath*:/applicationContext-geoloc.xml
+           
+           /WEB-INF/applicationContext*.xml
+            /WEB-INF/security.xml
+        </param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>cacheFilter</filter-name>
+        <filter-class>com.opensymphony.oscache.web.filter.CacheFilter</filter-class>
+    </filter>
+      <filter>
+        <filter-name>struts-cleanup</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
+    </filter>
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>exportFilter</filter-name>
+        <filter-class>org.displaytag.filter.ResponseOverrideFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>lazyLoadingFilter</filter-name>
+        <filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>localeFilter</filter-name>
+        <filter-class>com.gisgraphy.webapp.filter.LocaleFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>rewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>log4j</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>securityFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+        	<param-name>targetBeanName</param-name>
+        	<param-value>springSecurityFilterChain</param-value>
+    	</init-param>
+    </filter>
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.module.sitemesh.filter.PageFilterWithoutSession</filter-class>
+    </filter>
+    <filter>
+        <filter-name>staticFilter</filter-name>
+        <filter-class>com.gisgraphy.webapp.filter.StaticFilter</filter-class>
+        <init-param>
+            <param-name>includes</param-name>
+            <param-value>/scripts/dojo/*,/dwr/*,/google*,/static/*</param-value>
+        </init-param>
+    </filter>
+  
+    <filter>
+        <filter-name>struts</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+        <init-param>
+       		 <param-name>actionPackages</param-name>
+        	 <param-value>com.gisgraphy.webapp.action</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+    <!-- Commented out for 2 reasons: 1) it's a pain when developing JSPs, and
+                                      2) it causes the Signup webtest to fail -->
+    <filter-mapping>
+        <filter-name>cacheFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+    <filter-mapping>
+        <filter-name>lazyLoadingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+   
+    <filter-mapping>
+        <filter-name>localeFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>exportFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>rewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>struts-cleanup</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>staticFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>struts</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    
+	
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.gisgraphy.webapp.listener.StartupListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.gisgraphy.webapp.listener.UserCounterListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>net.sf.navigator.menu.MenuContextListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>dwr-invoker</servlet-name>
+        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+ 	  <servlet>
+		<servlet-name>geoloc service</servlet-name>
+		<servlet-class>
+			com.gisgraphy.servlet.GeolocServlet
+		</servlet-class>
+		 <init-param>
+		 <!-- if true the output field error will contains the exception message. Default to false -->
+			<param-name>debugMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>geoloc service</servlet-name>
+		<url-pattern>/geoloc/*</url-pattern>
+	</servlet-mapping>
+	
+ 	  <servlet>
+		<servlet-name>reverse geocoding service</servlet-name>
+		<servlet-class>
+			com.gisgraphy.servlet.ReverseGeocodingServlet
+		</servlet-class>
+		 <init-param>
+		 <!-- if true the output field error will contains the exception message. Default to false -->
+			<param-name>debugMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>reverse geocoding service</servlet-name>
+		<url-pattern>/reversegeocoding/*</url-pattern>
+	</servlet-mapping>
+	
+	 <servlet>
+		<servlet-name>address parser service</servlet-name>
+		<servlet-class>
+			com.gisgraphy.servlet.AddressParserServlet
+		</servlet-class>
+		 <init-param>
+		 <!-- if true the output field error will contains the exception message. Default to false -->
+			<param-name>debugMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>address parser service</servlet-name>
+		<url-pattern>/addressparser/*</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>street service</servlet-name>
+		<servlet-class>
+			com.gisgraphy.servlet.StreetServlet
+		</servlet-class>
+		 <init-param>
+		 <!-- if true the output field error will contains the exception message. Default to false -->
+			<param-name>debugMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>street service</servlet-name>
+		<url-pattern>/street/*</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>geocoding service</servlet-name>
+		<servlet-class>
+			com.gisgraphy.servlet.GeocodingServlet
+		</servlet-class>
+		 <init-param>
+		 <!-- if true the output field error will contains the exception message. Default to false -->
+			<param-name>debugMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>geocoding service</servlet-name>
+		<url-pattern>/geocoding/*</url-pattern>
+	</servlet-mapping>
+	
+	
+	 <servlet>
+		<servlet-name>fulltext service</servlet-name>
+		<servlet-class>
+			com.gisgraphy.servlet.FulltextServlet
+		</servlet-class>
+		<init-param>
+		 <!-- if true the output field error will contains the exception message. Default to false -->
+			<param-name>debugMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>fulltext service</servlet-name>
+		<url-pattern>/fulltext/*</url-pattern>
+	</servlet-mapping>
+	
+	
+    <servlet-mapping>
+        <servlet-name>dwr-invoker</servlet-name>
+        <url-pattern>/dwr/*</url-pattern>
+    </servlet-mapping>
+	
+    <session-config>
+        <session-timeout>5</session-timeout>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>/index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/index.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/403.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+    </error-page>
+</web-app>

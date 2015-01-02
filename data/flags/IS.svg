@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="486" id="islenskifaninn" inkscape:version="0.39" sodipodi:docbase="/home/cschalle/clipart/openclipart-0.10/signs_and_symbols/flags/europe" sodipodi:docname="iceland.svg" sodipodi:version="0.32" version="1" width="675" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Iceland</dc:title>
+        <dc:description>HASH(0x852c614)</dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>hash</rdf:li>
+            <rdf:li></rdf:li>
+            <rdf:li>europe</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>&amp;Aacute;ki G. Karlsson </dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>&amp;Aacute;ki G. Karlsson</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>&amp;Aacute;ki G. Karlsson </dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base" inkscape:cx="270.00000" inkscape:cy="194.40000" inkscape:window-height="538" inkscape:window-width="640" inkscape:window-x="5" inkscape:window-y="56" inkscape:zoom="0.94135802"/>
+  <defs id="defs380"/>
+  <rect height="486" id="blarfeldur" style="fill:#003897;fill-rule:evenodd;stroke-width:0pt;fill-opacity:1;" width="675" x="0" y="0"/>
+  <path d="M 0 189 L 189 189 L 189 0 L 297 0 L 297 189 L 675 189 L 675 297 L 297 297 L 297 486 L 189 486 L 189 297 L 0 297 L 0 189 z " id="hviturkross" sodipodi:fill-cmyk="(0 0 0 0)" style="fill:#ffffff;fill-rule:evenodd;stroke-width:0pt;"/>
+  <path d="M 0 216 L 216 216 L 216 0 L 270 0 L 270 216 L 675 216 L 675 270 L 270 270 L 270 486 L 216 486 L 216 270 L 0 270 L 0 216 z " id="raudurkross" style="fill:#d72828;fill-rule:evenodd;stroke-width:0pt;fill-opacity:1;"/>
+</svg>

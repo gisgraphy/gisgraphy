@@ -1,0 +1,247 @@
+/*@font-face {
+  font-family: Prociono;
+  src: url(../font/Prociono-Regular-webfont.ttf);
+}
+*/
+
+
+.tt-dropdown-menu,
+.gist {
+  text-align: left;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+  width: 396px;
+/*  height: 20px;*/
+  padding: 5px 8px;
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 20px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  outline: none;
+}
+
+.typeahead {
+  background-color: #fff;
+}
+
+.typeahead:focus {
+  border: 2px solid #1465b7;
+}
+
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-dropdown-menu {
+  width: 390px;
+  margin-top: 2px;
+  padding: 0px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 12px;
+  line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+.footer{
+font-size:10px;
+float:right;
+padding-right:8px;
+padding-bottom:4px;
+}
+
+
+/* example specific styles */
+/* ----------------------- */
+
+.empty-message {
+  padding: 5px 10px;
+ text-align: left;
+ font-size: 14px;
+}
+
+
+
+.flag-autocomplete {
+width:15px;
+padding-right:3px;
+padding-top:3px;
+}
+
+.isin-autocomplete{
+color:#999;
+}
+
+.closable {
+    background: url("../img/close.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    /*border: 1px solid;*/
+    display: block;
+    float: right;
+    height: 10px;
+    margin: 1px;
+    padding: 3px;
+    width: 10px;
+    cursor:pointer;
+}
+
+.clearable{
+  background:url(../img/close.png) no-repeat right -10px center;
+ /* border:1px solid #999;
+  padding:3px 18px 3px 4px; */
+  /*border-radius:3px;*/
+}
+.clearable.x{
+  background-position: right 5px center;
+}
+.clearable.onX{
+  cursor:pointer;
+}
+
+#gisgraphy-leaflet .searchbutton {
+width: 26px;
+height: 28px;
+background-image: url(../img/search.png);
+background-repeat: no-repeat;
+margin-top:8px;
+background-position: center;
+/*border:1px solid;*/
+float: right;
+cursor: pointer;
+padding:1px;
+}
+#gisgraphy-leaflet .help{
+margin-left:8px;
+margin-right:8px;
+cursor:help;
+background-color : #FFF;
+
+}
+
+
+
+#gisgraphy-leaflet .resultBox {
+font-size:11px;
+width: 340px;
+height: auto;
+/*border:1px solid;*/
+float: left;
+padding :5px;
+padding-top:8px;
+margin-top : 8px;
+margin-left : 3px;
+border: 2px solid #1465B7;
+border-radius: 8px 8px 8px 8px;
+background-color : #FFF;
+
+}
+
+#gisgraphy-leaflet .tools {
+background-color : #FFF;
+}
+
+
+#gisgraphy-leaflet {
+/*margin:auto auto;*/
+width:437px;
+padding:10px;
+padding-right:30px;
+font-size:9px;
+}
+
+#gisgraphy-leaflet .placetypes{
+/*display:none;*/
+width:130px;
+font-size:10px;
+margin-left:10px;
+}
+
+#gisgraphy-leaflet .languages {
+
+}
+
+#gisgraphy-leaflet .searchbox{
+width:390px;
+background-color : #FFF;
+}
+
+
+.leaflet-control-help {
+font-family : "Helvetica Neue",Arial,Helvetica,sans-serif;
+font-size:14px;
+padding:5px;
+background-color:#FFFFFF;
+}
+
+.searching {
+background-repeat: no-repeat;
+/*background-color:#FF0000;*/
+background-image: url(../img/loading.gif);
+}
+#gisgraphy-leaflet .help{
+margin-left:8px;
+margin-right:8px;
+cursor:help;
+background-color : #FFF;
+
+}
+
+
+#header{
+/*height:9%;*/
+vertical-align:middle;
+text-align:center;
+border-bottom: 2px solid #777;
+color: #FFF;
+font-weight:bold;
+font-family: Arial,Verdana,sans-serif;
+display:block;
+width:100%;
+font-size: 14px;
+margin:auto;
+background-color:#2D81BE;
+}
+
+#header a{
+color:#FFFFFF;
+font-weight:bold;
+}
+
+
+#map{
+background: none repeat scroll 0 0 #FFFFFF; 
+height:90%;
+position: absolute;
+width: 100%;
+}

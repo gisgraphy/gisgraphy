@@ -1,0 +1,140 @@
+<html>
+<head>
+ <style type="text/css" media="all">
+@import url("./css/site.css");
+
+h1 {
+	counter-reset: section;
+	counter-reset: subsection;
+	counter-reset: indexsection;
+	counter-reset: indexsubsection;
+	counter-reset: subsubsection;
+}
+
+h2 {
+	counter-increment: section;
+	counter-reset: subsection;
+}
+
+h2:before {
+	content: counter(section) " ";
+}
+
+h3 {
+	counter-increment: subsection;
+	counter-reset: subsubsection;
+}
+
+h3:before {
+	content: counter(section) "." counter(subsection) " ";
+}
+.redtext {
+	color:#FF0000;
+}
+
+h4 {
+	counter-increment: subsubsection;
+}
+
+h4:before {
+	content: counter(section) "." counter(subsection) "."
+		counter(subsubsection) " ";
+}
+
+.indexlevel2 {
+	counter-increment: indexsection;
+	counter-reset: indexsubsection;
+	padding-left: 24px;
+}
+
+.indexlevel2:before {
+	content: counter(indexsection) " ";
+}
+
+.indexlevel3 {
+	counter-increment: indexsubsection;
+	padding-left: 40px;
+}
+
+.indexlevel3:before {
+	content: counter(indexsection) "." counter(indexsubsection) " ";
+}
+</style>
+</head>
+<body>
+<h1>Edit Street and place</h1>
+<a name="top"></a>
+<br/>
+<div class="tip greentip">
+To suggest a change or a correction to any part of the documentation, please send a mail to <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>.
+</div>
+<div>
+
+<div class="masterTopic">Table of content : </div>
+<div class="indexlevel2"><a href="#introduction" />introduction</a></div>
+<div class="indexlevel2"><a href="#street" />Add / edit street</a></div>
+<div class="indexlevel2"><a href="#place" />Add / edit place</a></div>
+
+<a name="introduction"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Introduction</h2>
+Gisgraphy use free opensource data (Geonames and openstreetmap) but allows to add / edit your own place and streets. A friendly User interface allows to draw line or plot place directly on a map.<br/>
+To a Edit a particular street or place :
+<ul>
+<li>Go to the main admin Page '/mainMenu.html'</li>
+</ul>
+<br/><br/>
+<img src="../images/edition/edit_search.png" alt="edit search"/>
+<br/><br/>
+<li>Click on 'Add or edit streets or places in the database'.</li>
+<li>You will get a form to search for a place or a street. You can use the 'Advanced search' if needed.</li>
+<li>Click on the search button. The results are displayed</li> 
+<ul>
+<br/><br/>
+<img src="../images/edition/edit_results.png" alt="edit results"/>
+<br/><br/>
+<li>Choose the place or the street you want to add / edit, and click on the Edit button (note that if you click on the link, you will see the feature/street details)</li>
+<a name="street"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Add / Edit street</h2>
+A map is display, When you are on the edition form. The shape of the street is draw in red, so you can check the relevance of the shape. A marker of the middle of the street is displayed.
+<br/><br/>
+<img src="../images/edition/edit_street_form.png" alt="edit street form"/>
+<br/><br/>
+If you want to add a new segment to the existing shape, click on the map to plot a new point. A new segment will be added from the <u>last</u> point of the street to the new point. Repeat the operation to draw complex lines and curve. If you need to add some points to the beginning of the shape, delete the shape and draw your own lines.
+<br/>Note that the marker of the middle of the street and the length is automatically updated. Don't forget to click on the save button.
+<br/><br/>
+<img src="../images/edition/edit_street_add_point.png" alt="edit street add point"/>
+<br/><br/>
+If the existing shape is totally wrong and you want to draw your shape from scratch, click on 'Delete shape' and plot the points as described above.
+If the shape is partially wrong and you want to move some existing points, click on 'Edit points of the shape', All the points will be shown, then you move(drag with your mouse) them one by one. Once done click on 'Stop editing'. Don't forget to click on the save button.
+<br/><br/>
+<img src="../images/edition/edit street_edit_points.png" alt="edit street edit point"/>
+<br/><br/>
+At any time, If you've made mistakes or if the shape you've draw is not correct you can restore the initial shape by clicking 'Reset the initial shape'. If you add a new street, it will delete the shape already draw<br/>
+
+<div class="tip greentip">
+TIPS : If you need to be precise, you can zoom in/out the map put your mouse on the location you want to zoom and scroll with the wheel of your mouse, or simply use the zoom level display on the map.
+</div>
+
+<br/>
+<a name="Place"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Add / edit place</h2>
+A map is display, When you are on the form to add or edit a feature. If you edit a place, A marker is plot on the map to show the current position.
+<br/><br/>
+<img src="../images/edition/edit_place_form.png" alt="edit place form"/>
+<br/><br/>
+If you want to move the place, simply click on the map to move the point.<br/><br/>
+At any time, if you've made a mistake, you can restore the initial point by clicking the 'Reset initial shape' button.
+<br/><br>
+If you add a new place, a marker is present by default and the map is zoom out.<br/>
+<img src="../images/edition/add_place.png" alt="add place"/><br/><br/>
+
+<div class="tip greentip">
+TIPS : If you need to be precise, you can zoom in/out the map put your mouse on the location you want to zoom and scroll with the wheel of your mouse, or simply use the zoom level display on the map.
+</div>
+
+<br/><br/><br/><br/>
+</body>
+</html>

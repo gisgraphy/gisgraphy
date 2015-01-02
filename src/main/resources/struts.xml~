@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <!-- Constants -->
+    <constant name="struts.devMode" value="false"/>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="struts.action.extension" value="html"/>
+    <constant name="struts.objectFactory" value="spring"/>
+    <constant name="struts.custom.i18n.resources" value="ApplicationResources,errors,featurecodes"/>
+    <constant name="struts.multipart.maxSize" value="2097152"/>
+    <constant name="struts.ui.theme" value="css_xhtml"/>
+    <constant name="struts.codebehind.pathPrefix" value="/WEB-INF/pages/"/>
+    <constant name="struts.enable.SlashesInActionNames" value="true"/>
+
+    <!-- Configuration for the default package. -->
+    <package name="default" extends="struts-default" >
+        <interceptors>
+            <!-- Interceptor to handle allowing only admins to certain actions -->
+            <interceptor name="adminOnly" class="adminInterceptor"/>
+            <!-- Copied from struts-default.xml and changed validation exclude methods -->
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n">
+                	<param name="parameterName">locale</param>
+                </interceptor-ref>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="profiling"/>
+                <interceptor-ref name="scopedModelDriven"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="params">
+                    <param name="excludeParams">dojo\..*</param>
+                </interceptor-ref>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">cancel,execute,delete,edit,list</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+            </interceptor-stack>
+            <interceptor-stack name="fileUploadStack">
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+            <interceptor-stack name="adminCheck">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="adminOnly"/>
+            </interceptor-stack>
+    		<interceptor-stack name="longProcessStack">
+    			<interceptor-ref name="adminOnly"/>
+	            <interceptor-ref name="paramsPrepareParamsStack" />
+				<interceptor-ref name="execAndWait">
+					<param name="delay">1000</param>
+					<param name="delaySleepInterval">10000</param>
+				</interceptor-ref>
+			</interceptor-stack>
+            
+           
+        </interceptors>
+
+        <global-results>
+            <result name="mainMenu" type="redirect">mainMenu.html</result>
+            <result name="dataAccessFailure">/WEB-INF/pages/dataAccessFailure.jsp</result>
+            <result name="importFailure">/WEB-INF/pages/importFailure.jsp</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="org.springframework.dao.DataAccessException" result="dataAccessFailure"/>
+             <exception-mapping exception="com.gisgraphy.importer.ImporterException" result="importFailure"/>
+        </global-exception-mappings>
+
+        <action name="mainMenu" >
+            <result name="success">/WEB-INF/pages/mainMenu.jsp</result>
+        </action>
+ 
+        
+        <action name="fulltextsearch" class="com.gisgraphy.webapp.action.FulltextSearchAction">
+           <result name="success" type="freemarker">/WEB-INF/views/fulltextsearch.ftl</result>
+        </action>
+        
+         <action name="ajaxfulltextsearch" class="com.gisgraphy.webapp.action.FulltextSearchAction">
+           <result name="success" type="freemarker">/WEB-INF/views/ajaxfulltextsearch.ftl</result>
+            <result name="popup" type="freemarker">/WEB-INF/views/fulltextsearchpopup.ftl</result>
+        </action>
+        
+        <action name="geolocsearch" class="com.gisgraphy.webapp.action.GeolocSearchAction">
+           <result name="success" type="freemarker">/WEB-INF/views/geolocsearch.ftl</result>
+        </action>
+        
+        <action name="ajaxgeolocsearch" class="com.gisgraphy.webapp.action.GeolocSearchAction">
+           <result name="success" type="freemarker">/WEB-INF/views/ajaxgeolocsearch.ftl</result>
+           <result name="popup" type="freemarker">/WEB-INF/views/geolocsearchpopup.ftl</result>
+        </action>
+        
+
+        
+        <action name="displayfeature" class="com.gisgraphy.webapp.action.DisplayFeatureAction">
+           <result name="success" type="freemarker">/WEB-INF/views/displayfeature.ftl</result>
+           <result name="error" type="freemarker">/WEB-INF/views/displayfeatureerror.ftl</result>
+        </action>
+       
+
+     <!--    <action name="signup" class="signupAction">
+            <result name="cancel" type="redirect">/</result>
+            <result name="input">/WEB-INF/pages/signup.jsp</result>
+            <result name="success" type="chain">saveSignup</result>
+        </action>
+        
+        <action name="saveSignup" class="signupAction" method="save">
+            <result name="input">/WEB-INF/pages/signup.jsp</result>
+            <result name="success" type="redirect">/mainMenu.html</result>
+        </action>
+        -->
+
+        <action name="editUser" class="userAction" method="edit">
+            <interceptor-ref name="adminCheck"/>
+            <result name="success">/WEB-INF/pages/userForm.jsp</result>
+            <result name="input">/WEB-INF/pages/admin/userList.jsp</result>
+        </action>
+
+        <action name="editProfile" class="userAction" method="edit">
+            <result name="success">/WEB-INF/pages/userForm.jsp</result>
+            <result name="error">/WEB-INF/pages/mainMenu.jsp</result>
+        </action>
+
+        <action name="saveUser" class="userAction" method="save">
+            <result name="cancel" type="redirect">admin/users.html</result>
+            <result name="input">/WEB-INF/pages/userForm.jsp</result>
+            <result name="success" type="redirect">admin/users.html</result>
+        </action>
+
+        <action name="uploadFile" class="com.gisgraphy.webapp.action.FileUploadAction">
+            <interceptor-ref name="fileUploadStack"/>
+            <result name="input">/WEB-INF/pages/uploadForm.jsp</result>
+            <result name="success">/WEB-INF/pages/uploadDisplay.jsp</result>
+            <result name="cancel" type="redirect">mainMenu.html</result>
+        </action>
+
+     <!--    <action name="passwordHint" class="passwordHintAction" >
+            <result name="input">/</result>
+            <result name="success">/</result>
+        </action>
+        
+        -->
+    </package>
+    
+   <package name="public" extends="default" namespace="/public">
+         <action name="servicesdescription" >
+             <result name="success" type="freemarker">/WEB-INF/views/servicesdescription.ftl</result>
+        </action>
+        <action name="geocoding_worldwide" class="com.gisgraphy.webapp.action.GeocodingAction">
+             <result name="success" type="freemarker">/WEB-INF/views/geocodingautocomplete.ftl</result>
+        </action>
+        <action name="geocoding" class="com.gisgraphy.webapp.action.GeocodingByTextAction">
+           <result name="success" type="freemarker">/WEB-INF/views/geocoding.ftl</result>
+            <result name="popup" type="freemarker">/WEB-INF/views/geocodingsearchpopup.ftl</result>
+        </action>
+        <action name="addressparser" class="com.gisgraphy.webapp.action.AddressParserAction">
+           <result name="success" type="freemarker">/WEB-INF/views/addressparser.ftl</result>
+            <result name="popup" type="freemarker">/WEB-INF/views/geocodingsearchpopup.ftl</result>
+        </action>
+        <action name="displaystreet" class="com.gisgraphy.webapp.action.DisplayStreetAction">
+           <result name="success" type="freemarker">/WEB-INF/views/displaystreet.ftl</result>
+           <result name="error" type="freemarker">/WEB-INF/views/displaystreeterror.ftl</result>
+        </action>
+        <action name="streetSearch" class="com.gisgraphy.webapp.action.StreetSearchAction">
+             <result name="success" type="freemarker">/WEB-INF/views/ajaxstreetsearch.ftl</result>
+           <result name="popup" type="freemarker">/WEB-INF/views/streetsearchpopup.ftl</result>
+        </action>
+        <action name="reverse_geocoding_worldwide" class="com.gisgraphy.webapp.action.ReverseGeocodingAction">
+           <result name="success" type="freemarker">/WEB-INF/views/reversegeocoding.ftl</result>
+           <result name="popup" type="freemarker">/WEB-INF/views/reversegeocoding.ftl</result>
+        </action>
+        <action name="donateCancel" >
+             <result name="success" type="freemarker">/WEB-INF/views/donatecancel.ftl</result>
+        </action>
+         <action name="donateSuccess" >
+             <result name="success" type="freemarker">/WEB-INF/views/donatesuccess.ftl</result>
+        </action>
+         <action name="donate" >
+             <result name="success" type="freemarker">/WEB-INF/views/donate.ftl</result>
+        </action>
+   </package>
+
+    <!-- Actions in this package will be prefixed with /admin/ -->
+    <package name="admin" extends="default" namespace="/admin">
+   		
+   		<action name="debugStreet" class="com.gisgraphy.webapp.action.DebugStreetAction">
+            <interceptor-ref name="adminCheck"/>
+            <result name="success" type="freemarker">/WEB-INF/views/debugStreet.ftl</result>
+        </action>
+   	
+   		<action name="importconfirm" class="com.gisgraphy.webapp.action.ImportConfirmAction">
+            <interceptor-ref name="adminCheck"/>
+            <result name="success" type="freemarker">/WEB-INF/views/import.ftl</result>
+            <result name="errorconfig" type="freemarker">/WEB-INF/views/import.ftl</result>
+            <result name="status" type="redirect">import!status.html</result>
+            <result name="error"  type="freemarker">/WEB-INF/views/importError.ftl</result>
+            <result name="import" type="redirectAction">
+				<param name="actionName">import</param>
+				<param name="method">execute</param>
+				<param name="namespace">/admin</param>
+	   		</result>
+	   		<result name="checkconfig" type="freemarker">/WEB-INF/views/checkImportConfiguration.ftl</result>
+        </action>
+        
+        <action name="resetimport" class="com.gisgraphy.webapp.action.ResetImportAction">
+            <interceptor-ref name="adminCheck"/>
+            <result name="reset" type="freemarker">/WEB-INF/views/resetimport.ftl</result>
+             <result name="ask" type="freemarker">/WEB-INF/views/resetimportconfirm.ftl</result>
+             <result name="impossible" type="freemarker">/WEB-INF/views/resetimportimpossible.ftl</result>
+        </action>
+   		
+   
+   		<action name="import" class="com.gisgraphy.webapp.action.ImportAction">
+         <interceptor-ref name="longProcessStack"/>
+            <result name="wait" type="freemarker">/WEB-INF/views/wait.ftl</result>
+            <result name="success" type="freemarker">/WEB-INF/views/importSuccess.ftl</result>
+             <result name="error"  type="freemarker">/WEB-INF/views/importError.ftl</result>
+        </action>
+        
+        <action name="importstatus" class="com.gisgraphy.webapp.action.ImportAction">
+            <result name="status" type="freemarker">/WEB-INF/views/wait.ftl</result>
+        </action>
+    
+        <action name="activeUsers" class="com.opensymphony.xwork2.ActionSupport">
+            <result name="success">/WEB-INF/pages/admin/activeUsers.jsp</result>
+        </action>
+        
+        <action name="stats" class="com.gisgraphy.webapp.action.StatsAction">
+       		<interceptor-ref name="adminCheck"/>
+            <result name="success"  type="freemarker">/WEB-INF/views/stats.ftl</result>
+        </action>
+
+        <action name="flushCache" class="com.opensymphony.xwork2.ActionSupport">
+            <interceptor-ref name="adminCheck"/>
+            <result name="success">/WEB-INF/pages/admin/flushCache.jsp</result>
+        </action>
+        
+        <action name="reload" class="com.gisgraphy.webapp.action.ReloadAction">
+            <interceptor-ref name="adminCheck"/>
+            <!-- this should never be used, it's here to prevent warnings -->
+            <result name="success">/WEB-INF/pages/mainMenu.jsp</result>
+        </action>
+
+        <action name="users" class="userAction" method="list">
+            <interceptor-ref name="adminCheck"/>
+            <result name="success">/WEB-INF/pages/admin/userList.jsp</result>
+        </action>
+        
+        <action name="editStreet" class="com.gisgraphy.webapp.action.EditStreetAction" method="input">
+          <interceptor-ref name="adminCheck"/>
+            <result name="success" type="redirectAction">
+				<param name="actionName">editSearch</param>
+				<param name="method">execute</param>
+				<param name="namespace">/admin</param>
+	   		</result>
+            <result name="input" type="freemarker">/WEB-INF/views/editStreetForm.ftl</result>
+            <result name="error" type="freemarker">/WEB-INF/views/editError.ftl</result>
+        </action>
+        
+         <action name="editFeature" class="com.gisgraphy.webapp.action.EditFeatureAction" method="input">
+          <interceptor-ref name="adminCheck"/>
+	   	<result name="success" type="redirectAction">
+				 <param name="actionName">editSearch</param>
+			 	<param name="method">execute</param>
+			 	<param name="namespace">/admin</param>
+	    	</result>
+            <result name="input" type="freemarker">/WEB-INF/views/editFeatureForm.ftl</result>
+            <result name="error" type="freemarker">/WEB-INF/views/editError.ftl</result>
+        </action>
+        
+        <action name="editAlternateName" class="com.gisgraphy.webapp.action.EditAlternateNameAction" >
+          <interceptor-ref name="adminCheck"/>
+	   	 	<result name="success" type="freemarker">/WEB-INF/views/savealternatenamesuccess.ftl</result>
+           	<result name="error" type="freemarker">/WEB-INF/views/savealternatenamefailure.ftl</result>
+        </action>
+        
+        <action name="editZipCode" class="com.gisgraphy.webapp.action.EditZipCodeAction" >
+          <interceptor-ref name="adminCheck"/>
+	   	 	<result name="success" type="freemarker">/WEB-INF/views/savezipcodesuccess.ftl</result>
+           	<result name="error" type="freemarker">/WEB-INF/views/savezipcodefailure.ftl</result>
+        </action>
+        
+         <action name="editSearch" class="com.gisgraphy.webapp.action.EditSearchAction">
+          <interceptor-ref name="adminCheck"/>
+           <result name="success" type="freemarker">/WEB-INF/views/editSearch.ftl</result>
+            <result name="popup" type="freemarker">/WEB-INF/views/fulltextsearchpopup.ftl</result>
+        </action>
+        
+        
+    </package>
+    
+        
+</struts>

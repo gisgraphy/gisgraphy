@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="385.85000pt" id="svg378" inkscape:version="0.39" sodipodi:docbase="/home/cschalle/clipart/openclipart-0.10/signs_and_symbols/flags/america" sodipodi:docname="bahamas.svg" sodipodi:version="0.32" version="1" width="787.70000pt" x="0" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" y="0">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Bahamas</dc:title>
+        <dc:description>HASH(0x866e358)</dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>hash</rdf:li>
+            <rdf:li></rdf:li>
+            <rdf:li>america</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Daniel McRae and Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Daniel McRae and Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Daniel McRae and Christian Schaller</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview id="base" inkscape:cx="396.85039" inkscape:cy="198.42520" inkscape:window-height="781" inkscape:window-width="1170" inkscape:window-x="0" inkscape:window-y="28" inkscape:zoom="0.69043651">
+    <sodipodi:guide id="guide565" orientation="vertical" position="314.120880"/>
+    <sodipodi:guide id="guide566" orientation="horizontal" position="526.735352"/>
+    <sodipodi:guide id="guide567" orientation="vertical" position="64.7313309"/>
+    <sodipodi:guide id="guide569" orientation="vertical" position="143.424316"/>
+    <sodipodi:guide id="guide584" orientation="horizontal" position="177.702667"/>
+  </sodipodi:namedview>
+  <defs id="defs380"/>
+  <g id="g956" transform="translate(-5.431347,-10.86269)">
+    <rect height="478.53827" id="rect149" style="font-size:12.000000;fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.78927202pt;" transform="scale(-1.000000,-1.000000)" width="980.61975" x="-990.00793" y="-492.05688"/>
+    <rect height="201.31525" id="rect601" style="font-size:12.000000;fill:#ffe900;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:1.0000000pt;" transform="scale(-1.000000,-1.000000)" width="980.61975" x="-990.00793" y="-356.44824"/>
+    <rect height="159.51277" id="rect148" style="font-size:12.000000;fill:#08ced6;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:1.0000000pt;" transform="scale(-1.000000,-1.000000)" width="980.61975" x="-990.00793" y="-492.05688"/>
+    <rect height="159.51277" id="rect585" style="font-size:12.000000;fill:#08ced6;fill-opacity:1.0000000;fill-rule:evenodd;stroke-width:1.0000000pt;" transform="scale(-1.000000,-1.000000)" width="980.61975" x="-990.00793" y="-173.16051"/>
+    <path d="M 8.9251506,11.745076 C 11.102416,11.745076 401.29741,248.71996 401.29741,248.71996 L 7.8365147,491.25599 L 8.9251506,11.745076 z " id="path570" sodipodi:nodetypes="cccc" style="font-size:12.000000;fill:#000000;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.4876000pt;"/>
+  </g>
+</svg>

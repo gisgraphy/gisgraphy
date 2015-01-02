@@ -1,0 +1,25 @@
+<decorators defaultdir="/decorators">
+    <excludes>
+        <pattern>/40*.jsp</pattern>
+        <pattern>/*decorate=none*</pattern>
+        <pattern>/fulltext/*</pattern>
+        <pattern>/geoloc/*</pattern>
+        <pattern>/*decorate=none*</pattern>
+        <pattern>/scripts/dojo/*</pattern>
+        <pattern>/static/*</pattern>
+        <pattern>/struts/dojo/*</pattern> 
+        <pattern>/resources/*</pattern>
+ 		<pattern>/*!searchpopup.html*</pattern>
+    </excludes>
+     <decorator name="ui" page="ui.jsp">
+     	<pattern>/public/*</pattern>
+        <pattern>/*fulltextsearch*.html</pattern>
+        <pattern>/*geolocsearch*.html</pattern>
+    </decorator>
+    <decorator name="feature" page="feature.jsp">
+        <pattern>/displayfeature.html</pattern>
+    </decorator>
+    <decorator name="default" page="default.jsp">
+        <pattern>/*</pattern>
+    </decorator>
+</decorators>

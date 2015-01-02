@@ -1,0 +1,181 @@
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.cache.use_query_cache">true</property>
+
+
+		<!-- 2nd level cache -->
+		<property name="hibernate.cache.use_second_level_cache">true</property>
+
+
+		<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+
+		<property name="hibernate.cache.provider_configuration_file_resource_path">ehcache-hibernate.xml</property>
+
+
+		<!-- Generate stats for JMX -->
+		<property name="hibernate.generate_statistics">false</property>
+		<!-- <property name="hibernate.cache.provider_class" value="org.hibernate.cache.OSCacheProvider" 
+			/> -->
+		<!-- <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" 
+			/> -->
+
+		<!-- some optimisations -->
+		<!-- <property name="hibernate.order_updates" value="true"/> <property 
+			name="hibernate.jdbc.use_get_generated_keys" value="true"/> -->
+
+		<!-- display -->
+		<property name="hibernate.show_sql">false</property>
+		<property name="hibernate.format_sql">false</property>
+		<property name="hibernate.jdbc.batch_size">20</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+
+		<mapping class="com.gisgraphy.model.Role" />
+		<mapping class="com.gisgraphy.model.User" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Adm" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Airport" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.AlternateName" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.AmusePark" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Aqueduc" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.ATM" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Bank" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Bar" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Bay" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Beach" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Bridge" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Building" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.BusStation" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Camp" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Canyon" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Casino" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Castle" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Cemetery" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Cirque" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.City" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.CitySubdivision" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Cliff" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Coast" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Continent" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Country" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.CourtHouse" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.CustomsPost" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Dam" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Desert" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Factory" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Falls" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Farm" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Field" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.FishingArea" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Fjord" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Forest" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Garden" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.GisFeature" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Golf" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Gorge" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.GrassLand" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Gulf" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Hill" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Hospital" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Hotel" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.House" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Ice" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Island" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Lake" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Language" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Library" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.LightHouse" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Mall" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Marsh" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.MetroStation" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Military" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Mill" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Mine" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Mole" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Monument" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Mound" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Mountain" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Museum" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Oasis" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.ObservatoryPoint" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Ocean" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.OperaHouse" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Park" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Parking" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Plantation" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.PolicePost" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.PoliticalEntity" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Pond" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Port" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.PostOffice" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Prison" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Pyramid" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Quay" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Rail" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.RailRoadStation" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Ranch" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Ravin" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Reef" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Religious" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Reserve" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Restaurant" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Road" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.School" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Sea" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Spring" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Stadium" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Strait" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Stream" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Street" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.OpenStreetMap" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.AlternateOsmName" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Theater" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Tower" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Tree" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Tunnel" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.UnderSea" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Vineyard" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Volcano" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.WaterBody" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.ZipCode" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Zoo" />
+		<!-- newly placetype added -->
+		<mapping class="com.gisgraphy.domain.geoloc.entity.AdmBuilding" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Bench" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Cinema" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Dentist" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Doctor" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.EmergencyPhone" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.FerryTerminal" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.FireStation" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Fountain" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Fuel" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.NightClub" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Pharmacy" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Rental" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Shop" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.SwimmingPool" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Taxi" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Telephone" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Toilet" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.VendingMachine" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Veterinary" />
+		
+		<mapping class="com.gisgraphy.domain.geoloc.entity.Ambulance" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.Camping" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.Cave" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.CityHall" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.Craft" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.Picnic" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.RestArea" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.Sport" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.Tourism" />
+        <mapping class="com.gisgraphy.domain.geoloc.entity.TourismInfo" />
+		
+		<mapping class="com.gisgraphy.stats.StatsUsage" />
+		<mapping class="com.gisgraphy.domain.geoloc.entity.HouseNumber" />
+		
+
+	</session-factory>
+</hibernate-configuration>

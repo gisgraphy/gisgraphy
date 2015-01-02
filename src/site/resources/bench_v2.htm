@@ -1,0 +1,84 @@
+<h1>Benchs</h1>
+
+The benchs have been made :
+<ul>
+<li>on a celeron 2Ghz, and gisgraphy has been launch with 256M.</li>
+<li>The bench dataset have been extracted from the database, and all the data are unique to minimize cache usage</li>
+<li>The benchs scripts are availables <a href="http://code.google.com/p/gisgraphy/source/browse/#svn/trunk/gisgraphy/src/bench/scenarios" target="blank">here</a></li>
+</ul>
+<br/><br/>
+ You can see the server configuration at the <a href="#serverconfig">end of this page</a>.
+<br/><br/>
+<a name="fulltext"></a>
+<h2>Fulltext Web service</h2>
+<img src="/images/benchs/fulltext_bench.png" alt="fulltext gisgraphy bench" tilte="fulltext gisgraphy bench"/> 
+<br/><br/>
+
+<a name="geoloc"></a>
+<h2>Geoloc Web service</h2>
+<img src="/images/benchs/geoloc_bench.png" alt="geoloc gisgraphy bench" tilte="geoloc gisgraphy bench"/>
+<br/><br/>
+
+<a name="geocoding"></a>
+<h2>Geocoding / reverseGeocoding web service</h2>
+<img src="/images/benchs/geocoding_bench.png" alt="geocoding gisgraphy bench" tilte="geocoding gisgraphy bench"/> 
+<br/><br/>
+
+<a name="gui"></a>
+<h2>GUI interface</h2>
+Note that no effort will be made on the user interface, because the goal is only to show a demo
+<img src="/images/benchs/gui_bench.png" alt="GUI gisgraphy bench" tilte="GUI gisgraphy bench"></a> 
+
+<br/><br/>
+<h2>Server configuration</h2>
+<a name="serverconfig"></a>
+
+CPU : 
+<pre>
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 22
+model name	: Intel(R) Celeron(R) CPU          220  @ 1.20GHz
+stepping	: 1
+cpu MHz		: 1200.044
+cache size	: 512 KB
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss tm pbe syscall nx lm constant_tsc up arch_perfmon pebs bts rep_good pni monitor ds_cpl tm2 ssse3 cx16 xtpr lahf_lm
+bogomips	: 2402.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+</pre>
+<br/><br/>
+Memory info :
+<pre>
+MemTotal:      2023248 kB
+MemFree:         16660 kB
+Buffers:        133692 kB
+Cached:         274276 kB
+SwapCached:     242696 kB
+Active:        1704508 kB
+Inactive:       243168 kB
+SwapTotal:     1044216 kB
+SwapFree:       524572 kB
+Dirty:             160 kB
+Writeback:           0 kB
+AnonPages:     1492592 kB
+Mapped:          44340 kB
+Slab:            31076 kB
+SReclaimable:    13968 kB
+SUnreclaim:      17108 kB
+PageTables:      11776 kB
+NFS_Unstable:        0 kB
+Bounce:              0 kB
+CommitLimit:   2055840 kB
+Committed_AS:  2244928 kB
+VmallocTotal: 34359738367 kB
+VmallocUsed:      6572 kB
+VmallocChunk: 34359731767 kB
+
+</pre>

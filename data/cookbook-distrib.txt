@@ -1,0 +1,25 @@
+organize import
+remove sysout et syserr
+license plugin
+change year and version in pom.xml
+format
+tests
+upload maven repo
+refaire les feed d'exemples
+verifier dans le pom qu'il n'y a pas de snapshots
+
+modifier http://www.gisgraphy.com/news/getnews.php to tell new version and obsolete
+site
+save feedbacks
+mettre page maintenance
+dist
+check javadoc 
+install
+upload doc
+migration guide / changes / update date of release
+upload dist to google
+link to dist in download page
+re-process sitemaps
+update gisgraphy sitemap
+save the stats usage
+change password of user and admin

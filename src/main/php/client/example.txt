@@ -1,0 +1,24 @@
+<?
+// dummy example of basic query. 
+
+//geocoding
+$query = RestClient::get("http://services.gisgraphy.com/geocoding/geocode",array('format'=>'php','address'=>'1 avenue des champs elysees 75003 paris','country'=>'FR'));
+//address parser
+$query = RestClient::get("http://services.gisgraphy.com/addressparser/parse",array('format'=>'php','address'=>'1 avenue des champs elysees 75003 paris','country'=>'FR'));
+//street search
+$query = RestClient::get("http://services.gisgraphy.com/street/streetsearch",array('format'=>'php','lat'=>'48.8534088134765','lng'=>'2.34879994392395','name'=>'Champs'));
+//fulltext
+$query = RestClient::get("http://services.gisgraphy.com/fulltext/fulltextsearch",array('format'=>'php','q'=>'paris'));
+//geoloc-find nearby
+$query = RestClient::get("http://services.gisgraphy.com/geoloc/search",array('format'=>'php','lat'=>'48.8534088134765','lng'=>'2.34879994392395','placetype'=>'city'));
+
+
+var_dump($query->getResponse());
+var_dump($query->getResponseCode());
+var_dump($query->getResponseContentType());
+
+//Note that 'format'=>'php' is in case you want to do something like :eval("\$str =$query->getResponse()");echo (print_r($str));
+//feel free to use xml, json, any format you want.
+
+
+?>

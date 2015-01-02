@@ -1,0 +1,258 @@
+@import url(../search.css);
+
+
+.stretch,.clear {
+	clear: both;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	font-size: 15px;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+* html>body .clearfix {
+	display: inline-block;
+	width: 100%;
+}
+
+* html .clearfix { /* Hides from IE-mac \*/
+	height: 1%;
+	/* End hide from IE-mac */
+}
+
+body {
+	text-align: left;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 76%;
+	/*line-height: 1em;*/
+	color: #444;
+	margin: 0;
+	padding: 0;
+	background: white url(images/background.gif) top left repeat-x;
+	text-align: center;
+}
+
+div {
+	font-size: 1em;
+}
+
+img {
+	border: 0;
+}
+.imgAlign{
+vertical-align: middle;	
+}
+
+/* LINKS */
+a,a:link a:active {
+	color: #1465b7;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #1465b7;
+	background-color: transparent;
+}
+
+a:hover {
+	color: #cc0000;
+	text-decoration: none;
+}
+
+
+
+/* END LINKS */ /* HEADINGS */
+h1,h2,h3,h4,h5,h6 {
+	font-family: tahoma, arial, helvetica, sans-serif;
+	font-weight: normal;
+}
+
+h1 {
+	font-size: 6em;
+	letter-spacing: -1px;
+	line-height: 1.3em;
+	margin: 0 0 0.5em 0;
+	padding: 0;
+	color: #b4c24b;
+}
+
+div#branding h1 {
+	font-size: 3em;
+	letter-spacing: -1px;
+	margin: 0;
+	line-height: 1.5em;
+	color: #3e9ade;
+}
+
+div#branding p {
+	margin: 0;
+	line-height: 1em;
+}
+
+h2 {
+	font-size: 1.4em;
+	line-height: 1.5em;
+	margin: 0 0 0.5em 0;
+	padding: 0;
+}
+
+h3 {
+	font-size: 1.3em;
+	line-height: 1.3em;
+	margin: 0 0 0.5em 0;
+	padding: 0;
+	color: black;
+}
+
+h4 {
+	font-size: 1.2em;
+	line-height: 1.3em;
+	margin: 0 0 0.25em 0;
+	padding: 0;
+	color: black;
+}
+
+h5 {
+	font-size: 1.1em;
+	line-height: 1.3em;
+	margin: 0 0 0.25em 0;
+	padding: 0;
+	color: black;
+}
+
+h6 {
+	font-size: 1em;
+	line-height: 1.3em;
+	margin: 0 0 0.25em 0;
+	padding: 0;
+	color: black;
+}
+.header{
+	font-size: 2em;
+	letter-spacing: -1px;
+	line-height: 1.3em;
+	margin: 0 0 0.5em 0;
+	padding: 0;
+	color: #b4c24b;	
+}
+
+/* END HEADINGS */ /* TEXT */
+p {
+	font-size: 1em;
+	margin: 0 0 1.5em 0;
+	padding: 0;
+	line-height: 1.4em;
+}
+
+.quote {
+	color: #333333;
+	clear: both;
+	background-color: #f9f9f9;
+	border-bottom-color: #cccccc;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-top-color: #cccccc;
+	border-top-style: solid;
+	border-top-width: 1px;
+	font-style: italic;
+	line-height: 1.5em;
+	margin-left:20px;
+	padding-bottom: 1em;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-top: 1em;
+	text-align: justify;
+	width:80%;
+}
+
+blockquote {
+	margin-left: 10px;
+}
+
+.indented {
+	margin-left: 10px;
+}
+
+pre {
+	font-family: monospace;
+	font-size: 12px;
+}
+
+strong,b, .strong {
+	font-weight: bold;
+}
+
+em,i {
+	font-style: italic;
+}
+
+code {
+	font-family: "courier new", courier, monospace;
+	font-size: 12px;
+	white-space: pre;
+}
+
+/* END TEXT */
+div.hr {
+	height: 1px;
+	margin: 1.5em 10px;
+	border-bottom: 1px dotted black;
+}
+
+div#content {
+	position: relative;
+	width: 955px;
+	margin: 0 auto 20px auto;
+	padding: 0;
+	text-align: left;
+}
+
+div#page {
+	width: 1000px;
+	margin: 0 auto;
+	padding: 0;
+	text-align: center;
+}
+
+/* HEADER */
+div#header {
+	margin: 0 0 5em 0;
+	padding: 6px 0 2px 10px;
+	text-align: left;
+	height: 50px; /* needed by IE 7 */
+}
+
+div#branding {
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 0px 0 10px 0px;
+	text-align: center;
+}
+
+div#tagline {
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 0px;
+	text-align: center;
+}
+
+/* MAIN */
+div#main {
+	margin: 0 auto;
+	width: 100%;
+}
+
+div#main form ul li {
+	list-style-type: none;
+	margin: 0 auto;
+}
+

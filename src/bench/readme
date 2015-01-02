@@ -1,0 +1,2 @@
+to aggregate reports see ./bin/aggregate_sample.sh
+Please do not bench gisgraphy server !

@@ -1,0 +1,2623 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Gisgraphy user guide</title>
+ <style type="text/css" media="all">
+@import url("./css/site.css");
+
+h1 {
+	counter-reset: section;
+	counter-reset: subsection;
+	counter-reset: indexsection;
+	counter-reset: indexsubsection;
+	counter-reset: subsubsection;
+}
+
+h2 {
+	counter-increment: section;
+	counter-reset: subsection;
+}
+
+h2:before {
+	content: counter(section) " ";
+}
+
+h3 {
+	counter-increment: subsection;
+	counter-reset: subsubsection;
+}
+
+h3:before {
+	content: counter(section) "." counter(subsection) " ";
+}
+.redtext {
+	color:#FF0000;
+}
+
+h4 {
+	counter-increment: subsubsection;
+}
+
+h4:before {
+	content: counter(section) "." counter(subsection) "."
+		counter(subsubsection) " ";
+}
+
+.indexlevel2 {
+	counter-increment: indexsection;
+	counter-reset: indexsubsection;
+	padding-left: 24px;
+}
+
+.indexlevel2:before {
+	content: counter(indexsection) " ";
+}
+
+.indexlevel3 {
+	counter-increment: indexsubsection;
+	padding-left: 40px;
+}
+
+.indexlevel3:before {
+	content: counter(indexsection) "." counter(indexsubsection) " ";
+}
+</style>
+</head>
+<body>
+<h1>Gisgraphy user guide</h1>
+<a name="top"></a>
+<br/>
+<div class="tip greentip">
+To suggest a change or a correction to any part of the documentation, please send a mail to <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>.
+</div>
+<div>
+<div class="masterTopic">Quick access to webservices documentation : </div>
+<a href="#geocodingservice">Geocoding</a> | <a href="http://address-parser.net">Address parser</a> | <a href="#reversegeocodingservice">Reverse geocoding </a> | <a href="#streetservice"> street service</a> | <a href="#geolocservice">Find nearby</a> | <a href="#fulltextservice">Fulltext</a>
+</div>
+
+<div class="masterTopic">Table of content : </div>
+<div class="indexlevel2"><a href="#introduction" />Introduction</a></div>
+<div class="indexlevel3"><a href="#about" />About</a></div>
+<div class="indexlevel3"><a href="#version" />version</a></div>
+<div class="indexlevel3"><a href="#technics" />Technical informations...</a></div>
+<div class="indexlevel3"><a href="#quickstart" />Quick start</a></div>
+<div class="indexlevel3"><a href="#requirements" />Requirements</a></div>
+<div class="indexlevel3"><a href="#technologiesused" />Which technologies are used ?</a></div>
+<div class="indexlevel3"><a href="#license" />License</a></div>
+<div class="indexlevel2"><a href="#installation" />Installation</a></div>
+<div class="indexlevel2"><a href="#importdata" />Import Data</a></div>
+<div class="indexlevel3"><a href="#options" />Options and environement specific settings</a></div>
+<div class="indexlevel2"><a href="#geocodingservice" />Geocoding service</a></div>
+<div class="indexlevel3"><a href="#geocodingservicedescription" />Description</a></div>
+<div class="indexlevel3"><a href="#geocodingserviceoutputformat" />Output formats and languages</a></div>
+<div class="indexlevel3"><a href="#geocodingserviceparameters" />Parameters</a></div>
+<div class="indexlevel3"><a href="#geocodingwebservice" />Web service</a></div>
+<div class="indexlevel3"><a href="#geocodingserviceoutputfieldsdescription" />Output fields description</a></div>
+<div class="indexlevel3"><a href="#geocodingservicejavaapi" />Java API</a></div>
+<div class="indexlevel2"><a href="#addressparser" />AdressParser</a></div>
+<div class="indexlevel2"><a href="#reversegeocodingservice" />Reverse geocoding</a></div>
+<div class="indexlevel3"><a href="#reversegeocodingservicedescription" />Description</a></div>
+<div class="indexlevel3"><a href="#reversegeocodingserviceoutputformat" />Output formats and languages</a></div>
+<div class="indexlevel3"><a href="#reversegeocodingserviceparameters" />Parameters</a></div>
+<div class="indexlevel3"><a href="#reversegeocodingwebservice" />Web service</a></div>
+<div class="indexlevel3"><a href="#reversegeocodingserviceoutputfieldsdescription" />Output fields description</a></div>
+<div class="indexlevel3"><a href="#reversegeocodingservicejavaapi" />Java API</a></div>
+
+<div class="indexlevel2"><a href="#streetservice" />street service</a></div>
+<div class="indexlevel3"><a href="#streetservicedescription" />Description</a></div>
+<div class="indexlevel3"><a href="#streetserviceoutputformat" />Output formats and languages</a></div>
+<div class="indexlevel3"><a href="#streetserviceparameters" />Parameters</a></div>
+<div class="indexlevel3"><a href="#streetwebservice" />Web service</a></div>
+<div class="indexlevel3"><a href="#streetserviceoutputfieldsdescription" />Output fields description</a></div>
+<div class="indexlevel3"><a href="#streetservicejavaapi" />Java API</a></div>
+<div class="indexlevel2"><a href="#fulltextservice" />Full text service</a></div>
+<div class="indexlevel3"><a href="#fulltextservicedescription" />Description</a></div>
+<div class="indexlevel3"><a href="#fulltextserviceoutputformat" />Output formats and languages</a></div>
+<div class="indexlevel3"><a href="#fulltextserviceparameters" />Parameters</a></div>
+<div class="indexlevel3"><a href="#autosuggetion" />auto completion / suggetions</a></div>
+<div class="indexlevel3"><a href="#fulltextwebservice" />Web service</a></div>
+<div class="indexlevel3"><a href="#fulltextserviceoutputfieldsdescription" />Output fields description</a></div>
+<div class="indexlevel3"><a href="#fulltextservicejavaapi" />Java API</a></div>
+<div class="indexlevel2"><a href="#geolocservice" />Geolocalisation service</a></div>
+<div class="indexlevel3"><a href="#geolocservicedescription" />Description</a></div>
+<div class="indexlevel3"><a href="#geolocserviceoutputformat" />Output formats and languages</a></div>
+<div class="indexlevel3"><a href="#geolocserviceparameters" />Parameters</a></div>
+<div class="indexlevel3"><a href="#geolocwebservice" />Web service</a></div>
+<div class="indexlevel3"><a href="#geolocserviceoutputfieldsdescription" />Output fields description</a></div>
+<div class="indexlevel3"><a href="#geolocservicejavaapi" />Java API</a></div>
+<div class="indexlevel2"><a href="#clientLibraries" />Client libraries</a></div>
+<div class="indexlevel3"><a href="#pythonclient" />Python</a></div>
+<div class="indexlevel3"><a href="#javaclient" />Java</a></div>
+<div class="indexlevel3"><a href="#phpclient" />PHP</a></div>
+<div class="indexlevel3"><a href="#rubyclient" />RUBY</a></div>
+<div class="indexlevel2"><a href="#admininterface" />Admin Interface</a></div>
+<div class="indexlevel3"><a href="#adminloginpassword" />Login - Password</a></div>
+<div class="indexlevel3"><a href="#adminimportdata" />Import data</a></div>
+<div class="indexlevel3"><a href="#admineditdata" />Add / Edit data</a></div>
+<div class="indexlevel3"><a href="#adminscreenshots" />Screenshots</a></div>
+<div class="indexlevel2"><a href="#security" />Security</a></div>
+<div class="indexlevel3"><a href="#defaultusersecurity" />Default admin password</a></div>
+<div class="indexlevel3"><a href="#protectwebservices" />Protect webServices</a></div>
+<div class="indexlevel2"><a href="#performance" />Performance</a></div>
+<div class="indexlevel3"><a href="#jmeter" />Jmeter</a></div>
+<div class="indexlevel3"><a href="#databaseoptimisation" />Database optimisations</a></div>
+<div class="indexlevel3"><a href="#jvmoptimisation" />JVM optimisations</a></div>
+<div class="indexlevel3"><a href="#othertipsoptimisation" />Other tips</a></div>
+
+
+<a name="introduction"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Introduction</h2>
+<a name="version"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>version</h3>
+This documentation is for the last version of gisgraphy (snapshots, nightly builds, and "not-released yet" versions included), you can find documentation for older versions <a href="http://www.gisgraphy.com/documentation/oldversions/">here</a>
+<a name="about"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>About</h3>
+ Since 2006, Gisgraphy is a free, open source framework that offers the possibility to do geolocalisation and geocoding via Java APIs or REST webservices.
+  Because geocoding is nothing without data, it provides an easy to use importer that will automagically download and import the necessary 
+  (free) data to your local database (<a href="www.openstreetmap.org" target="gisgraphy">OpenStreetMap</a>, <a href="http://www.geonames.org/" target="gisgraphy">Geonames</a> and <a href="http://quattroshapes.com" target="gisgraphy">Quattroshapes</a> : more than 100 million entries). You can also add your own data with the Web interface or the importer connectors provided. Gisgraphy is production ready, and has been designed to be scalable(load balanced), performant and used in other languages than just java : results can be output in XML, JSON, PHP, Python, Ruby, YAML, GeoRSS, and Atom. One of the most popular GPS tracking System (<a href="http://opengts.sourceforge.net/">OpenGTS</a>) also includes a gisgraphy client...Gisgraphy is a framework. As a result it's flexible and powerful enough to be used in a lot of different use cases<a href="/documentation/quick-start.htm">read more</a>
+ Here are the main functionalities  :
+<ul>
+<li> Importers for Openstreetmap and quattroshapes data in csv format (view <a href="http://www.gisgraphy.com/download/download_data.htm"> data</a>)
+<li> Importers from geonames CSV files. Just give the country(ies) you wish to import and / or the <a href="/placetype.htm">placetypes</a>, and Gisgraphy download the files  and import them with all the alternateNames (optional), and sync the database with the fulltext search engine</li>
+<li> WorldWide geocoding / worldWide reverse geocoding / street search WebServices;
+<li> REST WebService</li>
+<li> Powerfull Autocompletion / suggetion engine</li>
+<li> Leaflet plugins and JS API (aka : gisgraphy-js-API)</li>
+<li> Several output formats supported : XML, json, PHP, ruby, python, Atom, RSS / GeoRSS, YAML  </li>
+<li> Full text search  (based on <a href="http://lucene.apache.org/java/"/>Lucene</a> / <a href="http://lucene.apache.org/solr/"/>Solr</a>  with default filters optimized for city search
+(case insensitivity, separator characters stripping, ..) via an Java API or a webservice</li>
+<li> Findnearby function (with limits, pagination, restrict to a specific country and/or language and other useful options) via a Java API or a Web Service</li>
+<li> An admin / back office whith statistics <a href="http://www.gisgraphy.com/screenshots.htm"> interface</a></li>
+<li> Fully replicated / scalable / high performance / cached services</li>
+<li> Search for zipcode name, IATA, ICAO </li>
+<li> Internationalized (with support of cyrillique, arabic, chinese,... alphabet)</li>
+<li> Dojo widgets / prototype / Ajax to ease search but can be use it even if javascript is not enabled on the client side</li>
+<li><a href="http://www.gisgraphy.com/documentation/addons.htm#opensearch">Opensearch module</a></li>
+<li> Plateform / language independent</li>
+<li> Provides all the countries flags in svg and png format</li> 
+</ul>
+<a name="technics"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Technical informations...</h3>
+Please consult the <a href="http://www.gisgraphy.com/developer-guide.htm">developer guide</a>
+
+<a name="quickstart"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Quick start</h3>
+Please consult the last <a href="http://www.gisgraphy.com//documentation/quick-start.htm">quick start</a> guide.
+<a name="requirements"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Requirements</h3>
+<ul>
+<li>70 GO of free disk space</li>
+<li>Internet access to download data files (you can skip it)</li>
+<li>Java 1.6 or greater (1.5 is acceptable but not optimized)
+<li>A 64 bit platform is strongly recommended since Solr use <a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html">Memorymap</a> )</li></li>
+<li> <a href="http://www.postgresql.org/">PostgreSQL</a> with <a href="http://postgis.refractions.net/">Postgis</a> extension (It is HIGHLY recommended to have postgis 1.3.1 or greater for good performances... <a href="/documentation/user-guide.htm#postgis1.1.3">more</a>.</li>
+<li>4G of Memory is required for the import process, it can be decrease to 2Go for the webservices only. the amount of memory depends on the amount of data. </li>
+<li>A servlet container if you want to use it as a Servlet (Not programatically). Actually Gisgraphy has been tested on <a href="http://tomcat.apache.org/">Tomcat</a> and <a href="http://www.mortbay.org/">Jetty</a> but any Servlet container should be OK</li>
+</ul>
+<a name="technologiesused"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Which technologies are used ?</h3>
+<ul>
+<li>Java</li>
+<li>Maven 2</li>
+<li>Spring</li>
+<li>Hibernate</li>
+<li>PostgreSQL / Postgis </li>
+<li>SolR / Lucene</li>
+<li>Hibernate Spatial</li>
+<li>Appfuse</li>
+<li>Jquery / prototype</li>
+</ul>
+
+
+<a name="license"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>License</h3>
+The Gisgraphy project (<a href="http://www.gisgraphy.com">www.gisgraphy.com</a>) is a free open sources project under the <a href="http://www.gisgraphy.com/license.html">LGPL license V3</a>. Geonames data are under the <a href="http://www.geonames.org/about.html">creative commons attributions license</a>.
+<br/>
+<a name="installation"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Installation</h2>
+<a name="installpostgres"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<div>Please go the the <a href="./installation">installation page</a></div>
+<a name="importdata"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Import Data</h2>
+To import data, you must use the admin interface. see the <a href="#admininterface">admin interface section</a> for more informations
+<a name="debugMode"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Debug Mode</h3>
+Each Gisgraphy service is a servlet.
+Each servlet can be run in debug Mode. It enables the error message (exception message) to be output to the end user. To do so, just declare the servlet init parameter "debugMode" to true (in the web.xml) as shown :  
+<div class ="code">
+<pre>
+
+&lt;servlet&gt;
+		&lt;servlet-name&gt;address parser service&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;
+			com.gisgraphy.servlet.AddressParserServlet
+		&lt;/servlet-class&gt;
+		 &lt;init-param&gt;
+		 &lt;!-- if true the output field error will contains the exception message.
+			 Default to false --&gt;
+			&lt;param-name&gt;debugMode&lt;/param-name&gt;
+			&lt;param-value&gt;true&lt;/param-value&gt;
+		&lt;/init-param&gt;
+		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+	&lt;/servlet&gt;
+
+&lt;servlet&gt;
+		&lt;servlet-name&gt;geocoding service&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;
+			com.gisgraphy.servlet.GeocodingServlet
+		&lt;/servlet-class&gt;
+		 &lt;init-param&gt;
+		 &lt;!-- if true the output field error will contains the exception message.
+			 Default to false --&gt;
+			&lt;param-name&gt;debugMode&lt;/param-name&gt;
+			&lt;param-value&gt;true&lt;/param-value&gt;
+		&lt;/init-param&gt;
+		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+
+
+&lt;servlet&gt;
+		&lt;servlet-name&gt;street service&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;
+			com.gisgraphy.servlet.StreetServlet
+		&lt;/servlet-class&gt;
+		 &lt;init-param&gt;
+		 &lt;!-- if true the output field error will contains the exception message.
+			 Default to false --&gt;
+			&lt;param-name&gt;debugMode&lt;/param-name&gt;
+			&lt;param-value&gt;true&lt;/param-value&gt;
+		&lt;/init-param&gt;
+		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+	&lt;/servlet&gt;
+
+
+&lt;servlet&gt;
+		&lt;servlet-name&gt;geoloc service&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;
+			com.gisgraphy.servlet.GeolocServlet
+		&lt;/servlet-class&gt;
+		 &lt;init-param&gt;
+		 &lt;!-- if true the output field error will contains the exception message.
+			 Default to false --&gt;
+			&lt;param-name&gt;debugMode&lt;/param-name&gt;
+			&lt;param-value&gt;true&lt;/param-value&gt;
+		&lt;/init-param&gt;
+		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+	
+	
+&lt;servlet&gt;
+		&lt;servlet-name&gt;fulltext service&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;
+			com.gisgraphy.servlet.FulltextServlet
+		&lt;/servlet-class&gt;
+		&lt;init-param&gt;
+		 &lt;!-- if true the output field error will contains the exception message.
+			 Default to false --&gt;
+			&lt;param-name&gt;debugMode&lt;/param-name&gt;
+			&lt;param-value&gt;true&lt;/param-value&gt;
+		&lt;/init-param&gt;
+		&lt;load-on-startup&gt;2&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+
+	
+</pre>
+</div>
+
+<a name="options"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Options and environement specific settings</h3>
+All the options and environement specific settings are located in the env.properties file. The env.properties is located in the <GISGRAPHY_DISTRIBUTION_DIRECTORY>/webapps/ROOTWEB-INF/classes directory 
+<div class="tip yellowtip">
+Take care of white spaces in properties file : MyProperties=bar is not the same as MyProperties= bar (whitespaces after the equals sign are taken into accounts)
+</div>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.geonames.dir</h4>
+This option determines the directory where the Geonames files are located. It must ends with / or \ according to the operating system path separator. It is also the directory where the Geonames files will be downloaded from the <code>importer.geonames.downloadURL</code> URL
+. On Windows The '\' character must be escaped as in the example bellow. The path can be absolute or relative (from the directory where you've launch Gisgraphy). It is not recommended to put space in the path.<br/>. This option is case sensitive if the underlaying file system is case sensitive (e.g : Linux / Unix).
+<div class="code">
+Examples on Linux :<br/>
+importer.geonames.dir=./data/prod/<br/>
+importer.geonames.dir=/home/user/data/prod/<br/>
+<br/>
+Example on Windows<br/>
+importer.geonames.dir=.\\data\\prod\\
+</div>
+<br/><br/>
+
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmap.dir</h4>
+This option determines the directory where the OpenStreetMap files are located. It must ends with / or \ according to the operating system path separator. It is also the directory where the OpenStreetMap files will be downloaded from the <code>importer.openstreetmap.downloadURL</code> URL
+. On Windows The '\' character must be escaped as in the example bellow. The path can be absolute or relative (from the directory where you've launch Gisgraphy). It is not recommended to put space in the path.<br/>. This option is case sensitive if the underlaying file system is case sensitive (e.g : Linux / Unix).
+<div class="code">
+Examples on Linux :<br/>
+importer.openstreetmap.dir=./data/prod/<br/>
+importer.openstreetmap.dir=/home/user/data/prod/<br/>
+<br/>
+Example on Windows<br/>
+importer.openstreetmap.dir=.\\data\\prod\\
+</div>
+<br/><br/>
+
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.geonames.zipcode.dir</h4>
+This option determines the directory where the Geonames zipcode files are located. It must ends with / or \ according to the operating system path separator. It is also the directory where the Geonames zipcode files will be downloaded from the <code>importer.geonames.zip.downloadURL</code> URL
+. On Windows The '\' character must be escaped as in the example bellow . The path can be absolute or relative (from the directory where you've launch Gisgraphy). It is not recommended to put space in the path.<br/>. This option is case sensitive if the underlaying file system is case sensitive (e.g : Linux / Unix).
+<div class="code">
+Examples on Linux :<br/>
+mporter.geonames.zipcode.dir=./data/prod/<br/>
+mporter.geonames.zipcode.dir=/home/user/data/prod/<br/>
+<br/>
+Example on Windows<br/>
+mporter.geonames.zipcode.dir=.\\data\\prod\\
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.geonames.enabled</h4>
+Wether the importers related to Geonames will be processed(it enable the zipcode importer too). If 'true' the importers will be executed. This option should be in lower case. 
+<br/>
+<div class="code">
+Examples : <br/>
+importer.geonames.enabled=true<br/>
+importer.geonames.enabled=false
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmap.enabled</h4>
+Wether the importers related to Openstreetmap will be processed. If 'true' the importers will be excuted. This option should be in lower case
+<br/>
+<div class="code">
+Examples : <br/>
+importer.openstreetmap.enabled=true<br/>
+importer.openstreetmap.enabled=false
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmap.housenumber.enabled</h4>
+Wether the importers related to house numbers Openstreetmap will be processed. If 'true' the importers will be excuted. This option should be in lower case
+<br/>
+<div class="code">
+Examples : <br/>
+importer.openstreetmap.housenumber.enabled=true<br/>
+importer.openstreetmap.housenumber.enabled=false
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.quattroshapes.enabled</h4>
+Wether the importers related to Quattroshapes will be processed. If 'true' the importers will be excuted. This option should be in lower case
+<br/>
+<div class="code">
+Examples : <br/>
+importer.quattroshapes.enabled=true<br/>
+importer.quattroshapes.enabled=false
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.openstreetmap.fill.isin.field</h4>
+Wether we search for the nearest city in geonames data to fill the is_in field. This increase the time of the importer but <b>strongly increase the relevance of the geocoder</b>. Default to true.
+This option should be in lower case.
+<br/>
+<div class="code">
+Examples : <br/>
+importerConfig.openstreetmap.fill.isin.field=true<br/>
+importerConfig.openstreetmap.fill.isin.field=false
+</div>
+<br/><br/>
+
+<div class="tip yellowtip">
+DON'T MODIFY this option after importer is done.
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.geonames.downloadURL</h4>
+This option determines the URL of the server to download the Geonames files to be processed (typically, the Geonames download server). This option is case sensitive.
+<div class="code">
+Example : <br/>
+importer.geonames.downloadURL=http://download.geonames.org/export/dump/
+</div>
+<br/><br/>
+<div class="tip yellowtip">
+Don't forget the ending slash !
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmap.downloadURL</h4>
+This option determines the URL of the server to download the OpenStreetMap files to be processed (typically, the <a href="http://download.gisgraphy.com/">Gisgraphy download server</a>). This option is case sensitive.
+<div class="code">
+Example : <br/>
+importer.openstreetmap.downloadURL=http://download.gisgraphy.com/openstreetmap/
+</div>
+<br/><br/>
+<div class="tip yellowtip">
+Don't forget the ending slash !
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmap.housenumbers.downloadURL</h4>
+This option determines the URL of the server to download the house numbers OpenStreetMap files to be processed (typically, the <a href="http://download.gisgraphy.com/">Gisgraphy download server</a>). This option is case sensitive.
+<div class="code">
+Example : <br/>
+importer.openstreetmap.downloadURL=http://download.gisgraphy.com/openstreetmap/housenumbers/
+</div>
+<br/><br/>
+<div class="tip yellowtip">
+Don't forget the ending slash !
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmap.cities.downloadURL</h4>
+This option determines the URL of the server to download the cities OpenStreetMap files to be processed (typically, the <a href="http://download.gisgraphy.com/">Gisgraphy download server</a>). This option is case sensitive.
+<div class="code">
+Example : <br/>
+importer.openstreetmap.cities.downloadURL=http://download.gisgraphy.com/openstreetmap/cities/
+</div>
+<br/><br/>
+<div class="tip yellowtip">
+Don't forget the ending slash !
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmap.pois.downloadURL</h4>
+This option determines the URL of the server to download the POIs (point of interest) OpenStreetMap files to be processed (typically, the <a href="http://download.gisgraphy.com/">Gisgraphy download server</a>). This option is case sensitive.
+<div class="code">
+Example : <br/>
+importer.openstreetmap.pois.downloadURL=http://download.gisgraphy.com/openstreetmap/pois/
+</div>
+<br/><br/>
+<div class="tip yellowtip">
+Don't forget the ending slash !
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.quattroshapes.downloadURL</h4>
+This option determines the URL of the server to download the Quattroshapes files to be processed (typically, the <a href="http://download.gisgraphy.com/">Gisgraphy download server</a>). This option is case sensitive.
+<div class="code">
+Example : <br/>
+importer.quattroshapes.downloadURL=http://download.gisgraphy.com/quattroshapes/
+</div>
+<br/><br/>
+<div class="tip yellowtip">
+Don't forget the ending slash !
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.geonames.zipcode.downloadURL</h4>
+This option determines the URL of the server to download the Geonames zipcode files to be processed (typically, the Geonames download server). This option is case sensitive.
+<div class="code">
+Example : <br/>
+importer.geonames.zipcode.downloadURL=http://download.geonames.org/export/zip/
+</div>
+<br/><br/>
+<div class="tip yellowtip">
+Don't forget the ending slash !
+</div>
+<br/><br/>
+
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.geonamesfilesToDownload</h4>
+This option determines the files to be download from the <code>importer.geonames.downloadURL</code> URL. The files must be ';' separated. Add specific country zip files (or allcountries.zip) and alternateNames.zip. This option is case sensitive. If allCountries.txt file is in the <code>importer.geonames.dir</code> Directory, the other country files will be logically ignored.
+<br/>
+<div class="code">
+Examples : <br/>
+importer.geonamesfilesToDownload=US.zip;MX.zip<br/>
+importer.geonamesfilesToDownload=allCountries.zip<br/>
+<br/>
+</div>
+<br/>
+<div class="tip yellowtip">If you run an import, change the option and re-run an import : you must first delete the old downloaded file before re-run the import. If you don't : the files you've downloaded for the first importwill be processed. 
+</div>
+<br/>
+<div class="tip greentip">It is not necessary To download CountryInfo.txt,iso-languagecodes.txt, because there are already in the Gisgraphy data directory of the gisgraphy distrib.
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmapfilesToDownload</h4>
+This option determines the files to be download from the <code>importer.openStreetMap.downloadURL</code> URL. The files must be ';' separated. Add specific country zip files (or allcountries.zip). This option is case sensitive. If allCountries.txt file is in the <code>importer.geonames.dir</code> Directory, the other countries files will be logically ignored.
+<br/>
+<div class="code">
+Examples : <br/>
+importer.openstreetmapfilesToDownload=AD.tar.bz2;CY.tar.bz2<br/>
+importer.openstreetmapfilesToDownload=allCountries.zip<br/>
+<br/>
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openstreetmapHouseNumberFilesToDownload</h4>
+This option determines the house numbers files to be download from the <code>importer.openstreetmap.housenumbers.downloadURL</code> URL. The files must be ';' separated. Add specific country zip files (or allcountries.zip). This option is case sensitive. If allCountries.txt file is in the <code>importer.openstreetmap.housenumbers.dir</code> Directory, the other countries files will be logically ignored.
+<br/>
+<div class="code">
+Examples : <br/>
+importer.openstreetmapHouseNumberFilesToDownload=AD.tar.bz2;CY.tar.bz2<br/>
+importer.openstreetmapHouseNumberFilesToDownload=allCountries.zip<br/>
+<br/>
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openStreetMapCitiesFilesToDownload</h4>
+This option determines the openstreetmap cities files to be download from the <code>importer.openstreetmap.cities.downloadURL</code> URL. The files must be ';' separated. Add specific country zip files (or allcountries.zip). This option is case sensitive. If allCountries.txt file is in the <code>importer.openStreetMapCitiesFilesToDownload</code> Directory, the other countries files will be logically ignored.
+<br/>
+<div class="code">
+Examples : <br/>
+importer.openStreetMapCitiesFilesToDownload=AD.tar.bz2;CY.tar.bz2<br/>
+importer.openStreetMapCitiesFilesToDownload=allCountries.zip<br/>
+<br/>
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.openStreetMapPoisFilesToDownload</h4>
+This option determines the POIs (point of interest) numbers files to be download from the <code>importer.openstreetmap.pois.downloadURL</code> URL. The files must be ';' separated. Add specific country zip files (or allcountries.zip). This option is case sensitive. If allCountries.txt file is in the <code>importer.openstreetmap.pois.dir</code> Directory, the other countries files will be logically ignored.
+<br/>
+<div class="code">
+Examples : <br/>
+importer.openStreetMapPoisFilesToDownload=AD.tar.bz2;CY.tar.bz2<br/>
+importer.openStreetMapPoisFilesToDownload=allCountries.zip<br/>
+<br/>
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.quattroshapesFilesToDownload</h4>
+This option determines the quattroshapes files to be download from the <code>importer.quattroshapes.downloadURL</code> URL. The files must be ';' separated. typically the files is shapes.tar.bz2. This option is case sensitive. files will be downloaded in <code>importer.quattroshapes.dir</code> Directory.
+<br/>
+<div class="code">
+Examples : <br/>
+importer.quattroshapesFilesToDownload=shapes.tar.bz2<br/>
+<br/>
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importer.retrieveFiles</h4>
+Wether the files defined by the <code>importer.*filesToDownload</code> options should be downloaded. If 'true' the importer will download the files. If 'false', it will use the files already presents. This option should be in lower case.
+<br/>
+<div class="code">
+Examples : <br/>
+importer.retrieveFiles=true<br/>
+importer.retrieveFiles=false
+</div>
+<br/><br/>
+<a name="fulltextsearchurl"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h4>fulltextSearchUrl</h4>
+The URL of the SolR Server. If you use the SolR server of the Gisgraphy distribution : the URL should be the Gisgraphy URL follow by solr (name of the war file). If you need better performance, (that's to say, run Gisgraphy and the SolR server in two distinct JVM. see <a href="#jvmoptimisation">jvm optimisation</a>) : specify the URL of the server you want to use. This option is case sensitive.
+<div class="code">
+Examples : <br/>
+fulltextSearchUrl=http://localhost:8080/solr/<br/>
+<br/>
+Example with the default SolR port <br/>
+fulltextSearchUrl=http://localhost:8983/solr/
+</div>
+<br/><br/>
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.wrongNumberOfFieldsThrows</h4>
+Wether the importer should throws an exception and stop the import if a line in an imported CSV file haven't the expected number of fields. This option should be in lower case. Recommended to false, set it to true if you use Gisgraphy for errors correction.
+
+<br/>
+<div class="code">
+Examples : <br/>
+importerConfig.wrongNumberOfFieldsThrows=true<br/>
+importerConfig.wrongNumberOfFieldsThrows=false
+</div>
+<br/><br/>
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.missingRequiredFieldThrows</h4>
+Wether we should throws an exception and stop the import if a required field is missing. This option should be in lower case. Recommended to false, set it to true if you use Gisgraphy for errors correction.
+<div class="code">
+Examples : <br/>
+importerConfig.missingRequiredFieldThrows=true<br/>
+importerConfig.missingRequiredFieldThrows=false
+</div>
+<br/><br/>
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.acceptRegExString</h4>
+
+a Regular expression for the place type we want to import. The default value is .*  (all the place type), if the value is not specified.
+Administrative divisions and countries are automaticaly imported. This option is case insensitive. place types are the name of the entities class (see package com.gisgraphy.domain.geoloc.entity source code for details), don't forget to add GISFEATURE for POI that are not Categorized
+
+<div class="code">
+Examples :<br/>
+<code>.*</code> : import all gisfeatures, no matter their feature class / code<br/>
+<code>RESTAURANT|BAR</code> : import all Restaurants and Bars<br/>
+<code>RESTAURANT|BAR|GISFEATURE</code> : import all Restaurants and Bars and POI that have no real categories<br/>
+<code>FOREST</code> : import all the forests<br/>
+<br/>
+</div>
+<br/>
+<div class="tip greentip">
+See <a href="http://download.geonames.org/export/dump/featureCodes.txt">http://download.geonames.org/export/dump/featureCodes.txt</a> to have a full description of feature class / code. This <a href="http://forum.geonames.org/gforum/posts/list/130.page">page</a> give you details on what are the "feature codes" used in GeoNames?.
+</div>
+<br/><br/>
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.tryToDetectAdmIfNotFound</h4>
+If this option is set to (recomended value) true : The importer will try to detect Adm for features if the AdmXcodes values does not correspond to a known Adm. set this option to true activate errors correction. If set to false, errors correction is disabled and if no Adm is found for the AdmXcode, the feature will be linked to a null Adm.<br/><br/>This option is case sensitive and must be set in lower case.
+Example : There is an adm with level 2 which have adm1Code = 'A1' and adm2Code = 'B2' in the datastore, suppose there is a gisFeature which have Adm1code='A3' and Adm2Code='B2', Gisgraphy will detect an error because there is no Adm with those codes. So! if this option is set to true, Gisgraphy will correct the error and will link the feature to the Adm with codes adm1Code = 'A1' and adm2Code = 'B2'. If if this option is set to false, Gisgraphy won't try to correct the error,  put a warning message in logs, and links the Feature to a null Adm. This option should be in lower case.
+
+<div class="code">
+Examples : <br/>
+importerConfig.tryToDetectAdmIfNotFound=true<br/>
+importerConfig.tryToDetectAdmIfNotFound=false
+</div>
+<br/><br/>
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.syncAdmCodesWithLinkedAdmOnes</h4>
+This option is a little bit difficult to understand. An example is often simpler than a big speech ;). First, there is a few little thing to know : a feature has the following properties:<br/>
+FeatureId......Adm...Adm1Code...Adm2Code...Adm3Code...Adm4Code...adm1Name...Adm2Name...adm3Name...Adm4Name...
+<br/>
+An Adm is a feature too and has the same properties.<br/> 
+So a feature is linked to an administrative division (AKA : Adm). For performance reasons, the codes and names of the Adms are stored in the Feature itself too.<br/>
+Now consider the example <a href="#tryToDetectAdmIfNotFound">above</a> : if there is an error the adm will not be the same as the Codes in The CSV files. this option allow to choose beetween two strategy :
+<ul>
+<li>If <code>importerConfig.syncAdmCodesWithLinkedAdmOnes</code> is set to 'true' then the admXcodes and admXnames of the features will be the same as the linked Adm One (in our example : if <code>importerConfig.tryToDetectAdmIfNotFound</code>is set to 'true' the adm1Code will be 'A1' and the Adm2Code will be 'B2' that's to say the same as the Adm ones)</li>
+<li>If <code>importerConfig.syncAdmCodesWithLinkedAdmOnes</code> is set to 'false', the admXcodes and admXnames of the features will be the same as the CSV file (in our example : if <code>importerConfig.tryToDetectAdmIfNotFound</code> is set to 'true', the adm1Code will be 'A3' and the Adm2Code will be 'B2' And the Linked Adm will be null) </li>
+</ul>
+
+In other words if you want the importer to set the admXcode and admXnames with the CSV one : set this option to false. if you want those codes to be the same as the linked Adm : set it to true.
+<br/>
+if you don't know what to do : set it to the recommended value : true. This option is case sensitive and must be set in lower case.
+
+<br/>
+<div class="tip yellowtip">
+importerConfig.tryToDetectAdmIfNotFound and importerConfig.syncAdmCodesWithLinkedAdmOnes are orthogonal concepts
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.admXExtracterStrategyIfAlreadyExists</h4>
+In order to import the Adm before the other features, Gisgraphy extract Adm1, Adm2, Adm3 and Adm4 into separate files. This option tells what to do if an AdmX file (determines with the <code>importerConfig.admXFileName</code> option) already exists in the <code>importer.geonames.dir</code>.This option is case sensitive. 3 options are available : 
+<ul>
+<li>skip : extraction will be skiped, and the existing file will be used</li>
+<li>backup : The already existing file will be backup (with the date and the current time), a new file will be extracted and used</li>
+<li>reprocess : the file will be replace by the new one</li>
+</ul>
+
+<div class="code">
+Examples : <br/>
+importerConfig.adm3ExtracterStrategyIfAlreadyExists=reprocess<br/>
+importerConfig.adm4ExtracterStrategyIfAlreadyExists=skip
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.adm1FileName</h4>
+Specify the filename of the CSV file with Administrative division with level 1. Should normally be 'admin1Codes.txt'. This option is case sensitive if the underlaying file system is case sensitive<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.adm2FileName</h4>
+Specify the filename of the CSV file with Administrative division with level 2. Should normally be 'admin2Codes.txt'. This option is case sensitive if the underlaying file system is case sensitive<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.adm3FileName</h4>
+Specify the filename of the CSV file with Administrative division with level 3. Should normally be 'admin3Codes.txt'. This file name will be used to extract Adm with level 3. This option is case sensitive if the underlaying file system is case sensitive
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.adm4FileName</h4>
+Specify the filename of the CSV file with Administrative division with level 4. Should normally be 'admin4Codes.txt'. This file name will be used to extract Adm with level 4. This option is case sensitive if the underlaying file system is case sensitive
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.languageFileName</h4>
+Specify the filename of the CSV file with languages. should normally be 'iso-languagecodes.txt'. This option is case sensitive if the underlaying file system is case sensitive
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.countriesInfosFileName</h4>
+Specify the filename of the CSV file with countries informations. Should normally be 'countryInfo.txt'. This option is case sensitive if the underlaying file system is case sensitive. This option is not the list of countries to import.
+<br/><br/>
+<div class="tip greentip">
+To be clearer the option importerConfig.countriesFileName has been renamed to 'importerConfig.countriesInfosFileName' (version &gt;= 2.0)
+</div>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.alternateNamesFileName</h4>
+Specify the filename of the CSV file that contains alternate names. Should normally be 'alternateNames.txt'. This option is case sensitive if the underlaying file system is case sensitive.
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.alternateNameFeaturesFileName</h4>
+Specify the name of the file where the alternate names of features that are not adm1, adm2, or country are (extracted). Should normally be 'alternateNames-features.txt'. This option is case sensitive if the underlaying file system is case sensitive.
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.alternateNameAdm1FileName</h4>
+Specify the the name of the file where the alternate names of adm with level 1 are (extracted). Should normally be 'alternateNames-adm1.txt'. This option is case sensitive if the underlaying file system is case sensitive.
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.alternateNameAdm2FileName</h4>
+Specify the the name of the file where the alternate names of adm with level 2 are (extracted). Should normally be 'alternateNames-adm2.txt'. This option is case sensitive if the underlaying file system is case sensitive
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.alternateNameCountryFileName</h4>
+Specify the name of the file where the alternate names of countries are . Should normally be 'alternateNames-country.txt'. This option is case sensitive if the underlaying file system is case sensitive
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>importerConfig.importGisFeatureEmbededAlternateNames</h4>
+The alternate names are provided in each country dump file, some additionnal information (languages, isPrefered name,...)are in a separated file name. If you want to import the alternate names of the country files (faster but you miss some informations and the language parameter of the fulltext service won't be taken into account) set this option to true, in that case the importerConfig.alternateNamesFileName will be ignored. if you want a full import with the alternatenames separated file set this option to false. This option is case sensitive and must be set in lowercase.
+<div class="code">
+Examples : <br/>
+importerConfig.importGisFeatureEmbededAlternateNames=true<br/>
+importerConfig.importGisFeatureEmbededAlternateNames=false
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>fulltextsearch.maxConnectionsPerHost</h4>
+Limits the numbers of connections to the SolR server per host. Recommended : 32.
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>fulltextsearch.maxTotalConnections</h4>
+Limits the numbers of connections to the SolR server for all hosts. Recommended : 128.
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<a name="defaultGeolocSearchPlaceType"></a>
+<h4>geolocsearch.defaultGeolocSearchPlaceType</h4>
+Define the default placetype Class for the <b>geoloc</b> query <b>(not the fulltext one)</b>. An empty or wrong value will search for any placetype by default. This option is case sensitive. and the placeType must be in the entity package. searching for all placetype decrease performance if there is a lot of feature in the database. This name of the class should not ends with '.class' and is case sensitive.
+<div class="code">
+Examples : <br/>
+geolocsearch.defaultGeolocSearchPlaceType=City<br/>
+geolocsearch.defaultGeolocSearchPlaceType=
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>addressParser.url</h4>
+The url of the address parser server. this option is the one to change when buy premium webservices). This must be a valid URL
+<div class="code">
+Examples : <br/>
+addressParser.url=http://addressparser.appspot.com/webaddressparser<br/>
+addressParser.url=http://services.gisgraphy.com/addressparser/parse?
+</div>
+
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>useAddressParserWhenGeocoding</h4>
+The option below enable/disable the parsing of the text to geocode. It can improve the response time because no request are done to Gisgraphy (offline mode)
+. Case sensitive, should be in lowercase true|false, default to false.
+<div class="code">
+Examples : <br/>
+useAddressParserWhenGeocoding=true<br/>
+useAddressParserWhenGeocoding=false<br/>
+<br/>
+Note that address parser will be enable if this option is true OR if the <a href="#postalgeocoding">postal parameter</a> is true. so you can disable the address parser by default and enable it at query time.
+</div>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>searchForExactMatchWhenGeocoding</h4>
+Whether we should do a search with all words required AND a search without. It decrease the response time but can be useful if you want to search for common places (hotel, city, adm, monument) AND address.
+It allow to do a fulltext search and a geocoding request.
+Default to true. Set to false if you only want to geocode
+#address, not place (better performance, less accuracy). Case sensitive, should be in lowercase true|false.
+<div class="code">
+Examples : <br/>
+searchForExactMatchWhenGeocoding=true<br/>
+searchForExactMatchWhenGeocoding=false
+</div>
+
+
+<div class="tip green tip">
+Two versions are deployed : one on gisgraphy server and one on Google appengine.
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>addressParser.class</h4>
+The (Java) class of the address parser client. this option can be changed to put your own implementation.This parameter is usefull when you <a href="http://www.address-parser.net">buy a license</a> of the parser and so use it intenally (without the webservices)
+<div class="code">
+Examples : <br/>
+addressParser.class=com.gisgraphy.addressparser.AddressParserClient<br/>
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<a name="spellcheckerenabled"></a>
+<h4>spellchecker.enabled</h4>
+Enable or disable the spellchecker for the fulltext search engine. 'true' or 'false' are possible values. This option is case sensitive.
+<div class="code">
+Examples : <br/>
+spellchecker.enabled=true<br/>
+spellchecker.enabled=false
+</div>
+<div class="tip green tip">
+Spellchecking is available for Gisgraphy 1.1 and greater.
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<a name="spellcheckeractiveByDefault"></a>
+<h4>spellchecker.activeByDefault=true</h4>
+Define the default value if the <a href="#spellchecking">spellchecking parameter</a> is not set. 'true' or 'false' are possible values. this option is case sensitive.
+<div class="code">
+Examples : <br/>
+spellchecker.activeByDefault=true<br/>
+spellchecker.activeByDefault=false
+</div>
+<div class="tip yellowtip">
+The spellchecker is only enabled if the <a href="#spellchecking">spellchecking parameter</a> <u>AND</u> the <a href="#spellcheckerenabled">spellchecker.enabled</a> are equals to 'true'
+</div>
+<br/><br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>spellchecker.spellcheckerDictionaryName</h4>
+The name of the SolR spellChecker to use. This option is case sensitive and you must set the same name in the solrconfig.xml file and in the env.properties in lower case. by default two spellchecker are define : 'levenstein' and 'jarowinkler'. In practice jarowinkler seems to give better results. 
+<div class="code">
+Examples : <br/>
+spellchecker.spellcheckerDictionaryName=jarowinkler<br/>
+spellchecker.spellcheckerDictionaryName=levenstein
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>spellchecker.collateResults</h4>
+For a request with several words, return a string with the best suggestion for each word. for instance for 'pariss frence' => 'Paris France' will be suggest. This option is case sensitive. 'true' and 'false' are possible values.
+<div class="code">
+Examples : <br/>
+spellchecker.collateResults=true<br/>
+spellchecker.collateResults=false
+</div>
+<br/><br/>
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>googleMapAPIKey</h4>
+The google maps API key. Required if you want to use Google maps  to display gisgraphy search results in the demo pages. in any case Gisgraphy use google to do search!. See more on the <a href="http://code.google.com/apis/maps/signup.html">Google Maps page</a> to sign up.
+<div class="code">
+Examples : <br/>
+googleMapAPIKey=ABQIAAAAC0kUg2SfDYBO-AEagcTgvhQ5aXWj7Kef4ih_G0qG0UGxHdmrpFrmSD7sGMwTJIN1g7C45waZ5ybiQ<br/>
+</div>
+<br/><br/>
+
+
+
+<div align="right"><a href="#top">[top]</a></div>
+<h4>googleanalytics.uacctcode</h4>
+The <a href="http://www.google.com/analytics/">Google analytics</a> code to have statistics</a>
+<div class="code">
+Examples : <br/>
+googleMapAPIKey=ABQIAAAAC0GGGDYBO-AEagcTgvhQ5aXWj7Kef4ih_G0qG0UGxHdmrpFrmSD7sGMwTJIN1g7C45waZ5ybiQ<br/>
+</div>
+<br/><br/>
+
+<a name="geocodingservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Geocoding service</h2>
+<a name="geocodingservicedescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Description</h3>
+<br/>
+The Gisgraphy geocoding service allows to transform postal address or other description (a street, a city, a postal code, a country, or a combination) of a location into a (latitude, longitude) coordinate. The goal is to give a free opensource alternative to <a href="http://maps.google.com/" target="_blank" />Google maps</a>, and <a href="http://nominatim.openstreetmap.org/">nominatim</a> that is not really usable (words should be comma separated, poor relevance,...<br/>
+
+<a name="geocodingserviceoutputformat"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output formats and languages</h3>
+The following languages are supported :
+<ul>
+<li>XML</li>
+<li>Json</li>
+<li>Php</li>
+<li>Ruby</li>
+<li>Python</li>
+<li>YAML</li>
+</ul>
+<br/>
+
+<a name="geocodingserviceparameters"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Parameters</h3>
+<ul>
+<a name="addressgeocoding"></a>
+<li>The address (required) : a postal address, strucrured or not, a street, a city, a postal code, a country, or a combination.
+<br/> Examples :
+<ul>
+<li>101 Avenue des Champs-Elysées 75008 Paris</li>
+<li>Champs elysees paris</li>
+<li>Champs elysees</li>
+<li>paris</li>
+</ul>
+</li>
+You can also specify a structured by speciying the separate parts of the address : houseNumber, streetName, streetType, city, state, zipCode, etc.
+a full list can be found <a href=https://code.google.com/p/gisgraphy/source/browse/trunk/addressParser-commons/src/main/java/com/gisgraphy/addressparser/Address.java" target="_blank">here</a>
+<br/>
+<br/>
+
+<a name="countrygeocoding"></a>
+<li>The country (not required for gisgraphy v 4.0 and above) : The country where the Place/address is. it is used to determine the postal address format and to improve performance. it will probably be optionnal in next version to ease the usability. The value must be the <a href="http://en.wikipedia.org/wiki/ISO_3166">ISO 3166 Alpha 2 code</a> of the country
+<br/> Examples :
+<ul>
+<li>US</li>
+<li>FR</li>
+<li>DE</li>
+</ul>
+</li>
+<br/>
+<br/>
+
+<a name="postalgeocoding"></a>
+<li>postal  : whether the given address is a postal address. default to false. In other words, if the address follow the <a href="http://www.upu.int"> specifications</a> or if it is a well formed address as it was writen on an envelop.
+this parameter will enable the parsing of the address by the address parser before geocoding, this way, the relevance will be better because because if parsing is sucessful, we will know the meaning of each word. note that you can also <a href="#addressgeocoding">specify each fields</a> if you already know them
+<br/> Examples :
+<ul>
+<li>true</li>
+<li>false</li>
+<li>on</li>
+</ul>
+</li>
+<br/>
+<br/>
+
+
+
+<a name="callbackgeocoding"></a>
+<li>The callback method name (optional), use to wrap the content into a (alphanumeric) javascript method. operate only for script output formats (json, PHP, Ruby, Python)
+<br/> Examples :
+<ul>
+<li>executeCallback :(will output "executeCallback(RESULT_FEED);" then if you evaluate this string the method will be called implicitly)</li>
+</ul>
+</li>
+<br/>
+<a name="indentgeocoding"></a>
+<li>The indentation (optional) : indents the results. Default to false. Possible values are true|false (or "on" when used with the rest service. If you use a checkbox in a web form, to indent the results, the value will be "on" or "off", so for a simple use : the value of indent, for can be "true" or "on".</li>
+<br/>
+<br/>
+
+
+
+<div class="tip yellowtip">
+ Actually, only XML can be indented. It is not a bug :  Indent JSON is possible but decrease performance.
+</div>
+
+<br/>
+<a name="apikeygeocoding"></a>
+<li>the API key (optional) : the API key to use if you use <a href="http://www.gisgraphy.com/premium">premium webservices</a> this parameter is useless for local installation</li>
+<br/><br/>
+</ul>
+<a name="geocodingwebservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Web service</h3>
+
+The geolocoding web service use a servlet to wrap the Java API. It links web parameters to a geocoding query and output the results to HTTP feed.
+<br/>
+All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">notify a bug</a>.
+
+<div class="tip yellowtip">
+ All the parameters should be encoded in <a href="http://fr.wikipedia.org/wiki/UTF-8">UTF-8</a> and the URL MUST be <a href="http://www.w3schools.com/TAGS/ref_urlencode.asp">encoded</a>.
+</div>
+<br/><br/>
+Here is a summary of the Web parameters mapping : <br/>
+<table class="smallsizetable smartborder">
+<th>Parameter description</th><th>Web parameter name</th>
+<tr><td>address</td><td>address</td></tr>
+<tr><td>A structured address</td><td>Any field that can describe an address. a list of fields can be foud at <a href="https://code.google.com/p/gisgraphy/source/browse/trunk/addressParser-commons/src/main/java/com/gisgraphy/addressparser/Address.java" target="_blank">here</a></td></tr>
+<tr><td>country<td>country</td></tr>
+<tr><td>postal</td><td>postal</td></tr>
+<tr><td>Callback method name</td><td>callback</td></tr>
+<tr><td>Output format</td><td>format</td></tr>
+<tr><td>Indent</td><td>indent</td></tr>
+<tr><td>apikey</td><td>api key (only for <a href="http://www.gisgraphy.com/premium">premium webservices</a>, useless for local installation)</td></tr>
+</table>
+<br/>
+<div class="code">
+Examples : <br/>
+geocoding/geocode?address=108%20avenue%20des%20champs%20elysees%20paris&countrycode=FR<br/><br/>
+geocoding/geocode?address=108%20avenue%20des%20champs%20elysees%20paris&countrycode=FR&format=json<br/><br/>
+/geocoding/geocode?housenumber=105&streetname=avenue des champs elysees&city=paris<br/>
+</div>
+<br/>
+
+<div class="tip greentip">
+By default the geocoding service is mapped to <code>/geocoding</code> pattern but you can change it in the WEB-INF/web.xml<br/><br/>
+</div>
+<br/><br/>
+
+
+
+<a name="geocodingserviceoutputfieldsdescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output fields description</h3>
+The Geocoding service returns a list of address. it also return the parsed address in a parsedAddress field ()when the <a href="http://www.address-parser.net">address parser</a> is enabled.
+Here is a description of all the output fields of an adress that can be returned  :<br/>
+<table class="mediumsizetable smartborder">
+<th>field</th><th>description</th><th>Examples of value</th><th>Examples in address</th>
+<tr><td>houseNumber</td><td>Official number assigned to an address by the municipality, several languages supported</td><td>3;151-125;eight</td><td><span class="redtext">123</span> street of philadelphia city, apt 5A, Washington</td></tr>
+<tr><td>houseNumberInfo</td><td>All informations that give extra informations on the house number</td><td>bis, ter, quater,</td><td>125 <span class="redtext">bis</span> rue de la france 75000 Paris</td></tr>
+<tr><td>streetName</td><td>The official name of the street or the ordinal number</td><td>Main, 8TH</td><td>100 <span class="redtext">MAIN</span> ST POB 1022 SEATTLE WA 98104</td></tr>
+<tr><td>streetType</td><td>The type of the street</td><td>street,st,bd,dr,bvd,...</td><td>100 MAIN <span class="redtext">ST</span> POB 1022 SEATTLE WA 98104</td></tr>
+<tr><td>city</td><td>The city or locality, A small town or village name sometimes included in an address when the Delivery Point is outside the boundary of the main Post Town that serves it.</td><td>APPLEFORD</td><td>Leda Engineering Ltd <span class="redtext">APPLEFORD</span> ABINGDON OX14 4PG</td></tr>
+<tr><td>dependentLocality</td><td>"Sub" city attached to a big city</td><td>Dublin</td><td>boulevard of liberty <span class="redtext">Washington</span></td></tr>
+<tr><td>PostTown</td><td>a city it is required part of all postal addresses in the United Kingdom</td><td>London</td><td>49 Featherstone Street <span clas="redtext">LONDON</span>EC1Y 8SY</td></tr>
+<tr><td>state</td><td>The state or county when applicable, can be fullName or abbreviation</td><td>WA</td><td>100 MAIN ST POB 1022 SEATTLE <span class="redtext">WA</span> 98104</td></tr>
+<tr><td>district</td><td>The district, mainly use for russia</td><td>ALEKSCEVSKTY (r-n)</td><td>ul. Lesnaya d. 5 pos. Lesnoe <span class="redtext">ALEKSCEVSKTY</span> r-n VORONEJSKAYA obl 247112 RUSSIAN FEDERATION </td></tr>
+<tr><td>quarter</td><td>A section of an urban settlement</td><td>DOĞANBEY MAH(turkey),French Quarter</td><td><span class="redtext">Mebusevleri Mah.</span>
+Önder Cad. Ankara Ap. 11/8 ALEKSCEVSKTY </td></tr>
+<tr><td>zipCode</td><td>The zip or post code</td><td>98104</td><td>100 MAIN ST POB 1022 SEATTLE WA <span class="redtext">98104</span></td></tr>
+<tr><td>extraInfo</td><td>Informations on floor, unit, and sometimes POBOX,..</td><td>floor 6,Hangar of the century</td><td>100 MAIN ST <span class="redtext">POB 1022</span> SEATTLE WA 98104<br/>100 MAIN ST <span class="redtext">3rd floor</span> SEATTLE WA 98104</td></tr>
+<tr><td>POBox</td><td>Post office box, Boite postale, Casilla de Correo,..</td><td>POB 45, POBOX 52,boite postale 89,Casilla de Correo 17</td><td>100 MAIN ST <span class="redtext">POB 1022</span> SEATTLE WA 98104<br/>100 MAIN ST <span class="redtext">3rd floor</span> SEATTLE WA 98104</td></tr>
+<tr><td>POBoxInfo</td><td>extra info on Post office box, Boite postale, Casilla de Correo,..</td><td>CEDEX 01</td><td>5, rue Foobar, 75725 Paris <span class="redtext">CEDEX 01</span></td></tr>
+<tr><td>POBoxAgency</td><td>Agency where the office box, Boite postale, Casilla de Correo is</td><td>KHOURIBGA PRINCIPALE</td><td>P.O 1737 <span class="redtext">KHOURIBGA PRINCIPALE</span> 25005 KHOURIBGACEDEX</td></tr>
+<tr><td>preDirection</td><td>The cardinal direction before the name of the street</td><td>N,NE;North</td><td><span class="redtext">N</span> broadway bd</td></tr>
+<tr><td>postDirection</td><td>The cardinal direction after the name of the street </td><td>N,NE;North</td><td> boulevard of liberty <span class="redtext">north</span> Washington</td></tr>
+<tr><td>streetNameIntersection</td><td>The official name of the intersection street</td><td>Main</td><td>N street of philadelhia & W boulevard <span class="redtext">of liberty</span> Washington</td></tr>
+<tr><td>streetTypeIntersection</td><td>The type of the intersection street</td><td>street,st,bd,dr,bvd,...</td><td>N street of philadelhia & W <span class="redtext">boulevard</span> of liberty Washington</td></tr>
+<tr><td>preDirectionIntersection</td><td>The cardinal direction before the name of the intersection street</td><td>N,NE;North</td><td>N street of philadelhia & <span class="redtext">W</span> boulevard of liberty Washington</td></tr>
+<tr><td>postDirectionIntersection</td><td>The cardinal direction after the name of the intersection street </td><td>N,NE;North</td><td>N street of philadelhia & boulevard of liberty <span class="redtext">SOUTH</span> Washington</td></tr>
+<tr><td>civicNumberSuffix</td><td>The number that follow the house number (Canada only)</td><td>1/2</td><td>10-123 <span class="redtext">1/2</span> main street NW MONTREAL QC H3Z 2Y7</td></tr>
+<!-- <tr><td>unitNumber</td><td>The number of the unit when without unit member (e.g :apt),(frequently used in Canada), see unit above</td><td>5</td><td><span class="redtext">10</span>-123 1/2 main street NW MONTREAL QC H3Z 2Y7</td></tr>-->
+ <tr><td>floor</td><td>The floor in an address, not a floor number in a unit (Brasilia only)</td><td>8o andar</td><td>SBN - Quadra 13 - Bloca B - <span class="redtext">8o andar</span> BRASILIA-DF 70002-900</td></tr>
+ <tr><td>sector</td><td>The sector in an address (Brasilia only)</td><td>SBN</td><td><span class="redtext">SBN</span> - Quadra 13 - Bloca B - 8o andar BRASILIA-DF 70002-900</td></tr>
+ <tr><td>quadrant</td><td>The quadrant in an address (Brasilia only)</td><td>Quadra 13</td><td>SBN - <span class="redtext">Quadra 13</span> - Bloca B - 8o andar BRASILIA-DF 70002-900</td></tr>
+ <tr><td>block</td><td>The block in an address (Brasilia only)<br/>the block in austria, singapore,... address</td><td>Bloca B<br/>2</td><td>SBN - Quadra 13 - <span class="redtext">Bloca B</span> - 8o andar BRASILIA-DF 70002-900<br/>Rennbahnweg 25/<span class="redtext">2</span>/15
+1220 WIEN</td></tr>
+ <tr><td>country</td><td>The country name</td><td>USA<br/> United States<br/> France<br/></td><td>Paris - <span class="redtext">France</span></td></tr>
+ <tr><td>countrycode</td><td>The countrycode given in the request</td><td>FR<br/> US<br/> DE<br/></td><td>N/A</td></tr>
+</table>
+<br/><br/>
+
+<a name="geocodingservicejavaapi"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Java API</h3>
+
+The geocoding API looks like this
+<div class="code">
+<pre>
+IGeocodingService geocodingService = new GeocodingService();
+	String rawAddress = "101 Avenue des Champs-Elysées 75008 Paris";
+	AddressQuery query =new AddressQuery("101 Avenue des Champs-Elysées 75008 Paris", "FR");
+	AddressResultsDto results =geocodingService.geocode(query);
+	/* or 
+	Address address=new Address();
+	address.setCity("Paris");
+	address.setZipCode("75008");
+	address.setHouseNumber("101");
+	address.setStreetType("Avenue")
+	address.setStreetName("des Champs-Elysées");
+	AddressResultsDto result = geocodingService.geocode(address,"FR");
+	*/
+	System.out.println("Query tooks "+result.getQTime()+" ms and"+
+		" return "+result.getNumFound()+" result(s)");
+	//if the parser is enabled or if the geocoder is called with a structured address
+	//then, the the parsedAddress field is filled.
+	System.out.println("parsed address : "+result.getParsedAddress());
+	for (Address address : results.getResult()){
+		System.out.println("housenumber : "+address.getHouseNumber());
+		System.out.println("streetType : "+address.getStreetType());
+		System.out.println("streetname : "+address.getStreetName());
+		System.out.println("PObox : "+address.getPOBox());
+		System.out.println("lat : "+address.getlat());
+		System.out.println("long : "+address.getLng());
+		System.out.println("city : "+address.getCity());
+		System.out.println("district : "+address.getDistrict());
+		System.out.println("state : "+address.getState());
+		//see all fields description above...
+		
+	}
+</pre>
+</div>
+
+<br/>
+
+<br/>
+You can output results to an OutputStream (useful for servlet use) or a String.
+<br/> The API is thread safe.
+<br/> It is possible to create a query directly from a HTTP servlet request
+<br/>
+<!-- end geocoding-->
+
+<!-- Start address Parser -->
+<a name="addressparser"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Adress Parser</h2>
+<div class="tip yellowtip">
+The International address parser is based on a modular engine, The address-parser is now a spin off and has his dedicated site:
+<a href="http://address-parser.net/try.php">http://address-parser.net</a>
+</div>
+You can <a href="http://address-parser.net/try.php">try it</a> for free
+<!-- end address parser -->
+
+
+
+<!-- Reverse geocoding-->
+<a name="reversegeocodingservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Reverse geocoding service</h2>
+<a name="reversegeocodingservicedescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Description</h3>
+<br/>
+The Reverse geocoding service allows to search for an address for a given GPS position.<br/>
+
+<a name="reversegeocodingserviceoutputformat"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output formats and languages</h3>
+The following languages are supported :
+<ul>
+<li>XML</li>
+<li>Json</li>
+<li>Php</li>
+<li>Ruby</li>
+<li>Python</li>
+<li>Georss</li>
+</ul>
+<br/>
+<a name="reversegeocodingserviceparameters"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Parameters</h3>
+<ul>
+<a name="latitudereversegeocoding"></a>
+<li>The latitude (north-south) for the location point to search around. The value is a float, between -90 and +90. It use GPS coordinates. This parameter is required
+<br/> Examples : 
+<ul>
+<li>-4.2</li>
+<li>+4,2</li>
+</ul>
+</li>
+<br/>
+
+
+<a name="longitudereversegeocoding"></a>
+<li>The longitude (east-West) for the location point to search around. The value is a float between -180 and +180. It use GPS coordinates.This parameter is required
+<br/> Examples : 
+<ul>
+<li>3.6</li>
+<li>3,6</li>
+</ul>
+</li>
+<br/>
+
+
+<a name="callbackreversegeocoding"></a>
+<li>The callback method name (optional), use to wrap the content into a method name, must be alphanumeric and operate only for script outputformat (json,php,ruby,python)
+<br/> Examples : 
+<ul>
+<li>executeCallback :(will output "executeCallback(RESULT_FEED);" then if you evaluate this string the method will be called implicitly)</li>
+</ul>
+</li>
+<br/>
+<a name="outputformatreversegeocoding"></a>
+<li>The output format (optional) : The formats available are :<br/>
+<ul>
+<li>XML (Default)</li>
+<li>JSON</li>
+<li>Python</li>
+<li>Ruby </li>
+<li>PHP</li>
+<li>YAML</li>
+</ul>
+</li>
+<br>
+
+<a name="indentreversegeocoding"></a>
+<li>The indentation (optional) : indents the results. Default to false. Possible values are true|false. If you use a checkbox in a web form to indent the results, the value will be "on" or "off", so for a simple use : the value of indent, for the web service can be "true" or "on".</li>
+<br/>
+
+<div class="tip yellowtip">
+ Actually, only XML can be indented. It is not a bug :  Indent JSON is possible but decrease performance.
+</div>
+<br/><br/>
+
+<br/>
+<a name="apikeyreversegeocoding"></a>
+<li>the API key (optional) : the API key to use if you use <a href="http://www.gisgraphy.com/premium">premium webservices</a> this parameter is useless for local installation</li>
+<br/>
+
+</ul>
+<a name="reversegeocodingwebservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Web service</h3>
+
+The reverse geocoding web service use a servlet to wrap the Java API. It links web parameters to a reverse geocoding query and output the results via HTTP.
+<br/>
+All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">notify a bug</a>.
+
+<div class="tip yellowtip">
+ All the parameters should be encoded in <a href="http://fr.wikipedia.org/wiki/UTF-8">UTF-8</a> and the URL MUST be <a href="http://www.w3schools.com/TAGS/ref_urlencode.asp">encoded</a>.
+</div>
+<br/><br/>
+Here is a summary of the Web parameters mapping : <br/>
+<table class="smallsizetable smartborder">
+<th>Parameter description</th><th>Web parameter name</th>
+<tr><td>Latitude</td><td>lat</td></tr>
+<tr><td>Longitude<td>lng</td></tr>
+<tr><td>Callback method name</td><td>callback</td></tr>
+<tr><td>Output format</td><td>format</td></tr>
+<tr><td>Indent</td><td>indent</td></tr>
+<tr><td>apikey</td><td>api key(only for <a href="http://www.gisgraphy.com/premium">premium webservices</a>, useless for local installation)</td></tr>
+</table>
+<br/>
+<div class="code">
+Examples : <br/>
+http://localhost:8080/reversegeocoding/search?lat=4.5&lng=5.7&format=json&callback=doit&indent=true<br/><br/>
+http://localhost:8080/reversegeocoding/search?lat=4.5&lng=5.7<br/><br/>
+</div>
+<br/>
+
+<a name="reversegeocodingserviceoutputfieldsdescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output fields description</h3>
+Here is a description of all the output fields,  :<br/>
+<table class="mediumsizetable smartborder">
+<th>Field</th><th>Description</th><th>Applicable for</th>
+<tr><td><span color="red">error</span></td><td>A String only present if an error occured (e.g : empty Latitude or longitude)</td><td>When error occured</td></tr>
+<tr><td>numFound</td><td>The number of results display with this query (actually always 1)</td><td></td></tr>
+<tr><td>QTime</td><td>The execution time of the query in ms</td><td></td></tr>
+<tr><td>distance</td><td>The distance beetween the point and the address found</td><td></td></tr>
+<tr><td>houseNumber</td><td>The house Number of the address</td><td></td></tr>
+<tr><td>name</td><td>The name of the address (could be a shop name, etc)</td><td></td></tr>
+<tr><td>streetName</td><td>The name of street of the address (could be a shop name, etc), it could be null (even if the house number is not), if the name of the street is unknown</td><td></td></tr>
+<tr><td>city</td><td>The city of the address</td><td></td></tr>
+<tr><td>citySubdivision</td><td>a more precise information than the city (quater, place,...)</td><td></td></tr>
+<tr><td>state</td><td>The state of the address</td><td></td></tr>
+<tr><td>countryCode</td><td>The countryCode of the address</td><td></td></tr>
+<tr><td>geocodingLevel</td><td>information on how deep the reverse geocoding was able to do (housenumber, street, city)</td><td></td></tr>
+<tr><td>lat</td><td>The latitude of the middle of the street(north-south)</td><td></td></tr>
+<tr><td>lng</td><td>The longitude of the middle of the street(east-west)</td><td></td></tr>
+</table>
+<br/><br/>
+
+
+<a name="reversegeocodingservicejavaapi"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Java API</h3>
+
+The geoloc API looks like this
+<div class="code">
+<pre>
+			Point point = GeolocHelper.createPoint(<a href="#longitudereversegeocoding">LONGITUDE</a>, <a href="#latitudereversegeocoding">LATITUDE</a>);
+			Output output = Output.withFormat(<a href="#outputformatreversegeocoding">OUTPUTFORMAT</a>)
+								  .<a href="#indentreversegeocoding">WithIndentation</a>();
+			ReverseGeocodingQuery query = new ReverseGeocodingQuery(point, Output.withFormat(OutputFormat.JSON).withIndentation());
+    			ReverseGeocodingService service = new ReverseGeocodingService();
+    			AddressResultsDto result = service.executeQuery(query);
+    			System.out.println("reverse geocoding took "+result.getQTime()+" ms");
+    			System.out.println("reverse geocoding find address "+result.getResult()+" ms");
+</pre>
+</div>
+
+<div class="tip greentip">
+Click on the UPPERCASE parameters above to see the description of the parameter.
+</div>
+
+</div>
+<br/>
+<div class="tip greentip">
+The methods are designed with <a href="http://www.infoq.com/articles/internal-dsls-java">DSL</a> (Domain Specific Language), and can be chained as shown in the example above.
+</div>
+<br/>
+
+<br/>
+You can output results to an OutputStream (useful for servlet use) or a String.
+<br/> The API is thread safe.
+<br/> It is possible to create a query directly from a HTTP servlet request
+<br/>
+<!-- end reversegeocoding-->
+
+
+<!-- Street-->
+<a name="streetservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>street service</h2>
+<a name="streetservicedescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Description</h3>
+<br/>
+The street service allows to search for street by name or GPS position (or both).<br/>
+you can : 
+<ul>
+	<li> Specify GPS position</li>
+	<li> Give the begining or a part of the name of the street (useful for autocompletion)</li>
+	<li> Limit search to a specific type (e.g : Pedestrian, highway, residential, ... 25 type availables)</li>
+	<li> Limit search to a specified radius</li>
+	<li> Limit search to one way streets</li>
+	<li> Paginate the results</li>
+	<li> Tells if you want the output to be indented (currently, apply only for XML, not json for performance reasons. may change in next version) </li> 
+</ul>
+<br/>
+The street search service search the nearest street based on the shape of the streets, not the middle point. It is recommended to use this service for OpenGTS or if you want to search the nearest distance to a street. It is recommended to use the fulltext search engine with placetype=street to search by name, the fulltext engine search arround a point, it is more like a restriction and distance is the one to the middle of the street. street search service is the one to use when GPS is more important than name.<br><br>
+Actually the street search doesn't return house numbers (probably in next version). if you want house numbers you have to use the <a href="#fulltextservice">fulltext service</a>
+<br/>
+Gisgraphy is designed to allow search with auto completion / suggetions : 
+<ul>
+<li>To search for streets by entire name use the fulltext search (you can also specify GPS coordinate, and change the 'allwords required' option to esae the search).</li>
+<li>To do auto completion / suggetion use the fulltext webservice</li>
+</ul>
+
+<div class="tip yellowtip">
+If you don't specify the lat/lng and do a search that 'contains', indexes won't be used, so performances will be poor. With fulltext search performances will be ok.
+</div>
+
+<a name="streetserviceoutputformat"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output formats and languages</h3>
+The following languages are supported :
+<ul>
+<li>XML</li>
+<li>Json</li>
+<li>Php</li>
+<li>Ruby</li>
+<li>Python</li>
+<li>Georss</li>
+<li>ATOM</li>
+<li>YAML</li>
+</ul>
+<br/>
+<a name="streetserviceparameters"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Parameters</h3>
+<ul>
+<a name="latitudestreet"></a>
+<li>The latitude (north-south) for the location point to search around. The value is a float, between -90 and +90. It use GPS coordinates. could be optional but need to be valid if specified
+<br/> Examples : 
+<ul>
+<li>-4.2</li>
+<li>+4,2</li>
+</ul>
+</li>
+<br/>
+
+
+<a name="longitudestreet"></a>
+<li>The longitude (east-West) for the location point to search around. The value is a float between -180 and +180. It use GPS coordinates. could be optional but need to be valid if specified
+<br/> Examples : 
+<ul>
+<li>3.6</li>
+<li>3,6</li>
+</ul>
+</li>
+<br/>
+<a name="namestreet"></a>
+<li>A part of the name of the street (optional) or the name of the street : limit the search to the street that starts/contains with the specified name (WITHOUT STREET NUMBER). You could put the name and the type of the street. Example : 'Boulevard Paul'.the search is case insensitive.</li>
+<br/>
+
+
+<a name="searchmodestreet"></a>
+<div class="tip yellowtip">
+The search mode is deprecated in V3.0 The fulltext mode has been removed in gisgraphy v3.0 (default is always contains) and is replaced by the fulltext search with placetype="street". The results and accuracy is really better but you can not specify oneway or streettype parameter parameter or get the distance anymore. if you really need this features, please <a href="mailto:davidmasclet@gisgraphy.com">send a mail</a>
+IMPORTANT TIPS : If you need to do a fulltext search and you don't care about distance, oneway or streettype, use the fulltext search engine with placetype=street. you will get best accuracy and performance<br/>
+</div>
+<br/>
+
+
+<a name="radiusstreet"></a>
+<li>The radius (optional) : distance from the location point in meters we'd like to search around. The value is a number > 0 if it is not specify or incorrect : The default value will be used (10 km).
+<br/> Examples : 
+<ul>
+<li>50000</li>
+</ul>
+</li>
+<br/>
+<a name="onewaystreet"></a>
+<li>oneway : whether the street should be a oneWay street (optional) : limit the search to the street that are one way street</li>
+<br/>
+
+<a name="startindexstreet"></a>
+<li>Start pagination index (optional) : The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1.</li>
+<br/>
+<a name="endindexstreet"></a>
+<li>End pagination Index (optional) : The last pagination index. if < 1 or not specified, it will be set to startindex + 10. Max = 50 (can be changed)</li>
+<br/>
+
+<a name="callbackstreet"></a>
+<li>The callback method name (optional), use to wrap the content into a method name, must be alphanumeric and operate only for script outputformat (json,php,ruby,python)
+<br/> Examples : 
+<ul>
+<li>executeCallback :(will output "executeCallback(RESULT_FEED);" then if you evaluate this string the method will be called implicitly)</li>
+</ul>
+</li>
+<br/>
+<a name="outputformatstreet"></a>
+<li>The output format (optional) : The formats available are :<br/>
+<ul>
+<li>XML (Default) : <a href="./examples/streetsearch.xml">Example</a></li>
+<li>JSON  : <a href="./examples/streetsearch.json">Example</a></li>
+<li>Python</li>
+<li>Ruby </li>
+<li>PHP</li>
+<li>ATOM : <a href="./examples/streetsearch_atom.xml">Example</a></li>
+<li>GEORSS : <a href="./examples/streetsearch_georss.xml">Example</a></li>
+<li>YAML</li>
+</ul>
+</li>
+<br>
+
+
+<br/>
+<a name="distancestreet"></a>
+<li>Distance field : Wether (or not) we want the distance field to be output. This option is usefull to improve the performances if we don't care about the distance (e.g : we search for name). Of course, the results won't be sorted by distance. If you use a checkbox in a form to indent the results, the value will be "on" or "off", so to simplify the use : the value for the web service can be "true" or "on".</li>
+<br/><br/>
+
+<a name="indentstreet"></a>
+<li>The indentation (optional) : indents the results. Default to false. Possible values are true|false. If you use a checkbox in a web form to indent the results, the value will be "on" or "off", so for a simple use : the value of indent, for the web service can be "true" or "on".</li>
+<br/>
+
+<div class="tip yellowtip">
+ Actually, only XML can be indented. It is not a bug :  Indent JSON is possible but decrease performance. If it is a critical need you can see an example of how indent json in source code of streetSearchEngine.
+</div>
+<br/><br/>
+
+<br/>
+<a name="apikeystreet"></a>
+<li>the API key (optional) : the API key to use if you use <a href="http://www.gisgraphy.com/premium">premium webservices</a> this parameter is useless for local installation</li>
+<br/>
+
+</ul>
+<a name="streetwebservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Web service</h3>
+
+The street/ geocoding web service use a servlet to wrap the Java API. It links web parameters to a street query and output the results via HTTP.
+<br/>
+All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">notify a bug</a>.
+
+<div class="tip yellowtip">
+ All the parameters should be encoded in <a href="http://fr.wikipedia.org/wiki/UTF-8">UTF-8</a> and the URL MUST be <a href="http://www.w3schools.com/TAGS/ref_urlencode.asp">encoded</a>.
+</div>
+<br/><br/>
+Here is a summary of the Web parameters mapping : <br/>
+<table class="smallsizetable smartborder">
+<th>Parameter description</th><th>Web parameter name</th>
+<tr><td>Latitude</td><td>lat</td></tr>
+<tr><td>Longitude<td>lng</td></tr>
+<tr><td>name of the street</td><td>name</td></tr>
+<tr><td>one way street</td><td>oneway</td></tr>
+<tr><td>Type of the street</td><td>streettype</td></tr>
+<tr><td>Radius</td><td>radius</td></tr>
+<tr><td>Start pagination index</td><td>from</td></tr>
+<tr><td>End pagination index</td><td>to</td></tr>
+<tr><td>Callback method name</td><td>callback</td></tr>
+<tr><td>Output format</td><td>format</td></tr>
+<tr><td>Distance field </td><td>distance</td></tr>
+<tr><td>Indent</td><td>indent</td></tr>
+<tr><td>apikey</td><td>api key(only for <a href="http://www.gisgraphy.com/premium">premium webservices</a>, useless for local installation)</td></tr>
+</table>
+<br/>
+<div class="code">
+Examples : <br/>
+http://localhost:8080/street/streetsearch?lat=4.5&lng=5.7&radius=5000&from=1&to=10&format=xml&name=strip&indent=true<br/><br/>
+http://localhost:8080/street/streetsearch?lat=4.5&lng=5.7<br/><br/>
+</div>
+<br/>
+
+<br/>
+<div class="tip yellowtip">
+Actually, the webservice limits the number of results to 50. but it can be changed (at compilation time)
+</div>
+<br/>
+
+<div align="right"><a href="#top">[top]</a></div>
+<a name="streettype"/>
+<h3>street type</h3>
+Streets are group by type. Here are the possible values :
+<ul>
+	<li>RESIDENTIAL</li>
+	<li>SERVICE</li>
+	<li>UNCLASSIFIED</li> 
+	<li>TRACK</li>
+	<li>FOOTWAY</li>
+	<li>TERTIARY</li>
+	<li>PATH</li>
+	<li>SECONDARY</li>
+	<li>PRIMARY</li>
+	<li>BUS_STOP</li>
+	<li>TURNING_CIRCLE</li>
+	<li>CROSSING</li>
+	<li>CYCLEWAY</li>
+	<li>TRUNK, TRAFFIC_SIGNALS</li>
+	<li>MOTORWAY</li>
+	<li>MOTORWAY_LINK</li>
+	<li>ROAD</li>
+	<li>LIVING_STREET</li>
+	<li>STEPS</li>
+	<li>PEDESTRIAN</li>
+	<li>TRUNK_LINK</li>
+	<li>STREET_LAMP, PRIMARY_LINK</li>
+	<li>MOTORWAY_JUNCTION</li>
+	<li>SECONDARY_LINK</li>
+	<li>STOP</li>
+	<li>CONSTRUCTION</li>
+	<li>TERTIARY_LINK</li>
+	<li>BRIDLEWAY</li>
+	<li>MINI_ROUNDABOUT</li>
+	<li>PLATFORM</li>
+	<li>PROPOSED</li>
+	<li>GIVE_WAY</li>
+	<li>SPEED_CAMERA</li>
+	<li>EMERGENCY_ACCESS_POINT</li>
+	<li>MILESTONE</li>
+	<li>RACEWAY</li>
+	<li>FORD</li>
+	<li>REST_AREA</li>
+	<li>PASSING_PLACE</li>
+	<li>SERVICES</li>
+	<li>ABANDONED</li>
+	<li>ELEVATOR</li>
+	<li>UNSURFACED</li>
+	<li>EMERGENCY_BAY</li> 
+	<li>STILE</li>
+	<li>INCLINE_STEEP</li>
+	<li>INCLINE</li>
+	<li>STREET_LIGHT</li>
+</ul>
+
+<div class="tip greentip">
+note that in v 3.0 the street type were different (they have been updated to reflect the openstreetmap evolution): 
+<ul>
+<li>BYWAY</li>
+<li>MINOR</li>
+<li>SECONDARY_LINK</li>
+<li>CONSTRUCTION</li>
+<li>UNSURFACED</li>
+<li>BRIDLEWAY</li>
+<li>PRIMARY_LINK</li>
+<li>LIVING_STREET</li>
+<li>TRUNK_LINK</li>
+<li>STEPS</li>
+<li>PATH</li>
+<li>ROAD</li>
+<li>PEDESTRIAN</li>
+<li>TRUNK</li>
+<li>MOTROWAY</li>
+<li>CYCLEWAY</li>
+<li>MOTORWAY_LINK</li>
+<li>PRIMARY</li>
+<li>FOOTWAY</li>
+<li>TERTIARY</li>
+<li>SECONDARY</li>
+<li>TRACK</li>
+<li>UNCLASSIFIED</li>
+<li>SERVICE</li>
+<li>RESIDENTIAL</li>
+</ul>
+</div>
+
+<a name="streetserviceoutputfieldsdescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output fields description</h3>
+Here is a description of all the output fields,  :<br/>
+<table class="mediumsizetable smartborder">
+<th>Field</th><th>Description</th><th>Applicable for</th>
+<tr><td><span color="red">error</span></td><td>A String only present if an error occured (e.g : empty Latitude or longitude)</td><td>When error occured</td></tr>
+<tr><td>numFound</td><td>The number of results display with this query (it takes the pagination into account)</td><td></td></tr>
+<tr><td>QTime</td><td>The execution time of the query in ms</td><td></td></tr>
+<tr><td>query</td><td>The name of the street that has been search (aka : name)</td><td></td></tr>
+<tr><td>distance</td><td>The distance beetween the point and the nearest point to the street in meters</td><td></td></tr>
+<tr><td>name</td><td>The name of the feature</td><td></td></tr>
+<tr><td>gid</td><td>Unique id of the street, it is unique between geonames and openstreetmap</td><td></td></tr>
+<tr><td>openstreetmapId</td><td>openstreetmap unique id of the street</td><td></td></tr>
+<tr><td>isIn</td><td>Information of the city where the street is (depends on <a href="http://tagstat.hypercube.telascience.org/tagdetails.php?tag=is_in">openstreetmap 'is_in' field</a>), the city in general</td><td></td></tr>
+<tr><td>streetType</td><td>The type of the street (see <a href="#streettype">street type list</a>)</td><td></td></tr>
+<tr><td>oneWay</td><td>Whether the street is a one way street or not</td><td></td></tr>
+<tr><td>lat</td><td>The latitude of the middle of the street(north-south)</td><td></td></tr>
+<tr><td>lng</td><td>The longitude of the middle of the street(east-west)</td><td></td></tr>
+<tr><td>countryCode</td><td>The <a href="http://en.wikipedia.org/wiki/ISO_3166"> ISO 3166 </a> country code</td><td></td></tr>
+</table>
+<br/><br/>
+
+<div class="tip greentip">
+Some fields were not available in older version of gisgraphy. please see <a href="http://www.gisgraphy.com/documentation/oldversions/">old versions</a>
+</div>
+
+
+
+<a name="streetservicejavaapi"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Java API</h3>
+
+The geoloc API looks like this
+<div class="code">
+<pre>
+			Point point = GeolocHelper.createPoint(<a href="#longitudestreet">LONGITUDE</a>, <a href="#latitudestreet">LATITUDE</a>);
+			Pagination pagination = paginate().from(<a href="#startindexstreet">STARTINDEX</a>).to(<a href="#endindexstreet">ENDINDEX</a>);
+			Output output = Output.withFormat(<a href="#outputformatstreet">OUTPUTFORMAT</a>)
+								  .<a href="#indentstreet">WithIndentation</a>();
+			StreetSearchQuery query = new StreetSearchQuery(point,<a href="#radiusstreet">RADIUS</a>,
+					pagination,output,<a href="#streettype">STREETTYPE</a>,
+					<a href="#onewaystreet">ONEWAY</a>,<a href="#namestreet">NAME</a>);
+			String results = streetSearchEngine.executeQueryToString(query);
+</pre>
+</div>
+
+<div class="tip greentip">
+Click on the UPPERCASE parameters above to see the description of the parameter.
+</div>
+
+
+Here is an example :
+
+<div class="code">
+<pre>
+			Point point = GeolocHelper.createPoint(-3.5F, 45F);
+			Pagination pagination = paginate().from(1).to(10);
+			Output output = Output.withFormat(OutputFormat.XML)
+								  .WithIndentation();	
+			StreetSearchQuery streetQuery = new StreetSearchQuery((point,100000
+				pagination, output, StreetType.PEDESTRIAN,false,"Avenue des c");
+			String result = geolocSearchEngine.executeQueryToString(streetQuery);
+</pre>
+</div>
+<br/>
+<div class="tip greentip">
+The methods are designed with <a href="http://www.infoq.com/articles/internal-dsls-java">DSL</a> (Domain Specific Language), and can be chained as shown in the example above.
+</div>
+<br/>
+
+<br/>
+You can output results to an OutputStream (useful for servlet use) or a String.
+<br/> The API is thread safe.
+<br/> It is possible to create a query directly from a HTTP servlet request
+<br/>
+<!-- end street-->
+
+
+
+
+
+
+
+
+<a name="fulltextservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Full text service</h2>
+<a name="fulltextservicedescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Description</h3>
+<br/>
+The full text service allows to search for features / places / street.<br/>
+you can
+<ul>
+	<li> Specify one or more words</li>
+	<li>search on part of the name (auto completion / suggetion)</li>
+	<li> Search for text or zip code</li>
+	<li> Specify a GPS restriction (promote nearsest ,not sorted but hav an impact on the score)</li>
+	<li> Limit the results to a specific
+		<ul>
+		<li>Language</li>
+		<li>Country</li>
+		<li><a href="http://www.gisgraphy.com/placetype.htm">place type</a></li>
+		</ul>
+	</li>
+	<li> Paginate the results</li>
+	<li> Specify the ouput verbosity</li>
+	<li> Tells if you want the output to be indented</li>
+	<li> Tells that all words are required or not</li> 
+</ul>
+
+The search is case insensitive, use synonyms (Saint/st, ..), separator characters stripping, ...
+
+<a name="fulltextserviceoutputformat"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output formats and languages</h3>
+The following languages are supported :
+<ul>
+<li>XML</li>
+<li>Json</li>
+<li>Php</li>
+<li>Ruby</li>
+<li>Python</li>
+<li>Georss</li>
+<li>ATOM</li>
+</ul>
+<br/>
+<a name="fulltextserviceparameters"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Parameters</h3>
+<ul>
+<a name="searchedtext"></a>
+<li>The searched text (required) : The text for the query, it can be a zip code, a String or one or more String.
+<br/> Examples : 
+<ul>
+<li>30980</li>
+<li>Paris</li>
+<li>paris france</li>
+</ul>
+</li>
+<br/>
+<div class="tip greentip">
+You can search for a place or feature by id by specifying <i>feature_id:XXXXXX</i> Where XXXXXX is the id of the feature<br/>
+You can search for a place or feature by openstreetmap id by specifying <i>openstreetmap_id:XXXXXX</i> Where XXXXXX is the id of the feature in OpenstreetMap<br/>
+</div>
+<br/>
+
+<a name="allwordsrequiredfulltext"></a>
+<li>All words required (optional): Wether the fulltext engine should considers all the words specified as required. Default to false (since v 4.0). possible values are true|false (or "on" when used with the rest service)
+</li>
+<br/>
+
+<a name="latitudefulltext"></a>
+<li>The latitude (optional) (north-south) for the location point to search around and restrict the search results. The value is a float and can be negative. It use GPS coordinates. If lat/long is provided then the nearest place will be promotes (not sorted but hav an impact on the score)
+<br/> Examples : 
+<ul>
+<li>-4.2</li>
+</ul>
+</li>
+<br/>
+
+
+<a name="longitudefulltext"></a>
+<li>The longitude (optional) (east-West) for the location point to search around and restrict the search results. The value is a float and can be negative. It use GPS coordinates. If lat/long is provided then the nearest place will be promotes (not sorted but hav an impact on the score)
+<br/> Examples : 
+<ul>
+<li>3.6</li>
+</ul>
+</li>
+<br/>
+<a name="radiusfulltext"></a>
+<li>The radius (optional) : distance from the location point in meters we'd like to search around. The value is a number >= 0 if it is not specify or incorrect : The default value will be used (10 km).
+If the radius is >0, then the result will be filtered by a bounding box and nearest will be promotes. <b>If the radius is equal to 0 then it will only promote the nearest.</b>
+<br/> Examples : 
+<ul>
+<li>50000</li>
+</ul>
+</li>
+<br/>
+<a name="suggestfulltext"></a>
+<li>suggest (optional) : If this parameter is set then it will search in part of the names of the street, place,.... It allow you to do auto completion auto suggetions. See the gisgraphy leaflet plugin for more details.
+The json format will be forced if this parameter is true. See <a href="#autosuggetion"> auto completion / suggetions engine</a> for more details</li>. 
+
+<br/>
+
+<a name="startindex"></a>
+<li>Start pagination index (optional) : The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1.</li>
+<br/>
+<a name="endindex"></a>
+<li>End pagination Index (optional) : The last pagination index. if < 1 or not specified, it will be set to startindex + 10. max = 20 (can be changed)</li>
+<br/>
+<a name="outputformat"></a>
+<li>The output format (optional) : The formats available are :<br/>
+<ul>
+<li>XML (Default)</li>
+<li>PHP</li>
+<li>JSON</li>
+<li>PYTHON</li>
+<li>RUBY</li>
+<li>ATOM</li>
+<li>GEORSS</li>
+</ul>
+</li>
+<br>
+<a name="languagecode"></a>
+<li>The language code (optional) : The <a href="http://en.wikipedia.org/wiki/List_of_languages">iso 639 Alpha2 or alpha3 Language Code</a>. 
+Some properties as the AlternateName AdmNames and countryname belongs to a certain language code, The language parameter can limits the output of those fields to a certain language (it only apply when style parameter='style') : 
+<br/><br/>
+<ul>
+<li> If the language code does not exists or is not specified, properties with all the languages are retrieved</li>
+<li> If it exists, the properties with the specified language code, are retrieved</li>
+</ul>
+</li>
+<br/>
+<div class="tip greentip">
+Use the alpha2 code when possible, only use the alpha3 code when no alpha2 code exists for the language.
+</div>
+<br/>
+
+
+<br/>
+<a name="outputstyleverbosity"></a>
+<li>The output style verbosity (optional) : Determines the output verbosity. 4 styles are available :<br/><br/>
+<ul>
+<li>Short : feature_id, name, fully_qualified_name, zipcode (if city or city subdivision), placetype, country_code, country_name</li>
+<li>Medium (default) : Short + lat, lon,street_type(if street),one_way(if street),length(if street), feature_class, feature_code, population, fips,</li>
+<li>Medium (if country) continent, currency_code, currency_name, fips_code, isoalpha2_country_code, isoalpha3_country_code, postal_code_mask, postal_code_regex,
+ phone_prefix, spoken_languages, tld, capital_name, area</li>
+<li>Medium (adm only) level</li>
+<li>Long  : Medium + adm1_name, adm2_name, adm3_name, Adm4_name, adm1_code, Adm2_code, Adm3_code, Adm4_code</li>
+<li>Full : Long + alternateNames, country_alternate_name, adm1_alternate_name, adm2_alternate_name. If the language parameter is specified : only alternate names with the specified language are retrive, otherwise, all the alternate names for all the languages are retrieve</li>
+</ul>
+</li>
+<br/>
+<div class="tip greentip">
+For a full list and descrition of output fields : see <a href="#fulltextserviceoutputfieldsdescription" >bellow</a>.
+</div>
+<br/>
+
+
+<br/>
+<a name="placetype"></a>
+<li>The placetype(s) (optional) : limit the search to the one <b>or more</b> place type (you can specify more than one). place type regroups some feature class and feature code. You need to specify the class coresponding to the place type you want to search. default : search for all features</li>
+
+<br/>
+<div class="tip greentip">
+See a full list and explanation of placetype : <a href="http://www.gisgraphy.com/placetype.htm">here</a>.
+</div>
+<br/>
+
+<br/>
+<a name="countrycode"></a>
+<li>The country code (optional) : limit the search to the specify <a href="http://en.wikipedia.org/wiki/ISO_3166"> ISO 3166 </a> country code. Default : search in all countries</li>
+<br/><br/>
+
+<br/>
+<a name="indent"></a>
+<li>The indentation (optional) : indents the results. Default to false. Possible values are true|false (or "on" when used with the rest service <a href="#indentonfulltext">see more</a>) Georss and Atom won't be indented for performance reasons
+<br/><br/>
+
+<br/>
+<a name="spellchecking"></a>
+<li> The spellchecking (optional) : whether some suggestions should be provided if no results are found. default value is the value of the '<code>spellchecker.activeByDefault</code>' option (<a href="#spellcheckeractiveByDefault">see more</a>).</li>
+<br/><br/>
+
+
+
+
+
+</ul>
+
+
+<a name="autosuggetion"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Autocompletion / suggetions</h3>
+Gisgraphy can provide, via the fulltext search engine, a very powerfull auto completion / suggetions engine.
+combined with the other parameters of the fulltext engine (latitude, longitude, radius, countrycode,...),
+ It allow to have a very powerful and personnalized suggetion engine.<br/>
+You can : 
+<ul>
+<li>Promote nearest by specifying radius to 0</li>
+<li>or...Suggest only in a bounding box by specifying a radius superior to 0</li>
+<li>Suggest place for a specific country with the countrycode parameter</li>
+<li>Detect or specify lat/long to improve user experience</li>
+<li>Detect GPS coordinate and resolve them as an address</li>
+<li>Detect degree / minute / second coordinates and resolve them as an address</li>
+<li>Use magic sentence</li>
+<li>Prefetch some results</li>
+<li>So much more...feel free to <a href="mailto:david.masclet@gisgraphy.com">contact me</a> me for more details</li>
+</ul>
+<br/>
+You can use the gisgraphy js API to instanciate an auto completion input text very simply, or use the gisgraphy leaflet geocoder plugin to use aucocompletion on a map.
+there is also a reverse geocoding plugin.
+<br/>
+Note that adding a Lat/Long and a radus impact performance because the distance is calculated for all the result, but the relevance will probably be better : the user in 75% of uses cases search for someting near them.
+To do autocompletion, simply add the 'suggest' parameter to true. e.g 
+<div class="code">
+/fulltext/suggest?format=json&suggest=true&allwordsrequired=false&style=long&lat=50.4589901&lng=3.2124411&radius=0&placetype=city&placetype=adm&placetype=street&from=1&to=20&q=paris&apikey=12
+</div>
+<br/>
+See the gisgraphy leaflet plugin for more details.
+
+<br/>
+
+
+
+
+<a name="fulltextwebservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Web service</h3>
+
+The full text web service use a servlet to wrap the Java API. It links web parameters to a fulltext query and output the results via HTTP.
+<br/>
+All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">notify a bug</a>.
+
+<div class="tip yellowtip">
+ All the parameters should be encoded in <a href="http://fr.wikipedia.org/wiki/UTF-8">UTF-8</a> and the URL MUST be <a href="http://www.w3schools.com/TAGS/ref_urlencode.asp">encoded</a>.
+</div>
+
+<br/>
+<a name="apikeyfulltext"></a>
+<li>the API key (optional) : the API key to use if you use <a href="http://www.gisgraphy.com/premium">premium webservices</a> this parameter is useless for local installation</li>
+<br/>
+
+
+<br/><br/>
+Here is a summary of the Web parameters mapping : <br/>
+<table class="mediumsizetable smartborder">
+<th>Parameter name</th><th>Web parameter name</th><th>comment</th>
+<tr><td>The searched text</td><td>q</td><td></td></tr>
+<tr><td>all words required</td><td>allwordsrequired</td><td></td></tr>
+<tr><td>Latitude</td><td>lat</td><td></td></tr>
+<tr><td>Longitude<td>lng</td><td></td></tr>
+<tr><td>Radius</td><td>radius</td><td></td></tr>
+<tr><td>suggest</td><td>suggest</td><td></td></tr>
+<tr><td>Start pagination index</td><td>from</td><td></td></tr>
+<tr><td>End pagination index</td><td>to</td><td></td></tr>
+<tr><td>Output format</td><td>format</td><td></td></tr>
+<tr><td>Language code</td><td>lang</td><td></td></tr>
+<tr><td>Output style verbosity</td><td>style</td><td></td></tr>
+<tr><td>placetype</td><td>placetype</td><td>You can specify more than one placetype http://localhost:8080/fulltext/fulltextsearch?q=paris&placetype=city&placetype=adm</td></tr>
+<tr><td>country code</td><td>country</td><td></td></tr>
+<tr><td>indent</td><td>indent</td><td></td></tr>
+<tr><td>spellchecking</td><td>spellchecking</td><td></td></tr>
+<tr><td>api key</td><td>api key (only for <a href="http://www.gisgraphy.com/premium">premium webservices</a>, useless for local installation)</td></tr>
+</table>
+<br/>
+
+<div class="tip greentip" name="indentonfulltext">
+If you use a checkbox in a form to indent the results, the value will be "on" or "off", so for a simple use : the value of indent, for the fulltext web service can be "true" or "on".
+</div>
+
+<div class="code">
+Examples : <br/>
+http://localhost:8080/fulltext/fulltextsearch?q=paris&from=1&to=10&format=xml&amp;lang=fr&style=short&placetype=city&country=fr&indent=true<br/><br/>
+http://localhost:8080/fulltext/fulltextsearch?q=paris<br/><br/>
+</div>
+<br/>
+
+<br/>
+<div class="tip yellowtip">
+Actually, the webservice limits the number of results to 10.
+</div>
+<br/>
+
+<div class="tip greentip">
+By default the fulltext service is mapped to <code>/fulltext</code> pattern but you can change it in the WEB-INF/web.xml<br/><br/>
+</div>
+<br/><br/>
+
+ 
+
+<a name="fulltextserviceoutputfieldsdescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output fields description</h3>
+Here is a description of all the output fields :<br/>
+<table class="mediumsizetable smartborder">
+<th>Field</th><th>Description</th><th>Available from style</th>
+<tr><td><span color="red">error</span></td><td>A String only present if an error occured (e.g : empty query)<br/>The field 'error' appears in the path response/responseHeader/error </td><td><span color="red">ERROR</span></td></tr>
+<tr><td>feature_id</td><td>A unique id that identify the feature</td><td>SHORT</td></tr>
+<tr><td>name</td><td>The name of the feature</td><td>SHORT</td></tr>
+<tr><td>score</td><td>a number that indicates the relevance of the result</td><td>SHORT</td></tr>
+<tr><td>fully_qualified_name</td><td>A name of the form : (adm1Name et adm2Name are printed) Paris, D&eacute;partement de Ville-De-Paris, Ile-De-France, (FR)</td><td>SHORT</td></tr>
+<tr><td>placetype</td><td>The <a href="/placetype.htm">place Type</a> of the Feature</td><td>SHORT</td></tr>
+<tr><td>country_code</td><td>The <a href="http://en.wikipedia.org/wiki/ISO_3166">ISO 3166</a> country code</td><td>SHORT</td></tr>
+<tr><td>country_name</td><td>The name of the country the features belongs to</td><td>SHORT</td></tr>
+<tr><td>zipcode</td><td>The zipcodes</td><td>SHORT</td></tr>
+<tr><td>google_map_url</td><td>The URL to get the location on <a href="http://maps.google.com/">Google Map</a></td><td>MEDIUM</td></tr>
+<tr><td>openstreetmap_map_url</td><td>The URL to get the location on <a href="http://openstreetmap.org/">Openstreetmap.org</a></td><td>MEDIUM</td></tr>
+<tr><td>yahoo_map_url</td><td>The URL to get the location on <a href="http://maps.yahoo.com/">Yahoo Map</a></td><td>MEDIUM</td></tr>
+<tr><td>one_way</td><td>whether the street is one way or not (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>Length</td><td>The length of the street (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>openstreetmap_id</td><td>The openstreetmap unique id of the street (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>is_in</td><td>Information of the city where the street / POI is (depends on <a href="http://tagstat.hypercube.telascience.org/tagdetails.php?tag=is_in">openstreetmap 'is_in' field</a>), the city in general (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>is_in_place</td><td>Information of the place where the street / POI is (quater, common place). Generally a place at a lower level than city</td><td>MEDIUM</td></tr>
+<tr><td>is_in_adm</td><td>Information of the administration division where the street / POI is.</td><td>MEDIUM</td></tr>
+<tr><td>is_in_zip</td><td>Information of the zipcode where the street / POI is (often fill for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>house_numbers</td><td>a list of all the house numbers and their coordinates (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>municipality</td><td>if the place is a municipality. it is usefull for geonames feature that <a href="http://forum.geonames.org/gforum/posts/list/1893.page">don't have concept of 'city' </a> but a populated place (that can be a quater)</td><td>MEDIUM</td></tr>
+<tr><td>amenity</td><td>Informations on category of <a href="http://wiki.openstreetmap.org/wiki/Key:amenity">Openstreetmap POIs</a></td><td>MEDIUM</td></tr>
+<tr><td>street_type</td><td>The type of the street (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>country_flag_url</td><td>The relative URL to get the country flag image</td><td>MEDIUM</td></tr>
+<tr><td>feature_class</td><td>The feature Class. <a href="http://download.geonames.org/export/dump/featureCodes.txt">More</a>...</td><td>MEDIUM</td></tr>
+<tr><td>feature_code</td><td>The feature Code. <a href="http://download.geonames.org/export/dump/featureCodes.txt">More</a>...</td><td>MEDIUM</td></tr>
+<tr><td>population</td><td>How many people lives in this feature</td><td>MEDIUM</td></tr>
+<tr><td>elevation</td><td>Elevation in meters</td><td>MEDIUM</td></tr>
+<tr><td>name_ascii</td><td>The ascii name</td><td>MEDIUM</td></tr>
+<tr><td>timezone</td><td>The timezone (e.g :Europe/Paris)</td><td>MEDIUM</td></tr>
+<tr><td>gtopo30</td><td>Average elevation of 30'x30' (ca 900mx900m) area in meters</td><td>MEDIUM</td></tr>
+<tr><td>lat</td><td>The latitude (north-south)</td><td>MEDIUM</td></tr>
+<tr><td>lng</td><td>The longitude (east-West)</td><td>MEDIUM</td></tr>
+<tr><td>continent</td><td>The continent the country belongs (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>currency_code</td><td>The ISO 4217 Currency from the curencycode (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>currency_name</td><td>The name of the curency of the country (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>fips_code</td><td>The <a href="http://en.wikipedia.org/wiki/List_of_FIPS_country_codes">FIPS Code </a> of the country (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>isoalpha2_country_code</td><td>The <a href="http://en.wikipedia.org/wiki/ISO_3166"> ISO 3166 </a> alpha 2 code of the country (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>isoalpha3_country_code</td><td>The <a href="http://en.wikipedia.org/wiki/ISO_3166"> ISO 3166 </a> alpha 3 code of the country (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>postal_code_mask</td><td>The mask that postal codes should verify. e.g : ##### (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>postal_code_regex</td><td>The regular expression that postal codes should verify (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>phone_prefix</td><td>The phone prefix of the country. e.g : +33 .(only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>spoken_languages</td><td>Liste of languages spoken in the country (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>tld</td><td>Top level domain of the country (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>capital_name</td><td>Name of the capital of the country(only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>area</td><td>Area of the country in m² (only for country placetype)</td><td>MEDIUM</td></tr>
+<tr><td>level</td><td>Level of the Adm 1 , 2, 3, or 4(only for Adm placetype)</td><td>MEDIUM</td></tr>
+<tr><td>adm1_code</td><td>The internal code for the administrative division of level 1</td><td>LONG</td></tr>
+<tr><td>adm2_code</td><td>The internal code for the administrative division of level 2</td><td>LONG</td></tr>
+<tr><td>adm3_code</td><td>The internal code for the administrative division of level 3</td><td>LONG</td></tr>
+<tr><td>adm4_code</td><td>The internal code for the administrative division of level 4</td><td>LONG</td></tr>
+<tr><td>adm1_name</td><td>The name of the administrative division of level 1</td><td>LONG</td></tr>
+<tr><td>adm2_name</td><td>The name of the administrative division of level 2</td><td>LONG</td></tr>
+<tr><td>adm3_name</td><td>The name of the administrative division of level 3</td><td>LONG</td></tr>
+<tr><td>adm4_name</td><td>The name of the administrative division of level 4</td><td>LONG</td></tr>
+<tr><td>name_alternate</td><td>The alternate names of the feature that without specific language code</td><td>LONG</td></tr>
+<tr><td>name_alternate_<i>languagecode</i></td><td>The alternate names of the feature for this <a href="http://en.wikipedia.org/wiki/List_of_languages">language Code</a></td><td>LONG</td></tr>
+<tr><td>adm1_name_alternate</td><td>The alternate names of the administrative division of level 1 without specific language code</td><td>FULL</td></tr>
+<tr><td>adm1_name_alternate_<i>languagecode</i></td><td>The alternatenames of the administrative division of level 1 for this <a href="http://en.wikipedia.org/wiki/List_of_languages">language Code</a></td><td>FULL</td></tr>
+<tr><td>adm2_name_alternate</td><td>The alternate names of the administrative division of level 2 without specific language code</td><td>FULL</td></tr>
+<tr><td>adm2_name_alternate_<i>languagecode</i></td><td>The alternatenames of the administrative division of level 2 for this <a href="http://en.wikipedia.org/wiki/List_of_languages">language Code</a></td><td>FULL</td></tr>
+<tr><td>country_name_alternate</td><td>The alternate names of the country without specific language code</td><td>FULL</td></tr>
+<tr><td>country_name_alternate_<i>languagecode</i></td><td>The alternate names of the country for this <a href="http://en.wikipedia.org/wiki/List_of_languages">language Code</a><br/>,
+ If you specify link as a languagecode, you will get the Wikipedia link</td><td>FULL</td></tr>
+</table>
+<br/><br/>
+
+<div class="tip greentip">
+<br/>
+Some fields were not available in older version of gisgraphy. please see <a href="http://www.gisgraphy.com/documentation/oldversions/">old versions</a>
+</div>
+<br/><br/>
+
+
+<a name="fulltextservicejavaapi"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Java API</h3>
+
+The fulltext API looks like this
+<div class="code">
+<pre>
+			Pagination pagination = paginate().from(<a href="#startindex">STARTINDEX</a>).to(<a href="#endindex">ENDINDEX</a>);
+			Output output = Output.withFormat(<a href="#outputformat">OUTPUTFORMAT</a>)
+					.withLanguageCode(<a href="#languagecode">LANGUAGECODE</a>).withStyle(<a href="#outputstyleverbosity">VERBOSITY</a>)
+					.<a href="#indent">WithIndentation</a>();
+					
+			FulltextQuery fulltextQuery = new FulltextQuery("<a href="#searchedtext">SEARCHEDTEXT</a>",
+					pagination, output, <a href="#placetype">PLACETYPE</a>.class, <a href="#countrycode">COUNTRYCODE</a>);
+					fulltextQuery.<a href="#indent">withAllWordsRequired</a>(true)
+					.around(<a href="#latitudefulltext">POINT</a>)
+					.withRadius(<a href="#radiusfulltext">RADIUS</a>).limitToCountryCode("FR");
+			String result = fullTextSearchEngine.executeQueryToString(fulltextQuery);
+</pre>
+</div>
+
+<div class="tip greentip">
+Click on the UPPERCASE parameters above to see the description of the parameter.
+</div>
+
+
+Here is an example :
+
+<div class="code">
+<pre>
+			Pagination pagination = paginate().from(1).to(10);
+			Output output = Output.withFormat(OutputFormat.XML)
+					.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+					.WithIndentation();
+			FulltextQuery fulltextQuery = new FulltextQuery("Paris Texas",
+					pagination, output, new String[]{City.class}, "US")
+					.around(GeolocHelper.createPoint(54.2F, -95F))
+					.withRadius(1000).limitToCountryCode("FR");
+			String result = fullTextSearchEngine.executeQueryToString(fulltextQuery);
+</pre>
+</div>
+<br/>
+You can output results to an OutputStream (useful for servlet use) or a String. 
+<br/> The API is thread safe.
+<br/> It is possible to create a query directly from a HTTP servlet request
+<br/>
+<div class="tip greentip">
+The methods are designed with <a href="http://www.infoq.com/articles/internal-dsls-java">DSL</a> (Domain Specific Language), and can be chained as shown in the example above.
+</div>
+<br/>
+<!-- geoloc-->
+<a name="geolocservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Geolocalisation service</h2>
+<a name="geolocservicedescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Description</h3>
+<br/>
+The geolocalisation service allows to search for features around earth location.<br/>
+you can
+<ul>
+	<li> Specify GPS position</li>
+	<li> Limit the results to a specific <a href="/placetype.htm">place type</a> (e.g : search all monuments around a point)</li>
+	<li> Limit the results to a specified radius</li>
+	<li> Paginate the results</li>
+	<li> Tells if you want the output to be indented (currently, apply only for XML, not json for performance reasons. may change in next version) </li> 
+</ul>
+
+<a name="geolocserviceoutputformat"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output formats and languages</h3>
+The following languages are supported :
+<ul>
+<li>XML</li>
+<li>Json</li>
+<li>Php</li>
+<li>Ruby</li>
+<li>Python</li>
+<li>Georss</li>
+<li>ATOM</li>
+<li>YAML</li>
+</ul>
+<br/>
+
+<a name="geolocserviceparameters"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Parameters</h3>
+<ul>
+<a name="latitudegeoloc"></a>
+<li>The latitude (required) (north-south) for the location point to search around. The value is a float and can be negative. It use GPS coordinates.
+<br/> Examples : 
+<ul>
+<li>-4.2</li>
+</ul>
+</li>
+<br/>
+
+
+<a name="longitudegeoloc"></a>
+<li>The longitude (required) (east-West) for the location point to search around. The value is a float and can be negative. It use GPS coordinates.
+<br/> Examples : 
+<ul>
+<li>3.6</li>
+</ul>
+</li>
+<br/>
+<a name="radiusgeoloc"></a>
+<li>The radius (optional) : distance from the location point in meters we'd like to search around. The value is a number > 0 if it is not specify or incorrect : The default value will be used (10 km).
+<br/> Examples : 
+<ul>
+<li>50000</li>
+</ul>
+</li>
+<br/>
+<a name="startindexgeoloc"></a>
+<li>Start pagination index (optional) : The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1.</li>
+<br/>
+<a name="endindexgeoloc"></a>
+<li>End pagination Index (optional) : The last pagination index. if < 1 or not specified, it will be set to startindex + 10. Max = 10 (can be changed)</li>
+<br/>
+<a name="callbackgeoloc"></a>
+<li>The callback method name (optional), use to wrap the content into a method name, must be alphanumeric and operate only for script outputformat (json,php,ruby,python)
+<br/> Examples : 
+<ul>
+<li>executeCallback :(will output "executeCallback(RESULT_FEED);" then if you evaluate this string the method will be called implicitly)</li>
+</ul>
+</li>
+<br/>
+<a name="outputformatgeoloc"></a>
+<li>The output format (optional) : The formats available are :<br/>
+<ul>
+<li>XML (Default)</li>
+<li>JSON </li>
+<li>Python</li>
+<li>Ruby </li>
+<li>PHP</li>
+<li>ATOM </li>
+<li>GEORSS</li>
+<li>YAML</li>
+</ul>
+</li>
+<br>
+
+
+<br/>
+<a name="placetype"></a>
+<li>The placetype (optional) : limit the search to the specified place type. place type regroup some feature class and feature code. you need to specify the class coresponding to the place type you want to search. default : search for all features</li>
+
+<br/>
+<div class="tip yellowtip">
+For performance reasons, it is highly recommended to specify a placetype (if you use web GUI, put a required parameter with the placetype)
+</div>
+<br/>
+
+<br/>
+<div class="tip greentip">
+See a full list and explanation of placetype : <a href="/placetype.htm">here</a>.
+</div>
+<br/>
+
+
+<br/>
+<a name="distancegeoloc"></a>
+<li>Distance field : Wether (or not) we want the distance field to be filled. this option is usefull when we don't care about the distance, to improve the performances. Off course, the results won't be sorted by distance. If you use a checkbox in a form to indent the results, the value will be "on" or "off", so for a simple use : the value for the  web service can be "true" or "on".</li>
+<br/>
+
+
+<br/>
+<a name="indentgeoloc"></a>
+<li>The indentation (optional) : indents the results. Default to false. Possible values are true|false. If you use a checkbox in a form to indent the results, the value will be "on" or "off", so for a simple use : the value of indent, for the geoloc web service can be "true" or "on".</li>
+<br/>
+
+
+<div class="tip yellowtip">
+ Actually, only XML can be indented. It is not a bug : Indent JSON is possible but decrease performance. 
+</div>
+
+<br/>
+<a name="apikeygeoloc"></a>
+<li>the API key (optional) : the API key to use if you use <a href="http://www.gisgraphy.com/premium">premium webservices</a> this parameter is useless for local installation</li>
+<br/>
+
+
+<br/><br/>
+</ul>
+<a name="geolocwebservice"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Web service</h3>
+
+The geolocalisation web service use a servlet to wrap the Java API. It links web parameters to a geoloc query and output the results via HTTP.
+<br/>
+All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">notify a bug</a>.
+
+<div class="tip yellowtip">
+ All the parameters should be encoded in <a href="http://fr.wikipedia.org/wiki/UTF-8">UTF-8</a> and the URL MUST be <a href="http://www.w3schools.com/TAGS/ref_urlencode.asp">encoded</a>.
+</div>
+<br/><br/>
+Here is a summary of the Web parameters mapping : <br/>
+<table class="smallsizetable smartborder">
+<th>Parameter name</th><th>Web parameter name</th>
+<tr><td>Latitude</td><td>lat</td></tr>
+<tr><td>Longitude<td>lng</td></tr>
+<tr><td>Radius</td><td>radius</td></tr>
+<tr><td>Start pagination index</td><td>from</td></tr>
+<tr><td>End pagination index</td><td>to</td></tr>
+<tr><td>Callback method name</td><td>callback</td></tr>
+<tr><td>Output format</td><td>format</td></tr>
+<tr><td>Placetype</td><td>placetype</td></tr>
+<tr><td>Distance field </td><td>distance</td></tr>
+<tr><td>Indent</td><td>indent</td></tr>
+<tr><td>apikey</td><td>api key (only for <a href="http://www.gisgraphy.com/premium">premium webservices</a>, useless for local installation)</td></tr>
+</table>
+<br/>
+<div class="code">
+Examples : <br/>
+http://localhost:8080/geoloc/findnearbylocation?lat=4.5&lng=5.7&radius=5000&from=1&to=10&format=xml&placetype=city&indent=true<br/><br/>
+http://localhost:8080/geoloc/findnearbylocation?lat=4.5&lng=5.7<br/><br/>
+</div>
+<br/>
+
+<br/>
+<div class="tip yellowtip">
+Actually, the webservice limits the number of results to 10.
+</div>
+<br/>
+
+<div class="tip greentip">
+By default the geolocalisation service is mapped to <code>/geoloc</code> pattern but you can change it in the WEB-INF/web.xml<br/><br/>
+</div>
+<br/><br/>
+
+ 
+
+<a name="geolocserviceoutputfieldsdescription"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Output fields description</h3>
+Here is a description of all the output fields, some fields are specific to certain placetype (e.g : area is only available if the feature is a country) :<br/>
+<table class="mediumsizetable smartborder">
+<th>Field</th><th>Description</th><th>Applicable for</th>
+<tr><td><span color="red">error</span></td><td>A String only present if an error occured (e.g : empty Latitude or longitude)</td><td>When error occured</td></tr>
+<tr><td>numFound</td><td>The number of results display with this query (it takes the pagination into account)</td><td>All placetype</td></tr>
+<tr><td>QTime</td><td>The execution time of the query in ms</td><td>All placetype</td></tr>
+<tr><td>distance</td><td>The distance beetween the point and the gisFeature in meters</td><td>All placetype</td></tr>
+<tr><td>name</td><td>The name of the feature</td><td>All placetype</td></tr>
+<tr><td>asciiName</td><td>The ASCII name of the feature</td><td>All placetype</td></tr>
+<tr><td>feature_id</td><td>A unique id that identify the feature</td><td>All placetype</td></tr>
+
+<tr><td>is_in</td><td>Information of the city where the street / POI is (depends on <a href="http://tagstat.hypercube.telascience.org/tagdetails.php?tag=is_in">openstreetmap 'is_in' field</a>), the city in general (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>is_in_place</td><td>Information of the place where the street / POI is (quater, common place). Generally a place at a lower level than city</td><td>All placetype</td></tr>
+<tr><td>is_in_adm</td><td>Information of the administration division where the street / POI is.</td><td>All placetype</td></tr>
+<tr><td>is_in_zip</td><td>Information of the zipcode where the street / POI is </td><td>(often fill for placetype street)</td></tr>
+
+
+<tr><td>countryCode</td><td>The <a href="http://en.wikipedia.org/wiki/ISO_3166">ISO 3166</a> country code</td><td>All placetype</td></tr>
+<tr><td>openstreetmap_map_url</td><td>The URL to get the location on <a href="http://openstreetmap.org/">Openstreetmap.org</a>(since v3.0 beta3)</td><td>All placetype</td></tr>
+<tr><td>google_map_url</td><td>The URL to get the location on <a href="http://maps.google.com/">Google Map</a></td><td>All placetype</td></tr>
+<tr><td>yahoo_map_url</td><td>The URL to get the location on <a href="http://maps.yahoo.com/">Yahoo Map</a></td><td>All placetype</td></tr>
+<tr><td>country_flag_url</td><td>The relative URL to get the country flag image</td><td>All placetype</td></tr>
+<tr><td>featureClass</td><td>The feature Class. <a href="http://download.geonames.org/export/dump/featureCodes.txt">More</a>...</td><td>All placetype</td></tr>
+<tr><td>featureCode</td><td>The feature Code. <a href="http://download.geonames.org/export/dump/featureCodes.txt">More</a>...</td><td>All placetype</td></tr>
+<tr><td>placeType</td><td>The Type of Feature see faq</td><td>All placetype</td></tr>
+<tr><td>population</td><td>How many people lives in this feature</td><td>All placetype</td></tr>
+<tr><td>lat</td><td>The latitude (north-south)</td><td>All placetype</td></tr>
+<tr><td>lng</td><td>The longitude (east-West)</td><td>All placetype</td></tr>
+<tr><td>adm1Code</td><td>The internal code for the administrative division of level 1</td><td>All placetype</td></tr>
+<tr><td>adm2Ccode</td><td>The internal code for the administrative division of level 2</td><td>All placetype</td></tr>
+<tr><td>adm3Code</td><td>The internal code for the administrative division of level 3</td><td>All placetype</td></tr>
+<tr><td>adm4Code</td><td>The internal code for the administrative division of level 4</td><td>All placetype</td></tr>
+<tr><td>adm1Name</td><td>The name of the administrative division of level 1</td><td>All placetype</td></tr>
+<tr><td>adm2Name</td><td>The name of the administrative division of level 2</td><td>All placetype</td></tr>
+<tr><td>adm3Name</td><td>The name of the administrative division of level 3</td><td>All placetype</td></tr>
+<tr><td>adm4Name</td><td>The name of the administrative division of level 4</td><td>All placetype</td></tr>
+<tr><td>timezone</td><td>The time zone (e.g : Europe/Paris)</td><td>All placetype</td></tr>
+<tr><td>gtopo30</td><td>Average elevation of 30'x30' (ca 900mx900m) area in meters</td><td>All placetype</td></tr>
+<tr><td>elevation</td><td>The elevation in meters</td><td>All placetype</td></tr>
+<tr><td>zipcode</td><td>The zipcodes (only for city and city subdivision), one node by zipcode</td><td>City,CitySubdivision, </td></tr>
+<tr><td>level</td><td>The level of the Administrative division (1-4)</td><td>Adm</td></tr>
+<tr><td>area</td><td>The area of the country</td><td>Country</td></tr>
+
+<tr><td>tld</td><td>top-level domain name, (last part of an Internet domain name) of the country</td><td>Country</td></tr>
+<tr><td>capitalName</td><td>The Capital of the country</td><td>Country</td></tr>
+<tr><td>continent</td><td>The continent the country belongs</td><td>Country</td></tr>
+<tr><td>postalCodeRegex</td><td>The regexp that all zipcode/postalcode of the country matches</td><td>Country</td></tr>
+<tr><td>currencyCode</td><td>The Currency code (<a href="http://en.wikipedia.org/wiki/ISO_4217">ISO_4217</a>) of the country</td><td>Country</td></tr>
+<tr><td>currencyName</td><td>The Currency name of the country</td><td>Country</td></tr>
+<tr><td>area</td><td>The area of the country</td><td>Country</td></tr>
+<tr><td>fipsCode</td><td>The <a href="http://en.wikipedia.org/wiki/FIPS_county_code">fips Code</a> of the country</td><td>Country</td></tr>
+<tr><td>equivalentFipsCode</td><td>The <a href="http://en.wikipedia.org/wiki/FIPS_county_code">fips Code</a> of the country when no code are available</td><td>Country</td></tr>
+<tr><td>iso3166Alpha2Code</td><td><a href="http://en.wikipedia.org/wiki/ISO_3166">The iso 3166 Alpha 2 code</a> of the country</td><td>Country</td></tr>
+<tr><td>iso3166Alpha3Code</td><td><a href="http://en.wikipedia.org/wiki/ISO_3166">The iso 3166 Alpha 3 code</a> of the country</td><td>Country</td></tr>
+<tr><td>phonePrefix</td><td>The phone prefix of the country</td><td>Country</td></tr>
+<tr><td>postalCodeMask</td><td>The mask that all postal code of the country matches</td><td>Country</td></tr>
+</table>
+<br/><br/>
+
+<div class="tip greentip">
+Some fields were not available in older version of gisgraphy. please see <a href="http://www.gisgraphy.com/documentation/oldversions/">old versions</a>
+</div>
+
+<a name="geolocservicejavaapi"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Java API</h3>
+
+The geoloc API looks like this
+<div class="code">
+<pre>
+			Point point = GeolocHelper.createPoint(<a href="#longitudegeoloc">LONGITUDE</a>, <a href="#latitudegeoloc">LATITUDE</a>);
+			Pagination pagination = paginate().from(<a href="#startindexgeoloc">STARTINDEX</a>).to(<a href="#endindexgeoloc">ENDINDEX</a>);
+			Output output = Output.withFormat(<a href="#outputformatgeoloc">OUTPUTFORMAT</a>)
+								  .<a href="#indentgeoloc">WithIndentation</a>();
+			GeolocQuery query = new GeolocQuery(point,<a href="#radiusgeoloc">RADIUS</a>,pagination,output,<a href="#placetype">PLACETYPE</a>.class);
+			String results = geolocSearchEngine.executeQueryToString(query);
+</pre>
+</div>
+
+<div class="tip greentip">
+Click on the UPPERCASE parameters above to see the description of the parameter.
+</div>
+
+
+Here is an example :
+
+<div class="code">
+<pre>
+			Point point = GeolocHelper.createPoint(-3.5F, 45F);
+			Pagination pagination = paginate().from(1).to(10);
+			Output output = Output.withFormat(OutputFormat.XML)
+								  .WithIndentation();	
+			GeolocQuery geolocQuery = new GeolocQuery(point,100000
+					pagination, output, City.class);
+			String result = geolocSearchEngine.executeQueryToString(geolocQuery);
+</pre>
+</div>
+<br/>
+<div class="tip greentip">
+The methods are designed with <a href="http://www.infoq.com/articles/internal-dsls-java">DSL</a> (Domain Specific Language), and can be chained as shown in the example above.
+</div>
+<br/>
+
+<br/>
+You can output results to an OutputStream (useful for servlet use) or a String.
+<br/> The API is thread safe.
+<br/> It is possible to create a query directly from a HTTP servlet request
+<br/>
+<!-- end geoloc-->
+<a name="clientLibraries"></a>
+<div align="right"><a href="#top">[top]</a></div>
+
+<h2>Client libraries</h2>
+ Client librairies exists in several language. Consult the <a href="/documentation/client-libraries.htm">client librairy dedicated page</a>
+
+
+<a name="admininterface"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Admin Interface</h2>
+To access the admin interface :
+ <ul>
+ <li>Launch gisgraphy</li>
+ <li>Open a web browser and go to <a href="http://localhost:8080/mainMenu.html">http://localhost:8080/login.jsp</a> (according that gisgraphy is running on port 8080)</li>
+ </ul>
+ <br/>
+<a name="adminloginpassword"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Login - Password</h3>
+
+<div class="tip yellowtip">
+You can insert the two default users with the provided script in the sql directory : insert_users.sql
+</div>
+
+There is two default users already set :
+<table class="mediumsizetable smartborder">
+<th>user</th><th>password</th><th>profile</th><th>Description</th>
+<tr><td>user</td><td>user</td><td>ROLE_USER</td><td>user with simple rights : can not admin other users, can only edit his profile, can not import data</td></tr>
+<tr><td>admin</td><td>admin</td><td>ROLE_ADMIN</td><td>user with all rights : can admin other users and profiles, can edit options,can import data.</td></tr>
+</table>
+<br/>
+<div class="tip yellowtip">
+It is highly recommended to change the default users of the admin interface. To do so : You must login as 'admin' with password 'admin' or edit the 'insert_users.sql' file in the sql directory, set the users / passwords / roles, and run the script
+</div>
+<br/>
+<a name="adminimportdata"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Import data</h3>
+To import data, you must log With a user with admin rights. Then go to the <b>Administration</b> menu -> <b>Run importer</b>. A <a href="www.gisgraphy.com/screenshots.htm#">wizard</a> will guide you to choose the correct options.
+
+<div class="tip yellowtip">
+The importer process may takes more than 40 hours, depending on how much data you import and the machine the importer runs on. (some <a href="http://www.gisgraphy.com/dump.htm">dumps</a> are availables on the download server)
+</div>
+
+<br/>
+<a name="admineditdata"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Add / edit data</h3>
+<div class="tip greentip">
+please consult the dedicated <a href="./edition.html">documentation on how add/edit features</a>. Note that in versions greater than  3-beta2 you can draw street directly on map.
+</div><br/><br/>
+<img src="../images/edition/edit_street_add_point.png"
+
+If you need you can add / edit / delete entries in the database. you can also edit all the associated fields, (alternatenames and zip codes).<br/> 
+<br/>
+To do so :
+<br/>
+<ul>
+	<li> Log into the admin interface with an admin user (default : admin/admin).</li>
+	<li> Go to the 'Administration' menu and choose 'Add/edit/delete data'</li>
+</ul>
+<br/>
+Then you can add a new street or place, and search for feature to edit.
+
+You can also search for place to edit. The interface is the same as the one for fulltext search : 
+<ul>
+<li>Enter the name (openstreetmapid or gisfeatureid are possible)</li>
+<li>Click the search button</li>
+<li>In the results list, an 'edit' button appears, click on it to get the web form to edit the features or streets</li> 
+</ul>
+<div class="tip greentip">
+	click on the 'advanced search' link to to get more options 
+</div>
+
+<br/> To delete some entries, search for the place you want to delete, click the 'edit' button and then click on the remove link.
+<br/><br/>
+
+You can find some screenshots on the <a href="http://www.gisgraphy.com/screenshots.htm">screenshots page</a>  
+
+<a name="adminscreenshots"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Screenshots</h3>
+some screenshots are available <a href="http://www.gisgraphy.com/screenshots.htm">here</a>
+<br/><br/>
+<a name="security"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Security</h2>
+<a name="defaultusersecurity"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Default admin password</h3>
+<br/>
+<div class="tip yellowtip">
+It is highly recommended to change the default users of the admin interface. To do so : You must login as 'admin' with password 'admin'
+</div>
+<br/>
+<a name="protectwebservices"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Protect webServices</h3>
+Some users wants to restrict the solr engine to the host 'localhost' in order to disallow user to ask the SolR search engine directly. You can use a firewall and restrict the access of the Webapp with the following code
+<div class="code">
+With Tomcat : 
+<pre>
+&lt;Context path="/path/to/secret_files"&gt;
+  &lt;Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127.0.0.1" deny=""/&gt;
+&lt;/Context&gt;
+</pre>
+<br><br/>
+With Jetty : <br/> 
+<pre>
+A server configuration-XML-file can look something like this:
+&lt;Configure class="org.mortbay.jetty.Server"&gt;
+...
+&lt;Call name="addContext"&gt;
+...
+&lt;Call name="addHandler"&gt;
+&lt;Arg&gt;
+&lt;New class="IPAccessHandler"&gt;
+&lt;Set name="Standard"&gt;deny&lt;/Set&gt;
+&lt;Set name="AllowIP"&gt;192.168.0.103&lt;/Set&gt;
+&lt;Set name="AllowIP"&gt;192.168.0.100&lt;/Set&gt;
+&lt;/New&gt;
+&lt;/Arg&gt;
+&lt;/Call&gt;
+</pre>
+<br/>
+</div>
+<br/>
+See more on <a href="http://www.jdocs.com/jetty/5.1.11.rc0/org/mortbay/http/handler/IPAccessHandler.html">http://www.jdocs.com/jetty/5.1.11.rc0/org/mortbay/http/handler/IPAccessHandler.html</a>
+<br/>
+<a name="performance"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h2>Performance</h2>
+<a name="jmeter"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Jmeter</h3>
+Some Jmeter benchs are available (scripts and results) <a href="/bench.htm">here</a>.
+<br/>
+<a name="databaseoptimisation"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>Database optimisations</h3>
+in order to have good performances it is recommended to use database indexes. as far as I know it is possible to tell Hibernate to create index but not possible to choose the type of index (BTREE,GIST, and so on) with annotations. so you must create your own index with the following code :  
+<div class="code">
+<pre>
+DROP  INDEX IF EXISTS locationindex ;
+
+CREATE INDEX locationindex
+  ON gisfeature
+  USING gist
+  ("location");
+
+VACUUM FULL ANALYZE;
+<pre>
+
+</div>
+<br/>
+You can proceed for all the tables which have Geometry collumns.
+<br/>
+A script named 'createGISTIndex.sql' is provided in the 'SQL' dir in the Gisgraphy distribution to create all the GIST indexes for all the tables
+<br/><br/>
+You will have GREATER performnance if you specify a placetype, if you search for placetype 'gisFeature', your query will be slower.<br/><br/>
+<div class="tip greentip">
+You can define the default Geoloc Placetype in the env file (in the Classpath) with the option <a href="#geolocsearch.defaultGeolocSearchPlaceType">defaultGeolocSearchPlaceType</a>
+</div>
+
+
+<br/><br/>
+<div class="tip greentip">
+You can use command line but PGAdmin could be a friendly way.
+</div>
+<br/>
+
+<div class="tip yellowtip">
+If you use Postgis 1.3.1 or greater you don't have to use the GIST indexes because they will automatically be used. <a href="http://www.postgis.org/pipermail/postgis-users/2007-August/016628.html">More</a> .
+</div>
+<br/>
+
+It is recommended to run :
+<div class="code"> VACUUM FULL ANALYZE;</div>
+on postgres, after an import
+
+<a name="jvmoptimisation"></a>
+<div align="right"><a href="#top">[top]</a></div>
+<h3>JVM optimisations</h3>
+
+You will have better performances if you run Gisgraphy and the SolR server in two distinct JVM.
+To run solr in a separated JVM copy the solr Directory (default parameter) with the schema.xml, solrconfig.xml, the data directory, and so on to a <a href="http://lucene.apache.org/solr/">SolR</a> distribution and start it with <code>java -jar start.jar</code> (or an other way of your choice, that's the easier way).
+Then you can remove the solr.war from the Gisgraphy release and configure the <a href="#fulltextsearchurl">fulltextsearch URL</a> to point to the new Solr URL.
+It is also recommended to use the sun JVM (not the GCJ one) and to use the VMargs -server
+<br/><br/>
+To have great performance we recommand to use the sun-jdk in version 6.0
+<br/>
+<a name="othertipsoptimisation"></a>
+<h3>Other tips</h3>
+We strongly recommand to install Gisgraphy (that use SolR) on Linux or Unix Os. Due to <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6265734" target="_blank">JVM bug</a> and other reasons, Windows users will get less performances.
+if you want to tune performance you should call the /solr/admin/stats.jsp page and watch at cache section. hitRatio, eviction and warmupTime values can be useful. Read the <a href="http://wiki.apache.org/solr/SolrCaching">SolR caching wiki page</a> for more informations.
+<br/>
+The /solr/admin/luke page can give you interesting information (if index is optimized,...)
+<br/>
+<br/><br/><br/><br/>
+</body>
+</html>

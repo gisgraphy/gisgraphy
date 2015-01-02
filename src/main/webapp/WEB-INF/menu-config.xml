@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MenuConfig>
+    <Displayers>
+        <Displayer name="Velocity" type="net.sf.navigator.displayer.VelocityMenuDisplayer"/>
+    </Displayers>
+    <Menus>
+        <Menu name="MainMenu" title="mainMenu.title" page="/mainMenu.html" roles="ROLE_ADMIN,ROLE_USER"/>
+        <Menu name="UserMenu" title="menu.user" description="User Menu" page="/editProfile.html" roles="ROLE_ADMIN,ROLE_USER"/>
+         <Menu name="ImportMenu" title="import.import" description="Import Menu" roles="ROLE_ADMIN" width="120" page="/admin/users.html">
+         	<Item name="runImporter" title="menu.admin.import" page="/admin/importconfirm.html"/>
+         	<Item name="statusImporter" title="menu.admin.import.status" page="/admin/import!status.html"/>
+         	<Item name="resetImport" title="import.reset" page="/admin/resetimport.html"/>
+        </Menu>
+        <Menu name="AdminMenu" title="menu.admin" description="Admin Menu" roles="ROLE_ADMIN" width="120" page="/admin/users.html">
+         	<Item name="runImporter" title="menu.admin.import" page="/admin/importconfirm.html"/>
+         	<Item name="statusImporter" title="menu.admin.import.status" page="/admin/import!status.html"/>
+         	<Item name="resetImport" title="import.reset" page="/admin/resetimport.html"/>
+         	 <Item name="crud" title="global.crud.data" page="/admin/editSearch.html"/>
+           <!-- <Item name="ViewUsers" title="menu.admin.users" page="/admin/users.html"/>
+            <Item name="ActiveUsers" title="mainMenu.activeUsers" page="/admin/activeUsers.html"/>
+            <Item name="ReloadContext" title="menu.admin.reload" page="/admin/reload.html"/>
+            <Item name="FileUpload" title="menu.selectFile" page="/uploadFile.html"/>
+            <Item name="FlushCache" title="menu.flushCache" page="/admin/flushCache.html"/>-->
+            <Item name="stats" title="stats.title" page="/admin/stats.html"/>
+        </Menu>
+        <Menu name="Logout" title="user.logout" page="/logout.jsp" roles="ROLE_ADMIN,ROLE_USER"/>
+    </Menus>
+</MenuConfig>

@@ -1,0 +1,778 @@
+<document>
+	<properties>
+		<title>Changes Gisgraphy Project</title>
+		<author email="davidmasclet@gisgraphy.com">
+			David Masclet
+		</author>
+	</properties>
+	<body>
+		<release version="1.0" date="2008-23-01"
+			description="First release">
+			<action dev="David Masclet" type="add">
+				First release.
+			</action>
+		</release>
+
+		<release version="2.0" date="2010-08-03"
+			description="second release">
+			<action dev="David Masclet" type="update">
+				Add the ability to import openstreetmap database and use them in a web services
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Python client
+			</action>
+
+			<action dev="David Masclet" type="update">
+				Some L10N improvement
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability to change the locale
+			</action>
+
+			<action dev="David Masclet" type="update">
+				Improve XHTML on pages
+			</action>
+
+			<action dev="David Masclet" type="add">
+				Solr auto commit every 10000 docs or 300000 ms
+			</action>
+
+			<action dev="Tim King" type="update">
+				Improve doc and site
+			</action>
+
+			<action dev="David Masclet" type="update">
+				Solr logo update
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				Geoloc service for ADM or Country throws an exception
+			</action>
+
+			<action dev="David Masclet" type="update">
+				Add some fields for geolocservice for Country and Adm
+				(level)
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				Pagination parameters 'from' and 'to' was not reset when
+				closing popup
+			</action>
+
+			<action dev="David Masclet" type="add">
+				Add a page to describe the services
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				Some features contains EnhancerByCGLIB when synchronize
+				with solr
+			</action>
+
+			<action dev="David Masclet" type="update">
+				GeonameFeatureImporter : change the way Country are
+				detect and updated
+			</action>
+
+			<action dev="David Masclet" type="update">
+				SolRSynchroniser : adm Parents are treated when Adm are
+				sync
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				Reset the response buffer before sending errors to avoid
+				"getOutputStream() has already been called"
+			</action>
+
+			<action dev="David Masclet" type="add">
+				Add javascript capabilities for adding gisgraphy
+				opensearch module
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				Displayfeature won't throw if the country name is not
+				known Search result won't throw if the country name is
+				not known
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				Unknow feature class / feature code (UNK_UNK) are
+				considered as gisFeature, not as vineYard
+			</action>
+
+			<action dev="David Masclet" type="update">
+				Improve statistique page
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				ImportFailure.jsp won't throw a NullPointerException
+			</action>
+
+			<action dev="David Masclet" type="fix">
+				Zipcode is of type string to correct the problem that
+				zipcode which starts with zero are not well handled (e.g :
+				01234 was considered as 1234)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Log IP adress for Geoloc and Fulltext servlet call 
+			</action>
+			
+			<action dev="David Masclet" type="remove">
+				remove seters for GeolocResultDto and FulltextResultsDto 
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				extract code that check XPath in AbstractIntegrationHttpSolrTestCase to a class called XpathChecker
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				404 page send an 404 error status code instead of 200
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Add an entry for UNK.UNK in features.properties
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add launch script for macintosh
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Modify Launch script
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+			Fix Bug UTF-8 problem on non-Linux platforms : 
+			http://code.google.com/p/gisgraphy/issues/detail?id=1
+			</action>
+			
+			<action dev="David Masclet" type="add">
+			Fix advanced search URL for reverse geocoding and street search	remove the ability to search for 'no name street'
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add how many times all the services has been called on the stats page
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Remove some unused code and some alert() in js API
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Servlet send a 500 status code when an error occurred instead of 200
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				GeolocServiceException has been renamed to GeolocSearchException
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				AlternateNameSource is @Enumerated(EnumType.STRING) in AlternateName 
+				so, it is character varying(255) in the database
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability to specify a google map api key
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability to specify a google analytics code
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Geonames country importer does not ignore the fist line anymore
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add fulltext search for street names   
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Reset import throw a 404 not found
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Modify importerManager.isAlreadydone (it is now managed by a file that act as a flag)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Change importer rollback implementation : the rollback drop and recreate all necessary tables dynamically
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				GeonamesprocessorException has been renamed to ImporterException
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Index for geonames database and openstreetmap are done by the importer,no need to run the script manually
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Docs and installation guides have been updated to reflect forum questions
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				solRsynchroniser will retry on error (3 times by default). it may avoid 'Connection Reset' Exception
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				reset import throw a 404 not found exception
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				autocompletion of street names starts when at least 2 char are typed
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Tests of (featureCodeTest) was dependant of the locale of the machine
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				When do an Ajax request for street name autocompletion : Cancel the last Ajax requests, only one request done simultaneously 
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Lazy street names autocompletion : we doesn't make ajax request if number of suggestions is &lt; number of max results expected (Thats mean that the result is already present in the suggestions)   
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Add new links on statistics page   
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				to be clearer the option importerConfig.countriesFileName has been renamed to importerConfig.countriesFileName  
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				to be clearer the option importerConfig.countriesFileName has been renamed to importerConfig.countriesFileName  
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+					http://code.google.com/p/gisgraphy/issues/detail?id=8 : street search webservice should be accent insensitive 
+			</action>
+		
+		   <action dev="David Masclet" type="fix">
+			   fix advanced search URL for reverse geocoding and street search
+		   </action>
+		
+		   <action dev="David Masclet" type="update">	
+			remove the ability to search for 'no name street'
+		   </action>	
+		   
+		   <action dev="David Masclet" type="update">
+				Localize legend of status import   
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+					http://code.google.com/p/gisgraphy/issues/detail?id=10 : memory leak (DBCP/ prepareStatement pool)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+					update struts2 to 2.1.8 to be able to disable ognl cache to eat less memory
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				fix  issue http://code.google.com/p/gisgraphy/issues/detail?id=11 : create boudingbox method in distance restriction sometimes return bad values 
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				fix  issue http://code.google.com/p/gisgraphy/issues/detail?id=12 :   	 Street find webservice returns wrong street 
+			</action>
+			
+			<action dev="David Masclet" type="update">
+					street webservice does not sort the result by distance_sphere(middle of the street, point) anymore. It sort by distance (not distance sphere) between the line and the point
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				streetType is stored as a string  not an integer
+			</action>
+		
+		    <action dev="David Masclet" type="fix">
+				FIX bug :  display Search for streetnames in Russian fails  http://code.google.com/p/gisgraphy/issues/detail?id=13
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				file will be extracted even if retrieve file is false
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				An error page is display if the importerMetadata directory is not available and we can't determine if the import is done or not
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				GeonamesAlternateNameImporter ignored Countrycode null and empty (no alternatename without countrycode was inserted)
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				alternateName importer use extracted files, so alternatenames will be imported this order : country, adm1, adm2, others. and all the features will have the adm1 and adm2 and country alternatenames in solr (solr is not relationnal and we need to have alle the adm / countries alternate names first) 
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				zipcode is not a field anymore, but a list associated to gisfeature
+			</action>
+		
+			<action dev="David Masclet" type="fix">
+				opensearch module won't send 404 anymore
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability to retrieve geoloc or street without Distance 
+			</action>
+			
+			<action dev="David Masclet" type="add">
+			 download files for the importer have a more precise progression bar, that checks the file size instead of the number of files  
+			</action>
+			</release>
+			
+			<release version="2.1" date="2010-10-31"
+			description="improvements of v2.0">
+			
+			<action dev="David Masclet" type="fix">
+			Take the fact that now language name is not unique anymore 
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				malformed encoding properties when import data : \xxxxx
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				fulltext query terms are trimed 
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				fulltext search with featureID with space at the begining or at the end doesn't fail anymore
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				set a connection timeout for retrieving remote http file size, so if no internet connection is found, the satus page won't fail
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				importer have status 'unknow' if we can not determine the progression of an importer
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Update displayfeatures page with some country fields 
+			</action>
+			
+			
+			<action dev="David Masclet" type="fix">
+				there was only one spoken languages for fulltext webservice http://code.google.com/p/gisgraphy/issues/detail?id=15
+			</action>
+			
+			
+			</release>
+			
+			<release version="3.0beta1" date="2012-01-03"
+			description="improvements of v2.1">
+
+			<action dev="David Masclet" type="add">
+				Extract some common libraries (gisgraphy-commons, gisgraphy-utils, universalserialiser)
+				 to reuse it in client or anywhere else
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Migrate to solr 3.1
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Fulltext search do not use hack when countrycode or placetype is specify
+			</action>
+			
+			<action dev="David Masclet" type="remove">
+				Remove requesthandler typed in solrConfig.xml
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Extract ouputformat enum because we get method that are not directly in relation with format,(that doesn't allow reuse)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Geoloc result feed format change : Zipcodes in geoloc result is now wrap around a &lt;zipCodes&gt; element in XML e.g: &lt;zipCodes&gt;&lt;zipCode&gt;75000&lt;/zipCode&gt;&lt;zipCode&gt;75001&lt;/zipCode&gt;&lt;/zipCodes&gt;
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Streetsearch and geoloc search can now output ruby, php, and python
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Possibility to add a callback method for script output (php, ruby, python, json) for street and geoloc search
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Possibility to add several placetype for the fulltext search.
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Extract the building of fulltextquery, geolocquery and streetsearchquery into separate builder
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				When the openstreetmapimporter is disabled : the openstreetmapfulltextbuilder returns an error. (http://code.google.com/p/gisgraphy/issues/detail?id=16)
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Special char in queryString for fulltext service are removed, this avoid the use of nested queries 
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the abbility that all words are not mandatory in fulltext search
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				The location (point with lat/long) is not required anymore on street search. that allow to do a fulltextsearch on all street
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				LanguageImporter accept duplicates code and null iso639Alpha3LanguageCode if iso639Alpha2LanguageCode is specify 
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Correct misspell MOTROWAY=>MOTORWAY
+				change wrong unit (km=>m) in display street
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Better logging
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Importer status throw when there is too much line (int=>long)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Improve the way we retrieve http file size
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Consider zipcode as keyword (not tokenized, not split for whitespace, and so on , case insensitive)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				We can now do a fulltext search on openstreetmap (new specific fields added : street_type,one_way, length).
+				The 'openstreetmap street' are included in a fulltext search on any placetype.
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				ImporterConfig.importGisFeatureEmbededAlternateNames=true by default
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability to do a fulltext search AND specify a GPS point and radius to restrict the search
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Country code is now set in java bean FulltextresultDTO
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Statistics are no longer reset when reseting import
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add openstreetmap id (required) to the street webservice feed
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add is_in field to the street webservice feed
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				GeonamesFileRetriever and openstreetmapFileRetriever return a correct importerstatus even if there is already downloaded files.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a CRUD page in admin to search and edit, modify, add streets and place
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a CRUD page in admin to search and edit, modify, add streets and place
+			</action>
+			
+			<action dev="David Masclet" type="remove">
+				Remove the mode parameter for street service. it is now always contains. use the fulltext webservice with placetype=street instead
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the is_in fields in solr query fields when placetype is street
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability link geonames and openstreetmap database by getting the nearest city for a
+				 street and fill the openstreetmap isIn field via an importerConfig option in env.properties :
+				  importerConfig.openstreetmap.fill.isin.field
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a wizard for importer
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Improve solr memory usage
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Gisgraphoid, gisgraphy lib to geocode on android
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add an option searchForExactMatchWhenGeocoding to give the ability to search for address and other place
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add an option useAddressParserWhenGeocoding to give the ability to disable the address parser and go to offline mode, without any call to gisgraphy server
+			</action>
+			
+			
+			</release>
+			
+			<release version="3.0beta2" date="2012-01-03">
+			<action dev="David Masclet" type="fix">
+				callback method is missing end ');'
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Format parameter is not taken into account in street search and geolocquery(http://code.google.com/p/gisgraphy/issues/detail?id=18)
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				GeocodingLevel is not correct in geocoding ws(http://code.google.com/p/gisgraphy/issues/detail?id=19) 
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Option useAddressParserWhenGeocoding is disable by default
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add postal parameter to addressquery to enable the address parser at query time.
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				stats were not incremented for address parser
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				geocoding with accent in city fails : http://code.google.com/p/gisgraphy/issues/detail?id=23
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				reseting callback parameter for geoloc and street query was not taken into account
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				option importerConfig.importGisFeatureEmbededAlternateNames is false by default.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add java client for all webservices.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add direction (pre-dir and post-dir)management in geocoder
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				fix some display problems. pagination is reset for new search.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				We link streets no nearest city that have no number in names (some city subdivision are consider as city but should not) 
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				http://code.google.com/p/gisgraphy/issues/detail?id=24 : OR and AND in upper case cause fulltext engine to crash. 
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				When we search for nearest city during osm import, we only consider french city with population >0
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Add a new, more userfriendly UI to edit street/point
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Refactor jar dependencies and packages (gisgraphy-commons,gisgraphy-utils,addressparser-commons)
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				one_way and length are not filled by default (length used to be 0 by default even if not filled)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add the ability filter populated place as municipality in geolocsearch engine
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				city can now be flaged with 'municipality' to filter real municipality from popoluated place
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add is_in_place,is_in_adm_is_in_zip,fully_qualified_address to streets
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				update streettype possibles values with most frequent values ()http://taginfo.openstreetmap.org/keys/?key=highway#values)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability to give a structured address to geocode 
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				A fulltext query without space between comma failed (now it is ok) 
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add shape to gisfeature (Goal cities will shapes) 
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add openstreetmap cities importer
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add openstreetmap POI importer
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				AdmBuilding, Bench, Cinema, Dentist, Doctor, EmergencyPhone, FerryTerminal,
+				FireStation, Fountain, Fuel, NightClub , Pharmacy, Rental, Shop, SwimmingPool, Taxi,
+				Telephone, Toilet, VendingMachine, Veterinary
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				check that all files that will be downloaded are not 404/500 and don't check url file size if retrieve file is false 
+				(based on user feedbacks): 
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				parse apikey for each request receive by HTTP.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				update yahoo google and openstreetmap with new URLs, but the URLs are no longueur available as a field,
+				 you have to process it from the results.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add the ability to filter POI to import by place types.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Reset import now works on gg chrome (https://code.google.com/p/gisgraphy/issues/detail?id=25)
+			</action>
+			
+			<action dev="David Masclet" type="remove">
+				Remove experimental partial search
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				manage slovakia and czech housenumber (http://www.pitt.edu/~votruba/qsonhist/housenumbersslovakia.html)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				better management of alphabet (e.g:Duchnovičová)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				country code is no longuer mandatory for geocoding
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				latitude or longitude could now starts with space
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				alternatenames doesn't contain duplicates
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				zipcodes doesn't contain duplicates
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				fulltext engine (dto) now return the score
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a dedicated Reversegeocoding service that return address (Street search only returns street, and now v 4.0 is roof top, so 
+				we need something more precise)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				All words are not required for fulltext search
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				All word decompounder (german)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a form to geocode structured address 
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add quattroshapes importer
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add postgis 2.0 compatibility
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Improve importer performance by the creation of GIST index (if it doesn't already exists)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a leaflet plugin
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add our own decompound
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Improve synonyms management
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a 'suggest' parameter to allow autocompletion/ autosuggestion
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				use filter query for fulltext query (improve performance)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				migrate from acegi to spring security
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Geocoding now output the parsed address in a specific field (parsedAddress)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add a map with the shape of feature and city when we display infos on html page
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				fulltext : promote nearest results (not sorted!) when a location is given
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add smart street detection
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add the abbility to specify the default number of result and the max one 
+				separatetly, for service that are paginate (fulltext=>10/20, street=>10/50, geoloc=>10/10)
+			</action>
+			
+			
+			</release>
+			
+	</body>
+</document>

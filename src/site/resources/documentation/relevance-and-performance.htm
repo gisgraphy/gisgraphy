@@ -1,0 +1,127 @@
+<h1>Relevance and performances</h1>
+<div style="margin:0 auto;width:600px;"><span style="color:#F00">NEW :</span> <a href="http://www.gisgraphy.com/compare"><span style="font-size:1.2em;text-decoration:underline;">Check Gisgraphy relevance by comparing results from several geocoders</span></a></div>
+<a name="othergeocoder"></a>
+<h2>Yet an other geocoder ?</h2>
+There is some other geocoder already availables, so why gisgraphy? first, things has to be clear. You should be aware that my goal, here, is not to denigrate, or to tell that gisgraphy is the best geocoder, not at all!. I strongly respect the developpers and the community that work hard and for free to develop some geocoder or geoloc stuff. But it simply doesn't fit all my needs, and that's the reason why I have develop Gisgraphy. For me, the relevance / usability or price of the existing geocoder is not satisfactory (it is my opinion). let's take the most populars : Google geocoder, Nominatim and Geo::Coder::US : 
+<ul>
+<li>Google maps is not free and not opensource and really expensive (25 000$ for one year). But I must admit that the relevance is really good</li>
+<li><a href="http://search.cpan.org/~sderle/Geo-Coder-US/">Geo::Coder::US</a> is not worldwide. That's a real limitation</li>
+<li>On the <a href="http://wiki.openstreetmap.org/wiki/Nominatim">wiki page of Nominatim</a> it is writen that : "Search terms are processed left to right. This Search will work: pilkington avenue, birmingham, This search will fail: birmingham, pilkington avenue ". Thats not very usable.</li>
+</ul>
+<br/>
+<b>A different philosophy : An Address is not a string !</b>
+
+After more than 7 years of doing geocoding, that's the conclusion : An address is not a string ! it is tha cardinality of all of their possible names of the different parts :
+'3355 S Las Vegas Blvd, Las Vegas ' and 'the venitian, the strip NV 89109 USA' is the same address but there is no common word between the two addresses
+
+Gisgraphy has its own importer and mix the bests open source gazeteers / databases : <a href="http://wiki.openstreetmap.org" target="gisgraphy">Openstreetmap</a> of course, but also <a href="http://www.geonames.org">Geonames</a> and <a href="http://quattroshapes.com/" target="gisgraphy">Quattroshapes</a>, and it transform them into an address and Poi databases. it links each house to their streets, each streets to their city / zipcodes, and each city to their administrative divisions. and all of them are associated to their alternate names.
+
+Gisgraphy has a different philosophy than the other geocoder. it use a fulltext engine but it use an <a href="/documentation/addressparser.htm">address parser</a> to separate the several parts of the address, then it is simpler to do geocoding and remove ambiguity : streets that have city names, unit informations that can disturb the fulltext search , house numbers that looks like zipcodes,... to have better relevance it use the shapes when possible, it avoid to put a street in a city that its center is closer than the center of the city it belongs.
+
+Because of the parsing, Gisgraphy can do roof top geocoding, that mean that <b>it can do geocoding up to house numbers</b>
+
+Gisgraphy is more than a geocoder, it provides also a full stack that allows to do common things as reverse geocoding, search arround for place or poi by name, (different than search for address), restrict search arround a point for a given radius, and so on. it also comes with autocompletion and spellchecking, that is very useful and users are accustomed to it.
+<br/><br/>
+Technically, Gisgraphy comes with some facilities :
+<ul>
+<li>Gisgraphy support more language (XML, json, PHP, ruby, python, Atom, RSS / GeoRSS ) </li>
+<li>An importer wizard helps you to choose the country you need, and do all the stuff : No need to to be a geocoding guru :) Gisgraphy download, extract and import the files for you</li>
+<li>You have full controll on the data, you  can add / delete / modify data via a web interface.</li>
+<li>Autocompletion / autosuggestion</li>
+<li>Partial search</li>
+<li>Pagination</li>
+<li>All words mandatory or not</li>
+<li><a href="http://www.gisgraphy.com/documentation/user-guide.htm">more</a></li>
+</ul>
+<br/>
+Gisgraphy has also its own limitations, the main one is that it does not yet manage street numbers. but it will come in a future version :) (no date) 
+<br/>
+In the next paragraph I will explain how you can setup Gisgraphy to get the best relevance and performances
+<br/>
+<h2>Introduction</h2>
+Relevance and performances are the two most important things for a geocoder. A common question is "Does Gisgraphy has a good relevance for my country" and "How many requests can he handle".
+<br/>
+
+<h2>Relevance</h2>
+The relevance is strongly dependent of the datasets, it depends of the number of entries in Openstreetmap and in Geonames. To see how much entries is there for a specific country, I have compute some statistics on <a href="http://download.gisgraphy.com/openstreetmap/streets/stats.txt" target="_blank">streets<a href="" target="_blank"></a>, <a href="http://download.gisgraphy.com/openstreetmap/pois/stats.txt" target="_blank">Pois,<a href="http://download.gisgraphy.com/openstreetmap/cities/stats.txt" target="_blank">cities<a href="" target="_blank"></a>, and <a href="http://download.gisgraphy.com/openstreetmap/housenumbers/stats.txt" target="_blank">House numbers<a href="" target="_blank"></a>. There is also a good way to see if a particular region is well covered, Simply look at the <a href="http://www.apenstreetmap.org">openstreetmap maps</a>. it is the best way to see if there is a lot of streets, or POIs, or if a lot of house number are in the dataset. 
+
+The other thing that improve relevance is the address parser. As says on the home page, the address parser divides a single address (as string) into its individual component parts : house number, street type (bd, street, ..), street name, unit (apt, batiment, ...), zipcode, state, country, city... this is an important part when geocode because we knows the meaning of each words. To do so, the parser try to detect the address patterns of the <a href="http://www.upu.int/">Universal Postal Union (UPU)</a>. The address parser does not implemented all countries yet (see <a href="http://www.gisgraphy.com/documentation/addressparser.htm#implemetedcountries">already implemented countries</a>). If a country is not implemented, we geocode the address as a string, with fulltext search and the relevance can be decrease (If you chosse premium services, we can implement your country prior to the other if needed, depends on my availability too ;)). If you don't geocode postal address or if you think that the parsing is not pertinent, you can disable by setting the useAddressParserWhenGeocoding option to false or specify the 'postal' parameter to false at query time (finer grain).
+<br/>
+Geocoding is the process of find GPS coordinates for a given place, but if you only need to search for address and don't care about common places (e.g : eiffel tower, hotel XXX), you can set the searchForExactMatchWhenGeocoding option to false. it will also increase the performance
+<br/>
+The relevance needs to be tuned again and again. But it is very important to avoid regression, and we should know what are the impact of the changes along the development process. that's why, as for <a href="http://www.gisgraphy.com/bench.htm">performances</a> and <a href="http://code.google.com/p/gisgraphy/source/browse/#svn%2Ftrunk%2Fgisgraphy%2Fsrc%2Ftest">functionalities</a>, I do some relevance tests. The numbers of tests grow day after day, and for each feedback on relevance I try to make a test.
+<br/>.
+There is a <a href="http://address-parser.net/feedbacks.php">dedicated page</a> to make feedbacks on geocoding and address parsing. Feedbacks on relevance are very importants because I don't not know every country specific details. Be sure that every feedback is taken into account and the necessary changes will be done if there is a bug. Thanks in advance.
+<br/>
+
+  
+
+<h2>Performances</h2>
+
+<h3>Internal performance</h3>
+ A single server has to process a lot of request, since the beginning of Gisgraphy developement, it has been a priority to get good performances internally and to be scalable. Gisgraphy is internaly designed to have good performances. It
+<ul>
+<li>uses indexed data</li>
+<li>Uses some preprocessed data (that's one of the reason why the import took so long), street length, middle point, administrative division in tree, link streets to their city,...</li>
+<li>uses caching, that take a little bit of memory if you doing worldwide geocoding, but it is worthwhile</li>
+</ul>
+
+<h3>Improvements and tunning</h3>
+Apart form gisgraphy, there are some common consideration that can be done on postgres and solr. For Solr you can read <a href="http://www.lucidimagination.com/content/scaling-lucene-and-solr">this article</a>. For Postgres, I suggest to read the <a href="http://www.revsys.com/writings/postgresql-performance.html">Postgres wiki page on performance</a> and the <a href="http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server">one on tunning</a>. 
+
+<h3>Gisgraphy</h3>
+Now let's talk about Gisgraphy :)
+
+import only the country you need : the Postgres query planner does not use the plan when there is a lot of entries. and the more you import, the more you need memory.
+<br/>
+For the street service, restrict the radius in 'deep zone' (where there is a lot of streets) or use distance=false. because in 10 km arround a point in new york there is a lot of street and if you want to sort by distance, we have to calculate the distance for each streets found to sort the results.
+<br/>
+Check if the databases indexes are created (connect to the database '\d+ openstreetmap' or '\d+ city' and verify that GIST index are on location or shape. if not, run the createGISTindex.sql file (in the sql directory of the distrib). Run a vaccuum analyse on the database.
+<br/>
+optimise the fulltext search engine, simply call the following URL http://localhost:8080/solr/update?optimize=true&waitFlush=false
+<br/><br/>
+For information, a single Gisgraphy server (core I7,4GO of memory) can handle :
+<table>
+<tr><td>Webservice</td><td>Number of requests per second</td></tr>
+<tr><td>Geocoding</td><td>40 req/s</td></tr>
+<tr><td>street/reverse geocoding</td><td>44 req/s</td></tr>
+<tr><td>Find nearby</td><td>74 req/s</td></tr>
+<tr><td>Fulltext</td><td>114 req/s</td></tr>
+<tr><td>Address parser</td><td>196 req/s</td></tr>
+</table>
+
+<h3>Java</h3>
+All the jvm are not performant. after several tests, the best configuration is the sun/oracle one in <a href="http://stackoverflow.com/questions/198577/real-differences-between-java-server-and-java-client">server mode</a>. on last Ubuntu version, the jvm is openjdk that is not really performant.
+<br/>
+Configure the jvm memory. The needed memory depends on the amount of data in the fulltext engine. You will need 2 GO if you import all countries (you also have to let some memory the operating system and the postgres server).
+<br/><br/>
+<h3>Scalability</h3>
+In general, one server is enought, but sometimes one instance is not suffisant and you will need to put several instances. The next paragraph are for those who want to scale with more than one server.
+<br/>
+To process as many requests as possible, Gisgraphy has been designed to be scalable : you can have as many servers as you want. 
+Once the import is done, the data are in a read-only mode and the webservices simply (hum ;) )do some query on the database or on the fulltext engine. That's the key of Gisgraphy scalability.
+<br/>
+The data are stored in two datastores :
+<ul>
+<li>In the Postgres database<Li>
+<li>In the solr fulltext search engine </li>
+</ul>
+<br/>
+Both offers distributed/replicated/cluster capabilities.
+<br/>
+For Postgres so you got the choice to use one <a href="http://wiki.postgresql.org/wiki/Replication,_Clustering,_and_Connection_Pooling">clustered Postgres server</a> or use several Postgres servers independently. Same thing for Solr : <a href="http://www.lucidimagination.com/blog/2009/09/28/solrs-new-clustering-capabilities/">put it in a cluster</a> or use several servers independently there is also <a href="http://wiki.apache.org/solr/SolrCloud">SolrCloud</a>.
+
+It can be a little bit tricky to setup this but a simple architecture can be : n * (1 Gisgraphy server + 1 Postgres +1 Solr) and put a load balancer to share the load accross the several servers, and that's done :)
+
+<h2>Support</h2>
+Gisgraphy try to focus on the relevance and performance, if you got specific needs and don't know how to optimize, feel free to post a message on the <a href="http://www.gisgraphy.com/forum">forum</a>.
+
+
+
+
+
+
+
+
+
+

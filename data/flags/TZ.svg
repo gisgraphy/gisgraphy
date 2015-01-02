@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"
+[
+ <!ATTLIST svg
+  xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><!-- /Creative Commons Public Domain --><!--
+
+--><svg height="496.062988" id="svg548" version="1" width="744.094482" x="0.00000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0.00000000">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title> tanzania</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>united_nations_member</rdf:li>
+            <rdf:li>flag</rdf:li>
+            <rdf:li>africa</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title> Russell Cloran</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Russell Cloran</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title> Russell Cloran</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs550"/>
+  <g id="g589" style="font-size:12;" transform="matrix(4.133858,0.000000,0.000000,4.133858,0.000000,-1.525879e-5)">
+    <rect height="120.000000" id="rect583" style="fill:#0099ff;fill-rule:evenodd;stroke-width:1pt;" width="180.000000" x="0.00000000" y="0.00000000"/>
+    <path d="M 0 7.10543e-15 L 180 7.10543e-15 L 0 120 L 0 7.10543e-15 z " id="path584" style="fill:#009900;fill-rule:evenodd;stroke-width:1pt;"/>
+    <path d="M 0 120 L 40 120 L 180 25 L 180 7.10543e-15 L 140 7.10543e-15 L 0 95 L 0 120 z " id="path586" style="fill-rule:evenodd;stroke-width:1pt;"/>
+    <path d="M 0 91.4561 L 137.184 7.10543e-15 L 150.705 7.10543e-15 L 0 100.47 L 0 91.4561 z " id="path587" style="fill:#ffff00;fill-rule:evenodd;stroke-width:1pt;"/>
+    <path d="M -0.704896 95.47 L 150 -4.99993 L 150 4.01395 L 12.8159 95.47 L -0.704896 95.47 z " id="path588" style="fill:#ffff00;fill-rule:evenodd;stroke-width:1pt;" transform="translate(30.00000,24.53000)"/>
+  </g>
+</svg>

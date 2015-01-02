@@ -1,0 +1,55 @@
+<h1>Developer guide</h1>
+This page is specially writen for those who want to develop on Gisgraphy. Gisgraphy is a java framework. it gives all you need to start. 
+Got a cool tip, example, or solution? Help other Gisgraphy users by adding your <a href="/feedback/index.htm">feedbacks</a> or adding a post on the <a href="/forum">forum</a>.
+<h2>Get the sources</h2>
+All the sources are availables :
+<ul>
+<li><a href="/xref/index.html">For browsing</a></li>
+<li><a href="/source-repository.html">For download</a></li>
+</ul>
+
+<h2>A little bit of technical detail...</h2>
+<ul>
+<li> Spring services / Hibernate mapping with a custom Hibernate dialect.</li>
+<li> Lucene schema.</li>
+<li> Uses PostgreSQL / PostGIS.</li>
+<li> Build using Maven2.</li>
+<li> Automatic synchronisation between PostgreSQL and Solr.</li>
+<li> High test coverage (more than 1000 tests when this page is writen).</li>
+<li> Event based design.</li>
+<li> UTF-8 used throughout.</li>
+<li> Gisgraphy has it's <a href="http://gisgraphy.free.fr/mavenrepo">own Maven repository</a> with all the dependencies.</li>
+<li> Designed with <a href="http://www.infoq.com/articles/internal-dsls-java">DSL</a> (Domain Specific Language).</li>
+<li> Designed with the <a href="http://www.domaindrivendesign.org/">DDD</a> paradigm.</li>
+<li> Test to avoid memory leak</li>
+<li> <a href="/bench.htm">Benchs</a> are run for each release to see if performances are good</li>
+</ul>
+
+<h2>Build</h2>
+Gisgraphy is based on <a href="http://maven.apache.org/">Maven 2</a>, you simply need to be familiar with it. To ease the build, a <a href="http://gisgraphy.free.fr/mavenrepo" target="gisgraphy">dedicated Maven repository</a> is available.
+You have to <a href="">Install</a> Postgres, postGis, and setup a Gisgraphy database as you could do for a common gisgraphy installation. Then run 
+<div class="code">
+<pre>
+	mvn clean test
+</pre>
+</div>
+
+To compile an run the tests.
+
+<h2>IDE / Eclipse</h2>
+Personnaly, I use eclipse to develop but you can use NetBeans or any other IDE.
+To set up Gisgraphy in Eclipse :
+<ul>
+<li>Go to File-> New-> Project from SVN</li>
+<li>Then create a new location repository with the source repository link you can find on the <a href="/source-repository.html">Chekout page</a></li>
+<li>Once it is checkout, Open a command line and run a "mvn eclipse:clean eclipse:eclipse"</li>
+<li>Go back to Eclipse and refresh the project into your workspace (right click->Refresh).</li>
+</ul>
+
+<h2>License</h2>
+Just a short reminder about license. Gisgraphy is developed under the <a href="/license.html">LGPL license</a>. This license is more flexible than the 
+<a href="http://www.gnu.org/licenses/licenses.html" target="gisgraphy">GPL license</a> 
+(which is copy left, that's to say, you must give all the sources you modify and all the projects or libraries that use a GPL license). 
+with LGPL you can use Gisgraphy for commercial use, modify it in any way. You must give all the sources you modify but you are not obliged to re distribute sources of the project that use Gisgraphy.<br/>
+<br/>
+The Geonames data are under the <a href="http://creativecommons.org/">creative commons attributions license</a>. Openstreetmap data are under the <a href="http://www.openstreetmap.org/copyright" >ODbl license</a>. For Quattroshapes, you will find more informations on this <a href="https://github.com/foursquare/quattroshapes/blob/master/LICENSE.md">dedicated page</a>

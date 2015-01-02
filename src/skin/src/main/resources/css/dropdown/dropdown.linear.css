@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+/**
+ * Horizontal Linear CSS Drop-Down Menu Component
+ *
+ * @file		dropdown.linear.css
+ * @package		Dropdown
+ * @version		0.1.1
+ * @type		Transitional
+ * @requires	dropdown.css
+ * @browsers	Windows: IE6+, Opera7+, Firefox1+
+ *				Mac OS: Safari2+, Firefox2+
+ *
+ * @link		http://www.lwis.net/
+ * @copyright	2006-2008 Live Web Institute
+ *
+ */
+
+@import "dropdown.css";
+
+ul.dropdown-linear {
+ width: 100%;
+}
+
+ul.dropdown-linear ul li {
+ float: left;
+}
+
+ul.dropdown-linear li.hover,
+ul.dropdown-linear li:hover {
+ position: static;
+}
+
+ul.dropdown-linear ul ul {
+ display: none !important;
+}

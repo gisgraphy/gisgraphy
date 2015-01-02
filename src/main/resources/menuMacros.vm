@@ -1,0 +1,19 @@
+## Evaluates other macros.
+#macro(eval $_macro)$_macro#end
+
+#macro( displayMenu $menu $level )
+  #if ($displayer.isAllowed($menu))
+    #if ($menu.components.size() > 0)
+      ## display top menu
+      #menuItem($menu $level)
+      #foreach ($menu in $menu.components)
+        #local ($menu $level)
+          #set ($level = $level+1)
+          #eval("#displayMenu($menu $level)")
+        #end
+      #end
+    #else
+      #menuItem($menu $level)
+    #end
+  #end
+#end
