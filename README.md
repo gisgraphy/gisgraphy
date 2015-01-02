@@ -38,7 +38,7 @@ Give an Address, structured or not, and get GPS position in 243 countries.
 
 [Doc](/documentation/user-guide.htm#geocodingservice) | [REST API](/documentation/user-guide.htm#geocodingwebservice) | [Java API](/documentation/user-guide.htm#geocodingservicejavaapi) | [Demo](http://services.gisgraphy.com/public/geocoding.html) | [Free access](/free-access.htm)
 			
-###	Reverse geocoding ![](/images/new.png)
+###	Reverse geocoding ![]
 Give a GPS position and get the corresponding address
 
 [Doc](/documentation/user-guide.htm#streetservice) | [REST API](/documentation/user-guide.htm#streetwebservice) | [Java API](/documentation/user-guide.htm#streetservicejavaapi) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
