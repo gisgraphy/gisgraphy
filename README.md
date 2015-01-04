@@ -1,17 +1,18 @@
 # Free, open source, and ready to use geocoder and geolocalisation webservices
-
-* [Webservices overview](#Webservices-overview)
+* [Demo] (#demo)
+* [Who I am ?](#WhoIam)
+* [Webservices overview](#Webservicesoverview)
  * [Geocoding](#Geocoding)
- * [Reverse geocoding ](#Reverse-geocoding)
- * [Street search](#Street-search)
- * [Find nearby](#Find-nearby)
- * [Fulltext search / Autocompletion](#Fulltext-search-/-Autocompletion)
- * [Address parser](#Address-parser)
-* [Who I am](#Who-I-am?)
-* [Openstreetmap data download](#Openstreetmap-data-extract-by-country)
+ * [Reverse geocoding ](#Reversegeocoding)
+ * [Street search](#Streetsearch)
+ * [Find nearby](#Findnearby)
+ * [Fulltext search / Autocompletion](#FulltextsearchAutocompletion)
+ * [Address parser](#Addressparser)
+* [Who I am](#WhoIam)
+* [Openstreetmap data download](#Openstreetmapdatadownload)
 * [Gisgraphoid](#Gisgraphoid)
-* [Leaflet Plugin](#Leaflet-Plugin)
-* [A little bit further...](#A-little-bit-further)
+* [Leaflet Plugin](#LeafletPlugin)
+* [A little bit further...](#Alittlebitfurther)
 
 Since 2006, [Gisgraphy](http://www.gisgraphy.com) is a free, open source framework that offers the possibility to do geolocalisation and geocoding
 		via Java APIs or REST webservices. Because geocoding is nothing without data, it provides an easy to use importer that
@@ -20,61 +21,66 @@ Since 2006, [Gisgraphy](http://www.gisgraphy.com) is a free, open source framewo
 		production ready, and has been designed to be scalable(load balanced), performant and used in other languages than
 		just java : results can be output in XML, JSON, PHP, Python, Ruby, YAML, GeoRSS, and Atom. One of the most popular GPS
 		tracking System ([OpenGTS](http://opengts.sourceforge.net/)) also includes a Gisgraphy client...Gisgraphy
-		is a framework. As a result it's flexible and powerful enough to be used in a lot of different use cases. [read more](/documentation/quick-start.htm) 
- 
+		is a framework. As a result it's flexible and powerful enough to be used in a lot of different use cases. [read more](http://www.gisgraphy.com/documentation/quick-start.htm) 
+
+# Demo #
+[demo on map (leaflet plugin)](http://services.gisgraphy.com)
+[play with webservices] (http://services.gisgraphy.com/public/geocoding.html)
+[gisgraphy web site](http://www.gisgraphy.com)
+
 ## Who I am ?
 My name is David Masclet, I have developed Gisgraphy since 2006, My goal is to provide a realistic alternative for geocoding and geolocalisation. Feel free to contact me at davidmasclet[at]gisgraphy.com.
 
-## Webservices overview :
+## Webservices overview :##
 -----------------
 
 All the webservice are world wide (243 countries) and support pagination. Actually there are 6 (web)services, and all
-		are availables for free at [http://services.gisgraphy.com](http://services.gisgraphy.com). It also gives
+		are availables for free at [http://services.gisgraphy.com](c). It also gives
 		some HTML pages that uses the webservices under the hood. Find bellow a summary for each webservices :
 
-### Geocoding
+### Geocoding ###
 
 Give an Address, structured or not, and get GPS position in 243 countries.
 
-[Doc](/documentation/user-guide.htm#geocodingservice) | [REST API](/documentation/user-guide.htm#geocodingwebservice) | [Java API](/documentation/user-guide.htm#geocodingservicejavaapi) | [Demo](http://services.gisgraphy.com/public/geocoding.html) | [Free access](/free-access.htm)
+[Doc](http://www.gisgraphy.com/documentation/user-guide.htm#geocodingservice) | [REST API](http://www.gisgraphy.com/documentation/user-guide.htm#geocodingwebservice) | [Java API](http://www.gisgraphy.com/documentation/user-guide.htm#geocodingservicejavaapi) | [Demo](http://services.gisgraphy.com/public/geocoding.html) | [Free access](http://www.gisgraphy.com/free-access.htm)
 			
-###	Reverse geocoding
+###	Reverse geocoding ###
 Give a GPS position and get the corresponding address
 
-[Doc](/documentation/user-guide.htm#streetservice) | [REST API](/documentation/user-guide.htm#streetwebservice) | [Java API](/documentation/user-guide.htm#streetservicejavaapi) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
-					access](/free-access.htm)
+[Doc](http://www.gisgraphy.com/documentation/user-guide.htm#streetservice) | [REST API](http://www.gisgraphy.com/documentation/user-guide.htm#streetwebservice) | [Java API](http://www.gisgraphy.com/documentation/user-guide.htm#streetservicejavaapi) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
+					access](http://www.gisgraphy.com/free-access.htm)
 			
-### Street search
+### Street search ###
 Find streets and the associated informations, for a given GPS point (and an
 				optionnal name). It is very useful for tracking software like Open Gts, but a lot of other use cases.
 
-[Doc](/documentation/user-guide.htm#streetservice) | [REST API](/documentation/user-guide.htm#streetwebservice) | [Java API](/documentation/user-guide.htm#streetservicejavaapi) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
-					access](/free-access.htm)
+[Doc](http://www.gisgraphy.com/documentation/user-guide.htm#streetservice) | [REST API](http://www.gisgraphy.com/documentation/user-guide.htm#streetwebservice) | [Java API](http://www.gisgraphy.com/documentation/user-guide.htm#streetservicejavaapi) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
+					access](http://www.gisgraphy.com/free-access.htm)
 			
-### Find nearby
+### Find nearby ###
 Find places, streets, whatever you want, around a GPS point for a given radius.
 				Results can be sorted by distance.
 
-[Doc](/documentation/user-guide.htm#geolocservice) | [REST API](/documentation/user-guide.htm#geolocwebservice) | [Java API](/documentation/user-guide.htm#geolocservicejavaapi) | [Demo](http://services.gisgraphy.com/ajaxgeolocsearch.html) | [Free access](/free-access.htm)
+[Doc](http://www.gisgraphy.com/documentation/user-guide.htm#geolocservice) | [REST API](http://www.gisgraphy.com/documentation/user-guide.htm#geolocwebservice) | [Java API](http://www.gisgraphy.com/documentation/user-guide.htm#geolocservicejavaapi) | [Demo](http://services.gisgraphy.com/ajaxgeolocsearch.html) | [Free access](http://www.gisgraphy.com/free-access.htm)
 			
-### Fulltext search / Autocompletion
+### Fulltext search / Autocompletion ###
 For a given text and an optionnal GPS point, Find places, cities, streets, zip codes,... with informations
 				(coordinates, states, population, elevation, alternate names in many languages). **Auto completion**, location
 				bias, spellchecking, all words required or not...
 
-[Doc](/documentation/user-guide.htm#fulltextservice) | [REST API](/documentation/user-guide.htm#fulltextwebservice) | [Java API](/documentation/user-guide.htm#fulltextservicejavaapi) | [Demo](http://services.gisgraphy.com/ajaxfulltextsearch.html?advancedSearch=true) | [Free access](/free-access.htm)
+[Doc](http://www.gisgraphy.com/documentation/user-guide.htm#fulltextservice) | [REST API](http://www.gisgraphy.com/documentation/user-guide.htm#fulltextwebservice) | [Java API](http://www.gisgraphy.com/documentation/user-guide.htm#fulltextservicejavaapi) | [Demo](http://services.gisgraphy.com/ajaxfulltextsearch.html?advancedSearch=true) | [Free access](http://www.gisgraphy.com/free-access.htm)
 			
-### Address parser
+### Address parser ###
 
 Divide a single address (as string) into its individual component parts : house
 				number, street type (bd, street, ..), street name, unit (apt, batiment, ...), zipcode, state, country, city.
 
-[Doc](/documentation/addressparser.htm) | [REST
-					API](/documentation/addressparser.htm#webservice) | [Java API](/documentation/addressparser.htm#javaapi) | [Demo](http://services.gisgraphy.com/public/addressparser.html) | [Free
-					access](/free-access.htm)
+[Doc](http://www.gisgraphy.com/documentation/addressparser.htm) | [REST
+					API](http://www.gisgraphy.com/documentation/addressparser.htm#webservice) | [Java API](http://www.gisgraphy.com/documentation/addressparser.htm#javaapi) | [Demo](http://services.gisgraphy.com/public/addressparser.html) | [Free
+					access](http://www.gisgraphy.com/free-access.htm)
 			
 
-## Openstreetmap data Download
+## Openstreetmap data download ##
 -----------------
 
 Gisgraphy want to simplify the access to the Openstreetmap data. The model of the openstreetmap data is in
@@ -96,41 +102,41 @@ All those files are
 . In addition to the native openstreetmap data, some pre-calculated fields (length, middle point) are added...
 [Read more](http://www.gisgraphy.com/download/download_data.htm)
 
-## Gisgraphoid
+## Gisgraphoid ###
 -----------------
-[Gisgraphoid](/gisgraphoid.htm) is a library to do geocoding on your Android mobile or tablet with the same
+[Gisgraphoid](http://www.gisgraphy.com/gisgraphoid.htm) is a library to do geocoding on your Android mobile or tablet with the same
 		[Geocoder API](http://developer.android.com/reference/android/location/Geocoder.html) as Google but with
 		Gisgraphy. Run on all Android versions, free, no Google API needed by the phone, no API key, no limit. You can display
 		the result on Openstreetmap or Google maps (Google API key required)
 
-[Learn More](/gisgraphoid.htm) | [Download library](/gisgraphoid.htm#download) | [Download Demo app](/gisgraphoid.htm#demo)
+[Learn More](http://www.gisgraphy.com/gisgraphoid.htm) | [Download library](http://www.gisgraphy.com/gisgraphoid.htm#download) | [Download Demo app](http://www.gisgraphy.com/gisgraphoid.htm#demo)
 
-##Leaflet Plugin
+##Leaflet Plugin ###
 You can also check a [demo](http://services.gisgraphy.com/static/leaflet/index.html) with the two plugins
 
 **Geocoding** : It allows to
-                add a geocoding to add a geocoding input with autocompletion on a leaflet map. It wraps the [Gisgraphy js API.](/leaflet.htm#jsapi)
+                add a geocoding to add a geocoding input with autocompletion on a leaflet map. It wraps the [Gisgraphy js API.](http://www.gisgraphy.com/leaflet.htm#jsapi)
 
-[Learn More](/leaflet.htm) | [View demo](http://services.gisgraphy.com/static/leaflet/gisgraphy-geocoder-leaflet-demo.html) | [Documentation](#)
+[Learn More](http://www.gisgraphy.com/leaflet.htm) | [View demo](http://services.gisgraphy.com/static/leaflet/gisgraphy-geocoder-leaflet-demo.html) | [Documentation](https://github.com/gisgraphy/gisgraphy-leaflet-plugin/blob/master/leaflet/doc.md)
 
 **Reverse geocoding** :
                 It reverse geocode when you rightclick on the map. it is a sample and you can personalize it.
 
-[Learn More](/leaflet.htm) | [View demo](http://services.gisgraphy.com/static/leaflet/gisgraphy-reverse-geocoder-leaflet-demo.html) | [Documentation](#)
+[Learn More](http://www.gisgraphy.com/leaflet.htm) | [View demo](http://services.gisgraphy.com/static/leaflet/gisgraphy-reverse-geocoder-leaflet-demo.html) | [Documentation](https://github.com/gisgraphy/gisgraphy-leaflet-plugin/blob/master/leaflet/doc.md)
              
 
 
 
-## A little bit further...
+## A little bit further ###
 -----------------
-*   Importers from geonames CSV files. Just give the country(ies) you wish to import and / or the [placetypes](/placetype.htm), and Gisgraphy download the files and import them with all the alternate names
+*   Importers from geonames CSV files. Just give the country(ies) you wish to import and / or the [placetypes](http://www.gisgraphy.com/placetype.htm), and Gisgraphy download the files and import them with all the alternate names
 		(optional) and sync the database with a fulltext search engine
-*   All Openstreetmap data processed in csv format (view [ data](http://www.gisgraphy.com/download/download_data.htm))
+*   All Openstreetmap data processed in csv format (view [data](http://www.gisgraphy.com/download/download_data.htm))
 	<li>Importers for Openstreetmap data in csv (view [
 			data](http://www.gisgraphy.com/download/download_data.htm))
 	<li>Importers for Quattroshapes data in csv (view [
 			data](http://www.gisgraphy.com/download/download_data.htm))
-	<li>[Leaflet plugins](/leaflet.htm)
+	<li>[Leaflet plugins](http://www.gisgraphy.com/leaflet.htm)
 *   WorldWide geocoding / worldWide reverse geocoding / street search WebServices;
 	<li>REST WebService
 *   Several output formats supported : XML, json, PHP, ruby, python, Atom, RSS / GeoRSS
