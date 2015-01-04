@@ -1,18 +1,17 @@
 # Free, open source, and ready to use geocoder and geolocalisation webservices
-* [Demo] (#Demo)
-* [Who I am ?](#WhoIam)
-* [Webservices overview](#Webservicesoverview)
- * [Geocoding](#Geocoding)
- * [Reverse geocoding ](#Reversegeocoding)
- * [Street search](#Streetsearch)
- * [Find nearby](#Findnearby)
- * [Fulltext search / Autocompletion](#FulltextsearchAutocompletion)
- * [Address parser](#Addressparser)
-* [Who I am](#WhoIam)
-* [Openstreetmap data download](#Openstreetmapdatadownload)
-* [Gisgraphoid](#Gisgraphoid)
-* [Leaflet Plugins](#LeafletPlugins)
-* [A little bit further...](#Alittlebitfurther)
+* [Who I am ?](#who-i-am)
+* [Webservices overview](#webservices-overview-)
+ * [Geocoding](#geocoding)
+ * [Reverse geocoding ](#reverse-geocoding)
+ * [Street search](#street-search)
+ * [Find nearby](#find-nearby)
+ * [Fulltext search / Autocompletion](#fulltext-search--autocompletion)
+ * [Address parser](#address-parser)
+* [Openstreetmap data download](#openstreetmap-data-download)
+* [Gisgraphoid](#gisgraphoid)
+* [Leaflet Plugins](#leaflet-plugins)
+* [A little bit further...](#a-little-bit-further)
+
 
 Since 2006, [Gisgraphy](http://www.gisgraphy.com) is a free, open source framework that offers the possibility to do geolocalisation and geocoding
 		via Java APIs or REST webservices. Because geocoding is nothing without data, it provides an easy to use importer that
