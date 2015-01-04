@@ -1,4 +1,4 @@
-# Free, open source, and ready to use geocoder and geolocalisation webservices
+# Free, open source, and ready to use geocoder, reverse geocoder and geolocalisation webservices
 * [Who I am ?](#who-i-am)
 * [Webservices overview](#webservices-overview-)
  * [Geocoding](#geocoding)
