@@ -1,27 +1,31 @@
 <html>
+
 <head>
-<title>Gisgraphy-js-api demo</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <link href="style/gisgraphy-leaflet.css" rel="stylesheet" type="text/css">
+    <title>Gisgraphy-js-api demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="style/gisgraphy-leaflet.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
-<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="js/placetype.js"></script>
-<script src="js/typeahead/jquery-1.11.1.js"></script>
-<script src="js/typeahead/typeahead.bundle.js"></script>
-<script src="js/typeahead/bloodhound.js"></script>
-<script src="js/typeahead/typeahead.jquery.js"></script>
-<script src="js/typeahead/handlebars-v1.3.0.js"></script>
-<script src="js/gisgraphy-js-api.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="js/placetype.js"></script>
+    <script src="js/typeahead/jquery-1.11.1.js"></script>
+    <script src="js/typeahead/typeahead.bundle.js"></script>
+    <script src="js/typeahead/bloodhound.js"></script>
+    <script src="js/typeahead/typeahead.jquery.js"></script>
+    <script src="js/typeahead/handlebars-v1.3.0.js"></script>
+    <script src="js/gisgraphy-js-api.js"></script>
 
-<div id="gisgraphy-leaflet">
-<!--<form id="gisgraphy-leaflet-form">-->
-</div>
+    <div id="gisgraphy-leaflet">
+        <!--<form id="gisgraphy-leaflet-form">-->
+    </div>
 
-<script type="text/javascript">
-var gisgraphyGeocoder = new gisgraphyAutocomplete({ELEMENT_ID:"gisgraphy-leaflet"});
-gisgraphyGeocoder.initAutoCompletion();
-</script>
+    <script type="text/javascript">
+        var gisgraphyGeocoder = new gisgraphyAutocomplete({
+            ELEMENT_ID: "gisgraphy-leaflet"
+        });
+        gisgraphyGeocoder.initAutoCompletion();
+    </script>
 
 </body>
 

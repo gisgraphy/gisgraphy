@@ -1,34 +1,37 @@
 <html>
+
 <head>
-        <title>Gisgraphy leaflet reverse geocoder plugin demo</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-        <link href="style/gisgraphy-leaflet.css" rel="stylesheet" type="text/css">
+    <title>Gisgraphy leaflet reverse geocoder plugin demo</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href="style/gisgraphy-leaflet.css" rel="stylesheet" type="text/css">
 
 </head>
+
 <body style="margin:0 ">
-<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
-<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-<script src="js/gisgraphy-leaflet-reverse-geocoder.js"></script>
-<script src="js/util/NumberFormatter.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="js/gisgraphy-leaflet-reverse-geocoder.js"></script>
+    <script src="js/util/NumberFormatter.js"></script>
 
 
-       <div id="header" ><a href="http://www.gisgraphy.com"><img src="http://www.gisgraphy.com/images/logos/logo_48.png" style="vertical-align:middle;"/>Gisgraphy project</a> | <a href="/public/geocoding.html">Play with webservices</a> | <a href="http://www.gisgraphy.com/premium">Premium plans</a> | <a href="http://download.gisgraphy.com">Download Openstreetmap Data</a> | <a href="http://www.gisgraphy.com/documentation/index.htm">Documentation</a> | <a href="/static/leaflet/gisgraphy-geocoder-leaflet-demo.html">Try the geocoding leaflet plugin</a><br/>All you see is done with  Gisgraphy, Leaflet and opensource data ! this server is only a demo hosted on a small server, performances can be small if server is overloaded </div>
-        <div id="map" ></div>
+    <div id="header">
+        <a href="http://www.gisgraphy.com"><img src="http://www.gisgraphy.com/images/logos/logo_48.png" style="vertical-align:middle;" />Gisgraphy project</a> | <a href="/public/geocoding.html">Play with webservices</a> | <a href="http://www.gisgraphy.com/premium">Premium plans</a> | <a href="http://download.gisgraphy.com">Download Openstreetmap Data</a> | <a href="http://www.gisgraphy.com/documentation/index.htm">Documentation</a> | <a href="/static/leaflet/gisgraphy-geocoder-leaflet-demo.html">Try the geocoding leaflet plugin</a>
+        <br/>All you see is done with Gisgraphy, Leaflet and opensource data ! this server is only a demo hosted on a small server, performances can be small if server is overloaded </div>
+    <div id="map"></div>
 
- <script>
-
-               var map = L.map('map',{ zoomControl:false }).setView([51.505, -0.09], 13);
-                var layerUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-		L.tileLayer(layerUrl, {
-			maxZoom: 18,
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ',
-			id: 'examples.map-i875mjb7'
-		}).addTo(map);
-
-//new L.Control.gisgraphyreversegeocoder();
-   </script>
+    <script>
+        var map = L.map('map', {
+            zoomControl: false
+        }).setView([51.505, -0.09], 13);
+        var layerUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        L.tileLayer(layerUrl, {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ',
+            id: 'examples.map-i875mjb7'
+        }).addTo(map);
+    </script>
 </body>
-</html>
 
+</html>
