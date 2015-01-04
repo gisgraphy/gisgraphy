@@ -119,10 +119,10 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>src/main/webapp/scripts/</directory>
+			<directory>src/main/webapp/static/leaflet/js/</directory>
 			<outputDirectory>client/javascript/</outputDirectory>
 			<includes>
-				<include>gisgraphyapi.js</include>
+				<include>gisgraphy-js-api.js</include>
 			</includes>
 		</fileSet>
 		<fileSet>

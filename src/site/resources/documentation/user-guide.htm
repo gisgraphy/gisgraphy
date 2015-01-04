@@ -912,8 +912,8 @@ spellchecker.collateResults=false
 
 
 <div align="right"><a href="#top">[top]</a></div>
-<h4>googleMapAPIKey</h4>
-The google maps API key. Required if you want to use Google maps  to display gisgraphy search results in the demo pages. in any case Gisgraphy use google to do search!. See more on the <a href="http://code.google.com/apis/maps/signup.html">Google Maps page</a> to sign up.
+<h4>googleMapAPIKey (deprecated)</h4>
+The google maps API key was Required in v 3.0 but not in v 4.0 because we now use Openstreetmap maps.
 <div class="code">
 Examples : <br/>
 googleMapAPIKey=ABQIAAAAC0kUg2SfDYBO-AEagcTgvhQ5aXWj7Kef4ih_G0qG0UGxHdmrpFrmSD7sGMwTJIN1g7C45waZ5ybiQ<br/>
@@ -969,7 +969,7 @@ The following languages are supported :
 </ul>
 </li>
 You can also specify a structured by speciying the separate parts of the address : houseNumber, streetName, streetType, city, state, zipCode, etc.
-a full list can be found <a href=https://code.google.com/p/gisgraphy/source/browse/trunk/addressParser-commons/src/main/java/com/gisgraphy/addressparser/Address.java" target="_blank">here</a>
+a full list can be found <a href="https://github.com/gisgraphy/addressParser-commons/blob/master/src/main/java/com/gisgraphy/addressparser/Address.java" target="_blank">here</a>
 <br/>
 <br/>
 
@@ -1040,7 +1040,7 @@ Here is a summary of the Web parameters mapping : <br/>
 <table class="smallsizetable smartborder">
 <th>Parameter description</th><th>Web parameter name</th>
 <tr><td>address</td><td>address</td></tr>
-<tr><td>A structured address</td><td>Any field that can describe an address. a list of fields can be foud at <a href="https://code.google.com/p/gisgraphy/source/browse/trunk/addressParser-commons/src/main/java/com/gisgraphy/addressparser/Address.java" target="_blank">here</a></td></tr>
+<tr><td>A structured address</td><td>Any field that can describe an address. a list of fields can be foud at <a href="https://github.com/gisgraphy/addressParser-commons/blob/master/src/main/java/com/gisgraphy/addressparser/Address.java" target="_blank">here</a></td></tr>
 <tr><td>country<td>country</td></tr>
 <tr><td>postal</td><td>postal</td></tr>
 <tr><td>Callback method name</td><td>callback</td></tr>

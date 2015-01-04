@@ -33,12 +33,12 @@
 	<scm>
 		<connection></connection>
 		<developerConnection></developerConnection>
-		<url>http://code.google.com/p/gisgraphy/source/checkout</url>
+		<url>https://github.com/gisgraphy/gisgraphy</url>
 	</scm>
 
 	<issueManagement>
 		<system>Google</system>
-		<url>http://code.google.com/p/gisgraphy/issues/list</url>
+		<url>https://github.com/gisgraphy/gisgraphy/issues</url>
 	</issueManagement>
 
 	<developers>

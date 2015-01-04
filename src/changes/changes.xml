@@ -771,6 +771,10 @@
 				separatetly, for service that are paginate (fulltext=>10/20, street=>10/50, geoloc=>10/10)
 			</action>
 			
+			<action dev="David Masclet" type="add">
+				migrate to github.
+			</action>
+			
 			
 			</release>
 			

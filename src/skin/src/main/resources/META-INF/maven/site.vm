@@ -7,11 +7,7 @@
       @import url("/css/dropdown/themes/gisgraphy/default.advanced.css");
       @import url("/css/site.css");
     </style>
-     <link rel="alternate" type="application/atom+xml" title="download changes" href="http://code.google.com/feeds/p/gisgraphy/downloads/basic" />
-     <link rel="alternate" type="application/atom+xml" title="Project updates" href="http://code.google.com/feeds/p/gisgraphy/updates/basic" />
-     <link rel="alternate" type="application/atom+xml" title="Issues updates" href="http://code.google.com/feeds/p/gisgraphy/issueupdates/basic" />
-     <link rel="alternate" type="application/atom+xml" title="Sources changes" href="http://code.google.com/feeds/p/gisgraphy/svnchanges/basic" />
- 
+    
         <META NAME="Author" CONTENT="David Masclet"/>
 		<META NAME="Keywords" CONTENT="geocoding, webservices, find nearby,geonames,openstreetmap, geolocalisation"/>
 		<META NAME="Description" CONTENT="Since 2006, Gisgraphy is a free, open source framework that offers the possibility to do geolocalisation and geocoding via Java APIs or REST webservices. Results can be output in XML, Atom, RSS, JSON, PHP, Ruby, and Python."/>
