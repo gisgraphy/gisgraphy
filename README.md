@@ -1,5 +1,5 @@
 # Free, open source, and ready to use geocoder and geolocalisation webservices
-* [Demo] (#demo)
+* [Demo] (#Demo)
 * [Who I am ?](#WhoIam)
 * [Webservices overview](#Webservicesoverview)
  * [Geocoding](#Geocoding)
@@ -11,7 +11,7 @@
 * [Who I am](#WhoIam)
 * [Openstreetmap data download](#Openstreetmapdatadownload)
 * [Gisgraphoid](#Gisgraphoid)
-* [Leaflet Plugin](#LeafletPlugin)
+* [Leaflet Plugins](#LeafletPlugins)
 * [A little bit further...](#Alittlebitfurther)
 
 Since 2006, [Gisgraphy](http://www.gisgraphy.com) is a free, open source framework that offers the possibility to do geolocalisation and geocoding
@@ -23,12 +23,14 @@ Since 2006, [Gisgraphy](http://www.gisgraphy.com) is a free, open source framewo
 		tracking System ([OpenGTS](http://opengts.sourceforge.net/)) also includes a Gisgraphy client...Gisgraphy
 		is a framework. As a result it's flexible and powerful enough to be used in a lot of different use cases. [read more](http://www.gisgraphy.com/documentation/quick-start.htm) 
 
-# Demo #
+## Demo ##
 [demo on map (leaflet plugin)](http://services.gisgraphy.com)
+
 [play with webservices] (http://services.gisgraphy.com/public/geocoding.html)
+
 [gisgraphy web site](http://www.gisgraphy.com)
 
-## Who I am ?
+## Who I am ##
 My name is David Masclet, I have developed Gisgraphy since 2006, My goal is to provide a realistic alternative for geocoding and geolocalisation. Feel free to contact me at davidmasclet[at]gisgraphy.com.
 
 ## Webservices overview :##
@@ -96,10 +98,9 @@ and is not simple to manage. To simplify this, We have :
 *   Extract the shape of more than 160 000 cities and localities extracted from [Quatroshapes]() with
 		their associated geonames Id
 
-All those files are
-**freely available on our [download server](http://download.gisgraphy.com/).
-**
-. In addition to the native openstreetmap data, some pre-calculated fields (length, middle point) are added...
+All those files are *freely available on our [download server](http://download.gisgraphy.com/)*
+
+In addition to the native openstreetmap data, some pre-calculated fields (length, middle point) are added...
 [Read more](http://www.gisgraphy.com/download/download_data.htm)
 
 ## Gisgraphoid ###
@@ -111,11 +112,10 @@ All those files are
 
 [Learn More](http://www.gisgraphy.com/gisgraphoid.htm) | [Download library](http://www.gisgraphy.com/gisgraphoid.htm#download) | [Download Demo app](http://www.gisgraphy.com/gisgraphoid.htm#demo)
 
-##Leaflet Plugin ###
-You can also check a [demo](http://services.gisgraphy.com/static/leaflet/index.html) with the two plugins
+##Leaflet Plugins ##
+[Demo](http://services.gisgraphy.com/static/leaflet/index.html) with the two plugins on a map.
 
-**Geocoding** : It allows to
-                add a geocoding to add a geocoding input with autocompletion on a leaflet map. It wraps the [Gisgraphy js API.](http://www.gisgraphy.com/leaflet.htm#jsapi)
+**Geocoding** : It allows to add a geocoding to add a geocoding input with autocompletion on a leaflet map. It wraps the [Gisgraphy js API.](http://www.gisgraphy.com/leaflet.htm#jsapi)
 
 [Learn More](http://www.gisgraphy.com/leaflet.htm) | [View demo](http://services.gisgraphy.com/static/leaflet/gisgraphy-geocoder-leaflet-demo.html) | [Documentation](https://github.com/gisgraphy/gisgraphy-leaflet-plugin/blob/master/leaflet/doc.md)
 
@@ -124,8 +124,6 @@ You can also check a [demo](http://services.gisgraphy.com/static/leaflet/index.h
 
 [Learn More](http://www.gisgraphy.com/leaflet.htm) | [View demo](http://services.gisgraphy.com/static/leaflet/gisgraphy-reverse-geocoder-leaflet-demo.html) | [Documentation](https://github.com/gisgraphy/gisgraphy-leaflet-plugin/blob/master/leaflet/doc.md)
              
-
-
 
 ## A little bit further ###
 -----------------
