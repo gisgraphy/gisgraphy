@@ -337,7 +337,10 @@ DEFAULT_LANGUAGE = detectLanguage();
             }
             if (!$('#' + this.placetypeNodeID).val()) {
                 fulltextUrlWithParam = fulltextUrlWithParam + '&placetype=city&placetype=adm&placetype=street';
+            } else {
+                fulltextUrlWithParam = fulltextUrlWithParam +'&placetype='+$('#' + this.placetypeNodeID).val();
             }
+
             fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=20";
             fulltextUrlWithParam = fulltextUrlWithParam + "&q=" + replaceHouseNumber($('#' + this.inputSearchNodeID).val());
             if (this.apiKey != undefined) {
