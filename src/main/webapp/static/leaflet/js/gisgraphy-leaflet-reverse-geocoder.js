@@ -134,7 +134,7 @@ L.Control.gisgraphyreversegeocoder = L.Handler.extend({
                     }
                 },
                 error: function() {
-                    alert('error during reverse geocoding, maybe you have reached the limits of allowed requests on demo version, you can retry.');
+                    alert('error during reverse geocoding, maybe you have reached the limits of allowed requests (1 req/s) on the demo version.');
                 }
             });
         }

@@ -141,6 +141,11 @@ createlang -U YOURUSER -h YOURIP plpgsql gisgraphy
 psql -U YOURUSER -h YOURIP -d gisgraphy -f -f /usr/share/postgresql/YOURPOSTGRESVERSION/contrib/postgis-1.5/postgis.sql
 psql -U YOURUSER -h YOURIP -d gisgraphy -f psql -U postgres  -h 127.0.0.1 -d gisgraphy -f /usr/share/postgresql/YOURPOSTGRESVERSION/contrib/postgis-1.5/spatial_ref_sys.sql
 
+#or for postgis 2 :
+
+psql -U YOURUSER  -h YOURIP -d gisgraphy -f /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql
+psql -U YOURUSER  -h YOURIP -d gisgraphy -f /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql 
+
 
 </pre>
 Where YOURUSER is a postgresql user with admin rights,YOURIP is the ip adress of your server(127.0.0.1 in most case) and YOURPOSTGRESVERSION is your postgres version (9.1 in this tutorial) <br/>
