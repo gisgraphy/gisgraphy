@@ -146,7 +146,7 @@
         function nonword(str) {
             str = _.toStr(str);
             //modify by gisgraphy
-		 	/return str ? str.split(/\W+/) : [];
+		 	//return str ? str.split(/\W+/) : [];
             return str ? gisgraphyAutocomplete.normalize(str).split(/\W+/) : [];
         }
         function getObjTokenizer(tokenizer) {

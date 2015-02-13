@@ -149,7 +149,9 @@ background-color : #FFF;
 
 }
 
-
+#reversehelp {
+margin-right:160px;
+}
 
 #gisgraphy-leaflet .resultBox {
 font-size:11px;
