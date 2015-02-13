@@ -6,3 +6,4 @@
 /.project
 /.pydevproject
 /logs/*
+/logs/
