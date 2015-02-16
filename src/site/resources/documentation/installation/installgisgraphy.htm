@@ -43,19 +43,19 @@ h4:before {
 <body>
 <div>
 <h1>Gisgraphy installation guide</h1>
-Before install and launch Gisgraphy, you must setup java (you needs JVM &gt;= 1.5), postgres, and  postgis. it is not, properly speaking, the installation of Gisgraphy, and if you already havn't Postgres, Postgis and java installed, you must install it first. a tutorial is provided <a href="setuplinux.htm">here</a> for linux and <a href="setupwindows.htm">here</a> for windows
+Before you install and launch Gisgraphy, you must set up Java (you need a version of the JVM &gt;= 1.5), PostgreS, and  PostGIS. It is not, properly speaking, part of the installation of Gisgraphy, and if you don't already have PostgreS, PostGIS and Java installed, you must install them first. A tutorial is provided <a href="setuplinux.htm">here</a> for Linux and <a href="setupwindows.htm">here</a> for Windows.
 
 <h2>Download a Gisgraphy distribution</h2>
 <div>
 	<ul>
-		<li>Fisrt you have to download a distribution <a href="http://www.gisgraphy.com/download/index.htm">here</a>. Download a tar.gz file, if you are on Linux or download a zip file, if you are on windows.</li>
-		<li>Then extract it : tar xvf YOURFILE if you're on linux or double click on the file if your on Windows</li>
+		<li>First you have to download a distribution <a href="http://www.gisgraphy.com/download/index.htm">here</a>. Download a tar.gz file if you are on Linux or download a zip file if you are on Windows.</li>
+		<li>Then extract it : tar xvf YOURFILE if you're on Linux or double click on the file if you are running Windows.</li>
 	</ul>
 	<br/>
 </div>
 
-<h2>Initialize The database</h2>
-<div> Here are the command to run to and init the Gisgraphy tables</div> 
+<h2>Initialize the database</h2>
+<div> Here are the commands to run to and initialize the Gisgraphy tables:</div> 
 
 <div class=code>
 <pre>
@@ -63,44 +63,44 @@ Before install and launch Gisgraphy, you must setup java (you needs JVM &gt;= 1.
 psql -U<i>YOURUSER</i> -d gisgraphy -h YOURIP -f /path/to/file/create_tables.sql
  
 </pre> 
-Where YOURUSER is a postgresql user with admin rights, YOURIP is the ip adress of your server(127.0.0.1 in most case) <br/>
+Where YOURUSER is a postgresql user with admin rights, YOURIP is the IP address of your server (127.0.0.1 in most case) <br/>
 </div>
 <br/>
-Then insert users (...for the admin interface,... you don't have to log to use gisgraphy webservices) in the database. A script called insert-users.sql is provided with two default users: one with admin rights and one with simple rights.
+Then insert users (...for the admin interface,... you don't have to log to use Gisgraphy webservices) in the database. A script called insert-users.sql is provided with two default users: one with admin rights and one with simple rights.
 <div class="code">
 psql -U<i>YOURPOSTGRESQLUSER</i> -d gisgraphy -h YOURIP -f /path/to/file/insert_users.sql <br/>
 </div>
 <br/>
 <div class="tip greentip">
-It is HIGHLY recommended to modify them for security : once gisgraphy is installed :
+It is HIGHLY recommended that you modify them for security once Gisgraphy is installed.
 <ul>
-<li>loging as 'admin' with password 'admin'</li>
+<li>Log in as 'admin' with password 'admin'</li>
 <li>Go to the <a href="http://localhost:8080/admin/users.html">http://localhost:8080/admin/users.html</a> page</li>
 <li>Change the admin and user password</li>
 <li>Change the password of user 'user'</li>
 </ul>
 </div>
 <br/>
-<h2>Edit database and Gisgraphy settings</h2>
-Go into the directory you've extract the gisgraphy distribution, Then edit the database settings in the jdbc.properties file in the directory 'webapps/ROOT/WEB-INF/classes' of the Gisgraphy distribution to setup postgres password you've defined in the '<a href="http://www.gisgraphy.com/documentation/installation/index.htm">Environment setup</a>' step.<br/>
+<h2>Edit the database and Gisgraphy settings</h2>
+Go into the directory where you've extracted the Gisgraphy distribution, then edit the database settings in the jdbc.properties file in the directory 'webapps/ROOT/WEB-INF/classes' of the Gisgraphy distribution to set the PostgreS password you've defined in the '<a href="http://www.gisgraphy.com/documentation/installation/index.htm">Environment setup</a>' step.<br/>
 <br/><br/>
-You can edit the configuration (import, and so on) in the env.properties file in directory 'webapps/ROOT/WEB-INF/classes' of the Gisgraphy distribution (for more information see <a href="http://www.gisgraphy.com/documentation/user-guide.htm#options">options documentation</a>).<br/><br/>
+You can edit the configuration information (import, and so on) in the env.properties file in directory 'webapps/ROOT/WEB-INF/classes' of the Gisgraphy distribution (for more information see the <a href="http://www.gisgraphy.com/documentation/user-guide.htm#options">options documentation</a>).<br/><br/>
 <div class="tip yellowtip">
-Good to know : if you want to use Google maas features (see street, etc), you must set the googleMapAPIKey in the env.properties
+Good to know - if you want to use Google Maps features (see street, etc), you must set the googleMapAPIKey in the env.properties
 </div> 
 <br/>
 
-that's all, you can now start gisgraphy
+That's all - you can now start Gisgraphy
 
 <h2>Start Gisgraphy</h2>
 <ul>
 <li>Open a command line (Start/run and type 'cmd')</li>
-<li>Change the current directory to the folder where you've unzip the files</li>
-<li>Change the rights of the launch.sh script if you are on linux : chmod +x launch.sh</li>
+<li>Change the current directory to the folder where you've unzipped the files</li>
+<li>Change the rights of the launch.sh script if you are on Linux : chmod +x launch.sh</li>
 <li>Launch the launch script (.sh on Linux, .command on mac and .bat on windows </code>"</li>
 </ul>
 <br/>
-Some useful scripts are provided, most of them are for unix / linux : 
+Some useful scripts are provided, most of them are for Unix / Linux : 
 <ul>
 <li>launch : run gisgraphy and output logs to the console.</li>
 <li>start : starts Gisgraphy.</li>
@@ -119,31 +119,31 @@ Some useful scripts are provided, most of them are for unix / linux :
 <div class="tip redtip">
 <span>Important</span> : You must type the command line in the directory where you've extract the Gisgraphy files. 
 <br/><br/>
-The directory where you type the command to start your servlet container (e.g : <code>java -jar start.jar</code> for Jetty or <code>startup.sh/startup.bat</code> for Tomcat) determines the directory Where The full text data will be stored : the data will be stored in the <code>$Current_Working_directory/solr</code> Directory. In other words :
+The directory where you type the command to start your servlet container (e.g : <code>java -jar start.jar</code> for Jetty or <code>startup.sh/startup.bat</code> for Tomcat) determines the directory where the full text data will be stored. The data will be stored in the <code>$Current_Working_directory/solr</code> directory. In other words :
 <ul>
-<li>If you are in directory 'foo' and you type : "<code>java -jar ./directory/where/Gisgraphy/is/Extracted/start.jar</code>" The data will be stored in <code>foo/solr</code>, because you are in the 'foo' directory</li>
-<li>If you are in directory 'foo' and you type : "<code>cd directroy/where/gisgraphy/is/extracted/start.jar</code>" and then "<code>java -jar start.jar</code>", the Data will be stored in the 'extracted' directory, because you are in the 'extracted' directory.</li>
+<li>If you are in directory 'foo' and you type : "<code>java -jar ./directory/where/Gisgraphy/is/Extracted/start.jar</code>", the data will be stored in <code>foo/solr</code>, because you are in the 'foo' directory</li>
+<li>If you are in directory 'foo' and you type : "<code>cd directory/where/gisgraphy/is/extracted/start.jar</code>" and then "<code>java -jar start.jar</code>", the Data will be stored in the 'extracted' directory, because you are in the 'extracted' directory.</li>
 </ul>
-This is the same thing for Tomcat or any servlet Container (Resin, ...) due to solr. <a href="http://wiki.apache.org/solr/SolrInstall">More...</a>
+This is the same thing for Tomcat or any servlet Container (Resin, ...) due to SolR. <a href="http://wiki.apache.org/solr/SolrInstall">More...</a>
 </div> 
 <br/>
 <div class="tip greentip">
-To avoid OutOfMemoryError : if you launch Gisgraphy in Tomcat, you must launch it with a minimum memory of 512M. To do this : set your CATALINA_OPTS to <code>-Xms512M -Xmx512M</code> (e.g : add this <i>CATALINA_OPTS=-Xms512M -Xmx512M</i> to the .bashrc file in your home directory)
+To avoid OutOfMemoryError : If you launch Gisgraphy in Tomcat, you must launch it with a minimum memory of 512M. To do this, set your CATALINA_OPTS to <code>-Xms512M -Xmx512M</code> (e.g : add this <i>CATALINA_OPTS=-Xms512M -Xmx512M</i> to the .bashrc file in your home directory).
 </div>
 <br/>
 <br/>
 </div>
 <h2>See if it works</h2>
-Open a browser and go to <a href="http://localhost:8080/mainMenu.html">http://localhost:8080/mainMenu.html</a>. you should see the admin page
-and then go to <a href="http://localhost:8080/">http://localhost:8080/</a> you should see a Gisgraphy page
+Open a browser and go to <a href="http://localhost:8080/mainMenu.html">http://localhost:8080/mainMenu.html</a>. You should see the admin page; 
+ then go to <a href="http://localhost:8080/">http://localhost:8080/</a> you should see a Gisgraphy page!
 
 <br/>
 <h2>And now...</h2>
-Now, You can : 
+You can : 
 <ul>
 <li><a href="http://www.gisgraphy.com/documentation/user-guide.htm#importdata">Import data</a></li>
 <li><a href="http://www.gisgraphy.com/documentation/user-guide.htm#security">Improve security</a></li>
-<li><a href="http://www.gisgraphy.com/documentation/user-guide.htm#performance">Improve performances</a></li>
+<li><a href="http://www.gisgraphy.com/documentation/user-guide.htm#performance">Improve performance</a></li>
 <li><a href="http://gisgraphy.com/faq.html">See the FAQ</a></li>
 <li><a href="http://gisgraphy.com/forum/">Use the forum</a></li>
 </ul>

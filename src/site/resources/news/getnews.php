@@ -16,10 +16,10 @@ News from Gisgraphy<br/>
 <?php
 $version =$_GET["version"];
  ?>
-Last news from gisgraphy : <br/>
+Last news from Gisgraphy : <br/>
 <?php if ($version !="4.0-beta1"){ ?>
 <ul>
-<li><span style="color:#FF0000">Important news</span> : Your version '<?php echo $version ?>' is <b>not</b> up to date. The new Gisgraphy version 4.0 beta is out. New important functionnalities has been added (geocoding web service, zipcode management, address parsing,...)<a href="http://www.gisgraphy.com/gisgraphy_v_4_0.htm">Read more</a>
+<li><span style="color:#FF0000">Important news</span> : Your version '<?php echo $version ?>' is <b>not</b> up to date. The new Gisgraphy version 4.0 beta is out. New important functionality has been added (geocoding web service, zipcode management, address parsing,...)<a href="http://www.gisgraphy.com/gisgraphy_v_4_0.htm">Read more</a>
 
 </li>
 </ul>
@@ -27,7 +27,7 @@ Last news from gisgraphy : <br/>
 <?php }else{ ?>
 <ul>
 <li>
-Your version is up to date
+Your version is up to date!
 </li>
 </ul>
 <?php } ?> 

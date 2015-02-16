@@ -72,21 +72,21 @@ To suggest a change or a correction to any part of the documentation, please sen
 </div>
 <div>
 <div class="masterTopic">Quick access to webservices documentation : </div>
-<a href="#geocodingservice">Geocoding</a> | <a href="http://address-parser.net">Address parser</a> | <a href="#reversegeocodingservice">Reverse geocoding </a> | <a href="#streetservice"> street service</a> | <a href="#geolocservice">Find nearby</a> | <a href="#fulltextservice">Fulltext</a>
+<a href="#geocodingservice">Geocoding</a> | <a href="http://address-parser.net">Address parser</a> | <a href="#reversegeocodingservice">Reverse geocoding </a> | <a href="#streetservice">Street service</a> | <a href="#geolocservice">Find nearby</a> | <a href="#fulltextservice">Fulltext</a>
 </div>
 
-<div class="masterTopic">Table of content : </div>
+<div class="masterTopic">Table of contents : </div>
 <div class="indexlevel2"><a href="#introduction" />Introduction</a></div>
 <div class="indexlevel3"><a href="#about" />About</a></div>
-<div class="indexlevel3"><a href="#version" />version</a></div>
-<div class="indexlevel3"><a href="#technics" />Technical informations...</a></div>
+<div class="indexlevel3"><a href="#version" />Version</a></div>
+<div class="indexlevel3"><a href="#technics" />Technical information...</a></div>
 <div class="indexlevel3"><a href="#quickstart" />Quick start</a></div>
 <div class="indexlevel3"><a href="#requirements" />Requirements</a></div>
-<div class="indexlevel3"><a href="#technologiesused" />Which technologies are used ?</a></div>
+<div class="indexlevel3"><a href="#technologiesused" />Which technologies are used?</a></div>
 <div class="indexlevel3"><a href="#license" />License</a></div>
 <div class="indexlevel2"><a href="#installation" />Installation</a></div>
-<div class="indexlevel2"><a href="#importdata" />Import Data</a></div>
-<div class="indexlevel3"><a href="#options" />Options and environement specific settings</a></div>
+<div class="indexlevel2"><a href="#importdata" />Importing Data</a></div>
+<div class="indexlevel3"><a href="#options" />Options and environment specific settings</a></div>
 <div class="indexlevel2"><a href="#geocodingservice" />Geocoding service</a></div>
 <div class="indexlevel3"><a href="#geocodingservicedescription" />Description</a></div>
 <div class="indexlevel3"><a href="#geocodingserviceoutputformat" />Output formats and languages</a></div>
@@ -103,7 +103,7 @@ To suggest a change or a correction to any part of the documentation, please sen
 <div class="indexlevel3"><a href="#reversegeocodingserviceoutputfieldsdescription" />Output fields description</a></div>
 <div class="indexlevel3"><a href="#reversegeocodingservicejavaapi" />Java API</a></div>
 
-<div class="indexlevel2"><a href="#streetservice" />street service</a></div>
+<div class="indexlevel2"><a href="#streetservice" />Street service</a></div>
 <div class="indexlevel3"><a href="#streetservicedescription" />Description</a></div>
 <div class="indexlevel3"><a href="#streetserviceoutputformat" />Output formats and languages</a></div>
 <div class="indexlevel3"><a href="#streetserviceparameters" />Parameters</a></div>
@@ -114,7 +114,7 @@ To suggest a change or a correction to any part of the documentation, please sen
 <div class="indexlevel3"><a href="#fulltextservicedescription" />Description</a></div>
 <div class="indexlevel3"><a href="#fulltextserviceoutputformat" />Output formats and languages</a></div>
 <div class="indexlevel3"><a href="#fulltextserviceparameters" />Parameters</a></div>
-<div class="indexlevel3"><a href="#autosuggetion" />auto completion / suggetions</a></div>
+<div class="indexlevel3"><a href="#autosuggetion" />auto completion / suggestions</a></div>
 <div class="indexlevel3"><a href="#fulltextwebservice" />Web service</a></div>
 <div class="indexlevel3"><a href="#fulltextserviceoutputfieldsdescription" />Output fields description</a></div>
 <div class="indexlevel3"><a href="#fulltextservicejavaapi" />Java API</a></div>
@@ -140,8 +140,8 @@ To suggest a change or a correction to any part of the documentation, please sen
 <div class="indexlevel3"><a href="#protectwebservices" />Protect webServices</a></div>
 <div class="indexlevel2"><a href="#performance" />Performance</a></div>
 <div class="indexlevel3"><a href="#jmeter" />Jmeter</a></div>
-<div class="indexlevel3"><a href="#databaseoptimisation" />Database optimisations</a></div>
-<div class="indexlevel3"><a href="#jvmoptimisation" />JVM optimisations</a></div>
+<div class="indexlevel3"><a href="#databaseoptimisation" />Database optimisation</a></div>
+<div class="indexlevel3"><a href="#jvmoptimisation" />JVM optimisation</a></div>
 <div class="indexlevel3"><a href="#othertipsoptimisation" />Other tips</a></div>
 
 
@@ -155,12 +155,12 @@ This documentation is for the current version of Gisgraphy (snapshots, nightly b
 <a name="about"></a>
 <div align="right"><a href="#top">[top]</a></div>
 <h3>About</h3>
- Since 2006, Gisgraphy has been a free, open source framework that offers the possibility to do geolocalisation and geocoding via Java APIs or REST webservices.
-  Because geocoding is nothing without data, it provides an easy to use importer that will automagically download and import the necessary 
+ Since 2006, Gisgraphy has been a free, open-source framework that offers the ability to do geolocalisation and geocoding via Java APIs or REST webservices.
+  Because geocoding is nothing without data, it provides an easy-to-use importer that will automagically download and import the necessary 
   (free) data to your local database (<a href="www.openstreetmap.org" target="Gisgraphy">OpenStreetMap</a>, <a href="http://www.geonames.org/" target="Gisgraphy">GeoNames</a> and <a href="http://quattroshapes.com" target="Gisgraphy">Quattroshapes</a> : more than 100 million entries). You can also add your own data with the Web interface or the import connectors provided. Gisgraphy is production ready and has been designed to be scalable (load balanced), high-performance and used in other languages than just Java : results can be output in XML, JSON, PHP, Python, Ruby, YAML, GeoRSS, and Atom. One of the most popular GPS tracking systems (<a href="http://opengts.sourceforge.net/">OpenGTS</a>) also includes a Gisgraphy client...Gisgraphy is a framework. As a result it's flexible and powerful enough to be used in a lot of different use cases<a href="/documentation/quick-start.htm">read more</a>
  Here are the main functionalities  :
 <ul>
-<li> Importers for Openstreetmap and Quattroshapes data in CSV format (view <a href="http://www.Gisgraphy.com/download/download_data.htm"> data</a>)
+<li> Importers for OpenStreetMap and Quattroshapes data in CSV format (view <a href="http://www.Gisgraphy.com/download/download_data.htm"> data</a>)
 <li> Importers from GeoNames CSV files. Just give the country(ies) you wish to import and / or the <a href="/placetype.htm">placetypes</a>, and Gisgraphy will download the files  and import them with all the alternateNames (optional), and sync the database with the fulltext search engine</li>
 <li> Worldwide geocoding / worldwide reverse geocoding / street search WebServices;
 <li> REST WebService</li>
@@ -176,7 +176,7 @@ This documentation is for the current version of Gisgraphy (snapshots, nightly b
 <li> Internationalized (with support of Cryllic, Arabic, Chinese,... alphabet)</li>
 <li> Dojo widgets / prototype / Ajax to ease search but can be use it even if Javascript is not enabled on the client side</li>
 <li><a href="http://www.Gisgraphy.com/documentation/addons.htm#opensearch">Opensearch module</a></li>
-<li> Plateform / language independent</li>
+<li> Platform / language independent</li>
 <li> Provides all the countries flags in svg and png format</li> 
 </ul>
 <a name="technics"></a>
@@ -198,7 +198,7 @@ Please consult the last <a href="http://www.Gisgraphy.com//documentation/quick-s
 <li>A 64 bit platform is strongly recommended since SolR uses <a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html">Memorymap</a> )</li></li>
 <li> <a href="http://www.PostgreSql.org/">PostgreSQL</a> with the <a href="http://postgis.refractions.net/">PostGIS</a> extension (It is HIGHLY recommended to have PostGIS 1.3.1 or greater for good performance... <a href="/documentation/user-guide.htm#postgis1.1.3">more</a>.</li>
 <li>4G of Memory is required for the import process, it can be decreased to 2Gb for the webservice only. The amount of memory depends on the amount of data. </li>
-<li>A servlet container if you want to use it as a Servlet (Not programatically). Actually, Gisgraphy has been tested on <a href="http://tomcat.apache.org/">Tomcat</a> and <a href="http://www.mortbay.org/">Jetty</a> but any Servlet container should be OK</li>
+<li>A servlet container if you want to use it as a Servlet (not programatically). Actually, Gisgraphy has been tested on <a href="http://tomcat.apache.org/">Tomcat</a> and <a href="http://www.mortbay.org/">Jetty</a> but any Servlet container should be OK</li>
 </ul>
 <a name="technologiesused"></a>
 <div align="right"><a href="#top">[top]</a></div>
@@ -2432,7 +2432,7 @@ You can output results to an OutputStream (useful for servlet use) or a String.
 To access the admin interface :
  <ul>
  <li>Launch Gisgraphy</li>
- <li>Open a web browser and go to <a href="http://localhost:8080/mainMenu.html">http://localhost:8080/login.jsp</a> (according to that Gisgraphy is running on port 8080)</li>
+ <li>Open a web browser and go to <a href="http://localhost:8080/mainMenu.html">http://localhost:8080/login.jsp</a> (Gisgraphy defaults to running on port 8080)</li>
  </ul>
  <br/>
 <a name="adminloginpassword"></a>
@@ -2451,13 +2451,13 @@ There are two default users already set :
 </table>
 <br/>
 <div class="tip yellowtip">
-It is highly recommended to change the default users of the admin interface. To do so : You must login as 'admin' with password 'admin' or edit the 'insert_users.sql' file in the sql directory, set the users / passwords / roles, and run the script
+It is highly recommended that you change the default users of the admin interface. To do so : login as 'admin' with password 'admin' or edit the 'insert_users.sql' file in the sql directory, set the users / passwords / roles, and run the script
 </div>
 <br/>
 <a name="adminimportdata"></a>
 <div align="right"><a href="#top">[top]</a></div>
 <h3>Import data</h3>
-To import data, you must log With a user with admin rights. Then go to the <b>Administration</b> menu -> <b>Run importer</b>. A <a href="www.Gisgraphy.com/screenshots.htm#">wizard</a> will guide you to choose the correct options.
+To import data, you must log as a user with admin rights. Then go to the <b>Administration</b> menu -> <b>Run importer</b>. A <a href="www.Gisgraphy.com/screenshots.htm#">wizard</a> will guide you to choose the correct options.
 
 <div class="tip yellowtip">
 The importer process may takes more than 40 hours, depending on how much data you import and the machine the importer runs on. (some <a href="http://www.Gisgraphy.com/dump.htm">dumps</a> are available on the download server)
@@ -2470,7 +2470,9 @@ The importer process may takes more than 40 hours, depending on how much data yo
 <div class="tip greentip">
 please consult the dedicated <a href="./edition.html">documentation on how add/edit features</a>. Note that in versions greater than  3-beta2 you can draw street directly on map.
 </div><br/><br/>
-<img src="../images/edition/edit_street_add_point.png" >If you need you can add / edit / delete entries in the database. you can also edit all the associated fields, (alternatenames and zip codes).<br/> 
+<img src="../images/edition/edit_street_add_point.png">
+
+If you need you can add / edit / delete entries in the database. you can also edit all the associated fields, (alternatenames and zip codes).<br/> 
 <br/>
 To do so :
 <br/>
@@ -2499,7 +2501,7 @@ You can find some screenshots on the <a href="http://www.Gisgraphy.com/screensho
 <a name="adminscreenshots"></a>
 <div align="right"><a href="#top">[top]</a></div>
 <h3>Screenshots</h3>
-some screenshots are available <a href="http://www.Gisgraphy.com/screenshots.htm">here</a>
+Some screenshots are available <a href="http://www.Gisgraphy.com/screenshots.htm">here</a>
 <br/><br/>
 <a name="security"></a>
 <div align="right"><a href="#top">[top]</a></div>
@@ -2509,7 +2511,7 @@ some screenshots are available <a href="http://www.Gisgraphy.com/screenshots.htm
 <h3>Default admin password</h3>
 <br/>
 <div class="tip yellowtip">
-It is highly recommended to change the default users of the admin interface. To do so : You must login as 'admin' with password 'admin'
+It is highly recommended that you change the default users of the admin interface. To do so, login as 'admin' with password 'admin'
 </div>
 <br/>
 <a name="protectwebservices"></a>
@@ -2553,12 +2555,12 @@ See more on <a href="http://www.jdocs.com/jetty/5.1.11.rc0/org/mortbay/http/hand
 <a name="jmeter"></a>
 <div align="right"><a href="#top">[top]</a></div>
 <h3>Jmeter</h3>
-Some Jmeter benchs are available (scripts and results) <a href="/bench.htm">here</a>.
+Some Jmeter benchmarks are available (scripts and results) <a href="/bench.htm">here</a>.
 <br/>
 <a name="databaseoptimisation"></a>
 <div align="right"><a href="#top">[top]</a></div>
-<h3>Database optimisations</h3>
-in order to have good performance it is recommended that you use database indexes. As far as I know it is possible to tell Hibernate to create indexes but it is not possible to choose the type of index (BTREE,GIST, and so on) with annotations. so you must create your own index with the following code :  
+<h3>Database Optimisation</h3>
+In order to have good performance it is recommended that you use database indexes. As far as I know it is possible to tell Hibernate to create indexes but it is not possible to choose the type of index (BTREE,GIST, and so on) with annotations. You must create your own index with the following code :  
 <div class="code">
 <pre>
 DROP  INDEX IF EXISTS locationindex ;
@@ -2573,11 +2575,11 @@ VACUUM FULL ANALYZE;
 
 </div>
 <br/>
-You can do this for all the tables which have Geometry columns.
+You can do this for all the tables that have Geometry columns.
 <br/>
-A script named 'createGISTIndex.sql' is provided in the 'SQL' dir in the Gisgraphy distribution to create all the GIST indexes for all the tables
+A script named 'createGISTIndex.sql' is provided in the 'SQL' directory in the Gisgraphy distribution to create all the GIST indexes for all the tables.
 <br/><br/>
-You will have GREATER performance if you specify a placetype, if you search for placetype 'gisFeature', your query will be slower.<br/><br/>
+You will have GREATER performance if you specify a placetype; if you search for placetype 'gisFeature', your query will be slower.<br/><br/>
 <div class="tip greentip">
 You can define the default Geoloc Placetype in the env file (in the Classpath) with the option <a href="#geolocsearch.defaultGeolocSearchPlaceType">defaultGeolocSearchPlaceType</a>
 </div>
@@ -2590,7 +2592,7 @@ You can use command line but PGAdmin could be a friendly way.
 <br/>
 
 <div class="tip yellowtip">
-If you use Postgis 1.3.1 or greater you don't have to use the GIST indexes because they will automatically be used. <a href="http://www.postgis.org/pipermail/postgis-users/2007-August/016628.html">More</a> .
+If you use PostGIS 1.3.1 or greater you don't have to use the GIST indexes because they will automatically be used. <a href="http://www.postgis.org/pipermail/postgis-users/2007-August/016628.html">More</a> .
 </div>
 <br/>
 
@@ -2602,19 +2604,19 @@ on PostgreS, after an import
 <div align="right"><a href="#top">[top]</a></div>
 <h3>JVM optimisations</h3>
 
-You will have better performances if you run Gisgraphy and the SolR server in two distinct JVM.
-To run SolR in a separated JVM copy the SolR Directory (default parameter) with the schema.xml, SolRconfig.xml, the data directory, and so on to a <a href="http://lucene.apache.org/SolR/">SolR</a> distribution and start it with <code>java -jar start.jar</code> (or an other way of your choice, that's the easier way).
+You will have better performance if you run Gisgraphy and the SolR server in two distinct JVMs.
+To run SolR in a separate JVM, copy the SolR Directory (default parameter) with the schema.xml, SolRconfig.xml, the data directory, and so on to a <a href="http://lucene.apache.org/SolR/">SolR</a> distribution and start it with <code>java -jar start.jar</code> (or an other way of your choice, that's the easy way).
 Then you can remove the SolR.war from the Gisgraphy release and configure the <a href="#fulltextsearchurl">fulltextsearch URL</a> to point to the new SolR URL.
 It is also recommended to use the Sun JVM (not the GCJ one) and to use the VMargs -server
 <br/><br/>
-To have great performance we recommend to use the sun -jdk in version 6.0
+To have great performance we recommend that you use the Sun -jdk version 6.0.
 <br/>
 <a name="othertipsoptimisation"></a>
 <h3>Other tips</h3>
-We strongly recommend to install Gisgraphy (that use SolR) on Linux or Unix Os. Due to <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6265734" target="_blank">JVM bug</a> and other reasons, Windows users will get less performance.
-if you want to tune performance you should call the /SolR/admin/stats.jsp page and watch at cache section. hitRatio, eviction and warmupTime values can be useful. Read the <a href="http://wiki.apache.org/SolR/SolrCaching">SolR caching wiki page</a> for more informations.
+We strongly recommend that you install Gisgraphy (using SolR) on a Linux or Unix OS. Due to a <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6265734" target="_blank">JVM bug</a> and other reasons, Windows users will get less performance than Unix users.
+If you want to tune performance you should call the /SolR/admin/stats.jsp page and watch the cache section. hitRatio, eviction and warmupTime values can be useful. Read the <a href="http://wiki.apache.org/SolR/SolrCaching">SolR Caching Wiki page</a> for more information.
 <br/>
-The /SolR/admin/luke page can give you interesting information (if index is optimized,...)
+The /SolR/admin/luke page can also give you interesting information (if index is optimized,...)
 <br/>
 <br/><br/><br/><br/>
 </body>
