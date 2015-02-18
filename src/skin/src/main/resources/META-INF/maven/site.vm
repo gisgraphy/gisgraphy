@@ -129,13 +129,12 @@
 				</li>
 				<li><a href="#" class="dir importantmenu">Premium &nbsp;&#x25BC;&nbsp;</a>
 					<ul>
-						<li><a href="http://www.gisgraphy.com/premium/index.htm">What's this</a></li>
-						<li><a href="http://www.gisgraphy.com/premium/index.htm#installation">Installation</a></li>
-						<li><a href="http://www.gisgraphy.com/premium/index.htm#dump">Dump</a></li>
-						<li><a href="http://www.gisgraphy.com/premium/index.htm#data">Openstreetmap data extraction</a></li>
-						<li><a href="http://www.gisgraphy.com/premium/index.htm#sla">Premium webservice</a></li>
-						<li><a href="http://www.gisgraphy.com/premium/index.htm#developement">Developement</a></li>
-						<li><a href="http://www.gisgraphy.com/faq-premium.html">FAQ</a></li>
+						<li><a href="https://premium.gisgraphy.com/products">What's this</a></li>
+						<li><a href="https://premium.gisgraphy.com/products#dump">Dump</a></li>
+						<li><a href="https://premium.gisgraphy.com/products#data">Openstreetmap data extraction</a></li>
+						<li><a href="https://premium.gisgraphy.com/products#sla">Premium webservice</a></li>
+						<li><a href="https://premium.gisgraphy.com/products#developement">Developement</a></li>
+						<li><a href="https://premium.gisgraphy.com/pages/faq">FAQ</a></li>
 					</ul>
 				</li>
 			</ul>
