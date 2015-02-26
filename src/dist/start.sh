@@ -9,9 +9,16 @@ PID_DIR=./run
 mkdir -p $PID_DIR
 PIDFILE=$PID_DIR/$NAME.pid
 
+
 if [ -f $PIDFILE ]; then
- printf "%s\n" "$NAME is already started"
- exit 0;
+        PID=$(cat $PIDFILE);
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+                echo "found a pid ${PID} but the process ${NAME} is not running...cleaning and starting"
+                rm -f $PIDFILE
+        else
+            printf "%s\n" "$NAME is already started"
+            exit 0;
+        fi
 fi
 
 # the ammount of memory depends on the amount of data in the fulltext engine. 
