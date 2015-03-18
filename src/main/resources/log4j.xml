@@ -99,6 +99,11 @@
 		<level value="INFO" />
 		<appender-ref ref="RollingFileService" />
 	</logger>
+	
+	<logger name="com.gisgraphy.reversegeocoding.ReverseGeocodingService">
+		<level value="INFO" />
+		<appender-ref ref="RollingFileService" />
+	</logger>
 
 	<logger name="com.gisgraphy.geoloc.GeolocSearchEngine">
 		<level value="INFO" />

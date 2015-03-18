@@ -7,6 +7,9 @@
 <meta name="heading" content="Free Geolocalisation Services"/>
 <meta name="keywords" content="${preferedName} GPS information population elevation"/>
 <@utils.includeJs jsName="/scripts/prototype.js"/>
+<#if shape??>
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+</#if>
 </head>
 <body>
 <br/>
@@ -76,7 +79,7 @@
 						    return that;
 						}
 
-						displayMap(commadot('<#if lat??>${lat}<#else>${result.location.y?c}</#if>'),commadot('<#if lng??>${lng}<#else>${result.location.x?c}</#if>'),"<strong>${preferedName}</strong><br/>Lat :<#if lat??>${lat}<#else><#if lng??>${lng}<#else>${result.location.x?c}</#if></#if><br/>long:<#if lng??>${lng}<#else>${result.location.x?c}</#if>");
+						displayMap(commadot('<#if lat??>${lat}<#else>${result.location.y?c}</#if>'),commadot('<#if lng??>${lng}<#else>${result.location.x?c}</#if>'),"<strong>${preferedName}</strong><br/>Lat :<#if lat??>${lat}<#else>${result.location.y?c}</#if><br/>long:<#if lng??>${lng}<#else>${result.location.x?c}</#if>");
 						//viewStreetPanorama(commadot('${result.location.y}'),commadot('${result.location.x}'));
 						</script>
 						</div>
