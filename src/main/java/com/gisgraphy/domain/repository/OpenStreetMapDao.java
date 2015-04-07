@@ -89,7 +89,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
     protected static final Logger logger = LoggerFactory
 	    .getLogger(OpenStreetMapDao.class);
 
-	protected static final int DEFAULT_DISTANCE = 500;
+	protected static final int DEFAULT_DISTANCE = 1500;
 	
     /**
      * Default constructor

@@ -20,9 +20,6 @@ com.gisgraphy.importer.ImporterManager importerManager = (com.gisgraphy.importer
 <div class="tip greentip"> <fmt:message key="import.fulltextEngineReachable"/> ! </div>
 <%  }%>
 
-<% if (com.gisgraphy.domain.valueobject.GisgraphyConfig.googleMapAPIKey == null || "".equals(com.gisgraphy.domain.valueobject.GisgraphyConfig.googleMapAPIKey.trim())) { %>
-   <div class="tip yellowtip"> <fmt:message key="config.googlemapapikey.empty" /></div>
-<% } %>
 <div class="separator"></div>
 <p><fmt:message key="mainMenu.message"/></p>
 
