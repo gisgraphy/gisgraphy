@@ -196,7 +196,7 @@ public interface IGisDao<T> extends IDao<T, java.lang.Long> {
      * @param name
      *                the name or zipcode of the GisFeature to search
      * @param includeAlternateNames
-     *                wether we search in the alternatenames too
+     *                whether we search in the alternatenames too
      * @return a list of gisFeatures of type of the class for the given text.
      *         the max list size is {@link GenericGisDao#MAX_FULLTEXT_RESULTS};
      * @see IGisFeatureDao#listAllFeaturesFromText(String, boolean)

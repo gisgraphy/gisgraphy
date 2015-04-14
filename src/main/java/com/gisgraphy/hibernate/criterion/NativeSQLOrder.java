@@ -60,7 +60,7 @@ public class NativeSQLOrder extends Order {
      * @param sql
      *                the sql code
      * @param ascending
-     *                wether we want to sort asc or desc
+     *                whether we want to sort asc or desc
      */
     public NativeSQLOrder(String sql, boolean ascending) {
 	super(null, ascending);

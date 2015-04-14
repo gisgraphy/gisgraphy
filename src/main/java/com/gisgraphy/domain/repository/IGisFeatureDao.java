@@ -45,7 +45,7 @@ public interface IGisFeatureDao extends IGisDao<GisFeature> {
      * @param name
      *                the name or zipcode of the GisFeature to search
      * @param includeAlternateNames
-     *                wether we search in the alternatenames and names
+     *                whether we search in the alternatenames and names
      * @return a list of gisFeatures of type of the class for the given text.
      *         the max list size is {@link GenericGisDao#MAX_FULLTEXT_RESULTS};
      * @see IGisDao#listFromText(String, boolean)
