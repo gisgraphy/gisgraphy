@@ -1544,7 +1544,7 @@ Actually, the webservice limits the number of results to 50, but it can be chang
 <br/>
 
 <div align="right"><a href="#top">[top]</a></div>
-<a name="streettype"/>
+<a name="streettype"/></a>
 <h3>street type</h3>
 Streets are group by type. Here are the possible values :
 <ul>
@@ -2026,6 +2026,7 @@ Here is a description of all the output fields :<br/>
 <tr><td>country_name</td><td>The name of the country the features belongs to</td><td>SHORT</td></tr>
 <tr><td>zipcode</td><td>The zipcodes</td><td>SHORT</td></tr>
 <tr><td>google_map_url</td><td>The URL to get the location on <a href="http://maps.google.com/">Google Map</a></td><td>MEDIUM</td></tr>
+<tr><td>amenity</td><td>Informations on category of OpenStreetMap POIs</td><td>MEDIUM</td></tr>
 <tr><td>openstreetmap_map_url</td><td>The URL to get the location on <a href="http://openstreetmap.org/">OpenStreetMap.org</a></td><td>MEDIUM</td></tr>
 <tr><td>yahoo_map_url</td><td>The URL to get the location on <a href="http://maps.yahoo.com/">Yahoo Map</a></td><td>MEDIUM</td></tr>
 <tr><td>one_way</td><td>whether the street is one way or not (only for placetype street)</td><td>MEDIUM</td></tr>
@@ -2080,6 +2081,8 @@ Here is a description of all the output fields :<br/>
 <tr><td>country_name_alternate</td><td>The alternate names of the country without specific language code</td><td>FULL</td></tr>
 <tr><td>country_name_alternate_<i>languagecode</i></td><td>The alternate names of the country for this <a href="http://en.wikipedia.org/wiki/List_of_languages">language code</a><br/>,
  If you specify link as a languagecode, you will get the Wikipedia link</td><td>FULL</td></tr>
+<tr><td>fullyQualifiedAddress</td><td>NOT USED YET</td><td>N/A</td></tr>
+ 
 </table>
 <br/><br/>
 
@@ -2371,7 +2374,7 @@ Here is a description of all the output fields, some fields are specific to cert
 <tr><td>elevation</td><td>The elevation in meters</td><td>All placetypes</td></tr>
 <tr><td>zipcode</td><td>The zipcodes (only for city and city subdivision), one node by zipcode</td><td>City,CitySubdivision, </td></tr>
 <tr><td>level</td><td>The level of the Administrative division (1-4)</td><td>Adm</td></tr>
-<tr><td>area</td><td>The area of the country</td><td>Country</td></tr>
+<tr><td>area</td><td>The area of the feature</td><td>Country</td></tr>
 
 <tr><td>tld</td><td>top-level domain name, (last part of an Internet domain name) of the country</td><td>Country</td></tr>
 <tr><td>capitalName</td><td>The Capital of the country</td><td>Country</td></tr>
@@ -2384,6 +2387,7 @@ Here is a description of all the output fields, some fields are specific to cert
 <tr><td>equivalentFipsCode</td><td>The <a href="http://en.wikipedia.org/wiki/FIPS_county_code">FIPS Code</a> of the country when no code are available</td><td>Country</td></tr>
 <tr><td>iso3166Alpha2Code</td><td><a href="http://en.wikipedia.org/wiki/ISO_3166">The iso 3166 Alpha 2 code</a> of the country</td><td>Country</td></tr>
 <tr><td>iso3166Alpha3Code</td><td><a href="http://en.wikipedia.org/wiki/ISO_3166">The iso 3166 Alpha 3 code</a> of the country</td><td>Country</td></tr>
+<tr><td>iso3166NumericCode</td><td><a href="http://en.wikipedia.org/wiki/ISO_3166">The iso 3166 numeric code</a> of the country</td><td>Country</td></tr>
 <tr><td>phonePrefix</td><td>The phone prefix of the country</td><td>Country</td></tr>
 <tr><td>postalCodeMask</td><td>The mask that all postal codes of the country matches</td><td>Country</td></tr>
 </table>
