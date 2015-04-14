@@ -1150,7 +1150,7 @@
                 },
                 "timezone": {
                     "type": "string",
-                    "description": "The timezone (e.g :Europe/Paris).MEDIUM style"
+                    "description": "The timezone (e.g :Europe/Paris)."
                 },
                 "fully_qualified_name": {
                     "type": "string",
