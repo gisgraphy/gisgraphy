@@ -102,7 +102,6 @@ To suggest a change or a correction to any part of the documentation, please sen
 <div class="indexlevel3"><a href="#reversegeocodingwebservice" />Web service</a></div>
 <div class="indexlevel3"><a href="#reversegeocodingserviceoutputfieldsdescription" />Output fields description</a></div>
 <div class="indexlevel3"><a href="#reversegeocodingservicejavaapi" />Java API</a></div>
-
 <div class="indexlevel2"><a href="#streetservice" />Street service</a></div>
 <div class="indexlevel3"><a href="#streetservicedescription" />Description</a></div>
 <div class="indexlevel3"><a href="#streetserviceoutputformat" />Output formats and languages</a></div>
@@ -1029,6 +1028,8 @@ This parameter will enable the parsing of the address by the address parser befo
 
 The geocoding web service uses a servlet to wrap the Java API. It links web parameters to a geocoding query and output the results to an HTTP feed.
 <br/>
+<strong>It is recommended to <a href="http://www2.gisgraphy.com/documentation/api/index.html?url=/documentation/gisgraphy-swagger.json">explore the API</a></strong> 
+<br/>
 All the parameters should be case insensitive. If you've got some problems with case, please <a href="/issue-tracking.html">report a bug</a>.
 
 <div class="tip yellowtip">
@@ -1258,6 +1259,8 @@ The following languages are supported :
 
 The reverse geocoding web service uses a servlet to wrap the Java API. It links web parameters to a reverse geocoding query and output the results via HTTP.
 <br/>
+<strong>It is recommended to <a href="http://www2.gisgraphy.com/documentation/api/index.html?url=/documentation/gisgraphy-swagger.json">explore the API</a></strong> 
+<br/>
 All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">notify a bug</a>.
 
 <div class="tip yellowtip">
@@ -1473,11 +1476,15 @@ IMPORTANT TIPS : If you need to do a fulltext search and you don't care about di
 
 <br/>
 <a name="distancestreet"></a>
-<li>Distance field : Whether (or not) we want the distance field to be output. This option is useful to improve the performance if we don't care about the distance (e.g : we search for name). Of course, the results won't be sorted by distance. If you use a checkbox in a form to indent the results, the value will be "on" or "off", so to simplify the use : the value for the web service can be "true" or "on".</li>
+<li>Distance field : Whether (or not) we want the distance field to be output. Default to true. This option is useful to improve the performance if we don't care about the distance (e.g : we search for name). Of course, the results won't be sorted by distance. If you use a checkbox in a form to indent the results, the value will be "on" or "off", so to simplify the use : the value for the web service can be "true" or "on".</li>
 <br/><br/>
 
 <a name="indentstreet"></a>
 <li>The indentation (optional) : indents the results. Default to false. Possible values are true|false. If you use a checkbox in a web form to indent the results, the value will be "on" or "off", so for a simple use : the value of indent, for the web service can be "true" or "on".</li>
+<br/>
+
+<a name="streettypestreet"></a>
+<li>the street type (optional) : allow to filter the search for a particular street type. The street type is one of the <a href="#streettype">street type</a> available</li>
 <br/>
 
 <div class="tip yellowtip">
@@ -1496,6 +1503,8 @@ IMPORTANT TIPS : If you need to do a fulltext search and you don't care about di
 <h3>Web service</h3>
 
 The street/ geocoding web service use a servlet to wrap the Java API. It links web parameters to a street query and output the results via HTTP.
+<br/>
+<strong>It is recommended to <a href="http://www2.gisgraphy.com/documentation/api/index.html?url=/documentation/gisgraphy-swagger.json">explore the API</a></strong> 
 <br/>
 All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">notify a bug</a>.
 
@@ -1631,10 +1640,16 @@ Here is a description of all the output fields,  :<br/>
 <tr><td>QTime</td><td>The execution time of the query in ms</td><td></td></tr>
 <tr><td>query</td><td>The name of the street that has been search (aka : name)</td><td></td></tr>
 <tr><td>distance</td><td>The distance between the point and the nearest point to the street in meters</td><td></td></tr>
-<tr><td>name</td><td>The name of the feature</td><td></td></tr>
+<tr><td>name</td><td>The name of the street</td><td></td></tr>
 <tr><td>gid</td><td>Unique id of the street, it is unique between GeoNames and OpenStreetMap</td><td></td></tr>
 <tr><td>openstreetmapId</td><td>OpenStreetMap unique id of the street</td><td></td></tr>
 <tr><td>isIn</td><td>Information on the city where the street is (depends on <a href="http://tagstat.hypercube.telascience.org/tagdetails.php?tag=is_in">OpenStreetMap 'is_in' field</a>), the city in general</td><td></td></tr>
+
+<tr><td>isIn</td><td>Information on the city where the street is (depends on <a href="http://tagstat.hypercube.telascience.org/tagdetails.php?tag=is_in">OpenStreetMap 'is_in' field</a>), the city in general</td><td></td></tr>
+<tr><td>isInPlace</td><td>Information on the place where the street is. Often something more precise than the city or municipality</td><td></td></tr>
+<tr><td>isInAdm</td><td>Information on the administrative division where the street is: region, district,...</td><td></td></tr>
+<tr><td>isInZip</td><td>Information on the zip where the street is. only one is output.</td><td></td></tr>
+<tr><td>length</td><td>the length of the street in meters</td><td></td></tr>
 <tr><td>streetType</td><td>The type of the street (see <a href="#streettype">street type list</a>)</td><td></td></tr>
 <tr><td>oneWay</td><td>Whether the street is a one way street or not</td><td></td></tr>
 <tr><td>lat</td><td>The latitude of the middle of the street(north-south)</td><td></td></tr>
@@ -1712,7 +1727,7 @@ You can output results to an OutputStream (useful for servlet use) or a String.
 <div align="right"><a href="#top">[top]</a></div>
 <h3>Description</h3>
 <br/>
-The full text service allows you to search for features / places / street.<br/>
+The fulltext service allows you to search for features / places / street. It allow to do <a href="#autosuggetion">autocompletion / autosuggetion</a><br/>
 you can
 <ul>
 	<li> Specify one or more words</li>
@@ -1934,6 +1949,8 @@ See the Gisgraphy leaflet plugin for more details.
 
 The full text web service use a servlet to wrap the Java API. It links web parameters to a fulltext query and output the results via HTTP.
 <br/>
+<strong>It is recommended to <a href="http://www2.gisgraphy.com/documentation/api/index.html?url=/documentation/gisgraphy-swagger.json">explore the API</a></strong> 
+<br/>
 All the parameters should be case insensitive. If you've got some problems with case, please <a href="/issue-tracking.html">report a bug</a>.
 
 <div class="tip yellowtip">
@@ -2018,7 +2035,7 @@ Here is a description of all the output fields :<br/>
 <tr><td>is_in_place</td><td>Information on the place where the street / POI is (quater, common place). Generally a place at a lower level than city</td><td>MEDIUM</td></tr>
 <tr><td>is_in_adm</td><td>Information of the administration division where the street / POI is.</td><td>MEDIUM</td></tr>
 <tr><td>is_in_zip</td><td>Information of the zipcode where the street / POI is (often fill for placetype street)</td><td>MEDIUM</td></tr>
-<tr><td>house_numbers</td><td>a list of all the house numbers and their coordinates (only for placetype street)</td><td>MEDIUM</td></tr>
+<tr><td>house_numbers</td><td>a list of all the house numbers <strong>and their coordinates</strong> (only for placetype street). house number are sorted</td><td>MEDIUM</td></tr>
 <tr><td>municipality</td><td>if the place is a municipality. it is usefull for geonames feature that <a href="http://forum.geonames.org/gforum/posts/list/1893.page">don't have concept of 'city' </a> but a populated place (that can be a quarter)</td><td>MEDIUM</td></tr>
 <tr><td>amenity</td><td>Informations on category of <a href="http://wiki.openstreetmap.org/wiki/Key:amenity">OpenStreetMap POIs</a></td><td>MEDIUM</td></tr>
 <tr><td>street_type</td><td>The type of the street (only for placetype street)</td><td>MEDIUM</td></tr>
@@ -2264,6 +2281,8 @@ See a full list and explanation of placetype : <a href="/placetype.htm">here</a>
 
 The geolocalisation web service uses a servlet to wrap the Java API. It links web parameters to a geoloc query and output the results via HTTP.
 <br/>
+<strong>It is recommended to <a href="http://www2.gisgraphy.com/documentation/api/index.html?url=/documentation/gisgraphy-swagger.json">explore the API</a></strong> 
+<br/>
 All the parameters should be case insensitive. if you've got some problems with case, please <a href="/issue-tracking.html">report a bug</a>.
 
 <div class="tip yellowtip">
@@ -2319,13 +2338,15 @@ Here is a description of all the output fields, some fields are specific to cert
 <tr><td>name</td><td>The name of the feature</td><td>All placetype</td></tr>
 <tr><td>asciiName</td><td>The ASCII name of the feature</td><td>All placetype</td></tr>
 <tr><td>feature_id</td><td>A unique id that identify the feature</td><td>All placetype</td></tr>
+<tr><td>openstreetmapId</td><td>OpenStreetMap unique id of the feature</td><td>All placetypes</td></tr>
 
 <tr><td>is_in</td><td>Information of the city where the street / POI is (depends on <a href="http://tagstat.hypercube.telascience.org/tagdetails.php?tag=is_in">openstreetmap 'is_in' field</a>), the city in general (only for placetype street)</td><td>MEDIUM</td></tr>
 <tr><td>is_in_place</td><td>Information of the place where the street / POI is (quarter, common place). Generally a place at a lower level than city</td><td>All placetype</td></tr>
 <tr><td>is_in_adm</td><td>Information of the administration division where the street / POI is.</td><td>All placetype</td></tr>
 <tr><td>is_in_zip</td><td>Information of the zipcode where the street / POI is </td><td>(often fill for placetype street)</td></tr>
-
-
+<tr><td>oneWay</td><td>Whether the street is a one way street or not</td><td>Street only</td></tr>
+<tr><td>streetType</td><td>the <a href="#streettype">type of the street</a></td><td>Street only</td></tr>
+<tr><td>length</td><td>length of the street in meters </td><td>Street only</td></tr>
 <tr><td>countryCode</td><td>The <a href="http://en.wikipedia.org/wiki/ISO_3166">ISO 3166</a> country code</td><td>All placetypes</td></tr>
 <tr><td>openstreetmap_map_url</td><td>The URL to get the location on <a href="http://openstreetmap.org/">OpenStreetMap.org</a>(since v3.0 beta3)</td><td>All placetypes</td></tr>
 <tr><td>google_map_url</td><td>The URL to get the location on <a href="http://maps.google.com/">Google Map</a></td><td>All placetype</td></tr>

@@ -1,0 +1,1745 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Since 2006, [Gisgraphy](http://www.gisgraphy.com) is a free, open source framework that offers the possibility to do geolocalisation and geocoding via Java APIs or REST webservices. Because geocoding is nothing without data, it provides an easy to use importer that will automatically download and import the necessary (free) data to your local database ([OpenStreetMap](http://www.openstreetmap.org/), [Geonames](http://www.geonames.org/) and [Quattroshapes](http://www.quattroshapes.com/): more than 100 million entries). You can also add your own data with the Web interface or the importer connectors provided. Gisgraphy is production ready, and has been designed to be scalable(load balanced), performant and used in other languages than just java : results can be output in XML, JSON, PHP, Python, Ruby, YAML, GeoRSS, and Atom. One of the most popular GPS tracking System (OpenGTS) also includes a Gisgraphy client...Gisgraphy is a framework. As a result it's flexible and powerful enough to be used in a lot of different use cases. [read more](http://www.gisgraphy.com)\n\n\nif you use the premium servers, you can use the api key to test the webservices\n",
+        "version": "4.0.0",
+        "title": "Gisgraphy webservices",
+        "termsOfService": "http://www.gisgraphy.com/free-access.htm | https://premium.gisgraphy.com/terms",
+        "contact": {
+            "name": "davidmasclet@gisgraphy.com"
+        },
+        "license": {
+            "name": "LGPL license V3.",
+            "url": "http://www.gisgraphy.com/license.html"
+        }
+    },
+    "host": "free.gisgraphy.com",
+    "basePath": "/",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/geocoding/geocode": {
+            "get": {
+                "tags": [
+                    "geocoding"
+                ],
+                "summary": "Geocode an address",
+                "description": "The Gisgraphy geocoding service allows you to transform postal addresses or other descriptions (a street, a city, a postal code, a country, or a combination) of a location into a (latitude, longitude) coordinate.",
+                "operationId": "geocode",
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "application/php",
+                    "application/ruby",
+                    "application/yaml",
+                    "application/python"
+                ],
+                "parameters": [
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "A postal address, structured or not, a street, a city, a postal code, a country, or a combination.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "The country where the place/address is. It is used to determine the postal address format and to improve performance. It will probably be optional in next version to ease the usability. The value must be the ISO 3166 Alpha 2 code of the country.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "postal",
+                        "in": "query",
+                        "description": "Whether the given address is a postal address. default to false. In other words, if the address follow the specification or if it is a well-formed address as it was written on an envelope. This parameter will enable the parsing of the address by the address parser before geocoding, this way, the relevance will be better because because if parsing is successful, we will know the meaning of each word. Note that you can also specify each field if you already know them.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The output format.",
+                        "enum": [
+                            "XML",
+                            "JSON",
+                            "PHP",
+                            "RUBY",
+                            "PYTHON",
+                            "YAML"
+                        ],
+                        "default": "XML",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1",
+                        "required": false,
+                        "default": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "The last pagination index. if < 1 or not specified, it will be set to startindex + 10. Max = 10 (can be changed)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 10
+                    },
+                    {
+                        "name": "callback",
+                        "in": "query",
+                        "description": "The callback method name (optional), use to wrap the content into a (alphanumeric) Javascript method. Works only for script output formats (JSON, PHP, Ruby, Python)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "indent",
+                        "in": "query",
+                        "description": "indents the results. Possible values are true or false (or on when used with the rest service. If you use a checkbox in a web form, to indent the results, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "default": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully processed",
+                        "schema": {
+                            "$ref": "#/definitions/AddressResultsDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Need auth. The API key parameter is missing or wrong, or doesn't correspond to any subscriptions"
+                    },
+                    "403": {
+                        "description": "Unhauthorize (auth will change nothing).Your IP is not allowed."
+                    },
+                    "412": {
+                        "description": "Missing parameter. Some parameters required for the webservices ar missing, please consult documentation"
+                    },
+                    "429": {
+                        "description": "Too many requests. You exceed the authorized rate"
+                    },
+                    "500": {
+                        "description": "Internal error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/reversegeocoding/reversegeocode": {
+            "get": {
+                "tags": [
+                    "reversegeocoding"
+                ],
+                "summary": "Reverse geocode an address",
+                "description": "The Reverse geocoding service allows to search for an address for a given GPS position.",
+                "operationId": "reversegeocode",
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "application/php",
+                    "application/ruby",
+                    "application/yaml",
+                    "application/python",
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "The latitude (north-south) for the location point to search around. The value is a floating number, between -90 and +90. It uses GPS coordinates",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "TThe longitude (east-West) for the location point to search around. The value is a floating number between -180 and +180. It uses GPS coordinates.",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The output format.",
+                        "enum": [
+                            "XML",
+                            "JSON",
+                            "PHP",
+                            "RUBY",
+                            "PYTHON",
+                            "YAML"
+                        ],
+                        "default": "XML",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1",
+                        "required": false,
+                        "default": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "The last pagination index. if < 1 or not specified, it will be set to startindex + 10. Max = 10 (can be changed)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 10
+                    },
+                    {
+                        "name": "callback",
+                        "in": "query",
+                        "description": "The callback method name (optional), use to wrap the content into a (alphanumeric) Javascript method. Works only for script output formats (JSON, PHP, Ruby, Python)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "indent",
+                        "in": "query",
+                        "description": "indents the results. Possible values are true or false (or on when used with the rest service. If you use a checkbox in a web form, to indent the results, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "default": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully processed",
+                        "schema": {
+                            "$ref": "#/definitions/AddressResultsDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Need auth. The API key parameter is missing or wrong, or doesn't correspond to any subscriptions"
+                    },
+                    "403": {
+                        "description": "Unhauthorize (auth will change nothing).Your IP is not allowed."
+                    },
+                    "412": {
+                        "description": "Missing parameter. Some parameters required for the webservices ar missing, please consult documentation"
+                    },
+                    "429": {
+                        "description": "Too many requests. You exceed the authorized rate"
+                    },
+                    "500": {
+                        "description": "Internal error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/street/find": {
+            "get": {
+                "tags": [
+                    "streetservice"
+                ],
+                "summary": "Geocode an address",
+                "description": "The street service allows you to search for street by name or GPS position (or both). you can : Specify GPS position, Give the beginning or a part of the name of the street (useful for autocompletion), Limit search to a specific type (e.g : Pedestrian, highway, residential, ... 25 types available), Limit search to a specified radius, Limit search to one way streets,",
+                "operationId": "streetsearch",
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "application/php",
+                    "application/ruby",
+                    "application/yaml",
+                    "application/python",
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "The latitude (north-south) for the location point to search around. The value is a floating number, between -90 and +90. It uses GPS coordinates",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "TThe longitude (east-West) for the location point to search around. The value is a floating number between -180 and +180. It uses GPS coordinates.",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "distance from the location point in meters we'd like to search around. The value is a number > 0 if it is not specify or incorrect.",
+                        "default": 10000,
+                        "required": false,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "oneway",
+                        "in": "query",
+                        "description": "whether the street should be a oneWay street (optional) : limit the search to the street that are one way street. If you use a checkbox in a form to indent the results, the value will be 'on' or 'off', so to simplify the use : the value for the web service can be 'true' or 'on'",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "distance",
+                        "in": "query",
+                        "description": "Whether (or not) we want the distance field to be output. This option is useful to improve the performance if we don't care about the distance (e.g : we search for name). Of course, the results won't be sorted by distance. If you use a checkbox in a form to indent the results, the value will be 'on' or 'off', so to simplify the use : the value for the web service can be 'true' or 'on'",
+                        "required": false,
+                        "default": true,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "streettype",
+                        "in": "query",
+                        "description": "filter search with a stret type",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The output format.",
+                        "enum": [
+                            "XML",
+                            "JSON",
+                            "PHP",
+                            "RUBY",
+                            "PYTHON",
+                            "YAML"
+                        ],
+                        "default": "XML",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1",
+                        "required": false,
+                        "default": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "The last pagination index. if < 1 or not specified, it will be set to startindex + 10. Max = 10 (can be changed)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 10
+                    },
+                    {
+                        "name": "callback",
+                        "in": "query",
+                        "description": "The callback method name (optional), use to wrap the content into a (alphanumeric) Javascript method. Works only for script output formats (JSON, PHP, Ruby, Python)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "indent",
+                        "in": "query",
+                        "description": "indents the results. Possible values are true or false (or on when used with the rest service. If you use a checkbox in a web form, to indent the results, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "default": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully processed",
+                        "schema": {
+                            "$ref": "#/definitions/StreetSearchResultsDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Need auth. The API key parameter is missing or wrong, or doesn't correspond to any subscriptions"
+                    },
+                    "403": {
+                        "description": "Unhauthorize (auth will change nothing).Your IP is not allowed."
+                    },
+                    "412": {
+                        "description": "Missing parameter. Some parameters required for the webservices ar missing, please consult documentation"
+                    },
+                    "429": {
+                        "description": "Too many requests. You exceed the authorized rate"
+                    },
+                    "500": {
+                        "description": "Internal error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/geoloc/search": {
+            "get": {
+                "tags": [
+                    "geolocalisation"
+                ],
+                "summary": "Geocode an address",
+                "description": "The geolocalisation service allows to search for features around a earth location. you can Specify GPS position, Limit the results to a specific place type (e.g : search all monuments around a point), Limit the results to a specified radius, Paginate the results, Tells if you want the output to be indented (currently, applies only for XML, not JSON for performance reasons. May change in next version)",
+                "operationId": "geoloc",
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "application/php",
+                    "application/ruby",
+                    "application/yaml",
+                    "application/python",
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "The latitude (north-south) for the location point to search around. The value is a floating number, between -90 and +90. It uses GPS coordinates",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "TThe longitude (east-West) for the location point to search around. The value is a floating number between -180 and +180. It uses GPS coordinates.",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "distance from the location point in meters we'd like to search around. The value is a number > 0 if it is not specify or incorrect.",
+                        "default": 10000,
+                        "required": false,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "distance",
+                        "in": "query",
+                        "description": "Whether (or not) we want the distance field to be output. This option is useful to improve the performance if we don't care about the distance (e.g : we search for name). Of course, the results won't be sorted by distance. If you use a checkbox in a form to indent the results, the value will be 'on' or 'off', so to simplify the use : the value for the web service can be 'true' or 'on'",
+                        "required": false,
+                        "default": true,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "placetype",
+                        "in": "query",
+                        "description": "filter search for a given placetype",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The output format.",
+                        "enum": [
+                            "XML",
+                            "JSON",
+                            "PHP",
+                            "RUBY",
+                            "PYTHON",
+                            "YAML"
+                        ],
+                        "default": "XML",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1",
+                        "required": false,
+                        "default": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "The last pagination index. if < 1 or not specified, it will be set to startindex + 10. Max = 10 (can be changed)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 10
+                    },
+                    {
+                        "name": "callback",
+                        "in": "query",
+                        "description": "The callback method name (optional), use to wrap the content into a (alphanumeric) Javascript method. Works only for script output formats (JSON, PHP, Ruby, Python)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "indent",
+                        "in": "query",
+                        "description": "indents the results.Default to false. Possible values are true or false (or on when used with the rest service. If you use a checkbox in a web form, to indent the results, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully processed",
+                        "schema": {
+                            "$ref": "#/definitions/GeolocResultsDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Need auth. The API key parameter is missing or wrong, or doesn't correspond to any subscriptions"
+                    },
+                    "403": {
+                        "description": "Unhauthorize (auth will change nothing).Your IP is not allowed."
+                    },
+                    "412": {
+                        "description": "Missing parameter. Some parameters required for the webservices ar missing, please consult documentation"
+                    },
+                    "429": {
+                        "description": "Too many requests. You exceed the authorized rate"
+                    },
+                    "500": {
+                        "description": "Internal error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/fulltext/search": {
+            "get": {
+                "tags": [
+                    "fulltext - autocomplete"
+                ],
+                "summary": "search for places by text around a GPS point",
+                "description": "The full text service allows you to search for features / places / street and do autocompletion . you can : Specify one or more words search on part of the name (auto completion / suggestion) Search for text or zip code Specify a GPS restriction (promote nearest, not sorted but has an impact on the score), Limit the results to a specific Language, Country, place type, Paginate the results, Specify the output verbosity, Tells if you want the output to be indented, Tells that all words are required or not, The search is case insensitive, use synonyms (Saint/st, ..), separator characters stripping, ...",
+                "operationId": "fulltxtsearch",
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "application/php",
+                    "application/ruby",
+                    "application/yaml",
+                    "application/python",
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "The searched text : The text for the query can be a zip code, a string or one or more strings",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "allwordsrequired",
+                        "in": "query",
+                        "description": "Whether the fulltext engine should considers all the words specified as required. Defaults to false (since v 4.0). possible values are true|false (or 'on' when used with the rest service)",
+                        "required": true,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "spellchecking",
+                        "in": "query",
+                        "description": "The spellchecking (optional) : whether some suggestions should be provided if no results are found",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "The latitude (north-south) for the location point to search around. The value is a floating number, between -90 and +90. It uses GPS coordinates",
+                        "required": false,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "TThe longitude (east-West) for the location point to search around. The value is a floating number between -180 and +180. It uses GPS coordinates.",
+                        "required": false,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "distance from the location point in meters we'd like to search around. The value is a number > 0 if it is not specify or incorrect.",
+                        "default": 10000,
+                        "required": false,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "suggest",
+                        "in": "query",
+                        "type": "boolean",
+                        "description": "If this parameter is set then it will search in part of the names of the street, place,.... It allow you to do auto completion auto suggestion. See the Gisgraphy leaflet plugin for more details. The JSON format will be forced if this parameter is true. See auto completion / suggestions engine for more details"
+                    },
+                    {
+                        "name": "style",
+                        "in": "query",
+                        "type": "string",
+                        "enum": [
+                            "SHORT",
+                            "MEDIUM",
+                            "LONG",
+                            "FULL"
+                        ],
+                        "default": "MEDIUM",
+                        "description": "The output style verbosity (optional) : Determines the output verbosity. 4 styles are available"
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "type": "string",
+                        "description": "limit the search to the specified ISO 3166 country code. Default : search in all countries",
+                        "required": false
+                    },
+                    {
+                        "name": "lang",
+                        "in": "query",
+                        "type": "string",
+                        "description": "The language code (optional) : The iso 639 Alpha2 or alpha3 Language Code. Some properties such as the AlternateName AdmNames and countryname belong to a certain language code. The language parameter can limit the output of those fields to a certain language (it only apply when style parameter='style') : If the language code does not exists or is not specified, properties with all the languages are retrieved If it exists, the properties with the specified language code, are retrieved",
+                        "required": false
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The output format.",
+                        "enum": [
+                            "XML",
+                            "JSON",
+                            "PHP",
+                            "RUBY",
+                            "PYTHON",
+                            "YAML",
+                            "ATOM",
+                            "GEORSS"
+                        ],
+                        "default": "XML",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "The first pagination index. Numbered from 1. If the number is < 1 or not specified, it will be set to the default value : 1",
+                        "required": false,
+                        "default": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "The last pagination index. if < 1 or not specified, it will be set to startindex + 10. Max = 10 (can be changed)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 10
+                    },
+                    {
+                        "name": "callback",
+                        "in": "query",
+                        "description": "The callback method name (optional), use to wrap the content into a (alphanumeric) Javascript method. Works only for script output formats (JSON, PHP, Ruby, Python)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "indent",
+                        "in": "query",
+                        "description": "indents the results.Default to false. Possible values are true or false (or on when used with the rest service. If you use a checkbox in a web form, to indent the results, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully processed",
+                        "schema": {
+                            "$ref": "#/definitions/FulltextResultsDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Need auth. The API key parameter is missing or wrong, or doesn't correspond to any subscriptions"
+                    },
+                    "403": {
+                        "description": "Unhauthorize (auth will change nothing).Your IP is not allowed."
+                    },
+                    "412": {
+                        "description": "Missing parameter. Some parameters required for the webservices ar missing, please consult documentation"
+                    },
+                    "429": {
+                        "description": "Too many requests. You exceed the authorized rate"
+                    },
+                    "500": {
+                        "description": "Internal error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/addressparser/parse": {
+            "get": {
+                "tags": [
+                    "addressparser - standardizer"
+                ],
+                "summary": "split a raw address into several parts",
+                "description": "The address parser and address standardizer, are part of the Gisgraphy project (free open source worldwide geocoder). Address parsing is the process of dividing a single address string into its individual component parts ",
+                "operationId": "addressparsing",
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "application/php",
+                    "application/ruby",
+                    "application/yaml",
+                    "application/python"
+                ],
+                "parameters": [
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "A postal address.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "The ISO 3166 Alpha 2 code of the country.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The output format.",
+                        "enum": [
+                            "XML",
+                            "JSON",
+                            "PHP",
+                            "RUBY",
+                            "PYTHON",
+                            "YAML"
+                        ],
+                        "default": "XML",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "callback",
+                        "in": "query",
+                        "description": "The callback method name (optional), use to wrap the content into a (alphanumeric) Javascript method. Works only for script output formats (JSON, PHP, Ruby, Python)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "indent",
+                        "in": "query",
+                        "description": "indents the results.Default to false. Possible values are true or false (or on when used with the rest service. If you use a checkbox in a web form, to indent the results, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "standardize",
+                        "in": "query",
+                        "description": "Whether the address should be standardized after parsing, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "geocode",
+                        "in": "query",
+                        "description": "UNUSED YET. Whether the address should be geocoded after parsing, the value will be 'on' or 'off', so for a simple use : the value of indent can be 'true' or 'on'",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully processed",
+                        "schema": {
+                            "$ref": "#/definitions/AddressResultsDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Need auth. The API key parameter is missing or wrong, or doesn't correspond to any subscriptions"
+                    },
+                    "403": {
+                        "description": "Unhauthorize (auth will change nothing).Your IP is not allowed."
+                    },
+                    "412": {
+                        "description": "Missing parameter. Some parameters required for the webservices ar missing, please consult documentation"
+                    },
+                    "429": {
+                        "description": "Too many requests. You exceed the authorized rate"
+                    },
+                    "500": {
+                        "description": "Internal error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "query"
+        }
+    },
+    "definitions": {
+        "AddressResultsDto": {
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "a message"
+                },
+                "numFound": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "how many result found"
+                },
+                "QTime": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "how long the query took"
+                },
+                "parsedAddress": {
+                    "$ref": "#/definitions/Address",
+                    "description": "the parsed address"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                }
+            }
+        },
+        "Address": {
+            "properties": {
+			"nameAlternatesLocalized": {
+      				"type": "object",
+     				 "additionalProperties": {
+	       				 "type": "array",
+                   			 "items": {
+                        		 "type": "string"
+                    			  }
+      				}
+    			},
+			"adm1NameAlternatesLocalized": {
+      				"type": "object",
+     				 "additionalProperties": {
+	       				 "type": "array",
+                   			 "items": {
+                        		 "type": "string"
+                    			  }
+      				}
+    			},
+			"adm2NameAlternatesLocalized": {
+      				"type": "object",
+     				 "additionalProperties": {
+	       				 "type": "array",
+                   			 "items": {
+                        		 "type": "string"
+                    			  }
+      				}
+    			},
+			"countryNameAlternatesLocalized": {
+      				"type": "object",
+     				 "additionalProperties": {
+	       				 "type": "array",
+                   			 "items": {
+                        		 "type": "string"
+                    			  }
+      				}
+    			},
+		"geocodinglevel":{
+			 "type": "string",
+			 "enum": [
+       				 "NONE","HOUSE_NUMBER","STREET","CITY","STATE","COUNTRY"
+      			]
+		},
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "An internal ID to identify the address"
+                },
+                "lng": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The longitude of the address"
+                },
+                "lat": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The latitude of the address"
+                },
+                "confidence": {
+                    "type": "string",
+                    "description": "An indicator that mesure how the parser is confident for the result"
+                },
+                "distance": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The distance of the address for the given parameter location in the query"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the place, it is null in case of address but filled if common place. Name is different than recipient name"
+                },
+                "recipientName": {
+                    "type": "string",
+                    "description": "Name of the organisation or person at the given address"
+                },
+                "houseNumber": {
+                    "type": "string",
+                    "description": "Official number assigned to an address by the municipality, several languages supported"
+                },
+                "houseNumberInfo": {
+                    "type": "string",
+                    "description": "All information that give extra information on the house number"
+                },
+                "streetName": {
+                    "type": "string",
+                    "description": "The official name of the street or the ordinal number"
+                },
+                "streetType": {
+                    "type": "string",
+                    "description": "The type of the street"
+                },
+                "city": {
+                    "type": "string",
+                    "description": "The city or locality, a small town or village name sometimes is included in an address when the Delivery Point is outside the boundary of the main Post Town that serves it."
+                },
+                "citySubdivision": {
+                    "type": "string",
+                    "description": "A sub division of a city"
+                },
+                "dependentLocality": {
+                    "type": "string",
+                    "description": "'Sub' city atached to a big city"
+                },
+                "postTown": {
+                    "type": "string",
+                    "description": "a city is a required part of all postal addresses in the United Kingdom"
+                },
+                "prefecture": {
+                    "type": "string",
+                    "description": "prefecture of China"
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The state or county when applicable, can be fullname or abbreviation"
+                },
+                "district": {
+                    "type": "string",
+                    "description": "The district, mainly use for Russia"
+                },
+                "quarter": {
+                    "type": "string",
+                    "description": "A section of an urban settlement"
+                },
+                "zipCode": {
+                    "type": "string",
+                    "description": "The zip or post code"
+                },
+                "extraInfo": {
+                    "type": "string",
+                    "description": "Informations on floor, unit, and sometimes POBOX,..."
+                },
+                "suiteType": {
+                    "type": "string",
+                    "description": "Informations on the unit, mainly used and filled by standardizer"
+                },
+                "suiteNumber": {
+                    "type": "string",
+                    "description": "Informations on the unit, mainly used and filled by standardizer"
+                },
+                "POBox": {
+                    "type": "string",
+                    "description": "Post office box, Boite postale, Casilla de Correo,..."
+                },
+                "POBoxInfo": {
+                    "type": "string",
+                    "description": "extra info on post office box, Boite postale, Casilla de Correo,.."
+                },
+                "POBoxAgency": {
+                    "type": "string",
+                    "description": "Agency where the office box, Boite postale, Casilla de Correo is"
+                },
+                "preDirection": {
+                    "type": "string",
+                    "description": "The cardinal direction before the name of the street"
+                },
+                "postDirection": {
+                    "type": "string",
+                    "description": "The cardinal direction after the name of the street"
+                },
+                "streetNameIntersection": {
+                    "type": "string",
+                    "description": "The official name of the intersection street"
+                },
+                "streetTypeIntersection": {
+                    "type": "string",
+                    "description": "The type of the intersection street"
+                },
+                "preDirectionIntersection": {
+                    "type": "string",
+                    "description": "The cardinal direction before the name of the intersection street"
+                },
+                "postDirectionIntersection": {
+                    "type": "string",
+                    "description": "The cardinal direction after the name of the intersection street"
+                },
+                "civicNumberSuffix": {
+                    "type": "string",
+                    "description": "The number that follows the house number (Canada only)"
+                },
+                "floor": {
+                    "type": "string",
+                    "description": "The floor in an address, not a floor number in a unit (Brasilia only)"
+                },
+                "sector": {
+                    "type": "string",
+                    "description": "The sector in an address (Brasilia only)"
+                },
+                "quadrant": {
+                    "type": "string",
+                    "description": "The quadrant in an address (Brasilia only)"
+                },
+                "block": {
+                    "type": "string",
+                    "description": "The block in an address (Brasilia only) the block in austria, singapore,... address"
+                },
+                "lote": {
+                    "type": "string",
+                    "description": "Lote in Brazilian address"
+                },
+                "country": {
+                    "type": "string",
+                    "description": "The country name"
+                },
+                "countrycode": {
+                    "type": "string",
+                    "description": "The countrycode given in the request"
+                },
+                "ward": {
+                    "type": "string",
+                    "description": "Ward in japanese address"
+                }
+            }
+        },
+        "FulltextResultsDto": {
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "a message"
+                },
+                "numFound": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "how many results were found whatever the pagination"
+                },
+                "QTime": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "how long the query took"
+                },
+                "resultsSize": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "how many results are return"
+                },
+                "maxScore": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "the max score value accross all the results found"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SolrResponseDto"
+                    }
+                }
+            }
+        },
+        "SolrResponseDto": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the feature"
+                },
+                "score": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "a number that indicates the relevance of the result"
+                },
+                "name_alternates": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The alternate names of the feature that without specific language code"
+                },
+                "feature_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "A unique id that identify the feature"
+                },
+                "feature_class": {
+                    "type": "string",
+                    "description": "The feature Class."
+                },
+                "feature_code": {
+                    "type": "string",
+                    "description": "The feature Code."
+                },
+                "name_ascii": {
+                    "type": "string",
+                    "description": "The ASCII name"
+                },
+                "elevation": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Elevation in meters"
+                },
+                "gtopo30": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Average elevation of 30'x30' (ca 900mx900m) area in meters"
+                },
+                "timezone": {
+                    "type": "string",
+                    "description": "The timezone (e.g :Europe/Paris).MEDIUM style"
+                },
+                "fully_qualified_name": {
+                    "type": "string",
+                    "description": "A name of the form : (adm1Name et adm2Name are printed) Paris, Département de Ville-De-Paris, Ile-De-France, (FR)"
+                },
+                "placetype": {
+                    "type": "string",
+                    "description": "The place Type of the Feature"
+                },
+                "population": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "How many people live in this feature"
+                },
+                "lat": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The latitude (north-south)"
+                },
+                "lng": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The longitude (east-West)"
+                },
+                "adm1_code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 1"
+                },
+                "adm2_code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 2"
+                },
+                "adm3_code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 3"
+                },
+                "adm4_code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 4"
+                },
+                "continent": {
+                    "type": "string",
+                    "description": "The continent the country belongs (only for country placetype)"
+                },
+                "currency_code": {
+                    "type": "string",
+                    "description": "The ISO 4217 Currency from the curencycode (only for country placetype)"
+                },
+                "currency_name": {
+                    "type": "string",
+                    "description": "The name of the currency of the country (only for country placetype)"
+                },
+                "fips_code": {
+                    "type": "string",
+                    "description": "The FIPS Code of the country (only for country placetype)"
+                },
+                "isoalpha2_country_code": {
+                    "type": "string",
+                    "description": "The ISO 3166 alpha 2 code of the country (only for country placetype)"
+                },
+                "isoalpha3_country_code": {
+                    "type": "string",
+                    "description": "The ISO 3166 alpha 3 code of the country (only for country placetype)"
+                },
+                "postal_code_mask": {
+                    "type": "string",
+                    "description": "The mask that postal codes should verify. e.g : ##### (only for country placetype)"
+                },
+                "postal_code_regex": {
+                    "type": "string",
+                    "description": "The regular expression that postal codes should verify (only for country placetype)"
+                },
+                "phone_prefix": {
+                    "type": "string",
+                    "description": "The phone prefix of the country. e.g : +33 .(only for country placetype)"
+                },
+                "spoken_languages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of languages spoken in the country (only for country placetype)"
+                },
+                "tld": {
+                    "type": "string",
+                    "description": "Top level domain of the country (only for country placetype)"
+                },
+                "capital_name": {
+                    "type": "string",
+                    "description": "Name of the capital of the country(only for country placetype)"
+                },
+                "area": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "Area of the country in m² (only for country placetype)"
+                },
+                "level": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Level of the Adm 1 , 2, 3, or 4(only for Adm placetype)"
+                },
+                "adm1_name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 1"
+                },
+                "adm1_names_alternate": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The alternate names of the administrative division of level 1 without specific language code"
+                },
+                "adm2_name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 2"
+                },
+                "adm2_names_alternate": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The alternate names of the administrative division of level 2 without specific language code"
+                },
+                "adm3_name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 3"
+                },
+                "adm4_name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 4"
+                },
+                "zipcodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The zipcodes"
+                },
+                "country_code": {
+                    "type": "string",
+                    "description": "The ISO 3166 country code"
+                },
+                "country_name": {
+                    "type": "string",
+                    "description": "The name of the country the features belongs to"
+                },
+                "country_names_alternate": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The alternate names of the country without specific language code"
+                },
+                "country_flag_url": {
+                    "type": "string",
+                    "description": "The relative URL to get the country flag image"
+                },
+                "google_map_url": {
+                    "type": "string",
+                    "description": "The URL to get the location on Google Map"
+                },
+                "yahoo_map_url": {
+                    "type": "string",
+                    "description": "The URL to get the location on Yahoo Map"
+                },
+                "openstreetmap_map_url": {
+                    "type": "string",
+                    "description": "The URL to get the location on OpenStreetMap.org"
+                },
+                "one_way": {
+                    "type": "boolean",
+                    "description": "whether the street is one way or not (only for placetype street)"
+                },
+                "length": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The length of the street (only for placetype street)"
+                },
+                "street_type": {
+                    "type": "string",
+                    "description": "The type of the street (only for placetype street)"
+                },
+                "openstreetmap_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The OpenStreetMap unique id of the street (only for placetype street)"
+                },
+                "is_in": {
+                    "type": "string",
+                    "description": "Information on the city where the street / POI is (depends on OpenStreetMap 'is_in' field), the city in general (only for placetype street)"
+                },
+                "is_in_place": {
+                    "type": "string",
+                    "description": "Information on the place where the street / POI is (quater, common place). Generally a place at a lower level than city"
+                },
+                "is_in_adm": {
+                    "type": "string",
+                    "description": "Information of the administration division where the street / POI is."
+                },
+                "is_in_zip": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Information of the zipcode where the street / POI is (often fill for placetype street)"
+                },
+                "fully_qualified_address": {
+                    "type": "string",
+                    "description": "NOT USED YET"
+                },
+                "house_numbers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/HouseNumberDto"
+                    },
+                    "description": "a list of all the house numbers sorted and their coordinates (only for placetype street)"
+                },
+                "municipality": {
+                    "type": "boolean",
+                    "description": "if the place is a municipality. it is usefull for geonames feature that don't have concept of 'city' but a populated place (that can be a quarter)"
+                },
+                "amenity": {
+                    "type": "string",
+                    "description": "Informations on category of OpenStreetMap POIs"
+                }
+            }
+        },
+        "HouseNumberDto": {
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The lat / long coordinate"
+                },
+                "number": {
+                    "type": "string",
+                    "description": "the house number value"
+                }
+            }
+        },
+        "GeolocResultsDto": {
+            "properties": {
+                "numFound": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "The number of results display with this query (it takes the pagination into account)"
+                },
+                "QTime": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The execution time of the query in ms"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GisFeatureDistance"
+                    }
+                },
+                "error": {
+                    "type": "string",
+                    "description": "A String only present if an error occured (e.g : empty Latitude or longitude)"
+                }
+            }
+        },
+        "GisFeatureDistance": {
+            "properties": {
+                "distance": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The distance beetween the point and the gisFeature in meters"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the feature"
+                },
+                "adm1Code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 1"
+                },
+                "adm2Code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 2"
+                },
+                "adm3Code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 3"
+                },
+                "adm4Code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 4"
+                },
+                "adm5Code": {
+                    "type": "string",
+                    "description": "The internal code for the administrative division of level 5"
+                },
+                "adm1Name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 1"
+                },
+                "adm2Name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 2"
+                },
+                "adm3Name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 3"
+                },
+                "adm4Name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 4"
+                },
+                "adm5Name": {
+                    "type": "string",
+                    "description": "The name of the administrative division of level 5"
+                },
+                "asciiName": {
+                    "type": "string",
+                    "description": "The ASCII name of the feature"
+                },
+                "countryCode": {
+                    "type": "string",
+                    "description": "The ISO 3166 country code"
+                },
+                "elevation": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "The elevation in meters"
+                },
+                "featureClass": {
+                    "type": "string",
+                    "description": "The feature Class."
+                },
+                "featureCode": {
+                    "type": "string",
+                    "description": "The feature Code."
+                },
+                "featureId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "A unique id that identify the feature"
+                },
+                "gtopo30": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Average elevation of 30'x30' (ca 900mx900m) area in meters"
+                },
+                "population": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "How many people lives in this feature"
+                },
+                "timezone": {
+                    "type": "string",
+                    "description": "The time zone (e.g : Europe/Paris)"
+                },
+                "lat": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The latitude (north-south)"
+                },
+                "lng": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The longitude (east-West)"
+                },
+                "placeType": {
+                    "type": "string",
+                    "description": "The Type of Feature see faq"
+                },
+                "oneWay": {
+                    "type": "boolean",
+                    "description": "Wether the street is oneway or not"
+                },
+                "streetType": {
+                    "type": "string",
+                    "description": "the type of the street"
+                },
+                "openstreetmapId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "the id of the openstreetmap element"
+                },
+                "length": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "length of the street"
+                },
+                "zipCodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The zipcodes (only for city and city subdivision), one node by zipcode"
+                },
+                "google_map_url": {
+                    "type": "string",
+                    "description": "The URL to get the location on Google Map"
+                },
+                "yahoo_map_url": {
+                    "type": "string",
+                    "description": "The URL to get the location on Yahoo Map"
+                },
+                "openstreetmap_map_url": {
+                    "type": "string",
+                    "description": "The URL to get the location on Openstreetmap Map"
+                },
+                "country_flag_url": {
+                    "type": "string",
+                    "description": "The relative URL to get the country flag image"
+                },
+                "level": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "The level of the Administrative division (1-5)"
+                },
+                "area": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The area of the feature"
+                },
+                "tld": {
+                    "type": "string",
+                    "description": "top-level domain name, (last part of an Internet domain name) of the country"
+                },
+                "capitalName": {
+                    "type": "string",
+                    "description": "The Capital of the country"
+                },
+                "continent": {
+                    "type": "string",
+                    "description": "The continent the country belongs"
+                },
+                "postalCodeRegex": {
+                    "type": "string",
+                    "description": "The regexp that all zipcode/postalcode of the country matches"
+                },
+                "currencyCode": {
+                    "type": "string",
+                    "description": "The Currency code (ISO_4217) of the country"
+                },
+                "currencyName": {
+                    "type": "string",
+                    "description": "The Currency name of the country"
+                },
+                "equivalentFipsCode": {
+                    "type": "string",
+                    "description": "The fips Code of the country when no code are available"
+                },
+                "fipsCode": {
+                    "type": "string",
+                    "description": "The fips Code of the country"
+                },
+                "iso3166Alpha2Code": {
+                    "type": "string",
+                    "description": "The iso 3166 Alpha 2 code of the country"
+                },
+                "iso3166Alpha3Code": {
+                    "type": "string",
+                    "description": "The iso 3166 Alpha 3 code of the country"
+                },
+                "iso3166NumericCode": {
+                    "type": "string",
+                    "description": "The iso 3166 numeric code of the country"
+                },
+                "phonePrefix": {
+                    "type": "string",
+                    "description": "The phone prefix of the country"
+                },
+                "postalCodeMask": {
+                    "type": "string",
+                    "description": "The mask that all postal code of the country matches"
+                },
+                "isIn": {
+                    "type": "string",
+                    "description": "Information of the city where the street / POI is (depends on openstreetmap 'is_in' field), the city in general (only for placetype street)"
+                },
+                "isInPlace": {
+                    "type": "string",
+                    "description": "Information of the place where the street / POI is (quarter, common place). Generally a place at a lower level than city"
+                },
+                "isInAdm": {
+                    "type": "string",
+                    "description": "Information of the administration division where the street / POI is. "
+                },
+                "isInZip": {
+                    "type": "string",
+                    "description": "Information of the zipcode where the street / POI is\""
+                },
+                "amenity": {
+                    "type": "string",
+                    "description": "Informations on category of OpenStreetMap POIs"
+                },
+                "fullyQualifiedAddress": {
+                    "type": "string",
+                    "description": "NOT USED YET"
+                }
+            }
+        },
+        "StreetSearchResultsDto": {
+            "properties": {
+                "numFound": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "The number of results display with this query (it takes the pagination into account)"
+                },
+                "QTime": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The execution time of the query in ms"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StreetDistance"
+                    }
+                },
+                "error": {
+                    "type": "string",
+                    "description": "A String only present if an error occured (e.g : empty Latitude or longitude)"
+                }
+            }
+        },
+        "StreetDistance": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the street"
+                },
+                "distance": {
+                    "type": "number",
+                    "description": "The distance between the point and the nearest point to the street in meters"
+                },
+                "gid": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Unique id of the street, it is unique between GeoNames and OpenStreetMap"
+                },
+                "openstreetmapId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "OpenStreetMap unique id of the street"
+                },
+                "streetType": {
+                    "type": "string",
+                    "description": "The type of the street (see street type list)"
+                },
+                "oneWay": {
+                    "type": "boolean",
+                    "description": "Whether the street is a one way street or not"
+                },
+                "countryCode": {
+                    "type": "string",
+                    "description": "The ISO 3166 country code"
+                },
+                "length": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "length of the street in meters"
+                },
+                "lat": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The latitude of the middle of the street(north-south)"
+                },
+                "lng": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The longitude of the middle of the street(east-west)"
+                },
+                "isIn": {
+                    "type": "string",
+                    "description": "Information on the city where the street is (depends on OpenStreetMap 'is_in' field), the city in general"
+                },
+                "isInPlace": {
+                    "type": "string",
+                    "description": "Information on the place where the street is (quater, common place). Generally a place at a lower level than city"
+                },
+                "isInAdm": {
+                    "type": "string",
+                    "description": "Information of the administration division where the street is."
+                },
+                "isInZip": {
+                    "type": "string",
+                    "description": "Information of the zipcode where the street / POI is (often fill for placetype street)"
+                },
+                "fullyQualifiedAddress": {
+                    "type": "string",
+                    "description": "NOT USED YET"
+                }
+            }
+        }
+    }
+}
