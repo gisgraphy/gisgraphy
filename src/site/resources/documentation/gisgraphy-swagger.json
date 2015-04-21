@@ -258,7 +258,7 @@
                     "streetservice"
                 ],
                 "summary": "Geocode an address",
-                "description": "The street service allows you to search for street by name or GPS position (or both). you can : Specify GPS position, Give the beginning or a part of the name of the street (useful for autocompletion), Limit search to a specific type (e.g : Pedestrian, highway, residential, ... 25 types available), Limit search to a specified radius, Limit search to one way streets,",
+                "description": "The street service allows you to search for street by GPS position. You can : Specify GPS position, Give the beginning or a part of the name of the street (useful for autocompletion), Limit search to a specific type (e.g : Pedestrian, highway, residential, ... 25 types available), Limit search to a specified radius, Limit search to one way streets,",
                 "operationId": "streetsearch",
                 "produces": [
                     "application/json",
