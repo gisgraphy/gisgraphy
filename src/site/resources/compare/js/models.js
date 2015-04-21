@@ -34,7 +34,7 @@ var Yonder = Yonder || {};
               format: 'json',
               country: $('#countrylist').val()
             },
-            url: 'http://185.13.36.133/geocoding/geocode',
+            url: 'http://services.gisgraphy.com/geocoding/geocode',
             success: function (res) {
               if (res.numFound && res.numFound > 0) {
                   model.set(model.parse(res.result[0]));

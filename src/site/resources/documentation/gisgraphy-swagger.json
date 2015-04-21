@@ -723,7 +723,7 @@
                     "addressparser - standardizer"
                 ],
                 "summary": "split a raw address into several parts",
-                "description": "The address parser and address standardizer, are part of the Gisgraphy project (free open source worldwide geocoder). Address parsing is the process of dividing a single address string into its individual component parts ",
+                "description": "The address parser and address standardizer, are part of the Gisgraphy project (free open source worldwide geocoder). Address parsing is the process of dividing a single address string into its individual component parts. Please visit [http://www.address-parser.net](http://www.address-parser.net) for more details ",
                 "operationId": "addressparsing",
                 "produces": [
                     "application/json",
