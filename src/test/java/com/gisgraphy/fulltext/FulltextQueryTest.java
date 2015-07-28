@@ -265,6 +265,9 @@ public class FulltextQueryTest {
 	
 	query.withQuery("village\\");
 	Assert.assertEquals("village", query.getQuery());
+	
+	query.withQuery("Gamail \\");
+	Assert.assertEquals("Gamail", query.getQuery());
     }
     
     @Test
