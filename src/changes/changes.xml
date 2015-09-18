@@ -541,6 +541,8 @@
 				GeocodingLevel is not correct in geocoding ws(http://code.google.com/p/gisgraphy/issues/detail?id=19) 
 			</action>
 			
+			
+			<release version="4.0" date="2012-01-03">
 			<action dev="David Masclet" type="update">
 				Option useAddressParserWhenGeocoding is disable by default
 			</action>
@@ -774,6 +776,19 @@
 			<action dev="David Masclet" type="add">
 				migrate to github.
 			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add cityId to the openstreetmap entity
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				Add cityId to the openstreetmap entity
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				import suburb and neighboorhood
+			</action>
+			
 			
 			
 			</release>

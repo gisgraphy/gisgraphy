@@ -284,15 +284,15 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 
     }
     
-    protected boolean isACitySubdivision(String placeType) {
-    	if ("neighbourhood".equalsIgnoreCase(placeType) ||
-    			"quarter".equalsIgnoreCase(placeType)||
-    			"isolated_dwelling".equalsIgnoreCase(placeType)||
-    			"suburb".equalsIgnoreCase(placeType)||
-    			"city_block".equalsIgnoreCase(placeType) ||
-    			"borough".equalsIgnoreCase(placeType)){
-    		return true;
-    	}
+	protected boolean isACitySubdivision(String placeType) {
+		if ("neighbourhood".equalsIgnoreCase(placeType)
+				|| "quarter".equalsIgnoreCase(placeType)
+				|| "isolated_dwelling".equalsIgnoreCase(placeType)
+				|| "suburb".equalsIgnoreCase(placeType)
+				|| "city_block".equalsIgnoreCase(placeType)
+				|| "borough".equalsIgnoreCase(placeType)) {
+			return true;
+		}
 		return false;
 	}
 
