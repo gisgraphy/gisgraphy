@@ -141,6 +141,11 @@ public class QuattroshapesSimpleImporter extends AbstractSimpleImporterProcessor
 
 
 		for (GisFeature gisFeature:gisFeatures){
+			if (gisFeature.getShape()!=null){
+				//the quattroshape data are less relevant than openstreetmap one, we don't update the shape 
+				//if it is already filled
+				continue;
+			}
 			if (gisFeatures.size()==1 || shapeContainsPoint(shape, gisFeature)){
 				//if more than one feature match, we look at the one included in the shape
 				gisFeature.setShape(shape);

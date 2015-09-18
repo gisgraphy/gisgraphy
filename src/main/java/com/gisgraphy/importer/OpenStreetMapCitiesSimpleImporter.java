@@ -183,7 +183,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	    }
 	}
 	GisFeature city=null;
-	if (StringUtil.containsDigit(name)){
+	if (StringUtil.containsDigit(name) || isACitySubdivision(fields[8])){
 		SolrResponseDto  nearestCity = getNearestCity(location, name, countrycode,Constants.ONLY_CITYSUBDIVISION_PLACETYPE);
 		if (nearestCity != null ){
 			city = citySubdivisionDao.getByFeatureId(nearestCity.getFeature_id());
@@ -284,7 +284,19 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 
     }
     
-    /**
+    protected boolean isACitySubdivision(String placeType) {
+    	if ("neighbourhood".equalsIgnoreCase(placeType) ||
+    			"quarter".equalsIgnoreCase(placeType)||
+    			"isolated_dwelling".equalsIgnoreCase(placeType)||
+    			"suburb".equalsIgnoreCase(placeType)||
+    			"city_block".equalsIgnoreCase(placeType) ||
+    			"borough".equalsIgnoreCase(placeType)){
+    		return true;
+    	}
+		return false;
+	}
+
+	/**
      * @param fields
      *                The array to process
      * @return a string which represent a human readable string of the Array but without shape because it is useless in logs

@@ -158,7 +158,7 @@ goToStep(${step});
 			<div class="sectionHeader"><@s.text name="import.con.check.uncheckable"/></div>
 				<div class="tip yellowtip">
 					<@s.text name="import.free.disk.space">
-						<@s.param>70 GO</@s.param>
+						<@s.param>260 GO</@s.param>
 					</@s.text>
 				</div>
 			<div class="navigationtoolbar">

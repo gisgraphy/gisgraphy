@@ -476,6 +476,78 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	}
 	
 	@Test
+	public void processWithknownCityAndAdm_citySubdivision_placetype(){
+		final SolrResponseDto solrResponseDtoCity = EasyMock.createMock(SolrResponseDto.class);
+		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L);
+
+		EasyMock.replay(solrResponseDtoCity);
+		
+		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.replay(solrResponseDtoAdm);
+		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
+			@Override
+			protected SolrResponseDto getNearestCity(Point location, String name, String countryCode,Class[]placetype) {
+				if (!name.equals("paris") || !countryCode.equals("FR") || placetype != Constants.ONLY_CITYSUBDIVISION_PLACETYPE){
+					throw new RuntimeException("the function is not called with the correct parameter");
+				}
+				return solrResponseDtoCity;
+			};
+			
+			@Override
+			protected SolrResponseDto getAdm(String name, String countryCode) {
+				if (!name.equals("Europe") || !countryCode.equals("FR")){
+					throw new RuntimeException("the function is not called with the correct parameter");
+				}
+				return solrResponseDtoAdm;
+			}
+			
+			@Override
+			void savecity(GisFeature city) {
+				super.savecity(city);
+				Assert.assertEquals("neighbourhood", city.getAmenity());
+				Assert.assertEquals("When a city is already present, we keep the name","initial name", city.getName());
+				Assert.assertEquals("When a city is already present, we keep the countrycode","DE", city.getCountryCode());
+				Assert.assertEquals("When a city is already present, we keep the lat",20D, city.getLatitude().doubleValue(),0.01);
+				Assert.assertEquals("When a city is already present, we keep the long",30D, city.getLongitude().doubleValue(),0.01);
+				
+				Assert.assertEquals(1234L, city.getOpenstreetmapId().longValue());
+				Assert.assertEquals(1000000L, city.getPopulation().longValue());
+				Assert.assertEquals("admName", city.getAdm().getName());
+				Assert.assertEquals("5678", city.getZipCodes().iterator().next().getCode());
+			}
+		};
+		
+		CitySubdivisionDao citySubdivisionDao = EasyMock.createMock(CitySubdivisionDao.class);
+		CitySubdivision city=new CitySubdivision();
+		city.setName("initial name");
+		city.setCountryCode("DE");
+		city.setLocation(GeolocHelper.createPoint(30D, 20D));
+		city.setFeatureId(123L);
+		EasyMock.expect(citySubdivisionDao.getByFeatureId(123L)).andReturn(city);
+		EasyMock.expect(citySubdivisionDao.save(city)).andReturn(city);
+		EasyMock.replay(citySubdivisionDao);
+		importer.setCitySubdivisionDao(citySubdivisionDao);
+		
+		
+		IAdmDao admDao = EasyMock.createMock(IAdmDao.class);
+		Adm adm = new Adm(2);
+		adm.setName("admName");
+		EasyMock.expect(admDao.getByFeatureId(4356L)).andReturn(adm);
+		EasyMock.replay(admDao);
+		importer.setAdmDao(admDao);
+		
+		importer.setMunicipalityDetector(new MunicipalityDetector());
+		
+		String line= "N\t1234\tparis\tFR\t5678\t1000000\t0101000020E61000004070F0E0825F30405F65C80CAF1A4840\t\tneighbourhood\tEurope\tParis2";
+		
+		importer.processData(line);
+		
+		EasyMock.verify(citySubdivisionDao);
+		EasyMock.verify(admDao);
+	}
+	
+	@Test
 	public void processWithknownCityAndAdm_CityThatIsAlreadyAMunicipalityShouldAlwaysBe(){
 		final SolrResponseDto solrResponseDtoCity = EasyMock.createMock(SolrResponseDto.class);
 		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L);
@@ -675,6 +747,19 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.verify(cityDao);
 		EasyMock.verify(admDao);
 		EasyMock.verify(idGenerator);
+	}
+	
+	@Test
+	public void isACitySubdivision(){
+		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
+		Assert.assertTrue(importer.isACitySubdivision("neighbourhood"));
+		Assert.assertTrue("the placetypeshould be case insensitive",importer.isACitySubdivision("NEIghbourhood"));
+		Assert.assertTrue(importer.isACitySubdivision("quarter"));
+		Assert.assertTrue(importer.isACitySubdivision("isolated_dwelling"));
+		Assert.assertTrue(importer.isACitySubdivision("suburb"));
+		Assert.assertTrue(importer.isACitySubdivision("city_block"));
+		Assert.assertTrue(importer.isACitySubdivision("borough"));
+		Assert.assertFalse(importer.isACitySubdivision("city"));
 	}
 	
 	@Test

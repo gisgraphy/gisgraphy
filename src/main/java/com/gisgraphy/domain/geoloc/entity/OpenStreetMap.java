@@ -175,6 +175,8 @@ public class OpenStreetMap {
     
     private List<AlternateOsmName> alternateNames;
     
+    @IntrospectionIgnoredField
+    private long cityId;
     /**
      * if the associated city has been found by shape 
      * (only for sttistics and relevance purpose
@@ -183,7 +185,24 @@ public class OpenStreetMap {
     private boolean cityConfident = false;
     
     /**
-     * @return A list of the {@link AlternateName}s for this GisFeature
+     * @return the id of the city, we don't use the object because we don't want to link objects
+     * for performance reasons
+     */
+    public long getCityId() {
+	return cityId;
+    }
+    
+    /**
+     * @param set the id of the city of this street
+     */
+    public void setCityId(long cityId) {
+	this.cityId = cityId;
+    }
+    
+    
+    
+    /**
+     * @return A list of the {@link AlternateName}s for this street
      */
     @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "street")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -194,7 +213,7 @@ public class OpenStreetMap {
     
     /**
      * @param alternateNames
-     *                The {@link AlternateName}s for this GisFeature
+     *                The {@link AlternateName}s for this street
      */
     public void setAlternateNames(List<AlternateOsmName> alternateNames) {
 	this.alternateNames = alternateNames;

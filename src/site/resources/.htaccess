@@ -1,15 +1,15 @@
-AddType application/x-httpd-php .htm
+#AddType application/x-httpd-php .htm
 
-<FilesMatch "\.htm$">
-php_value auto_prepend_file "header.inc"
-php_value auto_append_file "footer.inc"
-</FilesMatch>
+#<FilesMatch "\.htm$">
+#php_value auto_prepend_file "header.inc"
+#php_value auto_append_file "footer.inc"
+#</FilesMatch>
 
 
-#RewriteEngine On
+RewriteEngine On
 
-#RewriteRule ^head_foot.php$ - [L]
-#RewriteRule \.(htm)$ /head_foot.php?file=%{SCRIPT_FILENAME} [L]
+RewriteRule ^head_foot.php$ - [L]
+RewriteRule \.(htm)$ /head_foot.php?file=%{SCRIPT_FILENAME} [L]
 
 ErrorDocument 404 /404.htm
 ErrorDocument 403 /403.htm

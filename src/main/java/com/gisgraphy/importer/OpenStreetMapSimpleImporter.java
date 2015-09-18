@@ -155,6 +155,8 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	    street.setName(fields[1].trim());
 	    StringHelper.updateOpenStreetMapEntityForIndexation(street);
 	}
+	
+	//location
 	if (!isEmptyField(fields, 2, false)) {
 	    try {
 		Point location = (Point) GeolocHelper.convertFromHEXEWKBToGeometry(fields[2]);
@@ -265,10 +267,11 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 
     protected void setIsInFields(OpenStreetMap street) {
     	if (street != null && street.getLocation() != null) {
-    		//first searchByShape because it is the more reliable :
+    		//first search By Shape because it is the more reliable :
     		City cityByShape = cityDao.getByShape(street.getLocation(),street.getCountryCode(),true);
     		if (cityByShape != null){
     			street.setIsIn(cityByShape.getName());
+    			street.setCityId(cityByShape.getId());
     			street.setCityConfident(true);
     			street.setPopulation(cityByShape.getPopulation());
     			if (cityByShape.getZipCodes() != null) {
@@ -302,6 +305,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     			if (city.getName() != null && street.getIsIn()==null) {//only if it has not be set by the openstreetmap is_in field
     				//we can here have some concordance problem if the city found is not the one populate in the osm is_in fields.
     				street.setIsIn(pplxToPPL(city.getName()));
+    				street.setCityId(city.getId());
     			}
     			if (city.getAlternateNames()!=null){
     				for (AlternateName name : city.getAlternateNames() ){
@@ -328,6 +332,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 
     				if (street.getIsIn() == null) {
     					street.setIsIn(pplxToPPL(city2.getName()));
+    					street.setCityId(city2.getId());
     				} else {
     					street.setIsInPlace(pplxToPPL(city2.getName()));
     				}

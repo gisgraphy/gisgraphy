@@ -404,6 +404,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setAdm2Name(adm2name);
 		city.setName(cityName);
 		city.setFeatureId(1L);
+		city.setId(123L);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
 		city.addZipCodes(zipCodes);
@@ -432,6 +433,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals("adm2name", street.getIsInAdm());
     	Assert.assertEquals("cityName", street.getIsIn());
+    	Assert.assertEquals(123L, street.getCityId());
     	Assert.assertEquals(null, street.getIsInPlace());
     	Assert.assertTrue(street.getIsInCityAlternateNames().size()==2);
     	
@@ -452,6 +454,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setName(cityName);
 		city.setMunicipality(false);
 		city.setFeatureId(1L);
+		city.setId(123L);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
 		city.addZipCodes(zipCodes);
@@ -464,6 +467,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city2.setAdm2Name(adm2name2);
 		city2.setName(cityName2);
 		city2.setFeatureId(1L);
+		city2.setId(456L);
 		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
 		zipCodes2.add(new ZipCode("zip2"));
 		city2.addZipCodes(zipCodes2);
@@ -496,6 +500,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals("adm2name", street.getIsInAdm());
     	Assert.assertEquals("cityName", street.getIsIn());
+    	Assert.assertEquals(123L, street.getCityId());
     	Assert.assertEquals(null, street.getIsInPlace());
     	Assert.assertTrue(street.getIsInCityAlternateNames().size()==2);
     	
@@ -516,6 +521,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setAdm2Name(adm2name);
 		city.setName(cityName);
 		city.setFeatureId(1L);
+		city.setId(123L);
 		city.setMunicipality(false);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
@@ -530,6 +536,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city2.setAdm2Name(adm2name2);
 		city2.setName(cityName2);
 		city2.setFeatureId(2L);
+		city2.setId(456L);
 		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
 		zipCodes2.add(new ZipCode("zip2"));
 		city2.addZipCodes(zipCodes2);
@@ -561,6 +568,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals("adm2name", street.getIsInAdm());
     	Assert.assertEquals("cityName", street.getIsIn());
+    	Assert.assertEquals(123L, street.getCityId());
     	Assert.assertEquals("isIn place should be filled if result are different and municipality is not the nearest",cityName2, street.getIsInPlace());
     	Assert.assertEquals("isIn should be filled with municipality if result are different and municipality is not the nearest",cityName, street.getIsIn());
     	Assert.assertTrue(street.getIsInCityAlternateNames().size()==2);
@@ -582,6 +590,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		final String adm2name= "adm2name";
 		final City city = new City();
 		city.setFeatureId(1L);
+		city.setId(123L);
 		city.setPopulation(population);
 		city.setAdm2Name(adm2name);
 		city.setName(cityName);
@@ -596,6 +605,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		final String adm2name2= "adm2name2";
 		final City city2 = new City();
 		city2.setFeatureId(2L);
+		city2.setId(456L);
 		city2.setPopulation(population2);
 		city2.setAdm2Name(adm2name2);
 		city2.setName(cityName2);
@@ -632,6 +642,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals("adm2name", street.getIsInAdm());
     	Assert.assertEquals("cityName", street.getIsIn());
+    	Assert.assertEquals(123L, street.getCityId());
     	Assert.assertEquals("isIn should not be filled with only isin if result are different and municipality is the nearest",cityName, street.getIsIn());
     	Assert.assertEquals("isIn place should not be filled if result are different and municipality is the nearest",null, street.getIsInPlace());
     	Assert.assertTrue(street.getIsInCityAlternateNames().size()==2);
@@ -653,6 +664,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setAdm2Name(adm2name);
 		city.setName(cityName);
 		city.setMunicipality(false);
+		city.setFeatureId(1L);
+		city.setId(123L);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
 		city.addZipCodes(zipCodes);
@@ -683,6 +696,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals("adm2name", street.getIsInAdm());
     	Assert.assertEquals("cityName", street.getIsIn());
+    	Assert.assertEquals(123L, street.getCityId());
     	Assert.assertEquals(null, street.getIsInPlace());
     	Assert.assertTrue(street.getIsInCityAlternateNames().size()==2);
     	
@@ -702,6 +716,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setAdm2Name(adm2name);
 		city.setName(cityName);
 		city.setMunicipality(false);
+		city.setFeatureId(1L);
+		city.setId(123L);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
 		city.addZipCodes(zipCodes);
@@ -725,6 +741,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	street.setCountryCode(countryCode);
     	street.setLocation(location);
     	street.setIsIn("AlreadyFilled");
+    	street.setCityId(456L);
     	openStreetMapSimpleImporter.setIsInFields(street);
     	
     	
@@ -733,6 +750,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals("adm2name", street.getIsInAdm());
     	Assert.assertEquals("AlreadyFilled", street.getIsIn());
+    	Assert.assertEquals(456L, street.getCityId());
     	Assert.assertEquals(null, street.getIsInPlace());
     	Assert.assertTrue(street.getIsInCityAlternateNames().size()==2);
     	
@@ -758,6 +776,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Adm adm = new Adm(2);
     	adm.setName("admName");
     	cityByShape.setAdm(adm);
+    	cityByShape.setFeatureId(1L);
+    	cityByShape.setId(123L);
     	EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(cityByShape);
     	EasyMock.replay(cityDao);
     	openStreetMapSimpleImporter.setCityDao(cityDao);
@@ -774,6 +794,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(true, street.isCityConfident());
     	Assert.assertEquals("admName", street.getIsInAdm());
     	Assert.assertEquals("name", street.getIsIn());
+    	Assert.assertEquals(123L, street.getCityId());
     	Assert.assertEquals(null, street.getIsInPlace());
     	
     	EasyMock.verify(cityDao);
