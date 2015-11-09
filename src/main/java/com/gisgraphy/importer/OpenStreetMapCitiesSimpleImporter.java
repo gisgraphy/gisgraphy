@@ -46,6 +46,7 @@ import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.CitySubdivisionDao;
 import com.gisgraphy.domain.repository.IAdmDao;
 import com.gisgraphy.domain.repository.ICityDao;
+import com.gisgraphy.domain.repository.ICitySubdivisionDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
@@ -77,6 +78,8 @@ import com.vividsolutions.jts.geom.Point;
 public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterProcessor {
 	
 	public static final int SCORE_LIMIT = 1;
+	
+	public final static int BATCH_UPDATE_SIZE = 100;
 
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapCitiesSimpleImporter.class);
 	
@@ -90,7 +93,8 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     
     protected ICityDao cityDao;
     
-    protected CitySubdivisionDao citySubdivisionDao;
+    
+    protected ICitySubdivisionDao citySubdivisionDao;
     
     protected IAdmDao admDao;
     
@@ -425,6 +429,8 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		return null;
 	}
 	
+	
+	
 	protected SolrResponseDto getAdm(String name, String countryCode) {
 		if (name==null){
 			return null;
@@ -498,17 +504,40 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     	return deletedObjectInfo;
     }
     
-    
     @Override
     //TODO test
     protected void tearDown() {
     	super.tearDown();
-    	FullTextSearchEngine.disableLogging=false;
     	String savedMessage = this.statusMessage;
+    	try {
+    		this.statusMessage = internationalisationService.getString("import.updatecitysubdivision");
+			int nbModify = citySubdivisionDao.linkCitySubdivisionToTheirCity();
+			logger.warn(nbModify +" citySubdivision has been modify");
+		} catch (Exception e){
+			logger.error("error during link city subdivision to their city",e);
+		}finally {
+			 // we restore message in case of error
+    	    this.statusMessage = savedMessage;
+		}
+    	try {
+    		this.statusMessage = internationalisationService.getString("import.fixpolygon");
+			logger.info("fixing polygons for city");
+			int nbModify = cityDao.fixPolygons();
+			logger.warn(nbModify +" polygons has been fixed");
+		} catch (Exception e){
+			logger.error("error durin fixing polygons",e);
+		}
+    	finally {
+    	    this.statusMessage = savedMessage;
+		}
+    	FullTextSearchEngine.disableLogging=false;
     	try {
     		this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
     		solRSynchroniser.optimize();
-    	} finally {
+    		logger.warn("fulltext engine has been optimized");
+    	}  catch (Exception e){
+			logger.error("error durin fulltext optimization",e);
+		}finally {
     	    // we restore message in case of error
     	    this.statusMessage = savedMessage;
     	}
@@ -531,6 +560,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     public void setCityDao(ICityDao cityDao) {
 		this.cityDao = cityDao;
 	}
+    
 
     @Required
 	public void setFullTextSearchEngine(IFullTextSearchEngine fullTextSearchEngine) {

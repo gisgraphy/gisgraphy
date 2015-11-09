@@ -54,6 +54,11 @@ public Street create(OpenStreetMap openstreetmap){
 	   street.setIsInPlace(openstreetmap.getIsInPlace());
 	   street.setIsInZip(openstreetmap.getIsInZip());
 	   street.setIsInAdm(openstreetmap.getIsInAdm());
+	   street.setAdm1Name(openstreetmap.getAdm1Name());
+	   street.setAdm2Name(openstreetmap.getAdm2Name());
+	   street.setAdm3Name(openstreetmap.getAdm3Name());
+	   street.setAdm4Name(openstreetmap.getAdm4Name());
+	   street.setAdm5Name(openstreetmap.getAdm5Name());
 	   street.setFullyQualifiedAddress(openstreetmap.getFullyQualifiedAddress());
 	   street.setPopulation(openstreetmap.getPopulation());
 	   street.setHouseNumbers(openstreetmap.getHouseNumbers());

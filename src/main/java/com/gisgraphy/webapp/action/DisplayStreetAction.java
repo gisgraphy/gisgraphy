@@ -37,191 +37,191 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
 public class DisplayStreetAction extends ActionSupport implements GoogleMapApiKeyAware{
-    
-    /**
-     * The reference in the localized file for  the fact that the street has no name
-     */
-    public static final String GLOBAL_STREET_NONAME = "global.street.noname";
 
-    /**
-     * The reference in the localized file for the error for the fact gid
-     * is required
-     */
-    public static final String ERROR_REF_REQUIRED_FEATURE_ID = "required.gid";
+	/**
+	 * The reference in the localized file for  the fact that the street has no name
+	 */
+	public static final String GLOBAL_STREET_NONAME = "global.street.noname";
 
-    /**
-     * The reference in the localized file for the error for the fact that the
-     * specified gid is not a numeric value
-     */
-    public static final String ERROR_REF_NON_NUMERIC_FEATUREID = "displayfeature.gid.numeric";
+	/**
+	 * The reference in the localized file for the error for the fact gid
+	 * is required
+	 */
+	public static final String ERROR_REF_REQUIRED_FEATURE_ID = "required.gid";
 
-
-    /**
-     * The reference in the localized file for the error for the fact that no
-     * features were found for the specified gid
-     */
-    public static final String ERROR_REF_NORESULT = "result.street.noresult";
-
-    /**
-     * The reference in the localized file for general error
-     */
-    static final String ERROR_REF_GENERAL_ERROR = "display.error";
-
-    /**
-     * Default Generated serial Id
-     */
-    private static final long serialVersionUID = 2940477476216677L;
+	/**
+	 * The reference in the localized file for the error for the fact that the
+	 * specified gid is not a numeric value
+	 */
+	public static final String ERROR_REF_NON_NUMERIC_FEATUREID = "displayfeature.gid.numeric";
 
 
-    private static Logger logger = LoggerFactory
-	    .getLogger(DisplayStreetAction.class);
+	/**
+	 * The reference in the localized file for the error for the fact that no
+	 * features were found for the specified gid
+	 */
+	public static final String ERROR_REF_NORESULT = "result.street.noresult";
 
-    private IOpenStreetMapDao openStreetMapDao;
+	/**
+	 * The reference in the localized file for general error
+	 */
+	static final String ERROR_REF_GENERAL_ERROR = "display.error";
 
-    private String gid;
-    
-    private String shape = null;
-
-    private OpenStreetMap result = null;
-    
-    private String lat;
-
-    private String lng;
-
-    public static final String ERROR = "error";
-    
-    /**
-     * @return the fullyqualified name if exists, or the name
-     */
-    public String getPreferedName() {
-	if (result == null) {
-	    return "";
-	} else {
-	    return !StringUtils.isEmpty(result.getName()) ? result.getName()
-		    :getText(GLOBAL_STREET_NONAME);
-	}
-    }
-
-   
-    private boolean isNumeric(String number) {
-	try {
-	    Integer.parseInt(number);
-	    return true;
-	} catch (NumberFormatException e) {
-	    return false;
-	}
-    }
-
-    /**
-     * The error message reference in the localized properties file
-     */
-    private String errorRef = "";
-
-    private String errorMessage = "";
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.opensymphony.xwork2.ActionSupport#execute()
-     */
-    @Override
-    public String execute() throws Exception {
-	try {
-	    if (StringUtils.isEmpty(gid)) {
-		errorRef = ERROR_REF_REQUIRED_FEATURE_ID;
-		return ERROR;
-	    }
-	    if (!isNumeric(gid)) {
-		errorRef = ERROR_REF_NON_NUMERIC_FEATUREID;
-		return ERROR;
-	    }
-	    result = openStreetMapDao.getByGid(Long.valueOf(gid));
-	    if (result == null) {
-		errorRef = ERROR_REF_NORESULT;
-		return ERROR;
-	    } else {
-	    	this.shape= retrieveShape(result.getGid());
-	    }
-	} catch (RuntimeException e) {
-	    if (e.getCause() != null) {
-		logger.warn("An error occured during search : "
-			+ e.getCause().getMessage());
-	    } else {
-		logger.warn("An error occured during search : "
-			+ e.getMessage());
-	    }
-	    this.errorRef = ERROR_REF_GENERAL_ERROR;
-	    this.errorMessage = e.getMessage();
-	    return ERROR;
-	}
-	return SUCCESS;
-    }
+	/**
+	 * Default Generated serial Id
+	 */
+	private static final long serialVersionUID = 2940477476216677L;
 
 
-    protected String retrieveShape(Long gid) {
-    	if (gid!=null){
-    		return openStreetMapDao.getShapeAsWKTByGId(gid);
-    	}
-    	return null;
-		
+	private static Logger logger = LoggerFactory
+			.getLogger(DisplayStreetAction.class);
+
+	private IOpenStreetMapDao openStreetMapDao;
+
+	private String gid;
+
+	private String shape = null;
+
+	private OpenStreetMap result = null;
+
+	private String lat;
+
+	private String lng;
+
+	public static final String ERROR = "error";
+
+	/**
+	 * @return the fullyqualified name if exists, or the name
+	 */
+	public String getPreferedName() {
+		if (result == null) {
+			return "";
+		} else {
+			return !StringUtils.isEmpty(result.getName()) ? result.getName()
+					:getText(GLOBAL_STREET_NONAME);
+		}
 	}
 
 
-    /**
-     * @return the gid
-     */
-    public String getGid() {
-        return gid;
-    }
+	private boolean isNumeric(String number) {
+		try {
+			Integer.parseInt(number);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * The error message reference in the localized properties file
+	 */
+	private String errorRef = "";
+
+	private String errorMessage = "";
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
+	 */
+	@Override
+	public String execute() throws Exception {
+		try {
+			if (StringUtils.isEmpty(gid)) {
+				errorRef = ERROR_REF_REQUIRED_FEATURE_ID;
+				return ERROR;
+			}
+			if (!isNumeric(gid)) {
+				errorRef = ERROR_REF_NON_NUMERIC_FEATUREID;
+				return ERROR;
+			}
+			result = openStreetMapDao.getByGid(Long.valueOf(gid));
+			if (result == null) {
+				errorRef = ERROR_REF_NORESULT;
+				return ERROR;
+			} else {
+				this.shape= retrieveShape(result.getGid());
+			}
+		} catch (RuntimeException e) {
+			if (e.getCause() != null) {
+				logger.warn("An error occured during search : "
+						+ e.getCause().getMessage());
+			} else {
+				logger.warn("An error occured during search : "
+						+ e.getMessage());
+			}
+			this.errorRef = ERROR_REF_GENERAL_ERROR;
+			this.errorMessage = e.getMessage();
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+
+
+	protected String retrieveShape(Long gid) {
+		if (gid!=null){
+			return openStreetMapDao.getShapeAsWKTByGId(gid);
+		}
+		return null;
+
+	}
+
+
+	/**
+	 * @return the gid
+	 */
+	public String getGid() {
+		return gid;
+	}
 
 
 
-    /**
-     * @param gid the gid to set
-     */
-    public void setGid(String gid) {
-        this.gid = gid;
-    }
+	/**
+	 * @param gid the gid to set
+	 */
+	public void setGid(String gid) {
+		this.gid = gid;
+	}
 
 
-    /**
-     * @param openStreetMapDao the openStreetMapDao to set
-     */
-    public void setOpenStreetMapDao(IOpenStreetMapDao openStreetMapDao) {
-        this.openStreetMapDao = openStreetMapDao;
-    }
+	/**
+	 * @param openStreetMapDao the openStreetMapDao to set
+	 */
+	public void setOpenStreetMapDao(IOpenStreetMapDao openStreetMapDao) {
+		this.openStreetMapDao = openStreetMapDao;
+	}
 
 
 
 
 
-    /**
-     * @return the errorRef
-     */
-    public String getErrorRef() {
-	return errorRef;
-    }
+	/**
+	 * @return the errorRef
+	 */
+	public String getErrorRef() {
+		return errorRef;
+	}
 
-    /**
-     * @return the result
-     */
-    public OpenStreetMap getResult() {
-	return result;
-    }
+	/**
+	 * @return the result
+	 */
+	public OpenStreetMap getResult() {
+		return result;
+	}
 
-    /**
-     * @return the errorMessage
-     */
-    public String getErrorMessage() {
-	return errorMessage;
-    }
-    
-    /**
-     * @return the googleMapAPIKey
-     */
-    public String getGoogleMapAPIKey() {
-        return GisgraphyConfig.googleMapAPIKey == null ? "" : GisgraphyConfig.googleMapAPIKey;
-    }
+	/**
+	 * @return the errorMessage
+	 */
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	/**
+	 * @return the googleMapAPIKey
+	 */
+	public String getGoogleMapAPIKey() {
+		return GisgraphyConfig.googleMapAPIKey == null ? "" : GisgraphyConfig.googleMapAPIKey;
+	}
 
 
 	public String getShape() {

@@ -31,6 +31,7 @@ import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.test.GisgraphyTestHelper;
 import com.vividsolutions.jts.geom.Point;
 
 public class OpenStreetMapCitiesSimpleImporterTest {
@@ -814,4 +815,6 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.verify(cityDao);
 		EasyMock.verify(admDao);
 	}
+	
+	
 }

@@ -364,7 +364,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 	@Test
 	public void findNearestStreet_errorsShouldBeCatched(){
 		
-		String streetName="--";
+		String streetName="foo";
 		FulltextQuery query = new FulltextQuery(streetName, Pagination.DEFAULT_PAGINATION, OpenStreetMapHouseNumberSimpleImporter.MEDIUM_OUTPUT, 
 				com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, null);
 		Point point = GeolocHelper.createPoint(2F,	3F);

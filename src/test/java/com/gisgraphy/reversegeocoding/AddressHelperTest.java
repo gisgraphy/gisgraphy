@@ -59,20 +59,93 @@ public class AddressHelperTest {
 		Assert.assertNull(addressHelper.buildAddressFromOpenstreetMap(null));
 	}
 	
+	@Test
+	public void buildFullAddressString(){
+		Address address= new Address();
+		address.setStreetName("foo bar street");
+		address.setHouseNumber("3");
+		address.setCity("paris");
+		address.setCitySubdivision("3e arrondissement");
+		address.setAdm1Name("adm1");
+		address.setAdm2Name("adm2");
+		address.setAdm3Name("adm3");
+		address.setAdm4Name("adm4");
+		address.setAdm5Name("adm5");
+		address.setCountryCode("FR");
+		String actual = addressHelper.buildFullAddressString(address);
+		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, adm5, adm4, adm3, adm2, adm1, France, fr", actual);
+
+		//with only state fill
+		address.setAdm1Name(null);
+		address.setAdm2Name(null);
+		address.setAdm3Name(null);
+		address.setAdm4Name(null);
+		address.setAdm5Name(null);
+		address.setState("state");
+		actual = addressHelper.buildFullAddressString(address);
+		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, state, France, fr", actual);
+
+		//without any state info
+		address.setAdm1Name(null);
+		address.setAdm2Name(null);
+		address.setAdm3Name(null);
+		address.setAdm4Name(null);
+		address.setAdm5Name(null);
+		address.setState(null);
+		actual = addressHelper.buildFullAddressString(address);
+		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, France, fr", actual);
+
+		//without any state info and city subdivision
+		address.setAdm1Name(null);
+		address.setAdm2Name(null);
+		address.setAdm3Name(null);
+		address.setAdm4Name(null);
+		address.setAdm5Name(null);
+		address.setState(null);
+		address.setCitySubdivision(null);
+		actual = addressHelper.buildFullAddressString(address);
+		Assert.assertEquals("3, foo bar street, paris, France, fr", actual);
+		//withunknow country
+		address.setAdm1Name(null);
+		address.setAdm2Name(null);
+		address.setAdm3Name(null);
+		address.setAdm4Name(null);
+		address.setAdm5Name(null);
+		address.setState(null);
+		address.setCountryCode("XX");;
+
+		address.setCitySubdivision(null);
+		actual = addressHelper.buildFullAddressString(address);
+		Assert.assertEquals("3, foo bar street, paris, xx", actual);
+
+	}
 	
 	@Test
 	public void buildAddressFromOpenstreetMap(){
 		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		osm.setAdm1Name("adm1Name");
+		osm.setAdm2Name("adm2Name");
+		osm.setAdm3Name("adm3Name");
+		osm.setAdm4Name("adm4Name");
+		osm.setAdm5Name("adm5Name");
 		Address address = addressHelper.buildAddressFromOpenstreetMap(osm);
 		Assert.assertEquals(osm.getName(), address.getStreetName());
 		Assert.assertEquals(osm.getIsIn(), address.getCity());
 		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
 		Assert.assertEquals(osm.getIsInAdm(), address.getState());
+		Assert.assertEquals(osm.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(osm.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
 		Assert.assertEquals(osm.getIsInZip().iterator().next(), address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
+		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
 		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
+		
+		
 		
 	}
 	
@@ -93,6 +166,8 @@ public class AddressHelperTest {
 		
 		//
 		Assert.assertEquals(GeolocHelper.distance(point, osm.getLocation()), address.getDistance().doubleValue(),0.01);
+		
+		
 		
 	}
 	

@@ -38,9 +38,11 @@ import org.springframework.beans.factory.annotation.Required;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.ICityDao;
+import com.gisgraphy.domain.repository.ICitySubdivisionDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
@@ -80,11 +82,16 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     @Autowired
     protected ICityDao cityDao;
     
+    @Autowired
+    protected ICitySubdivisionDao citySubdivisionDao;
+    
     private static final Pattern pattern = Pattern.compile("(\\w+)\\s\\d+.*",Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     
     public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "((?:(?!___).)+)(?:(?:___)|(?:$))";
     
     public static final Pattern ALTERNATENAMES_EXTRACTION_PATTERN = Pattern.compile(ALTERNATENAMES_EXTRACTION_REGEXP);
+
+	public static final Float SUBURB_MAX_DISTANCE = 5000f;
     
 
     /* (non-Javadoc)
@@ -286,15 +293,20 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     					}
     				}
     			}
-    			if (cityByShape.getAdm()!=null){
-    				street.setIsInAdm(cityByShape.getAdm().getName());
-    			}
+    				street.setIsInAdm(getDeeperAdmName(cityByShape));//cityByShape.getAdm().getName()
+    				setAdmNames(street, cityByShape);
+    				//set the is_in_place
+    				CitySubdivision subdivision = citySubdivisionDao.getByShape(street.getLocation(),cityByShape.getCountryCode());
+    				if (subdivision !=null){
+    					street.setIsInPlace(subdivision.getName());
+    				}
     			return;
     		}
     		City city = getNearestCity(street.getLocation(),street.getCountryCode(), true);
     		if (city != null) {
     			street.setPopulation(city.getPopulation());
     			street.setIsInAdm(getDeeperAdmName(city));
+    			setAdmNames(street, city);
     			if (city.getZipCodes() != null) {
     				for (ZipCode zip:city.getZipCodes()){
     					if (zip != null && zip.getCode()!=null){
@@ -336,9 +348,8 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     				} else {
     					street.setIsInPlace(pplxToPPL(city2.getName()));
     				}
-    				if (street.getIsInAdm() == null) {
-    					street.setIsInAdm(getDeeperAdmName(city2));
-    				}
+    				street.setIsInAdm(getDeeperAdmName(city2));
+    				setAdmNames(street, city2);
     				if (city2.getZipCodes() != null ) {//we merge the zipcodes for is_in and is_in_place, so we don't check
     					//if zipcodes are already filled
     					for (ZipCode zip:city2.getZipCodes()){
@@ -359,14 +370,37 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     		}
     	}
     }
+    
+    protected void setAdmNames(OpenStreetMap street,City city) {
+		if (city != null) {
+			if (city.getAdm5Name() != null) {
+				street.setAdm5Name(city.getAdm5Name());
+			}
+			if (city.getAdm4Name() != null) {
+				street.setAdm4Name(city.getAdm4Name());
+			} 
+			if (city.getAdm3Name() != null) {
+				street.setAdm3Name(city.getAdm3Name());
+			} 
+			if (city.getAdm2Name() != null) {
+				street.setAdm2Name(city.getAdm2Name());
+			} 
+			if (city.getAdm1Name() != null) {
+				street.setAdm1Name(city.getAdm1Name());
+			}
+		}
+	}
 
 	protected String getDeeperAdmName(City city) {
 		if (city != null) {
-			if (city.getAdm5Name() != null) {
+			/*if (city.getAdm5Name() != null) {
 				return city.getAdm5Name();
-			} else if (city.getAdm4Name() != null) {
+			}
+			if (city.getAdm4Name() != null) {
 				return city.getAdm4Name();
-			} else if (city.getAdm3Name() != null) {
+			}*/
+			//we consider that level 4 and 5 are too precise and doesn't reflect the deeper adm
+			if (city.getAdm3Name() != null) {
 				return city.getAdm3Name();
 			} else if (city.getAdm2Name() != null) {
 				return city.getAdm2Name();
@@ -528,5 +562,11 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	public void setCityDao(ICityDao cityDao) {
 		this.cityDao = cityDao;
 	}
+
+    @Required
+	public void setCitySubdivisionDao(ICitySubdivisionDao citySubdivisionDao) {
+		this.citySubdivisionDao = citySubdivisionDao;
+	}
+    
     
 }

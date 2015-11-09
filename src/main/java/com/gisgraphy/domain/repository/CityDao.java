@@ -34,6 +34,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.valueobject.SRID;
 import com.vividsolutions.jts.geom.Point;
 
@@ -92,6 +93,7 @@ public class CityDao extends GenericGisDao<City> implements ICityDao {
    
     
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public City getByShape(final Point location,final String countryCode,final boolean filterMunicipality) {
 		Assert.notNull(location);
 		return (City) this.getHibernateTemplate().execute(new HibernateCallback() {
@@ -110,7 +112,7 @@ public class CityDao extends GenericGisDao<City> implements ICityDao {
 				queryString+=" and c.countryCode='"+countryCode+"'";
 			}
 			queryString = queryString+ " order by st_area(c.shape)";
-			//we need to sort by distance due to error in osm data 
+			//we need to sort by shape due to error in osm data 
 			//eg : if we search for the nearest city of http://www.openstreetmap.org/way/27904415
 			// we can have 2 cities : http://www.openstreetmap.org/way/75509282 vs http://www.openstreetmap.org/relation/388250
 			//cause there is the city and the district
@@ -123,6 +125,25 @@ public class CityDao extends GenericGisDao<City> implements ICityDao {
 			return result;
 		    }
 		});
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public int fixPolygons(){
+		return (Integer) this.getHibernateTemplate().execute(
+				 new HibernateCallback() {
+
+				    public Object doInHibernate(Session session)
+					    throws PersistenceException {
+					session.flush();
+					logger.info("will fix polygons for city ");
+					String fixPolygon= "update city set shape=ST_MakePolygon(shape) where ST_GeometryType(shape)='ST_LineString'";
+					Query fixPolygonQuery = session.createSQLQuery(fixPolygon);
+					int nbModify = fixPolygonQuery.executeUpdate();
+					
+					return nbModify;
+				    }
+				});
+		
 	}
 
 	

@@ -795,6 +795,11 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     }
     
     @Test
+    public void testFixPolygons(){
+    	cityDao.fixPolygons();
+    }
+    
+    @Test
     public void testCreateGISTIndexForLocationColumnShouldNotThrow(){
 	cityDao.createGISTIndexForLocationColumn();
     }

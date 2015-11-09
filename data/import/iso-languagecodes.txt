@@ -1,77 +1,70 @@
 ISO 639-3	ISO 639-2	ISO 639-1	Language Name
-	afa		Afro-Asiatic languages
-	alg		Algonquian languages
-	apa		Apache languages
-	art		Artificial languages
-	ath		Athapascan languages
-	aus		Australian languages
-	bad		Banda languages
-	bai		Bamileke languages
-	bat		Baltic languages
-	ber		Berber languages
-	bih	bh	Bihari 
-	bnt		Bantu (Other)
-	btk		Batak languages
-	cai		Central American Indian languages
-	cau		Caucasian languages
-	cel		Celtic languages
-	cmc		Chamic languages
-	cpe		Creoles and pidgins, English based
-	cpf		Creoles and pidgins, French-based 
-	cpp		Creoles and pidgins, Portuguese-based 
-	crp		Creoles and pidgins 
-	cus		Cushitic languages
-	day		Land Dayak languages
-	dra		Dravidian languages
-	fiu		Finno-Ugrian languages
-	frr		Northern Frisian
-	gem		Germanic languages
-	him		Himachali languages; Western Pahari languages
-	ijo		Ijo languages
-	inc		Indic languages
-	ine		Indo-European languages
-	ira		Iranian languages
-	iro		Iroquoian languages
-	kar		Karen languages
-	khi		Khoisan languages
-	kro		Kru languages
-	map		Austronesian languages
-	mkh		Mon-Khmer languages
-	mno		Manobo languages
-	mun		Munda languages
-	myn		Mayan languages
-	nah		Nahuatl languages
-	nai		North American Indian languages
-	nic		Niger-Kordofanian languages
-	nqo		N'Ko
-	nub		Nubian languages
-	oto		Otomian languages
-	paa		Papuan languages
-	phi		Philippine languages
-	pra		Prakrit languages
-	roa		Romance languages
-	rup		Aromanian; Arumanian; Macedo-Romanian
-	sai		South American Indian (Other)
-	sal		Salishan languages
-	sem		Semitic languages
-	sgn		Sign Languages
-	sio		Siouan languages
-	sit		Sino-Tibetan languages
-	sla		Slavic languages
-	smi		Sami languages
-	son		Songhai languages
-	srn		Sranan Tongo
-	ssa		Nilo-Saharan languages
-	syc		Classical Syriac
-	tai		Tai languages
-	tup		Tupi languages
-	tut		Altaic languages
-	wak		Wakashan languages
-	wen		Sorbian languages
-	ypk		Yupik languages
-	zbl		Blissymbols; Blissymbolics; Bliss
-	znd		Zande languages
-	zza		Zaza; Dimili; Dimli; Kirdki; Kirmanjki; Zazaki
+afa	afa		Afro-Asiatic languages
+alg	alg		Algonquian languages
+apa	apa		Apache languages
+art	art		Artificial languages
+ath	ath		Athapascan languages
+aus	aus		Australian languages
+bad	bad		Banda languages
+bai	bai		Bamileke languages
+bat	bat		Baltic languages
+ber	ber		Berber languages
+bih	bih	bh	Bihari 
+bnt	bnt		Bantu (Other)
+btk	btk		Batak languages
+cai	cai		Central American Indian languages
+cau	cau		Caucasian languages
+cel	cel		Celtic languages
+cmc	cmc		Chamic languages
+cpe	cpe		Creoles and pidgins, English based
+cpf	cpf		Creoles and pidgins, French-based 
+cpp	cpp		Creoles and pidgins, Portuguese-based 
+crp	crp		Creoles and pidgins 
+cus	cus		Cushitic languages
+day	day		Land Dayak languages
+dra	dra		Dravidian languages
+fiu	fiu		Finno-Ugrian languages
+gem	gem		Germanic languages
+him	him		Himachali languages; Western Pahari languages
+ijo	ijo		Ijo languages
+inc	inc		Indic languages
+ine	ine		Indo-European languages
+ira	ira		Iranian languages
+iro	iro		Iroquoian languages
+kar	kar		Karen languages
+khi	khi		Khoisan languages
+kro	kro		Kru languages
+map	map		Austronesian languages
+mkh	mkh		Mon-Khmer languages
+mno	mno		Manobo languages
+mun	mun		Munda languages
+myn	myn		Mayan languages
+nah	nah		Nahuatl languages
+nai	nai		North American Indian languages
+nic	nic		Niger-Kordofanian languages
+nub	nub		Nubian languages
+oto	oto		Otomian languages
+paa	paa		Papuan languages
+phi	phi		Philippine languages
+pra	pra		Prakrit languages
+roa	roa		Romance languages
+sai	sai		South American Indian (Other)
+sal	sal		Salishan languages
+sem	sem		Semitic languages
+sgn	sgn		Sign Languages
+sio	sio		Siouan languages
+sit	sit		Sino-Tibetan languages
+sla	sla		Slavic languages
+smi	smi		Sami languages
+son	son		Songhai languages
+ssa	ssa		Nilo-Saharan languages
+tai	tai		Tai languages
+tup	tup		Tupi languages
+tut	tut		Altaic languages
+wak	wak		Wakashan languages
+wen	wen		Sorbian languages
+ypk	ypk		Yupik languages
+znd	znd		Zande languages
 aaa			Ghotuo
 aab			Alumu-Tesu
 aac			Ari

@@ -244,7 +244,8 @@ public class GenericDao<T, PK extends Serializable> extends HibernateDaoSupport
 		    public Object doInHibernate(Session session)
 			    throws PersistenceException {
 			String queryString = "from "
-				+ persistentClass.getSimpleName();
+				+ persistentClass.getSimpleName() +" order by id";
+			//we order by id because we want to keep the same order query after query
 
 			Query qry = session.createQuery(queryString);
 			qry.setCacheable(true);

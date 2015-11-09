@@ -134,7 +134,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 		} 
 		long end = System.currentTimeMillis();
 		long qTime = end - start;
-		logger.info(query + " took " + (qTime) + " ms and doeant returns no result");
+		logger.info(query + " took " + (qTime) + " ms and doesn't returns no result");
 		return new AddressResultsDto(NO_ADDRESS_LIST, qTime);
 	}
 

@@ -36,7 +36,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CitySubdivision extends GisFeature implements ZipCodesAware {
     
-    /**
+	private Long cityId;
+	
+    
+	/**
      * Constructor that populate the {@link CitySubdivision} with the gisFeature
      * fields<br>
      * 
@@ -70,5 +73,19 @@ public class CitySubdivision extends GisFeature implements ZipCodesAware {
 	return result;
     }
 
+    /**
+	 * @return the cityId
+	 */
+	public Long getCityId() {
+		return cityId;
+	}
+
+
+	/**
+	 * @param cityId the cityId to set
+	 */
+	public void setCityId(Long cityId) {
+		this.cityId = cityId;
+	}
        
 }

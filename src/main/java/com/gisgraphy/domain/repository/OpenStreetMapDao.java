@@ -89,7 +89,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
     protected static final Logger logger = LoggerFactory
 	    .getLogger(OpenStreetMapDao.class);
 
-	protected static final int DEFAULT_DISTANCE = 1500;
+	protected static final int DEFAULT_DISTANCE = 500;
 	
     /**
      * Default constructor
@@ -541,7 +541,11 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 		    	Criteria criteria = session
 						.createCriteria(OpenStreetMap.class);
 					
-					criteria.add(new DistanceRestriction(point,DEFAULT_DISTANCE,true));
+		    		if (point!=null){
+		    			//An intersect restriction will probably have better performances and use the index than a distance restriction 
+		    			Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), DEFAULT_DISTANCE);
+		    			criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
+		    		}
 					if (onlyroad) {
 						criteria = criteria.add(Restrictions.ne("streetType",StreetType.FOOTWAY));
 					}

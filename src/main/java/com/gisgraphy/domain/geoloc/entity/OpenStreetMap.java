@@ -176,7 +176,7 @@ public class OpenStreetMap {
     private List<AlternateOsmName> alternateNames;
     
     @IntrospectionIgnoredField
-    private long cityId;
+    private Long cityId;
     /**
      * if the associated city has been found by shape 
      * (only for sttistics and relevance purpose
@@ -184,19 +184,29 @@ public class OpenStreetMap {
     @IntrospectionIgnoredField
     private boolean cityConfident = false;
     
+    private String adm1Name;
+    
+    private String adm2Name;
+    
+    private String adm3Name;
+    
+    private String adm4Name;
+    
+    private String adm5Name;
+    
     /**
      * @return the id of the city, we don't use the object because we don't want to link objects
      * for performance reasons
      */
-    public long getCityId() {
-	return cityId;
+    public Long getCityId() {
+    	return cityId;
     }
     
     /**
      * @param set the id of the city of this street
      */
-    public void setCityId(long cityId) {
-	this.cityId = cityId;
+    public void setCityId(Long cityId) {
+    	this.cityId = cityId;
     }
     
     
@@ -208,7 +218,7 @@ public class OpenStreetMap {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Fetch(FetchMode.SELECT)
     public List<AlternateOsmName> getAlternateNames() {
-	return alternateNames;
+    	return alternateNames;
     }
     
     /**
@@ -216,7 +226,7 @@ public class OpenStreetMap {
      *                The {@link AlternateName}s for this street
      */
     public void setAlternateNames(List<AlternateOsmName> alternateNames) {
-	this.alternateNames = alternateNames;
+    	this.alternateNames = alternateNames;
     }
 
     /**
@@ -674,6 +684,46 @@ public class OpenStreetMap {
 
 	public void setPopulation(Integer population) {
 		this.population = population;
+	}
+	
+	public String getAdm1Name() {
+		return adm1Name;
+	}
+
+	public void setAdm1Name(String adm1Name) {
+		this.adm1Name = adm1Name;
+	}
+
+	public String getAdm2Name() {
+		return adm2Name;
+	}
+
+	public void setAdm2Name(String adm2Name) {
+		this.adm2Name = adm2Name;
+	}
+
+	public String getAdm3Name() {
+		return adm3Name;
+	}
+
+	public void setAdm3Name(String adm3Name) {
+		this.adm3Name = adm3Name;
+	}
+
+	public String getAdm4Name() {
+		return adm4Name;
+	}
+
+	public void setAdm4Name(String adm4Name) {
+		this.adm4Name = adm4Name;
+	}
+
+	public String getAdm5Name() {
+		return adm5Name;
+	}
+
+	public void setAdm5Name(String adm5Name) {
+		this.adm5Name = adm5Name;
 	}
 
 	/**

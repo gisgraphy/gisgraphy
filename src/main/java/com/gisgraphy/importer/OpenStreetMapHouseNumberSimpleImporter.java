@@ -687,7 +687,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 		if (location == null){
 			return null;
 		}
-		if (streetName==null || "".equals(streetName.trim()) || "\"\"".equals(streetName.trim()) ){
+		if (streetName==null || "".equals(streetName.trim()) || "\"\"".equals(streetName.trim()) || "-".equals(streetName.trim()) || "---".equals(streetName.trim()) || "--".equals(streetName.trim())){
 			return openStreetMapDao.getNearestFrom(location);
 		}
 		FulltextQuery query;

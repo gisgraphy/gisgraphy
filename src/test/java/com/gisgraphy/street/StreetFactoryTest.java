@@ -74,6 +74,12 @@ public class StreetFactoryTest {
 	openStreetMap.setOpenstreetmapId(openstreetmapId);
 	openStreetMap.setIsIn(isIn);
 	openStreetMap.setIsInAdm(isInAdm);
+	openStreetMap.setAdm1Name("adm1Name");
+	openStreetMap.setAdm2Name("adm2Name");
+	openStreetMap.setAdm3Name("adm3Name");
+	openStreetMap.setAdm4Name("adm4Name");
+	openStreetMap.setAdm5Name("adm5Name");
+	
 	openStreetMap.setIsInPlace(isInPlace);
 	openStreetMap.setIsInZip(isInZip);
 	openStreetMap.setFullyQualifiedAddress(fullyQualifiedAddress);
@@ -108,6 +114,11 @@ public class StreetFactoryTest {
 	Assert.assertEquals(isIn, street.getIsIn());
 	Assert.assertEquals(isInPlace, street.getIsInPlace());
 	Assert.assertEquals(isInAdm, street.getIsInAdm());
+	Assert.assertEquals("adm1Name", street.getAdm1Name());
+	Assert.assertEquals("adm2Name", street.getAdm2Name());
+	Assert.assertEquals("adm3Name", street.getAdm3Name());
+	Assert.assertEquals("adm4Name", street.getAdm4Name());
+	Assert.assertEquals("adm5Name", street.getAdm5Name());
 	Assert.assertEquals(isInZip, street.getIsInZip());
 	Assert.assertEquals(fullyQualifiedAddress, street.getFullyQualifiedAddress());
 	Assert.assertEquals(houseNumbers, street.getHouseNumbers());

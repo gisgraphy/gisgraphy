@@ -532,7 +532,6 @@
 			<action dev="David Masclet" type="fix">
 				callback method is missing end ');'
 			</action>
-			
 			<action dev="David Masclet" type="fix">
 				Format parameter is not taken into account in street search and geolocquery(http://code.google.com/p/gisgraphy/issues/detail?id=18)
 			</action>
@@ -540,6 +539,7 @@
 			<action dev="David Masclet" type="fix">
 				GeocodingLevel is not correct in geocoding ws(http://code.google.com/p/gisgraphy/issues/detail?id=19) 
 			</action>
+			</release>
 			
 			
 			<release version="4.0" date="2012-01-03">
@@ -781,14 +781,49 @@
 				Add cityId to the openstreetmap entity
 			</action>
 			
-			<action dev="David Masclet" type="add">
-				Add cityId to the openstreetmap entity
-			</action>
 			
 			<action dev="David Masclet" type="add">
 				import suburb and neighboorhood
 			</action>
 			
+			
+			<action dev="David Masclet" type="fix">
+				street service took the shape of the street into account when searching around a point 
+				(if the center of a street was too far the street was not found even if the center was close)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				when importing : keep openstreetmap city shape if present, and do not override whith quattroshape
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				display street : now we can see the shape
+			</action>
+			
+			
+			<action dev="David Masclet" type="update">
+				add the id of the city to openstreetmap (allow to do city search)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				link city subdivision to their city during import.
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				if the city of a street is find by shape we update is_in_place with the city subdivision
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				street service now return the admXnames from level 1 to 4
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				don't format sql schema since it can cause problems.
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				reverse geocoding service output a formated address
+			</action>
 			
 			
 			</release>

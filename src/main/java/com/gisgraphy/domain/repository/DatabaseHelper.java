@@ -144,6 +144,7 @@ public class DatabaseHelper extends HibernateDaoSupport implements IDatabaseHelp
 		} else {
 		   schemaExporter = new SchemaExport(config);
 		}
+		schemaExporter.setFormat(false);
 		if (outputFile != null){
 		    schemaExporter.setOutputFile(outputFile.getAbsolutePath());
 		}

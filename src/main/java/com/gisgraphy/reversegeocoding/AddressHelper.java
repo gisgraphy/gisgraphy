@@ -31,6 +31,7 @@ import com.gisgraphy.addressparser.commons.GeocodingLevels;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.countryInfo;
 import com.vividsolutions.jts.geom.Point;
 
 
@@ -96,6 +97,21 @@ public class AddressHelper {
 		if (openStreetMap.getIsInAdm()!=null){
 			address.setState(openStreetMap.getIsInAdm());
 		}
+		if (openStreetMap.getAdm1Name()!=null){
+			address.setAdm1Name(openStreetMap.getAdm1Name());
+		}
+		if (openStreetMap.getAdm2Name()!=null){
+			address.setAdm2Name(openStreetMap.getAdm2Name());
+		}
+		if (openStreetMap.getAdm3Name()!=null){
+			address.setAdm3Name(openStreetMap.getAdm3Name());
+		}
+		if (openStreetMap.getAdm4Name()!=null){
+			address.setAdm4Name(openStreetMap.getAdm4Name());
+		}
+		if (openStreetMap.getAdm5Name()!=null){
+			address.setAdm5Name(openStreetMap.getAdm5Name());
+		}
 		if (openStreetMap.getIsInZip()!=null && openStreetMap.getIsInZip().size() >=1){  
 			address.setZipCode(openStreetMap.getIsInZip().iterator().next());
 		}
@@ -109,6 +125,7 @@ public class AddressHelper {
 		address.setGeocodingLevel(GeocodingLevels.STREET);//We set it and don't calculate it cause if streetname is null
 		//geocoding level will be street
 		
+		address.setFormatedFull(buildFullAddressString(address));
 		return address;
 	}
 
@@ -144,6 +161,49 @@ public class AddressHelper {
 		address.setDistance(houseNumberDistance.getDistance());
 		address.setGeocodingLevel(GeocodingLevels.HOUSE_NUMBER);
 		return address;
+	}
+	
+	public String buildFullAddressString(Address address){
+		StringBuffer sb = new StringBuffer();
+		if (address.getHouseNumber()!=null){
+			sb.append(address.getHouseNumber()).append(", ");
+		}
+		if (address.getStreetName()!=null){
+			sb.append(address.getStreetName()).append(", ");
+		}
+		if (address.getCitySubdivision()!=null){
+			sb.append(address.getCitySubdivision()).append(", ");
+		}
+		if (address.getCity()!=null){
+			sb.append(address.getCity()).append(", ");
+		}
+		if (address.getAdm1Name()==null && address.getAdm2Name()==null && address.getAdm3Name()==null && address.getAdm4Name()==null && address.getAdm5Name()==null && address.getState()!=null ){
+			sb.append(address.getState()).append(", ");
+		} else {
+			if (address.getAdm5Name()!=null){
+				sb.append(address.getAdm5Name()).append(", ");
+			}
+			if (address.getAdm4Name()!=null){
+				sb.append(address.getAdm4Name()).append(", ");
+			}
+			if (address.getAdm3Name()!=null){
+				sb.append(address.getAdm3Name()).append(", ");
+			}
+			if (address.getAdm2Name()!=null){
+				sb.append(address.getAdm2Name()).append(", ");
+			}
+			if (address.getAdm1Name()!=null){
+				sb.append(address.getAdm1Name()).append(", ");
+			}
+		}
+		if (address.getCountryCode()!=null){
+			String countryName = countryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase());
+			if (countryName!=null){
+				sb.append(countryName).append(", ");
+			}
+			sb.append(address.getCountryCode().toLowerCase());
+		}
+		return sb.toString();
 	}
 
 }

@@ -52,6 +52,11 @@ public interface ICityDao extends IGisDao<City> {
      */
     public City getByShape(Point location,final String countryCode,boolean filterMunicipality);
     
+    /**
+     * run an sql request that transfrom linestring to polygon
+     * return the number of polygons modify
+     */
+    public int fixPolygons();
   
     
   

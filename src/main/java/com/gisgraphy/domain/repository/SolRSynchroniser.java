@@ -360,6 +360,10 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			    		ex.setField(FullTextFields.HOUSE_NUMBERS.getValue(),houseNumbersToAdd );
 		    	}
 				populateAlternateNamesForStreet(gisFeature.getAlternateNames(),ex);
+				 ex.setField(FullTextFields.ADM1NAME.getValue(), gisFeature.getAdm1Name());
+				    ex.setField(FullTextFields.ADM2NAME.getValue(), gisFeature.getAdm2Name());
+				    ex.setField(FullTextFields.ADM3NAME.getValue(), gisFeature.getAdm3Name());
+				    ex.setField(FullTextFields.ADM4NAME.getValue(), gisFeature.getAdm4Name());
 		    } else {
 			
 			ex.setField(FullTextFields.FEATURECLASS.getValue(), gisFeature

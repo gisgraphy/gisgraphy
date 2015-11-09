@@ -245,6 +245,13 @@ public class StreetSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
     @Test
     public void testExecuteQueryShouldReturnsAValidDTOOrderedByDistance() {
 	OpenStreetMap street = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+	//set the adm manually
+	street.setAdm1Name("adm1Name");
+	street.setAdm2Name("adm2Name");
+	street.setAdm3Name("adm3Name");
+	street.setAdm4Name("adm4Name");
+	street.setAdm5Name("adm5Name");
+	street.setIsInPlace("isInPlace");
 
 	this.openStreetMapDao.save(street);
 
@@ -255,6 +262,11 @@ public class StreetSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
 	StreetSearchResultsDto results = streetSearchEngine.executeQuery(query);
 	assertEquals(1, results.getResult().size());
 	assertEquals(street.getName(), results.getResult().get(0).getName());
+	assertEquals(street.getAdm1Name(), results.getResult().get(0).getAdm1Name());
+	assertEquals(street.getAdm2Name(), results.getResult().get(0).getAdm2Name());
+	assertEquals(street.getAdm3Name(), results.getResult().get(0).getAdm3Name());
+	assertEquals(street.getAdm4Name(), results.getResult().get(0).getAdm4Name());
+	assertEquals(street.getAdm5Name(), results.getResult().get(0).getAdm5Name());
 	assertEquals(street.getCountryCode(), results.getResult().get(0).getCountryCode());
 	assertEquals(street.getGid(), results.getResult().get(0).getGid());
 	assertEquals(street.getIsIn(), results.getResult().get(0).getIsIn());

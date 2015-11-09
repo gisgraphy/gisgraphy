@@ -1236,6 +1236,11 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
     	street.setShape(shape);
     	street.setIsIn(isIn);
     	street.setIsInAdm(isInAdm);
+    	street.setAdm1Name("adm1Name");
+    	street.setAdm2Name("adm2Name");
+    	street.setAdm3Name("adm3Name");
+    	street.setAdm4Name("adm4Name");
+    	street.setAdm5Name("adm5Name");
     	street.setIsInZip(isInZip);
     	street.setIsInPlace(isInPlace);
 		street.setFullyQualifiedAddress(fullyQualifiedAddress);
@@ -1309,6 +1314,14 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='"+street.getIsIn()+"']",
 			"//*[@name='" + FullTextFields.IS_IN_ADM.getValue()
 			+ "'][.='"+street.getIsInAdm()+"']",
+			"//*[@name='" + FullTextFields.ADM1NAME.getValue()
+			+ "'][.='"+street.getAdm1Name()+"']",
+			"//*[@name='" + FullTextFields.ADM2NAME.getValue()
+			+ "'][.='"+street.getAdm2Name()+"']",
+			"//*[@name='" + FullTextFields.ADM3NAME.getValue()
+			+ "'][.='"+street.getAdm3Name()+"']",
+			"//*[@name='" + FullTextFields.ADM4NAME.getValue()
+			+ "'][.='"+street.getAdm4Name()+"']",
 			"//*[@name='" + FullTextFields.IS_IN_PLACE.getValue()
 			+ "'][.='"+street.getIsInPlace()+"']",
 			"//*[@name='" + FullTextFields.IS_IN_ZIP.getValue()
