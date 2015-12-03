@@ -825,6 +825,14 @@
 				reverse geocoding service output a formated address
 			</action>
 			
+			<action dev="David Masclet" type="fix">
+				the fulltext engine filter result only if radius different than 0, otherwise it promote nearest
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				street detection in fulltext engine was overriding location filter
+			</action>
+			
 			
 			</release>
 			

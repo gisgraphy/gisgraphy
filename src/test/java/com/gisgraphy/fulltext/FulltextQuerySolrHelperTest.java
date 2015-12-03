@@ -96,6 +96,194 @@ public class FulltextQuerySolrHelperTest {
 				parameters.get(Constants.SPELLCHECKER_QUERY_PARAMETER));
 	}
 	
+	
+	@Test
+	public void testToQueryStringShouldreturnCorrectParamsForSuggestQuery_with_default_radius_should_filter_results() {
+		Country france = GisgraphyTestHelper.createCountryForFrance();
+		Pagination pagination = paginate().from(3).to(10);
+		Output output = Output.withFormat(OutputFormat.XML)
+				.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+				.withIndentation();
+		String searchTerm = "Saint-André";
+		FulltextQuery fulltextQuery = new FulltextQuery(searchTerm, pagination,
+				output, null, null).withAllWordsRequired(true)
+				.withSuggest(true).withSpellChecking().around(GeolocHelper.createPoint(3D, 4D));
+		// split parameters
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						FulltextQuerySolrHelper.toQueryString(fulltextQuery),
+						"&");
+		// check parameters
+		assertNotNull(
+				"field list parameter when radius ",
+				parameters.get(Constants.FQ_PARAMETER));
+		
+		assertEquals("wrong filter query parameter for geoloc",
+				"{!bbox sfield=location}",
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertEquals("wrong filter query parameter for geoloc",
+				1,
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).size());
+		
+		assertNotNull(
+				"field list parameter should contains spaial fields",
+				parameters.get(Constants.SPATIAL_FIELD_PARAMETER));
+		
+		assertNotNull(
+				"field list parameter should contains point fields",
+				parameters.get(Constants.POINT_PARAMETER));
+		
+		
+	}
+	
+	@Test
+	public void testToQueryStringShouldreturnCorrectParamsForSuggestQuery_with_streetdetection_and_radius_should_have_two_filterquery_If_there_is_already_a_streetplacetype() {
+		Country france = GisgraphyTestHelper.createCountryForFrance();
+		Pagination pagination = paginate().from(3).to(10);
+		Output output = Output.withFormat(OutputFormat.XML)
+				.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+				.withIndentation();
+		String searchTerm = "Saint-André street";
+		FulltextQuery fulltextQuery = new FulltextQuery(searchTerm, pagination,
+				output, null, null).withAllWordsRequired(true).withPlaceTypes(com.gisgraphy.fulltext.Constants.STREET_PLACETYPE)
+				.withSuggest(true).withSpellChecking().around(GeolocHelper.createPoint(3D, 4D));
+		// split parameters
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						FulltextQuerySolrHelper.toQueryString(fulltextQuery),
+						"&");
+		// check parameters
+		assertNotNull(
+				"field list parameter when radius ",
+				parameters.get(Constants.FQ_PARAMETER));
+		
+		assertEquals("wrong filter query parameter for geoloc",
+				"{!bbox sfield=location}",
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertEquals("wrong filter query parameter for geoloc",
+				2,
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).size());
+		
+		assertNotNull(
+				"field list parameter should contains spaial fields",
+				parameters.get(Constants.SPATIAL_FIELD_PARAMETER));
+		
+		assertNotNull(
+				"field list parameter should contains point fields",
+				parameters.get(Constants.POINT_PARAMETER));
+		
+		
+	}
+	
+	@Test
+	public void testToQueryStringShouldreturnCorrectParamsForSuggestQuery_with_streetdetection_and_radius_should_have_three_filterquery_If_there_is_a_placetype_other_than_street() {
+		Country france = GisgraphyTestHelper.createCountryForFrance();
+		Pagination pagination = paginate().from(3).to(10);
+		Output output = Output.withFormat(OutputFormat.XML)
+				.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+				.withIndentation();
+		String searchTerm = "Saint-André street";
+		FulltextQuery fulltextQuery = new FulltextQuery(searchTerm, pagination,
+				output, null, null).withAllWordsRequired(true).withPlaceTypes(com.gisgraphy.fulltext.Constants.ONLY_CITY_PLACETYPE)
+				.withSuggest(true).withSpellChecking().around(GeolocHelper.createPoint(3D, 4D));
+		// split parameters
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						FulltextQuerySolrHelper.toQueryString(fulltextQuery),
+						"&");
+		// check parameters
+		assertNotNull(
+				"field list parameter when radius ",
+				parameters.get(Constants.FQ_PARAMETER));
+		
+		assertEquals("wrong filter query parameter for geoloc",
+				"{!bbox sfield=location}",
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertEquals("wrong filter query parameter for geoloc",
+				3,
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).size());
+		
+		assertNotNull(
+				"field list parameter should contains spaial fields",
+				parameters.get(Constants.SPATIAL_FIELD_PARAMETER));
+		
+		assertNotNull(
+				"field list parameter should contains point fields",
+				parameters.get(Constants.POINT_PARAMETER));
+		
+		
+	}
+	
+	@Test
+	public void testToQueryStringShouldreturnCorrectParamsForSuggestQuery_without_radius_equals_0_should_promote_nearest() {
+		Country france = GisgraphyTestHelper.createCountryForFrance();
+		Pagination pagination = paginate().from(3).to(10);
+		Output output = Output.withFormat(OutputFormat.XML)
+				.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+				.withIndentation();
+		String searchTerm = "Saint-André";
+		FulltextQuery fulltextQuery = new FulltextQuery(searchTerm, pagination,
+				output, null, null).withAllWordsRequired(true)
+				.withSuggest(true).withSpellChecking().around(GeolocHelper.createPoint(3D, 4D)).withRadius(0);
+		// split parameters
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						FulltextQuerySolrHelper.toQueryString(fulltextQuery),
+						"&");
+		// check parameters
+		assertNull(
+				"field list parameter are by default, we use the one in the suggest request handler",
+				parameters.get(Constants.FQ_PARAMETER));
+		
+		assertNotNull(
+				"field list parameter should contains spaial fields",
+				parameters.get(Constants.SPATIAL_FIELD_PARAMETER));
+		
+		assertNotNull(
+				"field list parameter should contains point fields",
+				parameters.get(Constants.POINT_PARAMETER));
+		
+		
+	}
+	
+	@Test
+	public void testToQueryStringShouldreturnCorrectParamsForSuggestQuery_without_radius_specified_should_filter_result() {
+		Country france = GisgraphyTestHelper.createCountryForFrance();
+		Pagination pagination = paginate().from(3).to(10);
+		Output output = Output.withFormat(OutputFormat.XML)
+				.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+				.withIndentation();
+		String searchTerm = "Saint-André";
+		FulltextQuery fulltextQuery = new FulltextQuery(searchTerm, pagination,
+				output, null, null).withAllWordsRequired(true)
+				.withSuggest(true).withSpellChecking().around(GeolocHelper.createPoint(3D, 4D)).withRadius(2000);
+		// split parameters
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						FulltextQuerySolrHelper.toQueryString(fulltextQuery),
+						"&");
+		// check parameters
+		assertNotNull(
+				parameters.get(Constants.FQ_PARAMETER));
+		
+		assertEquals("wrong filter query parameter for geoloc",
+				"{!bbox sfield=location}",
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertNotNull(
+				"field list parameter should contains spaial fields",
+				parameters.get(Constants.SPATIAL_FIELD_PARAMETER));
+		
+		assertNotNull(
+				"field list parameter should contains point fields",
+				parameters.get(Constants.POINT_PARAMETER));
+		
+		
+	}
+	
 	@Test
 	public void testToQueryStringShouldreturnCorrectParamsForSuggestQuery_smartDetection() {
 		Country france = GisgraphyTestHelper.createCountryForFrance();
@@ -949,14 +1137,12 @@ public class FulltextQuerySolrHelperTest {
 
 		assertEquals("wrong filter query parameter for placetype",
 				"placetype:(Adm)",
-				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(2));
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
 		assertEquals("wrong filter query parameter for countrycode",
 				"country_code:FR",
-				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
-
-		assertEquals("wrong filter query parameter for geoloc",
-				"{!bbox sfield=location}",
 				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+
+		
 		assertEquals("wrong filter query parameter for geoloc, point",
 				"30.0,20.0", parameters.get(Constants.POINT_PARAMETER).get(0));
 		assertEquals("wrong filter query parameter for geoloc, distance should not be set to max if radius = 0",

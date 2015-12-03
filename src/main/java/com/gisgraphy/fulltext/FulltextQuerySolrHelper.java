@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.Street;
@@ -42,6 +43,7 @@ import com.gisgraphy.serializer.common.OutputFormat;
  * 
  */
 public class FulltextQuerySolrHelper {
+	
 	
 	public static final String FEATUREID_PREFIX = FullTextFields.FEATUREID.getValue()+":";
 	
@@ -135,9 +137,9 @@ public class FulltextQuerySolrHelper {
 		//filter query
 		if (query.getPoint() != null) {
 			    parameters.set(Constants.SPATIAL_FIELD_PARAMETER, GisFeature.LOCATION_COLUMN_NAME);
-				parameters.set(Constants.FQ_PARAMETER, FQ_LOCATION);
 				parameters.add(Constants.POINT_PARAMETER,query.getPoint().getY()+","+query.getPoint().getX());
 				if(query.getRadius() != 0){
+					parameters.add(Constants.FQ_PARAMETER, FQ_LOCATION);
 					parameters.add(Constants.DISTANCE_PARAMETER,query.getRadius()/1000+"");
 				} else if(query.getRadius() == 0){
 					parameters.add(Constants.DISTANCE_PARAMETER,MAX_RADIUS+"");
@@ -188,9 +190,9 @@ public class FulltextQuerySolrHelper {
 					.toString());
 		}
 		else if (query.isSuggest()){
-			if (smartStreetDetection.getStreetTypes(query.getQuery()).size()==1){
+			if (!isStreetQuery(query) && smartStreetDetection.getStreetTypes(query.getQuery()).size()==1){//only if there is no pacetype=street
 			//	parameters.set(Constants.BQ_PARAMETER, STREET_BOOST_QUERY);
-				parameters.set(Constants.FILTER_QUERY_PARAMETER, FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName());
+				parameters.add(Constants.FQ_PARAMETER, FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName());
 			}
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.suggest
 					.toString());
@@ -209,7 +211,7 @@ public class FulltextQuerySolrHelper {
 		    Constants.SolrQueryType.standard.toString());
 	    parameters.set(Constants.QUERY_PARAMETER, query.getQuery());*/
 			String boost="";
-			if (smartStreetDetection.getStreetTypes(query.getQuery()).size()==1){
+			if (!isStreetQuery(query) && smartStreetDetection.getStreetTypes(query.getQuery()).size()==1){
 				boost=STREET_BOOST_QUERY;
 			} else if (query.getPlaceTypes()==null){
 				boost=CITY_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
