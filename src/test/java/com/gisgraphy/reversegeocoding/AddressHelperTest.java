@@ -1,5 +1,7 @@
 package com.gisgraphy.reversegeocoding;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.junit.Assert;
@@ -7,8 +9,10 @@ import org.junit.Test;
 
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
+import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
+import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.test.GisgraphyTestHelper;
 import com.vividsolutions.jts.geom.Point;
@@ -143,6 +147,7 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
 		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
+		System.out.println(addressHelper.buildFullAddressString(address));
 		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
 		
 		
@@ -191,12 +196,86 @@ public class AddressHelperTest {
 		Assert.assertEquals(houseNumber.getLatitude(),address.getLat());
 		Assert.assertEquals(houseNumber.getLongitude(), address.getLng());
 		Assert.assertEquals(GeocodingLevels.HOUSE_NUMBER, address.getGeocodingLevel());
+		Assert.assertTrue(address.getFormatedFull().contains("2,"));
 		
 		//
 		Assert.assertEquals(distance, address.getDistance().doubleValue(),0.01);
 		Assert.assertEquals(name, address.getName());
 		Assert.assertEquals(number, address.getHouseNumber());
 		
+	}
+	
+	@Test
+	public void buildAddressFromcity(){
+		City city = new City();
+		city.setName("name");
+		city.setIsInAdm("isInAdm");
+		city.setAdm1Name("adm1Name");
+		city.setAdm2Name("adm2Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm5Name("adm5Name");
+		city.setIsInAdm("isInAdm");
+		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
+		zipcodes.add(new ZipCode("zip"));
+		city.setZipCodes(zipcodes);
+		city.setLocation(GeolocHelper.createPoint(2D, 3D));
+		city.setCountryCode("countryCode");
+		
+		
+		Address address = addressHelper.buildAddressFromcity(city);
+		Assert.assertEquals(city.getName(), address.getCity());
+		Assert.assertEquals(city.getIsInAdm(), address.getState());
+		Assert.assertEquals(city.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(city.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(city.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(city.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(city.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals(city.getZipCodes().iterator().next().toString(), address.getZipCode());
+		Assert.assertEquals(city.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(GeocodingLevels.CITY, address.getGeocodingLevel());
+		Assert.assertEquals(city.getLatitude(), address.getLat());
+		Assert.assertEquals(city.getLongitude(), address.getLng());
+		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
+		System.out.println(addressHelper.buildFullAddressString(address));
+		
+	}
+	
+	@Test
+	public void buildAddressFromCityAndPoint(){
+		City city = new City();
+		city.setName("name");
+		city.setIsInAdm("isInAdm");
+		city.setAdm1Name("adm1Name");
+		city.setAdm2Name("adm2Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm5Name("adm5Name");
+		city.setIsInAdm("isInAdm");
+		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
+		zipcodes.add(new ZipCode("zip"));
+		city.setZipCodes(zipcodes);
+		city.setLocation(GeolocHelper.createPoint(2D, 3D));
+		city.setCountryCode("countryCode");
+		Point point = GeolocHelper.createPoint(5D, 4D);
+		
+		
+		Address address = addressHelper.buildAddressFromCityAndPoint(city,point);
+		Assert.assertEquals(city.getName(), address.getCity());
+		Assert.assertEquals(city.getIsInAdm(), address.getState());
+		Assert.assertEquals(city.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(city.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(city.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(city.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(city.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals(city.getZipCodes().iterator().next().toString(), address.getZipCode());
+		Assert.assertEquals(city.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(GeocodingLevels.CITY, address.getGeocodingLevel());
+		Assert.assertEquals(city.getLatitude(), address.getLat());
+		Assert.assertEquals(city.getLongitude(), address.getLng());
+		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
+		System.out.println(addressHelper.buildFullAddressString(address));
+		Assert.assertEquals(GeolocHelper.distance(point, city.getLocation()), address.getDistance().doubleValue(),0.0001);
 	}
 	
 

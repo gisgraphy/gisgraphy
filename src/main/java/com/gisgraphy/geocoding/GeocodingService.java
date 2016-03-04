@@ -771,7 +771,7 @@ public class GeocodingService implements IGeocodingService {
 		Matcher m = HOUSENUMBERPATTERN.matcher(address);
 		if (m.find()) {
 			String houseNumber = m.group();
-			logger.info("found house number"+houseNumber+" in "+address);
+			logger.info("found house number "+houseNumber+" in "+address);
 			return houseNumber.trim();
 		} else {
 			logger.info("no house number found in "+address);

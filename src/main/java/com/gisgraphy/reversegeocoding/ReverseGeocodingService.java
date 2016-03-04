@@ -44,9 +44,12 @@ import org.springframework.util.Assert;
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.AddressResultsDto;
 import com.gisgraphy.addressparser.AddressResultsDtoSerializer;
+import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
+import com.gisgraphy.domain.repository.ICityDao;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.valueobject.Constants;
+import com.gisgraphy.geoloc.GeolocQuery;
 import com.gisgraphy.serializer.common.UniversalSerializerConstant;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.service.ServiceException;
@@ -73,6 +76,9 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 	@Autowired
 	protected AddressHelper addressHelper;
 	
+	@Autowired
+	protected ICityDao cityDao;
+	
 	AddressResultsDtoSerializer addressResultsDtoSerializer = new AddressResultsDtoSerializer();
 
 	/**
@@ -80,6 +86,8 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 	 */
 	protected static final Logger logger = LoggerFactory
 			.getLogger(ReverseGeocodingService.class);
+
+	public static int DEFAULT_RADIUS = 50000;
 
 
 	public AddressResultsDto executeQuery(ReverseGeocodingQuery query)
@@ -131,7 +139,30 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 					return new AddressResultsDto(addresses, qTime);
 				} 
 			}
-		} 
+		} else {
+			logger.info("No street found, try to find city by shape");
+			City city = cityDao.getByShape(point, null, false);
+			Address address = null;
+			if (city == null){
+				logger.info("No city by shape found, try by vicinity");
+				city = cityDao.getNearest(point,null, false, DEFAULT_RADIUS);
+				if (city == null){
+					logger.info("No city by vicinity found");
+				} else {
+					logger.info("find a city by vicinity "+city.getName()+" / "+city.getId());
+					address = addressHelper.buildAddressFromCityAndPoint(city,point);
+				}
+			} else {
+				logger.info("find a city by shape "+city.getName()+" / "+city.getId());
+				address = addressHelper.buildAddressFromCityAndPoint(city,point);
+			}
+			List<Address> addresses = new ArrayList<Address>();
+			addresses.add(address);
+			long end = System.currentTimeMillis();
+			long qTime = end - start;
+			logger.info(query + " took " + (qTime) + " ms and returns a city result");
+			return new AddressResultsDto(addresses, qTime);
+		}
 		long end = System.currentTimeMillis();
 		long qTime = end - start;
 		logger.info(query + " took " + (qTime) + " ms and doesn't returns no result");

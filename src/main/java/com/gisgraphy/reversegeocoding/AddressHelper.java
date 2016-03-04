@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
+import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.helper.GeolocHelper;
@@ -81,10 +82,13 @@ public class AddressHelper {
 	}
 	
 	public  Address buildAddressFromOpenstreetMap(OpenStreetMap openStreetMap) {
+		return buildAddressFromOpenstreetMap(openStreetMap, new Address());
+	}
+	
+	public  Address buildAddressFromOpenstreetMap(OpenStreetMap openStreetMap,Address address) {
 		if (openStreetMap==null){
 			return null;
 		}
-		Address address = new Address();
 		if (openStreetMap.getName()!=null){
 			address.setStreetName(openStreetMap.getName());
 		}
@@ -133,10 +137,13 @@ public class AddressHelper {
 		if (openStreetMap==null || point == null){
 			return null;
 		}
-		Address address = buildAddressFromOpenstreetMap(openStreetMap);
+		Address address = new Address();
 		if (openStreetMap.getLocation()!=null){
 			address.setDistance(GeolocHelper.distance(point, openStreetMap.getLocation()));
 		}
+		//we do the build address at the end because the formatedurl should take the housenumber into account
+				// and we have to set it first
+		address = buildAddressFromOpenstreetMap(openStreetMap,address);
 		
 		return address;
 	}
@@ -145,13 +152,9 @@ public class AddressHelper {
 		if (houseNumberDistance==null || houseNumberDistance.getHouseNumber()==null){
 			return null;
 		}
-		Address address = buildAddressFromOpenstreetMap(houseNumberDistance.getHouseNumber().getStreet());
-		if (houseNumberDistance.getHouseNumber().getLatitude()!=null){
-			address.setLat(houseNumberDistance.getHouseNumber().getLatitude());
-		}
-		if (houseNumberDistance.getHouseNumber().getLongitude()!=null){
-			address.setLng(houseNumberDistance.getHouseNumber().getLongitude());
-		}
+		Address address = new Address();
+		//we do the build address at the end because the formatedurl should take the housenumber into account
+		// and we have to set it first
 		if (houseNumberDistance.getHouseNumber().getNumber()!=null){
 			address.setHouseNumber(houseNumberDistance.getHouseNumber().getNumber());
 		}
@@ -159,6 +162,15 @@ public class AddressHelper {
 			address.setName(houseNumberDistance.getHouseNumber().getName());
 		}
 		address.setDistance(houseNumberDistance.getDistance());
+		//then enrich the address
+		address = buildAddressFromOpenstreetMap(houseNumberDistance.getHouseNumber().getStreet(),address);
+		//and overide lat / long 
+		if (houseNumberDistance.getHouseNumber().getLatitude()!=null){
+			address.setLat(houseNumberDistance.getHouseNumber().getLatitude());
+		}
+		if (houseNumberDistance.getHouseNumber().getLongitude()!=null){
+			address.setLng(houseNumberDistance.getHouseNumber().getLongitude());
+		}
 		address.setGeocodingLevel(GeocodingLevels.HOUSE_NUMBER);
 		return address;
 	}
@@ -196,6 +208,9 @@ public class AddressHelper {
 				sb.append(address.getAdm1Name()).append(", ");
 			}
 		}
+		if (address.getZipCode() != null){
+			sb.append(address.getZipCode()).append(", ");
+		} 
 		if (address.getCountryCode()!=null){
 			String countryName = countryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase());
 			if (countryName!=null){
@@ -203,7 +218,65 @@ public class AddressHelper {
 			}
 			sb.append(address.getCountryCode().toLowerCase());
 		}
-		return sb.toString();
+		String str =  sb.toString();
+		System.out.println(str);
+		return str;
 	}
+
+	public Address buildAddressFromCityAndPoint(City city,Point point) {
+		if (city==null || point == null){
+			return null;
+		}
+		Address address = buildAddressFromcity(city);
+		if (city.getLocation()!=null){
+			address.setDistance(GeolocHelper.distance(point, city.getLocation()));
+		}
+		
+		return address;
+	}
+
+	public Address buildAddressFromcity(City city) {
+		if (city == null){
+			return null;
+		}
+		Address address = new Address();
+		if (city.getName()!=null){
+			address.setCity(city.getName());
+		}
+		if (city.getIsInAdm()!=null){
+			address.setState(city.getIsInAdm());
+		}
+		if (city.getAdm1Name()!=null){
+			address.setAdm1Name(city.getAdm1Name());
+		}
+		if (city.getAdm2Name()!=null){
+			address.setAdm2Name(city.getAdm2Name());
+		}
+		if (city.getAdm3Name()!=null){
+			address.setAdm3Name(city.getAdm3Name());
+		}
+		if (city.getAdm4Name()!=null){
+			address.setAdm4Name(city.getAdm4Name());
+		}
+		if (city.getAdm5Name()!=null){
+			address.setAdm5Name(city.getAdm5Name());
+		}
+		if (city.getZipCodes()!=null && city.getZipCodes().size() >=1){  
+			address.setZipCode(city.getZipCodes().iterator().next().toString());
+		}
+		if (city.getLocation()!=null){
+			address.setLng(city.getLongitude());
+			address.setLat(city.getLatitude());
+		}
+		if (city.getCountryCode()!=null){
+			address.setCountryCode(city.getCountryCode());
+		}
+		address.setGeocodingLevel(GeocodingLevels.CITY);//We set it and don't calculate it cause if streetname is null
+		//geocoding level will be street
+		
+		address.setFormatedFull(buildFullAddressString(address));
+		return address;
+	}
+
 
 }
