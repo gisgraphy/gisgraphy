@@ -833,6 +833,9 @@
 				street detection in fulltext engine was overriding location filter
 			</action>
 			
+			<action dev="David Masclet" type="add">
+				if reverse geocoding service doesn't find a street it returns the nearest city
+			</action>
 			
 			</release>
 			
