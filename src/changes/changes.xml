@@ -837,6 +837,14 @@
 				if reverse geocoding service doesn't find a street it returns the nearest city
 			</action>
 			
+			<action dev="David Masclet" type="add">
+				Improve house number detection in geocoding service
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				geocoding service take the street type into account
+			</action>
+			
 			</release>
 			
 	</body>
