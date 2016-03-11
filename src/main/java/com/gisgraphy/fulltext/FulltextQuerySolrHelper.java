@@ -22,10 +22,9 @@
  *******************************************************************************/
 package com.gisgraphy.fulltext;
 
-import java.util.Locale;
-
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
@@ -33,6 +32,7 @@ import com.gisgraphy.domain.geoloc.entity.Street;
 import com.gisgraphy.domain.valueobject.Constants;
 import com.gisgraphy.domain.valueobject.Output.OutputStyle;
 import com.gisgraphy.fulltext.spell.SpellCheckerConfig;
+import com.gisgraphy.geocoding.GeocodingService;
 import com.gisgraphy.serializer.common.OutputFormat;
 
 /**
@@ -43,6 +43,8 @@ import com.gisgraphy.serializer.common.OutputFormat;
  * 
  */
 public class FulltextQuerySolrHelper {
+	
+	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 	
 	
 	public static final String FEATUREID_PREFIX = FullTextFields.FEATUREID.getValue()+":";
@@ -55,7 +57,7 @@ public class FulltextQuerySolrHelper {
 
 	private static OutputStyleHelper outputStyleHelper = new OutputStyleHelper();
 
-	private final static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^2 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.9  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.8 "+FullTextFields.IS_IN_CITIES.getValue()+"^1.5 ";
+	private final static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^2 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.9  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^1.5 ";
 	protected static final String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!dismax qf='all_name^1.1 iso_all_name^1 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5 all_country_name^0.5 %s' pf=name^1.3 ps=0 bq='%s' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)  %s'}%s\"";
 	//below the all_adm1_name^0.5 all_adm2_name^0.5 has been kept
 	//protected static final String NESTED_QUERY_TEMPLATE = "_query_:\"{!dismax qf='all_name^1.1 iso_all_name^1 zipcode^1.1 all_adm1_name^0.5 all_adm2_name^0.5 all_country_name^0.5 %s' pf=name^1.1 bf=population^2.0}%s\"";
@@ -211,7 +213,7 @@ public class FulltextQuerySolrHelper {
 		    Constants.SolrQueryType.standard.toString());
 	    parameters.set(Constants.QUERY_PARAMETER, query.getQuery());*/
 			String boost="";
-			if (!isStreetQuery(query) && smartStreetDetection.getStreetTypes(query.getQuery()).size()==1){
+			if ((!isStreetQuery(query) && smartStreetDetection.getStreetTypes(query.getQuery()).size()==1)){
 				boost=STREET_BOOST_QUERY;
 			} else if (query.getPlaceTypes()==null){
 				boost=CITY_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
@@ -230,7 +232,10 @@ public class FulltextQuerySolrHelper {
 			}
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
-			parameters.set(Constants.QUERY_PARAMETER, querybuffer.toString());
+			String queryAsStr = querybuffer.toString();
+			logger.error("queryAsStr="+queryAsStr);
+			
+			parameters.set(Constants.QUERY_PARAMETER, queryAsStr);
 		}
 
 
@@ -278,6 +283,14 @@ public class FulltextQuerySolrHelper {
 				}
 			}
 		}
+		return false;
+	}
+	
+	protected static boolean isStreetQueryOnly(FulltextQuery query) {
+		if (query.getPlaceTypes() != null && query.getPlaceTypes().length == 1 && 
+			 query.getPlaceTypes()[0] == Street.class) {
+					return true;
+			}
 		return false;
 	}
 

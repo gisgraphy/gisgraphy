@@ -216,7 +216,7 @@ public class AddressHelper {
 			if (countryName!=null){
 				sb.append(countryName).append(", ");
 			}
-			sb.append(address.getCountryCode().toLowerCase());
+			sb.append(address.getCountryCode().toUpperCase());
 		}
 		String str =  sb.toString();
 		System.out.println(str);

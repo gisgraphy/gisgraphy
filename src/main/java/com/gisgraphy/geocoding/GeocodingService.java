@@ -218,13 +218,15 @@ public class GeocodingService implements IGeocodingService {
 		AddressQuery addressQuery = new AddressQuery(rawAddress, countryCode);
 		AddressResultsDto addressResultDto = null;
 		logger.debug("is postal address : " +query.isPostal());
-		if (gisgraphyConfig.useAddressParserWhenGeocoding || query.isPostal()) {
+		if (gisgraphyConfig.useAddressParserWhenGeocoding || query.isPostal() && needParsing(query.getAddress())) {
 			try {
 				logger.debug("address parser is enabled");
 				addressResultDto = addressParser.execute(addressQuery);
 			} catch (AddressParserException e) {
 				logger.error("An error occurs during parsing of address" + e.getMessage(), e);
 			}
+		} else {
+			logger.debug("won't parse "+rawAddress);
 		}
 		if (addressResultDto != null && addressResultDto.getResult().size() >= 1 && isGeocodable(addressResultDto.getResult().get(0))) {
 			if (logger.isDebugEnabled()) {
@@ -245,12 +247,18 @@ public class GeocodingService implements IGeocodingService {
 				houseNumber = houseNumberAddressDto.getHouseNumber();
 				newAddress = houseNumberAddressDto.getAddressWithoutHouseNumber();
 			} 
-			List<SolrResponseDto> aproximativeMatches = findStreetInText(newAddress, countryCode, null);
 			if (GisgraphyConfig.searchForExactMatchWhenGeocoding) {
 				List<SolrResponseDto> exactMatches = findExactMatches(newAddress, countryCode);
-				List<SolrResponseDto> mergedResults = mergeSolrResponseDto(exactMatches, aproximativeMatches);
-				results = buildAddressResultDtoFromSolrResponseDto(mergedResults, houseNumber);
+			//	if (exactMatches.size()==0){
+					List<SolrResponseDto> aproximativeMatches = findStreetInText(newAddress, countryCode, null);
+					List<SolrResponseDto> mergedResults = mergeSolrResponseDto(exactMatches, aproximativeMatches);
+					results = buildAddressResultDtoFromSolrResponseDto(mergedResults, houseNumber);
+				/*} else {
+					//if there is some exact match it is probably the correct one
+					results = buildAddressResultDtoFromSolrResponseDto(exactMatches, houseNumber);
+				}*/
 			} else {
+				List<SolrResponseDto> aproximativeMatches = findStreetInText(newAddress, countryCode, null);
 				results = buildAddressResultDtoFromStreetsAndCities(aproximativeMatches, null, houseNumber);
 			}
 			Long endTime = System.currentTimeMillis();
@@ -330,6 +338,14 @@ public class GeocodingService implements IGeocodingService {
 			}
 		}
 
+	}
+
+	boolean needParsing(String query) {
+		if (query !=null){
+			String str = query.trim();
+			return str.length() > 0 && str.indexOf(" ") != -1;
+		}
+		return false;
 	}
 
 	protected boolean isGeocodable(Address address) {
@@ -462,7 +478,7 @@ public class GeocodingService implements IGeocodingService {
 
 				String streetName = street.getName();
 				if (logger.isDebugEnabled() && streets != null) {
-					logger.debug("=>street : " + streetName +" ("+street.getScore()+")");
+					logger.debug("=>street : " + streetName +" ("+street.getScore()+")/id="+street.getFeature_id());
 				}
 				address.setStreetName(streetName);
 				address.setStreetType(street.getStreet_type());
@@ -748,7 +764,8 @@ public class GeocodingService implements IGeocodingService {
 
 	protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
 		List<SolrResponseDto> streets = findInText(text, countryCode, point, com.gisgraphy.fulltext.Constants.STREET_PLACETYPE);
-		Point location;
+		//now that we use bounding box it is to necessary to sort by distance 
+		/*Point location;
 		if (point != null) {
 			for (SolrResponseDto solrResponseDto : streets) {
 				Double longitude = solrResponseDto.getLng();
@@ -760,7 +777,7 @@ public class GeocodingService implements IGeocodingService {
 				}
 			}
 			Collections.sort(streets, comparator);
-		}
+		}*/
 		return streets;
 	}
 
@@ -855,12 +872,14 @@ public class GeocodingService implements IGeocodingService {
 				}
 			}
 			String newAddress;
-			
+			if (countryCode !=null){
+				countryCode = countryCode.toUpperCase();
+			}
 			if (houseNumber.length() == 4 && (countryCode == null || (countryCode!= null && countryWithZipIs4Number.contains(countryCode)))  
 					|| houseNumber.length() == 3 && (countryCode!= null && countryWithZipIs3Number.contains(countryCode)) 
 					){
-				logger.info("found house number " + houseNumber + " in " + address
-						+ " for country "+countryCode+" but we don't remove it since it can be a zipcode");
+				logger.info("found house number " + houseNumber + " in '" + address
+						+ "' for country '"+countryCode+"' but we don't remove it since it can be a zipcode");
 				newAddress = address;
 			} else {
 				newAddress = m.replaceFirst("").trim();
@@ -868,8 +887,8 @@ public class GeocodingService implements IGeocodingService {
 			}
 			HouseNumberAddressDto houseNumberAddressDto = new HouseNumberAddressDto(
 					newAddress, address, houseNumber);
-			logger.info("found house number " + houseNumber + " in " + address
-					+ ", new address wo housenumber = " + newAddress);
+			logger.info("found house number " + houseNumber + " in '" + address
+					+ "' for countrycode = '"+countryCode+"', new address wo housenumber = " + newAddress);
 			return houseNumberAddressDto;
 		} else {
 			logger.info("no house number found in " + address);

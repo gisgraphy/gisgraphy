@@ -77,7 +77,7 @@ public class AddressHelperTest {
 		address.setAdm5Name("adm5");
 		address.setCountryCode("FR");
 		String actual = addressHelper.buildFullAddressString(address);
-		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, adm5, adm4, adm3, adm2, adm1, France, fr", actual);
+		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, adm5, adm4, adm3, adm2, adm1, France, FR", actual);
 
 		//with only state fill
 		address.setAdm1Name(null);
@@ -87,7 +87,7 @@ public class AddressHelperTest {
 		address.setAdm5Name(null);
 		address.setState("state");
 		actual = addressHelper.buildFullAddressString(address);
-		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, state, France, fr", actual);
+		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, state, France, FR", actual);
 
 		//without any state info
 		address.setAdm1Name(null);
@@ -97,7 +97,7 @@ public class AddressHelperTest {
 		address.setAdm5Name(null);
 		address.setState(null);
 		actual = addressHelper.buildFullAddressString(address);
-		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, France, fr", actual);
+		Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, France, FR", actual);
 
 		//without any state info and city subdivision
 		address.setAdm1Name(null);
@@ -108,7 +108,7 @@ public class AddressHelperTest {
 		address.setState(null);
 		address.setCitySubdivision(null);
 		actual = addressHelper.buildFullAddressString(address);
-		Assert.assertEquals("3, foo bar street, paris, France, fr", actual);
+		Assert.assertEquals("3, foo bar street, paris, France, FR", actual);
 		//withunknow country
 		address.setAdm1Name(null);
 		address.setAdm2Name(null);
@@ -120,7 +120,7 @@ public class AddressHelperTest {
 
 		address.setCitySubdivision(null);
 		actual = addressHelper.buildFullAddressString(address);
-		Assert.assertEquals("3, foo bar street, paris, xx", actual);
+		Assert.assertEquals("3, foo bar street, paris, XX", actual);
 
 	}
 	

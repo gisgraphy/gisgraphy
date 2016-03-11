@@ -87,7 +87,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 	protected static final Logger logger = LoggerFactory
 			.getLogger(ReverseGeocodingService.class);
 
-	public static int DEFAULT_RADIUS = 50000;
+	public static int DEFAULT_RADIUS = 30000;
 
 
 	public AddressResultsDto executeQuery(ReverseGeocodingQuery query)

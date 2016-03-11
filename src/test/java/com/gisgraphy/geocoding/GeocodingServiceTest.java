@@ -1812,6 +1812,17 @@ public class GeocodingServiceTest {
     	
     	Assert.assertEquals(null, geocodingService.findHouseNumber("rue de la gare 59000 lille",null));
     }
+    
+    @Test
+    public void needParsing(){
+    	GeocodingService geocodingService = new GeocodingService();
+    	Assert.assertFalse(geocodingService.needParsing(""));
+    	Assert.assertFalse(geocodingService.needParsing(null));
+    	Assert.assertFalse(geocodingService.needParsing(" "));
+    	Assert.assertFalse(geocodingService.needParsing(" toto "));
+    	Assert.assertFalse(geocodingService.needParsing(" to-to "));
+    	Assert.assertTrue(geocodingService.needParsing(" toto toto "));
+    }
 
    
 }
