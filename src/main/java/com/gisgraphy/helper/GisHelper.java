@@ -139,6 +139,59 @@ public class GisHelper {
     }
 
     
+    /**
+     * @param alias the
+     *                sql alias
+     * @param latInDegree
+     *                the latitude in degree
+     * @param longInDegree
+     *                the longitude in degree
+     * @param distance
+     *                the boundingbox distance
+     * @return a sql String that represents an envelope
+     */
+    public static String makeEnvelope(String alias, double latInDegree, double longInDegree,
+	    double distance) {
+    
+    double lat = Math.toRadians(latInDegree);
+    double lon = Math.toRadians(longInDegree);
+
+	double deltaXInDegrees = Math.abs(Math.asin(Math
+		.sin(distance / Constants.RADIUS_OF_EARTH_IN_METERS)
+		/ Math.cos(lat)));
+	double deltaYInDegrees = Math.abs(distance
+		/ Constants.RADIUS_OF_EARTH_IN_METERS);
+
+	double minX = Math.toDegrees(lon - deltaXInDegrees);
+	double maxX = Math.toDegrees(lon + deltaXInDegrees);
+	double minY = Math.toDegrees(lat - deltaYInDegrees);
+	double maxY = Math.toDegrees(lat + deltaYInDegrees);
+
+	//"ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";
+	StringBuffer sb = new StringBuffer();
+	// {alias}.location && setSRID(BOX3D(...), 4326)
+	sb.append("st_contains(");
+	sb.append("ST_MakeEnvelope(");
+	sb.append(minX); // minX
+	sb.append(", ");
+	sb.append(minY); // minY
+	sb.append(", ");
+	sb.append(maxX); // maxX
+	sb.append(", ");
+	sb.append(maxY); // maxY
+	sb.append(", ");
+	sb.append(SRID.WGS84_SRID.getSRID());
+	sb.append(")  ");
+	sb.append(",");
+	sb.append(alias);
+	sb.append(".").append(GisFeature.LOCATION_COLUMN_NAME);
+	sb.append(")=true ");
+
+	return sb.toString();
+
+    }
+
+    
   
 
 }

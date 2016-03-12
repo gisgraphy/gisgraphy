@@ -67,6 +67,7 @@ import com.gisgraphy.domain.valueobject.SRID;
 import com.gisgraphy.fulltext.FullTextFields;
 import com.gisgraphy.fulltext.IsolrClient;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.GisHelper;
 import com.gisgraphy.helper.IntrospectionHelper;
 import com.gisgraphy.hibernate.criterion.DistanceRestriction;
 import com.gisgraphy.hibernate.criterion.ProjectionOrder;
@@ -638,8 +639,17 @@ public class GenericGisDao<T extends GisFeature> extends
 		    public Object doInHibernate(Session session)
 			    throws PersistenceException {
 		    String pointAsString = "ST_GeometryFromText('POINT("+location.getX()+" "+location.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
+		    String bbox = "st_setSRID(cast ('BOX3D(39.875947845588854 -6.649904839690944,57.85738955675488 11.316505067046899)'as box3d), 4326)";
+		    String bbox2 = "ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";
 			String queryString = "from " + persistentClass.getSimpleName()
-				+ " as c  where st_distance_sphere(c.location,"+pointAsString+") < "+distance;//left outer join c.zipCodes z
+				+ " as c  where st_distance_sphere(c.location,"+pointAsString+") < "+distance
+				//+" AND st_contains("+bbox2+",c.location)=true ";
+				+ " AND "+GisHelper.makeEnvelope("c", location.getY(),location.getX(), distance)
+	
+						//GisHelper.getBoundingBox(criteriaQuery.getSQLAlias(criteria), this.point
+							//	.getY(), this.point.getX(), distance)
+				
+				;//left outer join c.zipCodes z
 			if (filterMunicipality){
 				queryString+=" and c.municipality=true";
 			}

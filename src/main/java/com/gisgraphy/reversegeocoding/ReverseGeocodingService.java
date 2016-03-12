@@ -160,7 +160,11 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 			addresses.add(address);
 			long end = System.currentTimeMillis();
 			long qTime = end - start;
-			logger.info(query + " took " + (qTime) + " ms and returns a city result");
+			if (address==null){
+				logger.info(query + " took " + (qTime) + " ms and returns no result");
+			} else {
+				logger.info(query + " took " + (qTime) + " ms and returns a city : "+address.getCity());
+			}
 			return new AddressResultsDto(addresses, qTime);
 		}
 		long end = System.currentTimeMillis();
