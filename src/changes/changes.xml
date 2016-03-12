@@ -845,6 +845,10 @@
 				geocoding service take the street type into account
 			</action>
 			
+			<action dev="David Masclet" type="add">
+				improve getnearest by using index
+			</action>
+			
 			</release>
 			
 	</body>
