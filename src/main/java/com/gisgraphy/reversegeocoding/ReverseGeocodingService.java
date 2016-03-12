@@ -157,7 +157,9 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 				address = addressHelper.buildAddressFromCityAndPoint(city,point);
 			}
 			List<Address> addresses = new ArrayList<Address>();
-			addresses.add(address);
+			if (address != null){
+				addresses.add(address);
+			}
 			long end = System.currentTimeMillis();
 			long qTime = end - start;
 			if (address==null){
