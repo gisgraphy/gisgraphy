@@ -849,6 +849,10 @@
 				improve getnearest by using index
 			</action>
 			
+			<action dev="justine tunney" type="fix">
+				Upgrade Apache Commons Collections to v3.2.2 (pull request)
+			</action>
+			
 			</release>
 			
 	</body>
