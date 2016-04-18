@@ -853,6 +853,10 @@
 				Upgrade Apache Commons Collections to v3.2.2 (pull request)
 			</action>
 			
+			<action dev="David Masclet" type="fix">
+				Improve street deduplication when there is no house number
+			</action>
+			
 			</release>
 			
 	</body>

@@ -495,7 +495,8 @@ public class GeocodingService implements IGeocodingService {
 				}
 				//now search for house number!
 				List<HouseNumberDto> houseNumbersList = street.getHouse_numbers();
-				if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
+				//if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
+				//count them as street that has same streetname
 				if (!isEmptyString(streetName)){ 
 					if(streetName.equals(lastName) && city!=null){//probably the same street
 						if (housenumberFound){
@@ -542,7 +543,7 @@ public class GeocodingService implements IGeocodingService {
 						housenumberFound=false;
 					}
 				}
-				}
+			//	}
 				lastName=streetName;
 				address.getGeocodingLevel();//force calculation of geocodingLevel
 				addresses.add(address);
@@ -568,6 +569,7 @@ public class GeocodingService implements IGeocodingService {
 
 	protected HouseNumberDto searchHouseNumber(String houseNumberToFind, List<HouseNumberDto> houseNumbersList,String countryCode) {
 		if(houseNumberToFind==null || houseNumbersList==null || houseNumbersList.size()==0){
+			logger.info("no house number to search : ");
 			return null;
 		}
 		String HouseNumberToFind;
