@@ -49,6 +49,8 @@ public class CitySubdivisionDao extends GenericGisDao<CitySubdivision>
 	
 	public final static int BATCH_UPDATE_SIZE = 100;
 	
+	private ICityDao cityDao;
+	
     /**
      * Default constructor
      */
@@ -147,6 +149,13 @@ public class CitySubdivisionDao extends GenericGisDao<CitySubdivision>
 		    }
 		});
 	}
+
+	@Required
+	public void setCityDao(ICityDao cityDao) {
+		this.cityDao = cityDao;
+	}
+	
+	
 
 	
 

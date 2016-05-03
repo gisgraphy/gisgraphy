@@ -29,6 +29,7 @@ import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.valueobject.Constants;
 import com.gisgraphy.domain.valueobject.FeatureCode;
 import com.gisgraphy.domain.valueobject.SRID;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Provides useful methods for geolocalisation
@@ -190,7 +191,8 @@ public class GisHelper {
 	return sb.toString();
 
     }
-
+    
+   
     
   
 

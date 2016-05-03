@@ -841,6 +841,56 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 	}
 	
+	@Test
+	public void processInterpolationHouseNumber_multipleInterpolation_no_even_correction(){
+		InterpolationHouseNumber interpolationHouseNumber = new InterpolationHouseNumber();
+		InterpolationMember m0 = new InterpolationMember("1796478450", 0, (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000009A023EE4525350C0959C137B682F38C0"),null,null);
+		InterpolationMember m1 = new InterpolationMember("1366275082", 1, (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000068661CD94B5350C0B055270C6F2F38C0"),null,"foo");
+		InterpolationMember m2 = new InterpolationMember("1796453793", 2, (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000038691A144D5350C023ADE75A6A2F38C0"),"600","ba_r");
+		InterpolationMember m3 = new InterpolationMember("1796453794", 3, (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000F38F6390605350C028A6666A6D2F38C0"),"608",null);
+		InterpolationMember m4 = new InterpolationMember("1796453795", 4, (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000B85B9203765350C03A0664AF772F38C0"),"612",null);
+		interpolationHouseNumber.addMember(m0);
+		interpolationHouseNumber.addMember(m1);
+		interpolationHouseNumber.addMember(m2);
+		interpolationHouseNumber.addMember(m3);
+		interpolationHouseNumber.addMember(m4);
+		interpolationHouseNumber.setInterpolationType(InterpolationType.even);
+		interpolationHouseNumber.setStreetName("california street");
+		
+		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter();
+		List<HouseNumber> houseNumbers = importer.processInterpolationHouseNumber(interpolationHouseNumber);
+		Assert.assertEquals(7, houseNumbers.size());//600,602,604,606,608,610,612
+		
+		//check the first point
+		Assert.assertEquals("600", houseNumbers.get(0).getNumber());
+		Assert.assertEquals(1796453793L, houseNumbers.get(0).getOpenstreetmapId().longValue());
+		Assert.assertEquals(null, houseNumbers.get(0).getName());
+		Assert.assertEquals(HouseNumberType.INTERPOLATION, houseNumbers.get(0).getType());
+		
+		//check intermediary point
+		Assert.assertEquals("602", houseNumbers.get(1).getNumber());
+		Assert.assertEquals(null, houseNumbers.get(1).getOpenstreetmapId());
+		Assert.assertEquals(HouseNumberType.INTERPOLATION, houseNumbers.get(1).getType());
+		
+		//check the last point of the first interpolation
+		Assert.assertEquals("the number should be round to the even value","608", houseNumbers.get(4).getNumber());
+		Assert.assertEquals(1796453794L, houseNumbers.get(4).getOpenstreetmapId().longValue());
+		Assert.assertEquals(HouseNumberType.INTERPOLATION, houseNumbers.get(4).getType());
+		
+		//check the interpolate point of the 2nd interpolation
+		Assert.assertEquals("the number is not corrst","610", houseNumbers.get(5).getNumber());
+		Assert.assertEquals(null, houseNumbers.get(5).getOpenstreetmapId());
+		Assert.assertEquals(null, houseNumbers.get(5).getName());
+		Assert.assertEquals(HouseNumberType.INTERPOLATION, houseNumbers.get(5).getType());
+
+		//check the last point of the 2nd interpolation
+		Assert.assertEquals("the number should be round to the even value","612", houseNumbers.get(6).getNumber());
+		Assert.assertEquals(1796453795L, houseNumbers.get(6).getOpenstreetmapId().longValue());
+		Assert.assertEquals(null, houseNumbers.get(6).getName());
+		Assert.assertEquals(HouseNumberType.INTERPOLATION, houseNumbers.get(6).getType());
+		
+	}
+	
 	
 
 }

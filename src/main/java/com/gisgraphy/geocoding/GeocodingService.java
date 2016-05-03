@@ -29,7 +29,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +70,6 @@ import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.stats.StatsUsageType;
 import com.gisgraphy.street.HouseNumberDto;
 import com.gisgraphy.street.HouseNumberUtil;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -250,7 +248,8 @@ public class GeocodingService implements IGeocodingService {
 			if (GisgraphyConfig.searchForExactMatchWhenGeocoding) {
 				List<SolrResponseDto> exactMatches = findExactMatches(newAddress, countryCode);
 			//	if (exactMatches.size()==0){
-					List<SolrResponseDto> aproximativeMatches = findStreetInText(newAddress, countryCode, null);
+					List<SolrResponseDto> aproximativeMatches = findStreetInText(newAddress, countryCode, null); //we search for street because we think that it is not a city nor an adm that 
+					//have been probably found by exact matc, so we search for address and so a street
 					List<SolrResponseDto> mergedResults = mergeSolrResponseDto(exactMatches, aproximativeMatches);
 					results = buildAddressResultDtoFromSolrResponseDto(mergedResults, houseNumber);
 				/*} else {
@@ -467,8 +466,12 @@ public class GeocodingService implements IGeocodingService {
 			}
 			String lastName=null;
 			boolean housenumberFound =false;
+			HouseNumberDtoInterpolation bestApproxDto = null;
+			//Integer bestApproxHN = null;
 			int numberOfStreetThatHaveTheSameName = 0;
+			int count = 0;
 			for (SolrResponseDto street : streets) {
+				count++;
 				Address address = new Address();
 
 				address.setLat(street.getLat());
@@ -497,55 +500,100 @@ public class GeocodingService implements IGeocodingService {
 				List<HouseNumberDto> houseNumbersList = street.getHouse_numbers();
 				//if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
 				//count them as street that has same streetname
-				if (!isEmptyString(streetName)){ 
-					if(streetName.equals(lastName) && city!=null){//probably the same street
+				if (!isEmptyString(streetName) && streetName.equalsIgnoreCase(lastName) && city!=null){//probably the same street
 						if (housenumberFound){
 							continue;
-							//do nothing it has already been found in the street
-							//TODO do we have to search and if we find, we add it?
+							//do nothing it has already been found in the street that have the same name
 						}else {
 							numberOfStreetThatHaveTheSameName++;
-							HouseNumberDto houseNumber = searchHouseNumber(houseNumberToFind,houseNumbersList,street.getCountry_code());
-							if (houseNumber !=null){
-								housenumberFound=true;
-								address.setHouseNumber(houseNumber.getNumber());
-								address.setLat(houseNumber.getLocation().getY());
-								address.setLng(houseNumber.getLocation().getX());
-								//remove the last results added
-								for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
-									addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
-								}
+							Integer houseNumberToFindAsInt;
+							String countryCode = street.getCountry_code();
+							if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
+								houseNumberToFindAsInt = HouseNumberUtil.normalizeSkCzNumberToInt(houseNumberToFind);
 							} else {
-								housenumberFound=false;
+								houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
 							}
+							HouseNumberDtoInterpolation houseNumberDto = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
+							if (houseNumberDto !=null){
+								if (houseNumberDto.isApproximative()){
+									bestApproxDto = processApproximativeHouseNumber(houseNumberToFind, bestApproxDto,street.getCountry_code(), houseNumberDto);
+									
+									
+								} else {
+									bestApproxDto = null;
+									housenumberFound=true;
+									address.setHouseNumber(houseNumberDto.getExactNumerAsString());
+									address.setLat(houseNumberDto.getExactLocation().getY());
+									address.setLng(houseNumberDto.getExactLocation().getX());
+									//remove the last results added
+									for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
+										addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
+									}
+								}
+							}/* else { //same street but no house number
+								housenumberFound=false;
+								bestApproxLocation = null;
+								bestApproxHN = null;
+							}*/
 						}
-					} else { //the streetName is different, 
-						numberOfStreetThatHaveTheSameName=0;
-						HouseNumberDto houseNumber = searchHouseNumber(houseNumberToFind,houseNumbersList,street.getCountry_code());
-						if (houseNumber !=null){
-							housenumberFound=true;
-							address.setHouseNumber(houseNumber.getNumber());
-							address.setLat(houseNumber.getLocation().getY());
-							address.setLng(houseNumber.getLocation().getX());
+					} else { //the streetName is different or null, 
+						//we overide the lastname with the approx one
+						if (bestApproxDto!=null){
+							//remove the last results added
+							for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
+								addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
+							}
+							Address lastAddressWTheName= addresses.get(addresses.size()-1);
+							//we set the number of the last address
+							//lastAddressWTheName.setHouseNumber(bestApproxDto.getExactNumerAsString());
+							lastAddressWTheName.setLat(bestApproxDto.getExactLocation().getY());
+							lastAddressWTheName.setLng(bestApproxDto.getExactLocation().getX());
+						}
+						//reinit parameter for a new loop if it is not the last, if so we need to know how many segment we have to removre
+						if (streets.size()!= count){
+							numberOfStreetThatHaveTheSameName=0;
+							bestApproxDto = null;
+						}
+						//we process the new street
+						Integer houseNumberToFindAsInt;
+						String countryCode = street.getCountry_code();
+						if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
+							houseNumberToFindAsInt = HouseNumberUtil.normalizeSkCzNumberToInt(houseNumberToFind);
+						} else {
+							houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
+						}
+						HouseNumberDtoInterpolation houseNumberDto = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
+						if (houseNumberDto !=null){
+							if (houseNumberDto.isApproximative()){
+								//bestapproxdto is null because the streetname is different and we don't want to handle old information
+								bestApproxDto = processApproximativeHouseNumber(houseNumberToFind, null,street.getCountry_code(), houseNumberDto);
+								
+							} else {
+								housenumberFound=true;
+								bestApproxDto = null;
+								address.setHouseNumber(houseNumberDto.getExactNumerAsString());
+								address.setLat(houseNumberDto.getExactLocation().getY());
+								address.setLng(houseNumberDto.getExactLocation().getX());
+							}
 						} else {
 							housenumberFound=false;
+							bestApproxDto = null;
 						}
 					}
-				} else {//streetname is null, we search for housenumber anyway
-					numberOfStreetThatHaveTheSameName=0;
-					HouseNumberDto houseNumber = searchHouseNumber(houseNumberToFind,houseNumbersList,street.getCountry_code());
-					if (houseNumber !=null){
-						housenumberFound=true;
-						address.setHouseNumber(houseNumber.getNumber());
-						address.setLat(houseNumber.getLocation().getY());
-						address.setLng(houseNumber.getLocation().getX());
-					} else {
-						housenumberFound=false;
-					}
-				}
-			//	}
+							//	}
 				lastName=streetName;
 				address.getGeocodingLevel();//force calculation of geocodingLevel
+				
+				if (bestApproxDto!=null && streets.size()== count){ //we are at the end of the loop and we have found an approx number
+					//remove the last results added
+					for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
+						addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
+					}
+					//we set the number of the last address
+					//lastAddressWTheName.setHouseNumber(bestApproxDto.getExactNumerAsString());
+					address.setLat(bestApproxDto.getExactLocation().getY());
+					address.setLng(bestApproxDto.getExactLocation().getX());
+				}
 				addresses.add(address);
 
 			}
@@ -567,25 +615,101 @@ public class GeocodingService implements IGeocodingService {
 		return new AddressResultsDto(addresses, 0L);
 	}
 
-	protected HouseNumberDto searchHouseNumber(String houseNumberToFind, List<HouseNumberDto> houseNumbersList,String countryCode) {
-		if(houseNumberToFind==null || houseNumbersList==null || houseNumbersList.size()==0){
+	protected HouseNumberDtoInterpolation processApproximativeHouseNumber(String houseNumberToFind,
+			HouseNumberDtoInterpolation bestApprox, String countryCode,
+			HouseNumberDtoInterpolation houseNumberDtoToProcess) {
+			Point bestApproxLocation = null;
+			Integer bestApproxHN = null;
+		if (bestApprox != null){
+			 bestApproxLocation = bestApprox.getExactLocation();
+			 bestApproxHN = bestApprox.getExactNumber();
+		}
+		Integer houseNumberToFindAsInt=null;
+		if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
+			houseNumberToFindAsInt = HouseNumberUtil.normalizeSkCzNumberToInt(houseNumberToFind);
+		} else {
+			houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
+		}
+		if (houseNumberDtoToProcess.getHigherNumber()==null && houseNumberDtoToProcess.getLowerNumber()!=null){
+			if (bestApproxHN == null || houseNumberDtoToProcess.getLowerNumber() > bestApproxHN){
+				bestApproxLocation = houseNumberDtoToProcess.getLowerLocation();
+				bestApproxHN = houseNumberDtoToProcess.getLowerNumber();
+			}
+		}
+		else if (houseNumberDtoToProcess.getHigherNumber()!=null && houseNumberDtoToProcess.getLowerNumber()==null){
+			if (bestApproxHN == null || houseNumberDtoToProcess.getHigherNumber() < bestApproxHN){
+				bestApproxLocation = houseNumberDtoToProcess.getHigherLocation();
+				bestApproxHN = houseNumberDtoToProcess.getHigherNumber();
+			}
+		}
+		else if (houseNumberDtoToProcess.getHigherNumber()!=null && houseNumberDtoToProcess.getLowerNumber()!=null){
+			if (bestApproxHN == null){
+				
+				bestApproxLocation = GeolocHelper.interpolatedPoint(houseNumberDtoToProcess.getLowerLocation(), houseNumberDtoToProcess.getHigherLocation(), houseNumberDtoToProcess.getLowerNumber(), houseNumberDtoToProcess.getHigherNumber(), houseNumberToFindAsInt);
+				bestApproxHN = houseNumberToFindAsInt;
+			}
+		}
+		return new HouseNumberDtoInterpolation(bestApproxLocation, bestApproxHN) ;
+	}
+
+	protected HouseNumberDtoInterpolation searchHouseNumber(Integer houseNumberToFindAsInt, List<HouseNumberDto> houseNumbersList,String countryCode) { //TODO pass the house as int directly
+		if(houseNumberToFindAsInt==null || houseNumbersList==null || houseNumbersList.size()==0){
 			logger.info("no house number to search : ");
 			return null;
 		}
-		String HouseNumberToFind;
-		if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
-			HouseNumberToFind = HouseNumberUtil.normalizeSkCzNumber(houseNumberToFind);
-		} else {
-			HouseNumberToFind = HouseNumberUtil.normalizeNumber(houseNumberToFind);
-		}
+		Integer nearestLower = null;
+		Integer nearestUpper = null;
+		HouseNumberDto nearestHouseLower = null;
+		HouseNumberDto nearestHouseUpper = null;
+		
 		for (HouseNumberDto candidate :houseNumbersList){
-			if (candidate!=null && candidate.getNumber()!=null && candidate.getNumber().equals(HouseNumberToFind)){
-				logger.info("house number candidate found : "+candidate.getNumber());
-				return candidate;
-			}
+			if (candidate != null && candidate.getNumber()!=null){
+				Integer candidateNormalized;
+				if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
+					candidateNormalized = HouseNumberUtil.normalizeSkCzNumberToInt(candidate.getNumber());
+				} else {
+					candidateNormalized = HouseNumberUtil.normalizeNumberToInt(candidate.getNumber());
+				}
+				if (candidateNormalized!=null && candidateNormalized == houseNumberToFindAsInt){
+					logger.info("house number candidate found : "+candidate.getNumber());
+					return new HouseNumberDtoInterpolation(candidate.getLocation(),houseNumberToFindAsInt);
+				} else if (candidateNormalized < houseNumberToFindAsInt ){
+					if (nearestLower ==null || candidateNormalized > nearestLower){
+						nearestLower = candidateNormalized;
+						nearestHouseLower = candidate;
+					}
+				} else if (candidateNormalized > houseNumberToFindAsInt){
+					if (nearestUpper == null || candidateNormalized < nearestUpper){
+						nearestUpper = candidateNormalized;
+						nearestHouseUpper = candidate;
+					}
+				}
 		}
-		logger.info("no house number candidate found for "+houseNumberToFind);
-		return null;
+		}
+		logger.info("no house number candidate found for "+houseNumberToFindAsInt);
+		//do interpolation
+		if (nearestHouseLower == null && nearestHouseUpper ==null){
+			return null;
+		}
+		HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation();
+		if (nearestHouseUpper !=null){
+			result.setHigherLocation(nearestHouseUpper.getLocation());
+			result.setHigherNumber(nearestUpper);
+		}
+		if (nearestHouseLower != null){
+			result.setLowerLocation(nearestHouseLower.getLocation());
+			result.setLowerNumber(nearestLower);
+		}
+			//this do interpolation, but if the street is not a line or is curve the point will be out
+			/*if (nearestHouseLower !=null && nearestHouseUpper != null){
+			Point location = GeolocHelper.interpolatedPoint(nearestHouseLower.getLocation(), nearestHouseUpper.getLocation(), nearestUpper, nearestLower, HouseNumberToFindAsInt);
+			if (location !=null){
+				return new HouseNumberDtoInterpolation(location,houseNumberToFind, true);
+			} else {
+				return null;
+			}
+			}*/
+		return result;
 	}
 
 	protected AddressResultsDto buildAddressResultDtoFromSolrResponseDto(List<SolrResponseDto> solResponseDtos, String houseNumberToFind) {
@@ -608,7 +732,8 @@ public class GeocodingService implements IGeocodingService {
 				address.setLat(solrResponseDto.getLat());
 				address.setLng(solrResponseDto.getLng());
 				address.setId(solrResponseDto.getFeature_id());
-				address.setCountryCode(solrResponseDto.getCountry_code());
+				String countryCode = solrResponseDto.getCountry_code();
+				address.setCountryCode(countryCode);
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Adm.class.getSimpleName())) {
 					address.setState(solrResponseDto.getName());
 				}else if (solrResponseDto.getAdm2_name() != null) {
@@ -618,6 +743,12 @@ public class GeocodingService implements IGeocodingService {
 				} 
 				if (solrResponseDto.getZipcodes() != null && solrResponseDto.getZipcodes().size() > 0) {
 					address.setZipCode(solrResponseDto.getZipcodes().iterator().next());
+				}
+				Integer houseNumberToFindAsInt;
+				if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
+					houseNumberToFindAsInt = HouseNumberUtil.normalizeSkCzNumberToInt(houseNumberToFind);
+				} else {
+					houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
 				}
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
 					String streetName = solrResponseDto.getName();
@@ -640,21 +771,26 @@ public class GeocodingService implements IGeocodingService {
 							address.setDependentLocality(solrResponseDto.getIs_in_place());
 							//now search for houseNumber
 							List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
-							if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
-								HouseNumberDto houseNumber = searchHouseNumber(houseNumberToFind,houseNumbersList,solrResponseDto.getCountry_code());
+							//if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
+							//count them as street that has same streetname
+							HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
 								if (houseNumber !=null){
-									housenumberFound=true;
-									address.setHouseNumber(houseNumber.getNumber());
-									address.setLat(houseNumber.getLocation().getY());
-									address.setLng(houseNumber.getLocation().getX());
-									//remove the last results added
-									for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
-										addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
+									if (houseNumber.isApproximative()){
+										
+									} else {
+										housenumberFound=true;
+										address.setHouseNumber(houseNumber.getExactNumerAsString());
+										address.setLat(houseNumber.getExactLocation().getY());
+										address.setLng(houseNumber.getExactLocation().getX());
+										//remove the last results added
+										for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
+											addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
+										}
 									}
 								} else{
 									housenumberFound=false;
 								}
-							}
+							//}
 						}
 						} else { //the streetName is different, 
 							
@@ -675,12 +811,16 @@ public class GeocodingService implements IGeocodingService {
 							//search for housenumber
 							List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
 							if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
-							HouseNumberDto houseNumber = searchHouseNumber(houseNumberToFind,houseNumbersList,solrResponseDto.getCountry_code());
+								HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
 							if (houseNumber !=null){
-								housenumberFound=true;
-								address.setHouseNumber(houseNumber.getNumber());
-								address.setLat(houseNumber.getLocation().getY());
-								address.setLng(houseNumber.getLocation().getX());
+								if (houseNumber.isApproximative()){
+									
+								} else {
+									housenumberFound=true;
+									address.setHouseNumber(houseNumber.getExactNumerAsString());
+									address.setLat(houseNumber.getExactLocation().getY());
+									address.setLng(houseNumber.getExactLocation().getX());
+								}
 							} else {
 								housenumberFound=false;
 							}
@@ -696,12 +836,16 @@ public class GeocodingService implements IGeocodingService {
 					address.setDependentLocality(solrResponseDto.getIs_in_place());
 				  List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
 					if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
-					HouseNumberDto houseNumber = searchHouseNumber(houseNumberToFind,houseNumbersList,solrResponseDto.getCountry_code());
+						HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
 					if (houseNumber !=null){
-						housenumberFound=true;
-						address.setHouseNumber(houseNumber.getNumber());
-						address.setLat(houseNumber.getLocation().getY());
-						address.setLng(houseNumber.getLocation().getX());
+						if (houseNumber.isApproximative()){
+							
+						} else {
+							housenumberFound=true;
+							address.setHouseNumber(houseNumber.getExactNumerAsString());
+							address.setLat(houseNumber.getExactLocation().getY());
+							address.setLng(houseNumber.getExactLocation().getX());
+						}
 					} else {
 						housenumberFound=false;
 					}
@@ -793,7 +937,7 @@ public class GeocodingService implements IGeocodingService {
 		} else {
 			output = LONG_OUTPUT;
 		}
-		FulltextQuery query = new FulltextQuery(text, Pagination.DEFAULT_PAGINATION, output, placetypes, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(20), output, placetypes, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		if (point != null) {
 			query.around(point);

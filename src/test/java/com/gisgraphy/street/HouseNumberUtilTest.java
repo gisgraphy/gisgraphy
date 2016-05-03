@@ -2,6 +2,8 @@ package com.gisgraphy.street;
 
 import static com.gisgraphy.street.HouseNumberUtil.normalizeNumber;
 import static com.gisgraphy.street.HouseNumberUtil.normalizeSkCzNumber;
+import static com.gisgraphy.street.HouseNumberUtil.normalizeNumberToInt;
+import static com.gisgraphy.street.HouseNumberUtil.normalizeSkCzNumberToInt;
 import net.sf.jstester.util.Assert;
 
 import org.junit.Test;
@@ -16,6 +18,7 @@ public class HouseNumberUtilTest {
 		Assert.assertEquals("11", normalizeNumber("11 d"));
 		Assert.assertEquals("2", normalizeNumber("2/1"));
 		Assert.assertEquals("1", normalizeNumber("1-3"));
+		Assert.assertEquals("1", normalizeNumber("1a"));
 		Assert.assertEquals("26", normalizeNumber("26 bis"));
 		Assert.assertEquals(null, normalizeNumber("A"));
 		Assert.assertEquals(null, normalizeNumber(""));
@@ -33,6 +36,35 @@ public class HouseNumberUtilTest {
 		Assert.assertEquals(null, normalizeSkCzNumber("A"));
 		Assert.assertEquals(null, normalizeSkCzNumber(""));
 		Assert.assertEquals(null, normalizeSkCzNumber(null));
+	}
+	
+	@Test
+	public void normalizeNumberToIntTest(){
+		Assert.assertEquals(1, normalizeNumberToInt("-1").intValue());
+		Assert.assertEquals(null, normalizeNumberToInt("?"));
+		Assert.assertEquals(3, normalizeNumberToInt("ev.3").intValue());
+		Assert.assertEquals(11, normalizeNumberToInt("11 d").intValue());
+		Assert.assertEquals(2, normalizeNumberToInt("2/1").intValue());
+		Assert.assertEquals(1, normalizeNumberToInt("1-3").intValue());
+		Assert.assertEquals(1, normalizeNumberToInt("1a").intValue());
+		Assert.assertEquals(26, normalizeNumberToInt("26 bis").intValue());
+		Assert.assertEquals(null, normalizeNumberToInt("A"));
+		Assert.assertEquals(null, normalizeNumberToInt(""));
+		Assert.assertEquals(null, normalizeNumberToInt(null));
+	}
+	
+	@Test
+	public void normalizeSKCZNumbertoIntTest(){
+		Assert.assertEquals(1, normalizeSkCzNumberToInt("-1").intValue());
+		Assert.assertEquals(null, normalizeSkCzNumberToInt("?"));
+		Assert.assertEquals(3, normalizeSkCzNumberToInt("ev.3").intValue());
+		Assert.assertEquals(11, normalizeSkCzNumberToInt("11 d").intValue());
+		Assert.assertEquals(1, normalizeSkCzNumberToInt("2/1").intValue());
+		Assert.assertEquals(3, normalizeSkCzNumberToInt("1-3").intValue());
+		Assert.assertEquals(1, normalizeSkCzNumberToInt("1a").intValue());
+		Assert.assertEquals(null, normalizeSkCzNumberToInt("A"));
+		Assert.assertEquals(null, normalizeSkCzNumberToInt(""));
+		Assert.assertEquals(null, normalizeSkCzNumberToInt(null));
 	}
 
 }

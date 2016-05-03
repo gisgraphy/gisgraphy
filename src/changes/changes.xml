@@ -854,7 +854,11 @@
 			</action>
 			
 			<action dev="David Masclet" type="fix">
-				Improve street deduplication when there is no house number
+				Geocoding  : Improve street deduplication when there is no house number
+			</action>
+			
+			<action dev="David Masclet" type="fix">
+				Geocoding : do interpolation for house number at run time
 			</action>
 			
 			</release>

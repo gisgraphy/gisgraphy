@@ -24,6 +24,21 @@ public class HouseNumberUtil {
 		return null;
 	}
 	
+	
+	public static Integer normalizeNumberToInt(String houseNumberAsString){
+		if (houseNumberAsString != null){
+			String normalizedStr = normalizeNumber(houseNumberAsString);
+			if (normalizedStr!= null){
+				try {
+					return Integer.parseInt(normalizedStr);
+				} catch (NumberFormatException e) {
+				}
+			}
+		} 
+			return null;	
+	}
+	
+	
 	/**
 	 * specific case for slovakia and czech
 	 * see http://www.pitt.edu/~votruba/qsonhist/housenumbersslovakia.html
@@ -37,6 +52,19 @@ public class HouseNumberUtil {
 			return matcher.group(1);
 		}
 		return null;
+	}
+	
+	public static Integer normalizeSkCzNumberToInt(String houseNumberAsString){
+		if (houseNumberAsString != null){
+			String normalizedStr = normalizeSkCzNumber(houseNumberAsString);
+			if (normalizedStr!= null){
+				try {
+					return Integer.parseInt(normalizedStr);
+				} catch (NumberFormatException e) {
+				}
+			}
+		} 
+			return null;	
 	}
 
 }
