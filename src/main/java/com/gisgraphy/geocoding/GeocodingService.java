@@ -620,9 +620,12 @@ public class GeocodingService implements IGeocodingService {
 			HouseNumberDtoInterpolation houseNumberDtoToProcess) {
 			Point bestApproxLocation = null;
 			Integer bestApproxHN = null;
+			Integer bestDif = null;
+			Integer curentDif = null;
 		if (bestApprox != null){
 			 bestApproxLocation = bestApprox.getExactLocation();
 			 bestApproxHN = bestApprox.getExactNumber();
+			 bestDif = bestApprox.getHouseNumberDif();
 		}
 		Integer houseNumberToFindAsInt=null;
 		if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
@@ -631,25 +634,40 @@ public class GeocodingService implements IGeocodingService {
 			houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
 		}
 		if (houseNumberDtoToProcess.getHigherNumber()==null && houseNumberDtoToProcess.getLowerNumber()!=null){
+			logger.info("approx : there is only a lower "+ houseNumberDtoToProcess.getLowerNumber());
 			if (bestApproxHN == null || houseNumberDtoToProcess.getLowerNumber() > bestApproxHN){
+				logger.info("approx : lower  "+ houseNumberDtoToProcess.getLowerNumber()+ " closer than "+bestApproxHN);
 				bestApproxLocation = houseNumberDtoToProcess.getLowerLocation();
 				bestApproxHN = houseNumberDtoToProcess.getLowerNumber();
+			} else {
+				logger.info("approx : lower  "+ houseNumberDtoToProcess.getLowerNumber()+ " not closer than "+bestApproxHN);
 			}
 		}
 		else if (houseNumberDtoToProcess.getHigherNumber()!=null && houseNumberDtoToProcess.getLowerNumber()==null){
+			logger.info("approx : there is only a higher "+ houseNumberDtoToProcess.getHigherNumber());
 			if (bestApproxHN == null || houseNumberDtoToProcess.getHigherNumber() < bestApproxHN){
+				logger.info("approx : higher  "+ houseNumberDtoToProcess.getHigherNumber()+ " closer than "+bestApproxHN);
 				bestApproxLocation = houseNumberDtoToProcess.getHigherLocation();
 				bestApproxHN = houseNumberDtoToProcess.getHigherNumber();
+			} else {
+				logger.info("approx : lower  "+ houseNumberDtoToProcess.getHigherNumber()+ " closer than "+bestApproxHN);
 			}
 		}
 		else if (houseNumberDtoToProcess.getHigherNumber()!=null && houseNumberDtoToProcess.getLowerNumber()!=null){
-			if (bestApproxHN == null){
-				
+			logger.info("approx : there is lower "+houseNumberDtoToProcess.getLowerNumber()+ " and higher "+ houseNumberDtoToProcess.getHigherNumber()+ ",bestDif="+bestDif+" and best is actually "+bestApproxHN );
+			curentDif = Math.abs(houseNumberDtoToProcess.getLowerNumber()-houseNumberDtoToProcess.getHigherNumber());
+			logger.info("currentdif="+curentDif);
+			if (bestDif == null ||(bestDif != null && curentDif <  bestDif)){
+				logger.debug("approx : curentDif "+curentDif+" < bestDif "+bestDif);
 				bestApproxLocation = GeolocHelper.interpolatedPoint(houseNumberDtoToProcess.getLowerLocation(), houseNumberDtoToProcess.getHigherLocation(), houseNumberDtoToProcess.getLowerNumber(), houseNumberDtoToProcess.getHigherNumber(), houseNumberToFindAsInt);
 				bestApproxHN = houseNumberToFindAsInt;
+				
 			}
 		}
-		return new HouseNumberDtoInterpolation(bestApproxLocation, bestApproxHN) ;
+		logger.debug("approx : best house approx found "+bestApproxHN);
+		HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation(bestApproxLocation, bestApproxHN) ;
+		result.setHouseNumberDif(curentDif);
+		return result;
 	}
 
 	protected HouseNumberDtoInterpolation searchHouseNumber(Integer houseNumberToFindAsInt, List<HouseNumberDto> houseNumbersList,String countryCode) { //TODO pass the house as int directly
@@ -661,6 +679,12 @@ public class GeocodingService implements IGeocodingService {
 		Integer nearestUpper = null;
 		HouseNumberDto nearestHouseLower = null;
 		HouseNumberDto nearestHouseUpper = null;
+		//for debug purpose, need to be removed
+		StringBuffer sb = new StringBuffer();
+		for (HouseNumberDto candidate :houseNumbersList){
+			sb.append(candidate.getNumber()).append(",");
+		}
+		logger.info("will analyze HN  : "+sb.toString());
 		
 		for (HouseNumberDto candidate :houseNumbersList){
 			if (candidate != null && candidate.getNumber()!=null){
@@ -686,17 +710,20 @@ public class GeocodingService implements IGeocodingService {
 				}
 		}
 		}
-		logger.info("no house number candidate found for "+houseNumberToFindAsInt);
+		logger.info("no exact house number candidate found for "+houseNumberToFindAsInt);
 		//do interpolation
 		if (nearestHouseLower == null && nearestHouseUpper ==null){
+			logger.info(" no lower, nor upper house number found");
 			return null;
 		}
 		HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation();
 		if (nearestHouseUpper !=null){
+			logger.info(" higher : "+nearestUpper);
 			result.setHigherLocation(nearestHouseUpper.getLocation());
 			result.setHigherNumber(nearestUpper);
 		}
 		if (nearestHouseLower != null){
+			logger.info(" lower : "+nearestLower);
 			result.setLowerLocation(nearestHouseLower.getLocation());
 			result.setLowerNumber(nearestLower);
 		}
@@ -937,7 +964,7 @@ public class GeocodingService implements IGeocodingService {
 		} else {
 			output = LONG_OUTPUT;
 		}
-		FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(20), output, placetypes, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(40), output, placetypes, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		if (point != null) {
 			query.around(point);

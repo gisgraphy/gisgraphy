@@ -12,9 +12,30 @@ public class HouseNumberDtoInterpolation {
 	private Integer lowerNumber;
 	private Point higherLocation;
 	private Integer HigherNumber;
+	private Integer HouseNumberDif;
 	
 	
 	
+
+	/**
+	 * @return the houseNumberDif
+	 */
+	public Integer getHouseNumberDif() {
+		return HouseNumberDif;
+	}
+
+
+
+
+	/**
+	 * @param houseNumberDif the houseNumberDif to set
+	 */
+	public void setHouseNumberDif(Integer houseNumberDif) {
+		HouseNumberDif = houseNumberDif;
+	}
+
+
+
 
 	public HouseNumberDtoInterpolation() {
 		super();

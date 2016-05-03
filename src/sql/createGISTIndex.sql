@@ -146,5 +146,6 @@ CREATE INDEX locationIndexTourismInfo ON TourismInfo USING GIST (location);
 CREATE INDEX locationindexopenstreetmap ON openstreetmap USING GIST (location);
 CREATE INDEX shapeindexopenstreetmap ON openstreetmap USING GIST (shape);
 CREATE INDEX shapeindexcity ON city USING GIST (shape);
+CREATE INDEX locationindexcity ON city USING GIST (location);
 
 VACUUM FULL ANALYZE;

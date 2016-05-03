@@ -1109,7 +1109,7 @@ public class GeocodingServiceTest {
 	String text = "toto";
 	String countryCode = "FR";
 	IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-	FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(20), GeocodingService.LONG_OUTPUT, com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, countryCode);
+	FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(40), GeocodingService.LONG_OUTPUT, com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, countryCode);
 	query.withAllWordsRequired(false).withoutSpellChecking();
 	EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
 	EasyMock.replay(mockfullFullTextSearchEngine);
@@ -1137,7 +1137,7 @@ public class GeocodingServiceTest {
 	String text = "toto";
 	String countryCode = "FR";
 	IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-	FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(20), GeocodingService.MEDIUM_OUTPUT, com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, countryCode);
+	FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(40), GeocodingService.MEDIUM_OUTPUT, com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, countryCode);
 	query.withAllWordsRequired(false).withoutSpellChecking();
 	EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
 	EasyMock.replay(mockfullFullTextSearchEngine);
