@@ -57,7 +57,7 @@ public class FulltextQuerySolrHelper {
 
 	private static OutputStyleHelper outputStyleHelper = new OutputStyleHelper();
 
-	private final static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^2 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.9  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^1.5 ";
+	private final static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^0.7 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.7  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
 	protected static final String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!dismax qf='all_name^1.1 iso_all_name^1 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5 all_country_name^0.5 %s' pf=name^1.3 ps=0 bq='%s' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)  %s'}%s\"";
 	//below the all_adm1_name^0.5 all_adm2_name^0.5 has been kept
 	//protected static final String NESTED_QUERY_TEMPLATE = "_query_:\"{!dismax qf='all_name^1.1 iso_all_name^1 zipcode^1.1 all_adm1_name^0.5 all_adm2_name^0.5 all_country_name^0.5 %s' pf=name^1.1 bf=population^2.0}%s\"";

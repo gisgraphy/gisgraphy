@@ -465,6 +465,7 @@ public class GeocodingService implements IGeocodingService {
 				city = cities.get(0);
 			}
 			String lastName=null;
+			String lastIsIn=null;
 			boolean housenumberFound =false;
 			HouseNumberDtoInterpolation bestApproxDto = null;
 			//Integer bestApproxHN = null;
@@ -481,7 +482,7 @@ public class GeocodingService implements IGeocodingService {
 
 				String streetName = street.getName();
 				if (logger.isDebugEnabled() && streets != null) {
-					logger.debug("=>street : " + streetName +" ("+street.getScore()+")/id="+street.getFeature_id());
+					logger.debug("=>street : " + streetName +" ("+street.getScore()+") in "+street.getIs_in()+"/id="+street.getFeature_id());
 				}
 				address.setStreetName(streetName);
 				address.setStreetType(street.getStreet_type());
@@ -500,7 +501,8 @@ public class GeocodingService implements IGeocodingService {
 				List<HouseNumberDto> houseNumbersList = street.getHouse_numbers();
 				//if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
 				//count them as street that has same streetname
-				if (!isEmptyString(streetName) && streetName.equalsIgnoreCase(lastName) && city!=null){//probably the same street
+				if (!isEmptyString(streetName) && streetName.equalsIgnoreCase(lastName) && city!=null && (!isEmptyString(is_in) && is_in.equalsIgnoreCase(lastIsIn))){//probably the same street
+					logger.info(streetName+"("+numberOfStreetThatHaveTheSameName+") is the same in "+is_in);
 						if (housenumberFound){
 							continue;
 							//do nothing it has already been found in the street that have the same name
@@ -516,7 +518,7 @@ public class GeocodingService implements IGeocodingService {
 							HouseNumberDtoInterpolation houseNumberDto = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
 							if (houseNumberDto !=null){
 								if (houseNumberDto.isApproximative()){
-									bestApproxDto = processApproximativeHouseNumber(houseNumberToFind, bestApproxDto,street.getCountry_code(), houseNumberDto);
+									bestApproxDto = processApproximativeHouseNumber(houseNumberToFind,houseNumberToFindAsInt, bestApproxDto,street.getCountry_code(), houseNumberDto);
 									
 									
 								} else {
@@ -538,6 +540,7 @@ public class GeocodingService implements IGeocodingService {
 						}
 					} else { //the streetName is different or null, 
 						//we overide the lastname with the approx one
+						logger.info(streetName+"("+numberOfStreetThatHaveTheSameName+") is different in "+is_in);
 						if (bestApproxDto!=null){
 							//remove the last results added
 							for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
@@ -546,6 +549,7 @@ public class GeocodingService implements IGeocodingService {
 							Address lastAddressWTheName= addresses.get(addresses.size()-1);
 							//we set the number of the last address
 							//lastAddressWTheName.setHouseNumber(bestApproxDto.getExactNumerAsString());
+							logger.info("the nearest hn is "+bestApproxDto.getExactNumber()+" at "+bestApproxDto.getExactLocation());
 							lastAddressWTheName.setLat(bestApproxDto.getExactLocation().getY());
 							lastAddressWTheName.setLng(bestApproxDto.getExactLocation().getX());
 						}
@@ -566,11 +570,12 @@ public class GeocodingService implements IGeocodingService {
 						if (houseNumberDto !=null){
 							if (houseNumberDto.isApproximative()){
 								//bestapproxdto is null because the streetname is different and we don't want to handle old information
-								bestApproxDto = processApproximativeHouseNumber(houseNumberToFind, null,street.getCountry_code(), houseNumberDto);
+								bestApproxDto = processApproximativeHouseNumber(houseNumberToFind, houseNumberToFindAsInt,null,street.getCountry_code(), houseNumberDto);
 								
 							} else {
 								housenumberFound=true;
 								bestApproxDto = null;
+								logger.info("the nearest hn is "+houseNumberDto.getExactNumerAsString()+" at "+houseNumberDto.getExactLocation());
 								address.setHouseNumber(houseNumberDto.getExactNumerAsString());
 								address.setLat(houseNumberDto.getExactLocation().getY());
 								address.setLng(houseNumberDto.getExactLocation().getX());
@@ -582,6 +587,7 @@ public class GeocodingService implements IGeocodingService {
 					}
 							//	}
 				lastName=streetName;
+				lastIsIn = is_in;
 				address.getGeocodingLevel();//force calculation of geocodingLevel
 				
 				if (bestApproxDto!=null && streets.size()== count){ //we are at the end of the loop and we have found an approx number
@@ -615,7 +621,7 @@ public class GeocodingService implements IGeocodingService {
 		return new AddressResultsDto(addresses, 0L);
 	}
 
-	protected HouseNumberDtoInterpolation processApproximativeHouseNumber(String houseNumberToFind,
+	protected HouseNumberDtoInterpolation processApproximativeHouseNumber(String houseNumberToFind, Integer houseNumberToFindAsInt,
 			HouseNumberDtoInterpolation bestApprox, String countryCode,
 			HouseNumberDtoInterpolation houseNumberDtoToProcess) {
 			Point bestApproxLocation = null;
@@ -627,15 +633,9 @@ public class GeocodingService implements IGeocodingService {
 			 bestApproxHN = bestApprox.getExactNumber();
 			 bestDif = bestApprox.getHouseNumberDif();
 		}
-		Integer houseNumberToFindAsInt=null;
-		if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
-			houseNumberToFindAsInt = HouseNumberUtil.normalizeSkCzNumberToInt(houseNumberToFind);
-		} else {
-			houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
-		}
 		if (houseNumberDtoToProcess.getHigherNumber()==null && houseNumberDtoToProcess.getLowerNumber()!=null){
 			logger.info("approx : there is only a lower "+ houseNumberDtoToProcess.getLowerNumber());
-			if (bestApproxHN == null || houseNumberDtoToProcess.getLowerNumber() > bestApproxHN){
+			if (bestApproxHN == null || Math.abs(houseNumberDtoToProcess.getLowerNumber()-houseNumberToFindAsInt) > Math.abs(bestApproxHN-houseNumberToFindAsInt)){
 				logger.info("approx : lower  "+ houseNumberDtoToProcess.getLowerNumber()+ " closer than "+bestApproxHN);
 				bestApproxLocation = houseNumberDtoToProcess.getLowerLocation();
 				bestApproxHN = houseNumberDtoToProcess.getLowerNumber();
@@ -645,16 +645,16 @@ public class GeocodingService implements IGeocodingService {
 		}
 		else if (houseNumberDtoToProcess.getHigherNumber()!=null && houseNumberDtoToProcess.getLowerNumber()==null){
 			logger.info("approx : there is only a higher "+ houseNumberDtoToProcess.getHigherNumber());
-			if (bestApproxHN == null || houseNumberDtoToProcess.getHigherNumber() < bestApproxHN){
+			if (bestApproxHN == null || Math.abs(houseNumberDtoToProcess.getHigherNumber()-houseNumberToFindAsInt) < Math.abs(bestApproxHN-houseNumberToFindAsInt)){
 				logger.info("approx : higher  "+ houseNumberDtoToProcess.getHigherNumber()+ " closer than "+bestApproxHN);
 				bestApproxLocation = houseNumberDtoToProcess.getHigherLocation();
 				bestApproxHN = houseNumberDtoToProcess.getHigherNumber();
 			} else {
-				logger.info("approx : lower  "+ houseNumberDtoToProcess.getHigherNumber()+ " closer than "+bestApproxHN);
+				logger.info("approx : higher  "+ houseNumberDtoToProcess.getHigherNumber()+ " not closer than "+bestApproxHN);
 			}
 		}
 		else if (houseNumberDtoToProcess.getHigherNumber()!=null && houseNumberDtoToProcess.getLowerNumber()!=null){
-			logger.info("approx : there is lower "+houseNumberDtoToProcess.getLowerNumber()+ " and higher "+ houseNumberDtoToProcess.getHigherNumber()+ ",bestDif="+bestDif+" and best is actually "+bestApproxHN );
+			logger.info("approx : there is lower "+houseNumberDtoToProcess.getLowerNumber()+ " and higher "+ houseNumberDtoToProcess.getHigherNumber()+ ",bestDif="+bestDif+" and best hn is actually "+bestApproxHN );
 			curentDif = Math.abs(houseNumberDtoToProcess.getLowerNumber()-houseNumberDtoToProcess.getHigherNumber());
 			logger.info("currentdif="+curentDif);
 			if (bestDif == null ||(bestDif != null && curentDif <  bestDif)){
