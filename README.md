@@ -37,7 +37,7 @@ My name is David Masclet, I have developed Gisgraphy since 2006, My goal is to p
 -----------------
 
 All the webservice are world wide (243 countries) and support pagination. Actually there are 6 (web)services, and all
-		are availables for free at [http://services.gisgraphy.com] (c). It also gives
+		are availables for free at http://services.gisgraphy.com (c). It also gives
 		some HTML pages that uses the webservices under the hood. Find bellow a summary for each webservices :
 
 ### Geocoding ###
