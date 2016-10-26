@@ -206,6 +206,14 @@ public class FulltextQueryHttpBuilder {
 		    query.withSuggest(true);
 		}
 	
+	//fuzzy
+		if ("true".equalsIgnoreCase(req
+				.getParameter(FulltextQuery.FUZZY_PARAMETER))
+				|| "on".equalsIgnoreCase(req
+					.getParameter(FulltextQuery.FUZZY_PARAMETER))) {
+			    query.withFuzzy(true);
+			}
+	
 	//spellchecking
 	if ("true".equalsIgnoreCase(req
 			.getParameter(FulltextQuery.SPELLCHECKING_PARAMETER))

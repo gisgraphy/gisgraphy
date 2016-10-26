@@ -253,7 +253,7 @@ public class FulltextSearchEngineTest extends
     	street.setIsInZip(isInZip);
     	street.setIsInAdm(isInAdm);
     	street.setIsInPlace(isInPlace);
-    	street.setFullyQualifiedAddress(fullyQualifiedAddress);
+    	street.setFullyQualifiedName(fullyQualifiedAddress);
    
 
     	openStreetMapDao.save(street);

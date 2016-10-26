@@ -38,6 +38,7 @@ import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.Street;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.GeolocHelper;
 import com.vividsolutions.jts.geom.Point;
 
@@ -59,7 +60,7 @@ public class StreetFactoryTest {
 	String isInZip2 = "zip2";
 	isInZip.add(isInZip1);
 	isInZip.add(isInZip2);
-	String fullyQualifiedAddress ="fullyQualifiedAddress";
+	String fullyQualifiedName ="fullyQualifiedName";
 	StreetType streetType = StreetType.SECONDARY_LINK;
 	String countryCode = "FR";
 	Point location = GeolocHelper.createPoint(10.2F, 9.5F);
@@ -82,13 +83,26 @@ public class StreetFactoryTest {
 	
 	openStreetMap.setIsInPlace(isInPlace);
 	openStreetMap.setIsInZip(isInZip);
-	openStreetMap.setFullyQualifiedAddress(fullyQualifiedAddress);
+	openStreetMap.setFullyQualifiedName(fullyQualifiedName);
 	HouseNumber houseNumber = new HouseNumber();
 	houseNumber.setLocation(GeolocHelper.createPoint(10.3F, 9.6F));
 	houseNumber.setNumber("1");
 	SortedSet<HouseNumber> houseNumbers = new TreeSet<HouseNumber>();
 	houseNumbers.add(houseNumber);
 	openStreetMap.setHouseNumbers(houseNumbers);
+	
+	openStreetMap.setLabel("label");
+	openStreetMap.setLabelPostal("labelPostal");
+	openStreetMap.setToll(true);
+	openStreetMap.setSurface("surface");
+	openStreetMap.setLanes(2);
+	openStreetMap.setMaxSpeed("30");
+	openStreetMap.setSpeedMode(SpeedMode.OSM);;
+	openStreetMap.setMaxSpeedBackward("50");
+	openStreetMap.setAzimuthStart(10);
+	openStreetMap.setAzimuthEnd(20);
+	openStreetMap.addAlternateLabel("alternateLabel");
+	openStreetMap.addAlternateLabel("alternateLabel2");
 	
 	List<AlternateOsmName> alternateNames = new ArrayList<AlternateOsmName>();
 	alternateNames.add(new AlternateOsmName("altname",AlternateNameSource.PERSONAL));
@@ -120,11 +134,28 @@ public class StreetFactoryTest {
 	Assert.assertEquals("adm4Name", street.getAdm4Name());
 	Assert.assertEquals("adm5Name", street.getAdm5Name());
 	Assert.assertEquals(isInZip, street.getIsInZip());
-	Assert.assertEquals(fullyQualifiedAddress, street.getFullyQualifiedAddress());
+	
+	
+	Assert.assertEquals("label",street.getLabel());
+	Assert.assertEquals("labelPostal",street.getLabelPostal());
+	Assert.assertTrue(street.isToll());
+	Assert.assertEquals("surface",street.getSurface());
+	Assert.assertEquals(2,street.getLanes().intValue());
+	Assert.assertEquals("30",street.getMaxSpeed());
+	Assert.assertEquals(SpeedMode.OSM,street.getSpeedMode());
+	Assert.assertEquals("50",street.getMaxSpeedBackward());
+	Assert.assertEquals(10,street.getAzimuthStart().intValue());
+	Assert.assertEquals(20,street.getAzimuthEnd().intValue());
+	
+	
+	Assert.assertEquals(fullyQualifiedName, street.getFullyQualifiedName());
 	Assert.assertEquals(houseNumbers, street.getHouseNumbers());
 	Assert.assertEquals(2, street.getAlternateNames().size());
 	Assert.assertTrue(alternateNamesContains(street.getAlternateNames(), "altname"));
 	Assert.assertTrue(alternateNamesContains(street.getAlternateNames(), "altname2"));
+	
+	Assert.assertTrue(alternateLabelsContains(street.getAlternateLabels(), "alternateLabel"));
+	Assert.assertTrue(alternateLabelsContains(street.getAlternateLabels(), "alternateLabel2"));
 	
 	Assert.assertTrue(alternateCitiesNamesContain(street.getIsInCityAlternateNames(), "city1"));
 	Assert.assertTrue(alternateCitiesNamesContain(street.getIsInCityAlternateNames(), "city2"));
@@ -157,6 +188,20 @@ public class StreetFactoryTest {
     		return false;
     	}
     	Assert.fail("cities alternateNames doesn't contain "+name);
+    	return false;
+    }
+    
+    private boolean alternateLabelsContains(Collection<String> names, String name){
+    	if (names!=null ){
+    		for(String nameToTest:names){
+    			if (nameToTest!=null && nameToTest.equals(name)){
+    				return true;
+    			}
+    		}
+    	} else {
+    		return false;
+    	}
+    	Assert.fail("alternate Labels doesn't contain "+name);
     	return false;
     }
     

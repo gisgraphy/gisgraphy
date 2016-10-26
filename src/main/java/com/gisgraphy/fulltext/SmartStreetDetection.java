@@ -52,11 +52,13 @@ public class SmartStreetDetection {
 			add("autopista");
 			add("autobahn");
 			add("fleck");
+			
 		};
 	};
 	
 	private static final List<String> STREET_TYPES_DECOMPOUND = new ArrayList<String>(){
 		{
+			add("str");
 			add("straße");
 			add("strasse");
 			add("plätze");

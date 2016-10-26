@@ -165,7 +165,7 @@ public class QuattroshapesFileRetrieverTest {
 		}
 
 		// check that files have been untar
-		String fileToDownload = "shape.txt";
+		String fileToDownload = "localities.txt";
 		    file = new File(importerConfig.getQuattroshapesDir()
 			    + fileToDownload);
 		    if (importerConfig.isRetrieveFiles()) {

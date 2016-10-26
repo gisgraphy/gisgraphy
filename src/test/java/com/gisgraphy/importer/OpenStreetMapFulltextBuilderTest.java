@@ -46,7 +46,7 @@ import com.gisgraphy.domain.valueobject.NameValueDTO;
 import com.gisgraphy.service.IInternationalisationService;
 
 public class OpenStreetMapFulltextBuilderTest {
-
+/*
 	@Test
 	public void testShouldBeSkiped() {
 		boolean savedValue = GisgraphyConfig.STREET_SEARCH_FULLTEXT_MODE;
@@ -196,5 +196,5 @@ public class OpenStreetMapFulltextBuilderTest {
 		Assert.assertEquals(ImporterStatus.WAITING, builder.getStatus());
 		Assert.assertEquals("", builder.getStatusMessage());
 	}
-
+*/
 }

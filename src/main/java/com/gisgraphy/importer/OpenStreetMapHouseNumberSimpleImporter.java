@@ -142,7 +142,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 		 * "47129758___0101000020E61000005CCBD3C231E76240AA6514FE5BF440C0___Bowral Street___Bowral Street___W___street"
 		 * ", ""84623507
 		 * ___0101000020E6100000546690CC36E76240A417D5545AF440C0___71___Bowral
-		 * Street___W___house""}"
+		 * Street___W___house""} SHAPE"
 		 */
 		if (line == null || "".equals(line.trim())) {
 			return null;
@@ -289,7 +289,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	}
 
 	protected NodeHouseNumber parseNodeHouseNumber(String line) {
-		//N	1053493828	0101000020E610000060910486D17250C05D4B6D4ECA753CC0	75	Sandwichs La Estrellita	Estanislao Maldones
+		//N	1053493828	0101000020E610000060910486D17250C05D4B6D4ECA753CC0	75	Sandwichs La Estrellita	Estanislao Maldones 6:CITY 7:POSTCODE 8:SUBURB 9:SHAPE
 		if (line == null || "".equals(line.trim())) {
 			return null;
 		}

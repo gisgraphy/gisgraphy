@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
+import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
@@ -43,6 +45,8 @@ import com.vividsolutions.jts.geom.Point;
  */
 @Service
 public class AddressHelper {
+	
+	BasicAddressFormater formater = BasicAddressFormater.getInstance();
 	
 	public  HouseNumberDistance getNearestHouse(SortedSet<HouseNumber> houses, Point location){
 		if (location==null || houses==null || houses.size()==0){
@@ -130,6 +134,7 @@ public class AddressHelper {
 		//geocoding level will be street
 		
 		address.setFormatedFull(buildFullAddressString(address));
+		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
 		return address;
 	}
 
@@ -219,7 +224,7 @@ public class AddressHelper {
 			sb.append(address.getCountryCode().toUpperCase());
 		}
 		String str =  sb.toString();
-		System.out.println(str);
+		//System.out.println(str);
 		return str;
 	}
 

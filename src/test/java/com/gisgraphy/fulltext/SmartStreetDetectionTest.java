@@ -35,6 +35,9 @@ public class SmartStreetDetectionTest {
 		//NOT DECOMPOUND
 		Assert.assertEquals(1, ssd.getStreetTypes("saintdenisstraße").size());
 		Assert.assertEquals("straße", ssd.getStreetTypes("saintdenisstraße").get(0));
+		//NOT DECOMPOUND
+		Assert.assertEquals(1, ssd.getStreetTypes("saintdenisstr.").size());
+		Assert.assertEquals("str", ssd.getStreetTypes("saintdenisstr.").get(0));
 		
 		//ACCENT
 		Assert.assertEquals(1, ssd.getStreetTypes("saint denis plätze").size());

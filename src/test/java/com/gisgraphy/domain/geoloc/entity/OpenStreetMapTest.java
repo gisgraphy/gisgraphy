@@ -151,5 +151,28 @@ public class OpenStreetMapTest {
 		Assert.assertEquals("double set is not correct",street, street.getAlternateNames().get(0).getStreet());
 		
 	}
+	
+	@Test
+	public void testAddAlternateLabels() {
+		OpenStreetMap street = new OpenStreetMap();
+		street.setId(1L);
+		
+		List<String> names = new ArrayList<String>();
+		
+		names.add("foo");
+		names.add("bar");
+		street.addAlternateLabels(names);
+		Assert.assertEquals(2, street.getAlternateLabels().size());
+		street.addAlternateLabel("foo2");
+		
+		Assert.assertEquals(3, street.getAlternateLabels().size());
+		
+		street.addAlternateLabel("foo");//already present
+		Assert.assertEquals(3, street.getAlternateLabels().size());
+		
+		
+	}
+	
+	
 
 }

@@ -41,6 +41,7 @@ import com.gisgraphy.service.IInternationalisationService;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
+@Deprecated
 public class OpenStreetMapFulltextBuilder implements IImporterProcessor {
 
    /**
@@ -121,6 +122,7 @@ public class OpenStreetMapFulltextBuilder implements IImporterProcessor {
 	}
 
 	public void process() {
+		/*
 		status = ImporterStatus.PROCESSING;
 		try {
 			if (!shouldBeSkipped()) {
@@ -149,12 +151,12 @@ public class OpenStreetMapFulltextBuilder implements IImporterProcessor {
 			status = ImporterStatus.ERROR;
 			throw new ImporterException(statusMessage, e);
 		} 
-
+*/
 	}
 
 	protected void setup() {
 		statusMessage = internationalisationService.getString("import.message.createIndex");
-		openStreetMapDao.createFulltextIndexes();
+		//openStreetMapDao.createFulltextIndexes();
 	}
 
 	public void resetStatus() {

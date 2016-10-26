@@ -54,6 +54,7 @@ import com.gisgraphy.domain.valueobject.AlternateNameSource;
 import com.gisgraphy.domain.valueobject.Output;
 import com.gisgraphy.domain.valueobject.Output.OutputStyle;
 import com.gisgraphy.domain.valueobject.Pagination;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.serializer.common.OutputFormat;
 import com.gisgraphy.street.StreetType;
@@ -126,8 +127,7 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 	assertEquals(city.getElevation(), result.getElevation());
 	assertEquals(city.getGtopo30(), result.getGtopo30());
 	assertEquals(city.getTimezone(), result.getTimezone());
-	//since v 4.0 we don't process calculated fields
-	assertEquals(null, result
+	assertEquals(city.getFullyQualifiedName(), result
 		.getFully_qualified_name());
 	assertEquals(city.getClass().getSimpleName(), result.getPlacetype());
 	assertEquals(city.getPopulation(), result.getPopulation());
@@ -242,7 +242,7 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 	assertNotNull(result.getTimezone());
 	assertEquals(country.getTimezone(), result.getTimezone());
 	//since v 4.0 we don't process calculated fields
-		assertEquals(null, result
+		assertEquals(country.getFullyQualifiedName(), result
 			.getFully_qualified_name());
 	assertNotNull(result.getPlacetype());
 	assertEquals(country.getClass().getSimpleName(), result.getPlacetype());
@@ -345,6 +345,18 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 	houseNumber.setNumber("3");
 	houseNumber.setLocation(GeolocHelper.createPoint(4F, 5F));
 	street.addHouseNumber(houseNumber);
+	street.setLanes(2);
+	street.setToll(true);
+	street.setLabel("label");
+	street.setLabelPostal("label");
+	street.addAlternateLabel("alternateLabel");
+	street.addAlternateLabel("alternateLabel2");
+	street.setMaxSpeed("30");
+	street.setSpeedMode(SpeedMode.OSM);
+	street.setMaxSpeedBackward("40");
+	street.setAzimuthStart(50);
+	street.setAzimuthEnd(60);
+	street.setFullyQualifiedName("fullyQualifiedName");
 	openStreetMapDao.save(street);
 	
 	this.solRSynchroniser.commit();
@@ -380,8 +392,33 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 			    result.getIs_in_zip());
 	    Assert.assertEquals("The is_in_adm is not correct", street.getIsInAdm(),
 			    result.getIs_in_adm());
-	   /* Assert.assertEquals("The fullyqualified address is not correct", street.getFullyQualifiedAddress(),
-			    result.getFully_qualified_address());*/
+	    Assert.assertEquals("The number of lanes is not correct", street.getLanes(),
+			    result.getLanes());
+	    Assert.assertEquals("The toll is not correct", street.isToll(),
+			    result.isToll());
+	    Assert.assertEquals("The label is not correct", street.getLabel(),
+			    result.getLabel());
+	    Assert.assertEquals("The label postal is not correct", street.getLabelPostal(),
+			    result.getLabel_postal());
+	    Assert.assertEquals("The maxspeed is not correct", street.getMaxSpeed(),
+			    result.getMaxSpeed());
+	    Assert.assertEquals("The speedMode is not correct", street.getSpeedMode().toString(),
+			    result.getSpeedMode());
+	    Assert.assertEquals("The max speed backward is not correct", street.getMaxSpeedBackward(),
+			    result.getMaxSpeed_backward());
+	    Assert.assertEquals("The azimuth start is not correct", street.getAzimuthStart(),
+			    result.getAzimuth_start());
+	    Assert.assertEquals("The azimuth end is not correct", street.getAzimuthEnd(),
+			    result.getAzimuth_end());
+	    Iterator<String> labeliterator = street.getAlternateLabels().iterator();
+	    while (labeliterator.hasNext()) {
+	    	String alternate_name = labeliterator.next();
+			Assert.assertTrue("The alternateLabels are not correct and not contains "+alternate_name +" : "+result.getAlternate_labels(), 
+	    			result.getAlternate_labels().contains(alternate_name));
+			
+		}
+	    Assert.assertEquals("The fullyqualified name is not correct", street.getFullyQualifiedName(),
+			    result.getFully_qualified_name());
 	    Assert.assertEquals("The openstreetmap id is not correct", street.getOpenstreetmapId(),
 			    result.getOpenstreetmap_id());
 	    

@@ -39,7 +39,6 @@ import org.junit.Test;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.valueobject.GisFeatureDistance;
-import com.gisgraphy.domain.valueobject.GisgraphyConfig;
 import com.gisgraphy.domain.valueobject.Output;
 import com.gisgraphy.domain.valueobject.Pagination;
 import com.gisgraphy.domain.valueobject.StreetSearchResultsDto;
@@ -47,6 +46,7 @@ import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
 import com.gisgraphy.geoloc.GeolocResultsDto;
 import com.gisgraphy.helper.FileHelper;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.serializer.common.OutputFormat;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.stats.StatsUsageType;
@@ -120,6 +120,38 @@ public class StreetSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
 	StreetSearchResultsDto results = streetSearchEngine.executeQuery(query);
 	assertEquals("Contains mode should be case insensitive and accent insensitive ",1, results.getResult().size());
 	assertEquals(street.getName(), results.getResult().get(0).getName());
+	
+	query = new StreetSearchQuery(street.getLocation(),10000,pagination,output,StreetType.MOTORWAY,street.isOneWay(),"hn kén",StreetSearchMode.CONTAINS);
+	
+	results = streetSearchEngine.executeQuery(query);
+	assertEquals("Contains mode should be case insensitive and accent insensitive, the given name should be normalized too",1, results.getResult().size());
+	assertEquals(street.getName(), results.getResult().get(0).getName());
+    }
+    
+    @Test
+    public void testExecuteWithContainsMode_accent() {
+	OpenStreetMap street = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+	
+	street.setName("andré malraux");
+	StringHelper.updateOpenStreetMapEntityForIndexation(street);
+	this.openStreetMapDao.save(street);
+
+	Pagination pagination = paginate().from(1).to(15);
+	Output output = Output.withFormat(OutputFormat.XML).withIndentation();
+	StreetSearchQuery query = new StreetSearchQuery(street.getLocation(),10000,pagination,output,StreetType.MOTORWAY,street.isOneWay(),"andre",StreetSearchMode.CONTAINS);
+	
+	StreetSearchResultsDto results = streetSearchEngine.executeQuery(query);
+	assertEquals("Contains mode should be case insensitive and accent insensitive ",1, results.getResult().size());
+	assertEquals(street.getName(), results.getResult().get(0).getName());
+	
+	
+	
+	query = new StreetSearchQuery(street.getLocation(),10000,pagination,output,StreetType.MOTORWAY,street.isOneWay(),"andré",StreetSearchMode.CONTAINS);
+	
+	results = streetSearchEngine.executeQuery(query);
+	assertEquals("Contains mode should be case insensitive and accent insensitive, the given name should be normalized too ",1, results.getResult().size());
+	assertEquals(street.getName(), results.getResult().get(0).getName());
+	
     }
     
     @Test(expected=IllegalArgumentException.class)
@@ -146,7 +178,7 @@ public class StreetSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
     }
     
     
-    
+   /*
     @Test
     public void testExecuteWithFulltextMode() {
     	if (GisgraphyConfig.STREET_SEARCH_FULLTEXT_MODE){
@@ -169,7 +201,7 @@ public class StreetSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
 	
 
     }
-    
+    */
 
     @Test
     public void testExecuteQueryToStringShouldReturnsAValidStringWithResults() {

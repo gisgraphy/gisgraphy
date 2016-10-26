@@ -54,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.domain.valueobject.SRID;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.IntrospectionIgnoredField;
 import com.gisgraphy.street.HouseNumberComparator;
 import com.gisgraphy.street.StreetSearchMode;
@@ -82,13 +83,7 @@ public class OpenStreetMap {
     
     public static final int MAX_ALTERNATENAME_SIZE = 200;
 
-    /**
-     * Name of the column that is equals to to_tsvector(
-     * {@link #FULLTEXTSEARCH_COLUMN_NAME} It is used to do Fulltext search with
-     * the postgres text search module (to use the index). This value should be
-     * change if the getter and the setter of the {@link #textSearchName} change
-     */
-    public static final String FULLTEXTSEARCH_VECTOR_PROPERTY_NAME = "textsearchVector";
+   
 
     
     /**
@@ -158,7 +153,7 @@ public class OpenStreetMap {
     
     private Set<String> isInZip;
     
-    private String fullyQualifiedAddress;
+    private String fullyQualifiedName;
 
     private String countryCode;
 
@@ -194,7 +189,174 @@ public class OpenStreetMap {
     
     private String adm5Name;
     
+    private Integer lanes;
+    
+    private Boolean toll;
+    
+    private String surface;
+    
+    private SpeedMode speedMode;
+    
+    private String maxSpeed;
+    
+    private String maxSpeedBackward;
+    
+    private Integer azimuthStart;
+    
+    private Integer azimuthEnd;
+    
+    private String label;
+    
+    private String labelPostal;
+    
+    @IntrospectionIgnoredField
+    private Set<String> alternateLabels;
+    
     /**
+	 * @return the label that represent the Postal address
+	 */
+	public String getLabelPostal() {
+		return labelPostal;
+	}
+
+	/**
+	 * @param labelPostal the labelPostal to set
+	 */
+	public void setLabelPostal(String labelPostal) {
+		this.labelPostal = labelPostal;
+	}
+
+    
+    
+    
+    /**
+	 * @return the label that represent the street
+	 */
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * @param label the label to set
+	 */
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	/**
+	 * @return the alternate Labels of the streets
+	 */
+	@Transient
+	public Set<String> getAlternateLabels() {
+		return alternateLabels;
+	}
+
+	/**
+	 * @param alternateLabels the alternate Labels to set
+	 */
+	public void setAlternateLabels(Set<String> alternateLabels) {
+		this.alternateLabels = alternateLabels;
+	}
+
+	/**
+	 * @return the number of lanes
+	 */
+	public Integer getLanes() {
+		return lanes;
+	}
+
+	/**
+	 * @param lanes the number of lanes to set
+	 */
+	public void setLanes(Integer lanes) {
+		this.lanes = lanes;
+	}
+
+	/**
+	 * @return whether the street is toll or free
+	 */
+	public Boolean isToll() {
+		return toll;
+	}
+
+	/**
+	 * @param toll whether the street is toll or free
+	 */
+	public void setToll(Boolean toll) {
+		this.toll = toll;
+	}
+
+	/**
+	 * @return the physical surface of the street
+	 */
+	public String getSurface() {
+		return surface;
+	}
+
+	/**
+	 * @param surface the surface to set
+	 */
+	public void setSurface(String surface) {
+		this.surface = surface;
+	}
+
+	/**
+	 * @return the maxSpeed of the street
+	 */
+	public String getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	/**
+	 * @param maxSpeed the max speed to set
+	 */
+	public void setMaxSpeed(String maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	/**
+	 * @return the max Speed in the backward direction
+	 */
+	public String getMaxSpeedBackward() {
+		return maxSpeedBackward;
+	}
+
+	/**
+	 * @param maxSpeedBackward the max Speed in the Backward to set
+	 */
+	public void setMaxSpeedBackward(String maxSpeedBackward) {
+		this.maxSpeedBackward = maxSpeedBackward;
+	}
+
+	/**
+	 * @return the azimuth at the start of the street
+	 */
+	public Integer getAzimuthStart() {
+		return azimuthStart;
+	}
+
+	/**
+	 * @param azimuthStart the azimuth to set
+	 */
+	public void setAzimuthStart(Integer azimuthStart) {
+		this.azimuthStart = azimuthStart;
+	}
+
+	/**
+	 * @return the azimuth at the end of the street
+	 */
+	public Integer getAzimuthEnd() {
+		return azimuthEnd;
+	}
+
+	/**
+	 * @param azimuthEnd the azimuth to set
+	 */
+	public void setAzimuthEnd(Integer azimuthEnd) {
+		this.azimuthEnd = azimuthEnd;
+	}
+
+	/**
      * @return the id of the city, we don't use the object because we don't want to link objects
      * for performance reasons
      */
@@ -267,6 +429,29 @@ public class OpenStreetMap {
 	    }
 	}
     }
+    
+    
+    
+    public void addAlternateLabel(String alternateLabel) {
+		if (alternateLabel!=null){
+			Set<String> currentLabels = getAlternateLabels();
+			if (currentLabels == null) {
+				currentLabels = new HashSet<String>();
+			}
+			currentLabels.add(alternateLabel);
+			this.setAlternateLabels(currentLabels);
+		}
+	}
+
+    public void addAlternateLabels(Collection<String> alternateLabels) {
+	if (alternateLabels != null) {
+	    for (String label : alternateLabels) {
+	    	addAlternateLabel(label);
+	    }
+	}
+    }
+    
+    
 
     /**
      * (Experimental) This String is used to search for a part of a street name
@@ -434,8 +619,25 @@ public class OpenStreetMap {
     public void setStreetType(StreetType streetType) {
 	this.streetType = streetType;
     }
+    
+    
 
     /**
+	 * @return the speedMode
+	 */
+    @Enumerated(EnumType.STRING)
+	public SpeedMode getSpeedMode() {
+		return speedMode;
+	}
+
+	/**
+	 * @param speedMode the speedMode to set
+	 */
+	public void setSpeedMode(SpeedMode speedMode) {
+		this.speedMode = speedMode;
+	}
+
+	/**
      * @return the oneway
      */
     @Index(name = "streetosmonewayIndex")
@@ -670,12 +872,12 @@ public class OpenStreetMap {
     }
 
 
-	public String getFullyQualifiedAddress() {
-		return fullyQualifiedAddress;
+	public String getFullyQualifiedName() {
+		return fullyQualifiedName;
 	}
 
-	public void setFullyQualifiedAddress(String fullyQualifiedAddress) {
-		this.fullyQualifiedAddress = fullyQualifiedAddress;
+	public void setFullyQualifiedName(String fullyQualifiedName) {
+		this.fullyQualifiedName = fullyQualifiedName;
 	}
 
 	public Integer getPopulation() {

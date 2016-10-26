@@ -38,6 +38,8 @@ import net.sf.jstester.util.Assert;
 
 import org.junit.Test;
 
+import com.gisgraphy.addressparser.Address;
+import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
@@ -369,6 +371,91 @@ public class FulltextQuerySolrHelperTest {
 						.contains("dismax"));
 		assertEquals("spellchecker query should be set", searchTerm, parameters
 				.get(Constants.SPELLCHECKER_QUERY_PARAMETER).get(0));
+	}
+	
+	@Test
+	public void testToQueryStringShouldreturnCorrectParamsForFuzzySearch() {
+		Country france = GisgraphyTestHelper.createCountryForFrance();
+		Pagination pagination = paginate().from(3).to(10);
+		Output output = Output.withFormat(OutputFormat.JSON)
+				.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+				.withIndentation();
+		String searchTerm = "Saint-André";
+		FulltextQuery fulltextQuery = new FulltextQuery(searchTerm, pagination,
+				output, null, null).withAllWordsRequired(true)
+				.withoutSpellChecking().withFuzzy(true);
+		// split parameters
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						FulltextQuerySolrHelper.toQueryString(fulltextQuery),
+						"&");
+		// check parameters
+		assertEquals(outputStyleHelper.getFulltextFieldList(
+				Output.OutputStyle.SHORT, "FR"),
+				parameters.get(Constants.FL_PARAMETER).get(0));
+		
+		assertEquals("wrong indent parameter found", "on",
+				parameters.get(Constants.INDENT_PARAMETER).get(0));
+		
+		assertEquals("wrong echoparams parameter found", "none", parameters
+				.get(Constants.ECHOPARAMS_PARAMETER).get(0));
+		
+		assertEquals("wrong start parameter found", "2",
+				parameters.get(Constants.START_PARAMETER).get(0));
+		
+		assertEquals("wrong rows parameter found", "8",
+				parameters.get(Constants.ROWS_PARAMETER).get(0));
+		
+		assertEquals("wrong output format parameter found",
+				OutputFormat.JSON.getParameterValue(),
+				parameters.get(Constants.OUTPUT_FORMAT_PARAMETER).get(0));
+		
+		assertEquals("wrong query type parameter found",
+				Constants.SolrQueryType.advanced.toString(),
+				parameters.get(Constants.QT_PARAMETER).get(0));
+		assertEquals("wrong query  parameter found",
+				FulltextQuerySolrHelper.buildFuzzyQuery(fulltextQuery),
+				parameters.get(Constants.QUERY_PARAMETER).get(0)
+						);
+		assertNull("spellchecker query should be set",
+				parameters.get(Constants.SPELLCHECKER_QUERY_PARAMETER));
+	}
+	
+	@Test
+	public void buildFuzzyQuery(){
+		FulltextQuerySolrHelper helper = new FulltextQuerySolrHelper();
+		//no placetype
+		FulltextQuery fulltextQuery = new FulltextQuery("toto-foo bar/tata");
+		String result = helper.buildFuzzyQuery(fulltextQuery);
+		 System.out.println(result);
+		//Assert.assertEquals("all_name: ( toto~  foo~  bar/tata~ ) all_adm1_name: ( toto~  foo~  bar/tata~ ) all_adm2_name: ( toto~  foo~  bar/tata~ ) ", result);
+		
+		//streetonly
+		 fulltextQuery = new FulltextQuery("toto-foo bar/tata").withPlaceTypes(com.gisgraphy.fulltext.Constants.STREET_PLACETYPE);
+		 result = helper.buildFuzzyQuery(fulltextQuery);
+		 System.out.println(result);
+		 
+		 fulltextQuery = new FulltextQuery("toto-foo bar/tata").withPlaceTypes(com.gisgraphy.fulltext.Constants.STREET_PLACETYPE).withAllWordsRequired(true);
+		 result = helper.buildFuzzyQuery(fulltextQuery);
+		 System.out.println(result);
+		//Assert.assertEquals("all_name: ( toto~  foo~  bar/tata~ ) is_in: ( toto~  foo~  bar/tata~ ) is_in_cities: ( toto~  foo~  bar/tata~ ) is_in_place: ( toto~  foo~  bar/tata~ ) is_in_adm: ( toto~  foo~  bar/tata~ ) ", result);
+		
+		//street and other
+		 fulltextQuery = new FulltextQuery("toto-foo bar/tata").withPlaceTypes(new Class[] { Street.class, City.class });
+		 result = helper.buildFuzzyQuery(fulltextQuery);
+		 System.out.println(result);
+		//Assert.assertEquals("all_name: ( toto~  foo~  bar/tata~ ) is_in: ( toto~  foo~  bar/tata~ ) is_in_cities: ( toto~  foo~  bar/tata~ ) is_in_place: ( toto~  foo~  bar/tata~ ) is_in_adm: ( toto~  foo~  bar/tata~ ) all_adm1_name: ( toto~  foo~  bar/tata~ ) all_adm2_name: ( toto~  foo~  bar/tata~ ) ", result);
+		
+		//only placetype without street
+		 fulltextQuery = new FulltextQuery("toto-foo bar/tata").withPlaceTypes(new Class[] { City.class });
+		 result = helper.buildFuzzyQuery(fulltextQuery);
+		 System.out.println(result);
+		//Assert.assertEquals("all_name: ( toto~  foo~  bar/tata~ ) all_adm1_name: ( toto~  foo~  bar/tata~ ) all_adm2_name: ( toto~  foo~  bar/tata~ ) ", result);
+		
+		 fulltextQuery = new FulltextQuery("Karl-Liebknecht-Str. 13, 2013 berlin").withPlaceTypes(new Class[] { City.class });
+		 result = helper.buildFuzzyQuery(fulltextQuery);
+		 System.out.println(result);
+		// Assert.assertEquals("all_name: ( Karl~0.5  Liebknecht~0.5  Str.~0.5  berlin~0.5 ) all_adm1_name: ( Karl~0.5  Liebknecht~0.5  Str.~0.5  berlin~0.5 ) all_adm2_name: ( Karl~0.5  Liebknecht~0.5  Str.~0.5  berlin~0.5 )", result);
 	}
 
 	@Test
@@ -1230,6 +1317,398 @@ public class FulltextQuerySolrHelperTest {
 
 		assertNotNull("spellchecker query should be set when numeric query",
 				parameters.get(Constants.SPELLCHECKER_QUERY_PARAMETER));
+	}
+	
+	@Test
+	public void buildAddressQuery(){
+		
+		String queryString;
+		
+		//nothing
+		Address address = new Address();
+		
+		 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		assertNull(queryString);
+		
+		//onlyzip
+		
+		address = new Address();
+		address.setZipCode("zip");
+		
+		 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+	
+		
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ZIPCODE.getValue()));
+
+		//onlyadm
+
+		address = new Address();
+		address.setState("state");
+
+		queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+
+
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Adm.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ALL_NAME.getValue()));
+		
+		// adm+zip
+
+		address = new Address();
+		address.setState("state");
+		address.setZipCode("zip");
+
+		queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+
+
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ZIPCODE.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ALL_ADM1_NAME.getValue()));
+
+		//only city
+		address = new Address();
+		address.setCountryCode("DE");
+		address.setCity("city");
+
+		queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+		assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ALL_NAME.getValue()));
+		
+		//city + zip
+		address = new Address();
+		address.setCountryCode("DE");
+		address.setCity("city");
+		address.setZipCode("zip");
+
+		queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+		assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ALL_NAME.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ZIPCODE.getValue()));
+		
+		//city + adm
+		address = new Address();
+		address.setCountryCode("DE");
+		address.setCity("city");
+		address.setState("state");
+
+		queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+		assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ALL_NAME.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.ALL_ADM1_NAME.getValue()));
+
+		//city + adm +zip
+				address = new Address();
+				address.setCountryCode("DE");
+				address.setCity("city");
+				address.setState("state");
+				address.setZipCode("zip");
+
+				queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+				System.out.println(queryString);
+				parameters = GisgraphyTestHelper
+						.splitURLParams(
+								queryString,
+								"&");
+				assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+
+				assertEquals(FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName(),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.ALL_NAME.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.ALL_ADM1_NAME.getValue()));
+
+//----------------------------with street---------------------------------------------------------------
+				
+				//only street
+				address = new Address();
+				address.setCountryCode("DE");
+				address.setStreetName("street Name");
+
+				queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+				System.out.println(queryString);
+				parameters = GisgraphyTestHelper
+						.splitURLParams(
+								queryString,
+								"&");
+				assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+
+				assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.ALL_NAME.getValue()));
+
+		//street + city
+		
+		address = new Address();
+		address.setCountryCode("DE");
+		address.setStreetName("street Name");
+		address.setCity("city");
+		
+		 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+		assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+		
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.ALL_NAME.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.IS_IN_CITIES.getValue()));
+		assertTrue(parameters.get(Constants.QT_PARAMETER).get(0)
+				.contains(Constants.SolrQueryType.advanced
+						.toString()));
+		
+
+		//street + zip
+		
+		address = new Address();
+		address.setCountryCode("DE");
+		address.setStreetName("street Name");
+		address.setZipCode("zip");
+		
+		 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+		assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+		
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.ALL_NAME.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.IS_IN_ZIP.getValue()));
+		
+		//street+city+adm
+		
+		address = new Address();
+		address.setCountryCode("DE");
+		address.setStreetName("street Name");
+		address.setCity("city");
+		address.setState("state");
+		
+		 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+		assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+		
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.ALL_NAME.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.IS_IN_CITIES.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.IS_IN_ADM.getValue()));
+		
+		//street adm
+		address = new Address();
+		address.setCountryCode("DE");
+		address.setStreetName("street Name");
+		address.setState("state");
+		
+		 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+		System.out.println(queryString);
+		parameters = GisgraphyTestHelper
+				.splitURLParams(
+						queryString,
+						"&");
+		assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+		
+		assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+		
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.ALL_NAME.getValue()));
+		assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+				.contains(FullTextFields.IS_IN_ADM.getValue()));
+		
+		//street+adm+zip
+		
+				address = new Address();
+				address.setCountryCode("DE");
+				address.setStreetName("street Name");
+				address.setZipCode("zip");
+				address.setState("state");
+				
+				 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+				System.out.println(queryString);
+				parameters = GisgraphyTestHelper
+						.splitURLParams(
+								queryString,
+								"&");
+				assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+				
+				assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+				
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+								.contains(FullTextFields.ALL_NAME.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.IS_IN_ZIP.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.IS_IN_ADM.getValue()));
+		
+	
+				//street+city+zip
+				
+				address = new Address();
+				address.setCountryCode("DE");
+				address.setStreetName("street Name");
+				address.setCity("city");
+				address.setZipCode("zip");
+				
+				 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+				System.out.println(queryString);
+				parameters = GisgraphyTestHelper
+						.splitURLParams(
+								queryString,
+								"&");
+				assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+				
+				assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+				
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+								.contains(FullTextFields.ALL_NAME.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.IS_IN_CITIES.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.IS_IN_ZIP.getValue()));
+				
+				//street+city+adm+zip
+				address = new Address();
+				address.setCountryCode("DE");
+				address.setStreetName("street Name");
+				address.setCity("city");
+				address.setState("adm");
+				address.setZipCode("zip");
+				
+				 queryString = FulltextQuerySolrHelper.toQueryString(address, false);
+				System.out.println(queryString);
+				parameters = GisgraphyTestHelper
+						.splitURLParams(
+								queryString,
+								"&");
+				assertEquals(String.format(FulltextQuerySolrHelper.FQ_COUNTRYCODE,address.getCountryCode().toUpperCase()),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
+				
+				assertEquals(FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName(),
+						parameters.get(Constants.FILTER_QUERY_PARAMETER).get(1));
+				
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+								.contains(FullTextFields.ALL_NAME.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.IS_IN_CITIES.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.IS_IN_ZIP.getValue()));
+				assertTrue(parameters.get(Constants.QUERY_PARAMETER).get(0)
+						.contains(FullTextFields.IS_IN_ADM.getValue()));
+		
+		
+	}
+	@Test
+	public void buildFuzzyWords(){
+		FulltextQuerySolrHelper helper = new FulltextQuerySolrHelper();
+		
+		String result = helper.buildFuzzyWords("totostr.");
+			System.out.println(result);
+			Assert.assertTrue(result.contains("~"+FulltextQuerySolrHelper.FUZZY_FACTOR));
+			Assert.assertEquals("saint~0.6  jean~0.6  de~0.6  luz~0.6", result);
+			
+			
+		 result = helper.buildFuzzyWords("saint-jean de luz - 2");
+		System.out.println(result);
+		Assert.assertTrue(result.contains("~"+FulltextQuerySolrHelper.FUZZY_FACTOR));
+		Assert.assertEquals("saint~0.6  jean~0.6  de~0.6  luz~0.6", result);
+		
+		
+	}
+	
+	@Test
+	public void clean(){
+		Assert.assertEquals("Am Silberberg 2 ", FulltextQuerySolrHelper.clean(" Am Silberberg 2 - "));
 	}
 
 }

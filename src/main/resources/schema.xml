@@ -67,6 +67,7 @@
 		<filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0"/>
 		<filter class="com.gisgraphy.compound.solr.DecompoundTokenFilterFactory"
         dictionary="compound.txt" />
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
       </analyzer>
     </fieldType>
     
@@ -230,16 +231,34 @@ decompound after lower because words of dictionary are in lower, unpunct
    
   <!-- Medium --><field name="street_type" type="string" indexed="false" stored="true"/>
   <!-- Medium --><field name="is_in" type="text" indexed="true" stored="true"/>
-  <!-- Medium --><field name="is_in_cities" type="exact_string_ci" indexed="true" stored="false" multiValued="true"/>
+  <!-- Medium --><field name="is_in_cities" type="text" indexed="true" stored="false" multiValued="true"/>
   <!-- Medium --><field name="is_in_place" type="text" indexed="true" stored="true"/>
   <!-- Medium --><field name="is_in_adm" type="text" indexed="true" stored="true"/>
   <!-- Medium --><field name="is_in_zip" type="text" indexed="true" stored="true" multiValued="true"/>
-  <!-- Medium --><field name="fully_qualified_address" type="text" indexed="false" stored="true"/>
   <!-- Medium --><field name="one_way" type="boolean" indexed="false" stored="true"/>
   <!-- Medium --><field name="length" type="double" indexed="false" stored="true"/>
   <!-- Medium --><field name="openstreetmap_id" type="long" indexed="true" stored="true"/>
   <!--Medium  --><field name="city_population" type="integer" indexed="true" stored="false"/><!-- must be indexed for boost field -->
   <!-- Medium --><field name="house_numbers" type="exact_string_ci" indexed="false" stored="true" multiValued="true"/>
+  
+  
+  <field name="lanes" type="integer" indexed="false" stored="true"/><!-- number of lanes -->
+<field name="toll" type="boolean" indexed="false" stored="true"/><!-- if the street is toll or free -->
+<field name="surface" type="string" indexed="false" stored="true"/><!-- the physical surface of the street -->
+<field name="max_speed" type="string" indexed="false" stored="true"/><!-- the maximum speed of the street -->
+<field name="speed_mode" type="string" indexed="false" stored="true"/><!-- how the speed is filled -->
+<field name="max_speed_backward" type="string" indexed="false" stored="true"/><!-- the maximum speed on backward direction of the street -->
+<field name="azimuth_start" type="integer" indexed="false" stored="true"/><!-- angular of the street at the beginning-->
+<field name="azimuth_end" type="integer" indexed="false" stored="true"/><!-- angular of the street at the end-->
+
+
+
+<field name="label" type="text" indexed="true" stored="true"/><!-- best string that represent the feature-->
+<field name="label_postal" type="text" indexed="true" stored="true"/><!-- string that represent the postal address of the feature-->
+<field name="label_alternate"  type="text"  indexed="false"  stored="true" multiValued="true"/>
+
+<copyField source="label*" dest="all_label"/>
+<field name="all_label" type="text" indexed="true" stored="true" multiValued="true"></field>
   
    <field name="feature_id" type="long" indexed="true" stored="true"/>
    <field name="location" type="location" indexed="true" stored="false"/>

@@ -30,6 +30,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.IntrospectionIgnoredField;
 import com.gisgraphy.street.StreetType;
 
@@ -52,6 +53,143 @@ public class Street extends GisFeature {
     @IntrospectionIgnoredField
     private String fullyQualifiedAddress;
     private SortedSet<HouseNumber> houseNumbers;
+ 
+    private Integer lanes;
+    
+    private Boolean toll;
+    
+    private String surface;
+    
+    private String maxSpeed;
+    
+    private String maxSpeedBackward;
+    
+    private SpeedMode speedMode;
+    
+    /**
+	 * @return the speedMode
+	 */
+	public SpeedMode getSpeedMode() {
+		return speedMode;
+	}
+
+	/**
+	 * @param speedMode the speedMode to set
+	 */
+	public void setSpeedMode(SpeedMode speedMode) {
+		this.speedMode = speedMode;
+	}
+
+	private Integer azimuthStart;
+    
+    private Integer azimuthEnd;
+    
+   
+    
+    
+
+    
+    
+    
+
+	/**
+	 * @return the number of lanes
+	 */
+	public Integer getLanes() {
+		return lanes;
+	}
+
+	/**
+	 * @param lanes the number of lanes to set
+	 */
+	public void setLanes(Integer lanes) {
+		this.lanes = lanes;
+	}
+
+	/**
+	 * @return whether the street is toll or free
+	 */
+	public Boolean isToll() {
+		return toll;
+	}
+
+	/**
+	 * @param toll whether the street is toll or free
+	 */
+	public void setToll(Boolean toll) {
+		this.toll = toll;
+	}
+
+	/**
+	 * @return the physical surface of the street
+	 */
+	public String getSurface() {
+		return surface;
+	}
+
+	/**
+	 * @param surface the surface to set
+	 */
+	public void setSurface(String surface) {
+		this.surface = surface;
+	}
+
+	/**
+	 * @return the maxSpeed of the street
+	 */
+	public String getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	/**
+	 * @param maxSpeed the max speed to set
+	 */
+	public void setMaxSpeed(String maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	/**
+	 * @return the max Speed in the backward direction
+	 */
+	public String getMaxSpeedBackward() {
+		return maxSpeedBackward;
+	}
+
+	/**
+	 * @param maxSpeedBackward the max Speed in the Backward to set
+	 */
+	public void setMaxSpeedBackward(String maxSpeedBackward) {
+		this.maxSpeedBackward = maxSpeedBackward;
+	}
+
+	/**
+	 * @return the azimuth at the start of the street
+	 */
+	public Integer getAzimuthStart() {
+		return azimuthStart;
+	}
+
+	/**
+	 * @param azimuthStart the azimuth to set
+	 */
+	public void setAzimuthStart(Integer azimuthStart) {
+		this.azimuthStart = azimuthStart;
+	}
+
+	/**
+	 * @return the azimuth at the end of the street
+	 */
+	public Integer getAzimuthEnd() {
+		return azimuthEnd;
+	}
+
+	/**
+	 * @param azimuthEnd the azimuth to set
+	 */
+	public void setAzimuthEnd(Integer azimuthEnd) {
+		this.azimuthEnd = azimuthEnd;
+	}
+
     
     
 
@@ -118,17 +256,7 @@ public class Street extends GisFeature {
     }
 
 
-
-	@Transient
-	public String getFullyQualifiedAddress() {
-		return fullyQualifiedAddress;
-	}
-
-	public void setFullyQualifiedAddress(String fullyQualifiedAddress) {
-		this.fullyQualifiedAddress = fullyQualifiedAddress;
-	}
-	
-	@Transient
+   	@Transient
     public SortedSet<HouseNumber> getHouseNumbers() {
 		return houseNumbers;
 	}

@@ -56,6 +56,7 @@ import com.gisgraphy.domain.valueobject.SRID;
 import com.gisgraphy.domain.valueobject.StreetDistance;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.IntrospectionHelper;
+import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.hibernate.criterion.DistanceRestriction;
 import com.gisgraphy.hibernate.criterion.FulltextRestriction;
 import com.gisgraphy.hibernate.criterion.IntersectsRestriction;
@@ -153,11 +154,11 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 			if (name != null) {
 					if (streetSearchMode==StreetSearchMode.CONTAINS){
 					    	criteria = criteria.add(Restrictions.isNotNull("name"));//optimisation!
-					    	criteria = criteria.add(Restrictions.ilike(OpenStreetMap.FULLTEXTSEARCH_PROPERTY_NAME, "%"+name+"%"));
+					    	criteria = criteria.add(Restrictions.ilike(OpenStreetMap.FULLTEXTSEARCH_PROPERTY_NAME, "%"+StringHelper.normalize(name)+"%"));
 					    	//criteria = criteria.add(new PartialWordSearchRestriction(OpenStreetMap.PARTIALSEARCH_VECTOR_COLUMN_NAME, name));
-					} else if (streetSearchMode == StreetSearchMode.FULLTEXT){
+					} /*else if (streetSearchMode == StreetSearchMode.FULLTEXT){
 						  criteria = criteria.add(new FulltextRestriction(OpenStreetMap.FULLTEXTSEARCH_VECTOR_PROPERTY_NAME, name));
-					} else {
+					} */else {
 						throw new NotImplementedException(streetSearchMode+" is not implemented for street search");
 					}
 			}
@@ -227,7 +228,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
     /* (non-Javadoc)
      * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#buildIndexForStreetNameSearch()
      */
-    public Integer updateTS_vectorColumnForStreetNameSearch() {
+   /* public Integer updateTS_vectorColumnForStreetNameSearch() {
 	return (Integer) this.getHibernateTemplate().execute(
 			 new HibernateCallback() {
 
@@ -243,12 +244,12 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 				
 			    }
 			});
-    }
+    }*/
     
     /* (non-Javadoc)
      * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#buildIndexForStreetNameSearch()
      */
-    public Integer updateTS_vectorColumnForStreetNameSearchPaginate(final long from,final long to ) {
+   /* public Integer updateTS_vectorColumnForStreetNameSearchPaginate(final long from,final long to ) {
 	return (Integer) this.getHibernateTemplate().execute(
 			 new HibernateCallback() {
 
@@ -264,7 +265,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 				
 			    }
 			});
-    }
+    }*/
 
 
     /* (non-Javadoc)
@@ -313,7 +314,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
     /* (non-Javadoc)
      * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#createGISTIndex()
      */
-    public void createFulltextIndexes() {
+   /* public void createFulltextIndexes() {
 	 this.getHibernateTemplate().execute(
 			 new HibernateCallback() {
 
@@ -328,7 +329,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 				return null;
 			    }
 			});
-   }
+   }*/
     
 
     

@@ -196,7 +196,7 @@ public class GisFeatureDistanceFactoryTest extends AbstractIntegrationHttpSolrTe
 	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	    m.marshal(gisFeatureDistance, outputStream);
 	    FeedChecker.checkGisFeatureDistanceJAXBMapping(gisFeatureDistance, outputStream.toString(Constants.CHARSET),"");
-	    FeedChecker.assertQ("Zipcode should be output if The GisFeature is a city",
+	    FeedChecker.assertQ("wrong feed for street",
 		    outputStream.toString(Constants.CHARSET), "/"
 			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
 			    + "/length[.='" + gisFeatureDistance.getLength() + "']",
@@ -205,10 +205,73 @@ public class GisFeatureDistanceFactoryTest extends AbstractIntegrationHttpSolrTe
 			    + "/streetType[.='" + gisFeatureDistance.getStreetType()+ "']", "/"
 			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
 			    + "/oneWay[.='" + gisFeatureDistance.isOneWay() + "']", 
+			    
+
+			    "/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/isInAdm[.='"
+			    + gisFeatureDistance.getIsInAdm() + "']",
+
+			   	"/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/isInPlace[.='"
+			    + gisFeatureDistance.getIsInPlace() + "']",
+
+			    "/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/isInZip[.='"
+			    + gisFeatureDistance.getIsInZip() + "']",
+
+			    "/"
+			   	+ GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			   	+ "/toll[.='" + gisFeatureDistance.isToll()
+			   	+ "']",
+
+			   	"/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/lanes[.='"
+			    + gisFeatureDistance.getLanes() + "']",
+
+			    "/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/maxSpeed[.='"
+			    + gisFeatureDistance.getMaxSpeed() + "']",
+
+			    "/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/maxSpeedBackward[.='"
+			    + gisFeatureDistance.getMaxSpeedBackward()
+			    + "']",
+
+			    "/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/azimuthStart[.='"
+			    + gisFeatureDistance.getAzimuthStart()
+			    + "']",
+
+			    "/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/azimuthEnd[.='"
+			    + gisFeatureDistance.getAzimuthEnd() + "']",
+				"/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			   	+ "/surface[.='"
+			   	+ gisFeatureDistance.getSurface() + "']",
+			    
+			    
+			    
+			    
 			    "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
 	    + "/openstreetmapId[.='" + gisFeatureDistance.getOpenstreetmapId() + "']",
 	    "/"+ GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
 	    + "/isIn[.='" + gisFeatureDistance.getIsIn() + "']");
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 	    checkupdateFields(gisFeatureDistance);
 	} catch (PropertyException e) {
 	    fail(e.getMessage());

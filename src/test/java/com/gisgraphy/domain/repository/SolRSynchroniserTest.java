@@ -70,6 +70,7 @@ import com.gisgraphy.domain.valueobject.Constants;
 import com.gisgraphy.domain.valueobject.Output;
 import com.gisgraphy.domain.valueobject.Output.OutputStyle;
 import com.gisgraphy.domain.valueobject.Pagination;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
 import com.gisgraphy.fulltext.FullTextFields;
 import com.gisgraphy.fulltext.FullTextSearchException;
@@ -766,9 +767,8 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 		"//*[@name='" + FullTextFields.FEATURECODE.getValue()
 			+ "'][.='PPL']", "//*[@name='"
 			+ FullTextFields.FEATUREID.getValue() + "'][.='1001']",
-			//since V 4.0 we have removed preprocessed field for performance reasons
-		/*"//*[@name='" + FullTextFields.FULLY_QUALIFIED_NAME.getValue()
-			+ "'][.='" + paris.getFullyQualifiedName(false) + "']",*/
+		"//*[@name='" + FullTextFields.FULLY_QUALIFIED_NAME.getValue()
+			+ "'][.='" + paris.getFullyQualifiedName() + "']",
 		"//*[@name='" + FullTextFields.LAT.getValue() + "'][.='2.5']",
 		"//*[@name='" + FullTextFields.LONG.getValue() + "'][.='1.5']",
 		"//*[@name='" + FullTextFields.PLACETYPE.getValue()
@@ -1202,7 +1202,6 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 		Set<String> isInZip = new HashSet<String>();
 		isInZip.add("90001");
 		isInZip.add("90002");
-		String fullyQualifiedAddress = "fullyQualifiedAddress";
 		String altname1 = "alt name 1";
 		String altname2 = "alt name 2";
 		HouseNumber houseNumber1 = new HouseNumber();
@@ -1243,9 +1242,22 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
     	street.setAdm5Name("adm5Name");
     	street.setIsInZip(isInZip);
     	street.setIsInPlace(isInPlace);
-		street.setFullyQualifiedAddress(fullyQualifiedAddress);
+		street.setFullyQualifiedName("fullyQualifiedName");
 		street.addHouseNumbers(houseNumbers);
 		street.addAlternateNames(alternateNames);
+		
+		street.setLabel("label");
+		street.setLabelPostal("labelPostal");
+		street.setToll(true);
+		street.setSurface("surface");
+		street.setLanes(2);
+		street.setMaxSpeed("30");
+		street.setSpeedMode(SpeedMode.OSM);;
+		street.setMaxSpeedBackward("50");
+		street.setAzimuthStart(10);
+		street.setAzimuthEnd(20);
+		street.addAlternateLabel("alternateLabel");
+		street.addAlternateLabel("alternateLabel2");
    
 		HouseNumberSerializer houseNumberSerializer = new HouseNumberSerializer();
     	openStreetMapDao.save(street);
@@ -1284,6 +1296,8 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 	}
 
 	Iterator<String> zipIterator = street.getIsInZip().iterator();
+	Iterator<String> labelIterator = street.getAlternateLabels().iterator();
+	
 	FeedChecker.assertQ("The query return incorrect values",
 		content,
 		"//*[@numFound='1']",
@@ -1324,13 +1338,54 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='"+street.getAdm4Name()+"']",
 			"//*[@name='" + FullTextFields.IS_IN_PLACE.getValue()
 			+ "'][.='"+street.getIsInPlace()+"']",
+			"//*[@name='" + FullTextFields.FULLY_QUALIFIED_NAME.getValue()
+			+ "'][.='" + street.getFullyQualifiedName() + "']",
+			
+
+			"//*[@name='" + FullTextFields.LABEL.getValue()
+			+ "'][.='"+street.getLabel()+"']",
+
+			"//*[@name='" + FullTextFields.LABEL_POSTAL.getValue()
+			+ "'][.='"+street.getLabelPostal()+"']",
+
+			"//*[@name='" + FullTextFields.TOLL.getValue()
+			+ "'][.='"+street.isToll()+"']",
+
+			"//*[@name='" + FullTextFields.SURFACE.getValue()
+			+ "'][.='"+street.getSurface()+"']",
+
+			"//*[@name='" + FullTextFields.MAX_SPEED.getValue()
+			+ "'][.='"+street.getMaxSpeed()+"']",
+			
+			"//*[@name='" + FullTextFields.SPEED_MODE.getValue()
+			+ "'][.='"+street.getSpeedMode()+"']",
+
+			"//*[@name='" + FullTextFields.MAX_SPEED_BACKWARD.getValue()
+			+ "'][.='"+street.getMaxSpeedBackward()+"']",
+
+			"//*[@name='" + FullTextFields.LANES.getValue()
+			+ "'][.='"+street.getLanes()+"']",
+
+			"//*[@name='" + FullTextFields.AZIMUTH_START.getValue()
+			+ "'][.='"+street.getAzimuthStart()+"']",
+
+			"//*[@name='" + FullTextFields.AZIMUTH_END.getValue()
+			+ "'][.='"+street.getAzimuthEnd()+"']",
+			
+			
+		/*	street.addAlternateLabel("alternateLabel");
+			street.addAlternateLabel("alternateLabel2");*/
+			
+			"//*[@name='" + FullTextFields.ALTERNATE_LABELS.getValue()
+			+ "'][./str[1]/.='"+labelIterator.next()+"']",
+			"//*[@name='" + FullTextFields.ALTERNATE_LABELS.getValue()
+			+ "'][./str[2]/.='"+labelIterator.next()+"']",
+			
+			
 			"//*[@name='" + FullTextFields.IS_IN_ZIP.getValue()
 			+ "'][./str[1]/.='"+zipIterator.next()+"']",
 			"//*[@name='" + FullTextFields.IS_IN_ZIP.getValue()
 			+ "'][./str[2]/.='"+zipIterator.next()+"']",
-			/*"//*[@name='" + FullTextFields.FULLY_QUALIFIED_ADDRESS.getValue()
-			+ "'][.='"+street.getFullyQualifiedAddress()+"']",*/
-			//we check the order too
 			"//*[@name='" + FullTextFields.HOUSE_NUMBERS.getValue()
 			+ "'][./str[1][.='"+houseNumberSerializer.serialize(houseNumber2)+"']]"
 		, "//*[@name='" + FullTextFields.HOUSE_NUMBERS.getValue()

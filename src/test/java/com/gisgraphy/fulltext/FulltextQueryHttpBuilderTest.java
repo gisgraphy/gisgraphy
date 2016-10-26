@@ -523,6 +523,37 @@ public class FulltextQueryHttpBuilderTest {
 				+ " should be true for 'on' value (case insensitive and on value)  ",
 			query.isSuggest());
 		
+		
+		// test fuzzy
+				// with no value specified
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.removeParameter(FulltextQuery.FUZZY_PARAMETER);
+				query = buildQuery(request);
+				assertEquals("When no " + FulltextQuery.FUZZY_PARAMETER
+					+ " is specified, the  parameter should be set to default", false
+					,query.isFuzzy());
+				// with wrong value
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.setParameter(FulltextQuery.FUZZY_PARAMETER, "UNK");
+				query = buildQuery(request);
+				assertEquals("When wrong " + FulltextQuery.FUZZY_PARAMETER
+					+ " is specified, the  parameter should be set to default",false,
+					query.isFuzzy());
+				// test case sensitive
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.setParameter(FulltextQuery.FUZZY_PARAMETER, "True");
+				query = buildQuery(request);
+				assertTrue(FulltextQuery.FUZZY_PARAMETER
+					+ " should be case insensitive  ", query.isFuzzy());
+				// test with on value
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.setParameter(FulltextQuery.FUZZY_PARAMETER, "oN");
+				query = buildQuery(request);
+				assertTrue(
+						FulltextQuery.FUZZY_PARAMETER
+						+ " should be true for 'on' value (case insensitive and on value)  ",
+					query.isFuzzy());
+		
 	
 	
 	// test allwordsRequired

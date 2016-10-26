@@ -44,9 +44,14 @@ public class Constants {
 		
 		
 		/**
-		 * convenence placetype for city and citySubdivision
+		 * convenence placetype for city and citySubdivision, street
 		 */
 		public final static Class[] ADDRESSES_PLACETYPE = new Class[] {City.class,CitySubdivision.class,Street.class,Adm.class}; 
+		
+		/**
+		 * convenence placetype for city and citySubdivision and adm
+		 */
+		public final static Class[] CITY_CITYSUB_ADM_PLACETYPE = new Class[] {City.class,CitySubdivision.class,Adm.class}; 
 		
 		/**
 		 * convenence placetype for city and citySubdivision

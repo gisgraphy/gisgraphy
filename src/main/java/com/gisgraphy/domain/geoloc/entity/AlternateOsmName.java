@@ -76,6 +76,24 @@ public class AlternateOsmName {
 	this.name = name;
 	this.source = source;
     }
+    
+    /**
+     * @param name
+     *                The name of the alternate name
+     * @param source
+     *                what is the source the alternate name 
+     * @param language the language of the alternatename
+     * @see AlternateNameSource
+     * 
+     **/                
+    public AlternateOsmName(String name, String language,AlternateNameSource source) {
+	super();
+	this.name = name;
+	if(language!=null){
+		this.language=language.toUpperCase();
+	}
+	this.source = source;
+    }
 
     /**
      * Default constructor (Needed by CGLib)

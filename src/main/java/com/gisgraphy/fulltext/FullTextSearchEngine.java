@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
+import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.repository.GisFeatureDao;
 import com.gisgraphy.domain.valueobject.Constants;
@@ -242,6 +243,59 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
 	    return new FulltextResultsDto();
 	}
     }
+    
+    public FulltextResultsDto executeAddressQuery(Address address, boolean fuzzy)
+    	    throws ServiceException {
+    	statsUsageService.increaseUsage(StatsUsageType.FULLTEXT);
+    	Assert.notNull(address, "Can not execute a null address query");
+    	if (address.getZipCode()!=null && address.getCountryCode()!=null){
+    		address.setZipCode(ZipcodeNormalizer.normalize(address.getZipCode(), address.getCountryCode()));
+    	}
+    	ModifiableSolrParams params = FulltextQuerySolrHelper.buildAddressQuery(address, fuzzy);
+    	QueryResponse response = null;
+    	try {
+    	    response = solrClient.getServer().query(params);
+    	} catch (SolrServerException e) {
+    	    throw new FullTextSearchException(e.getMessage(), e);
+    	} catch (RuntimeException e) {
+    	    throw new FullTextSearchException(e.getMessage(), e);
+    	}
+    	if (response != null) {
+    	    long numberOfResults = response.getResults() != null ? response
+    		    .getResults().getNumFound() : 0;
+    		    if (!disableLogging){
+    		    	logger.info("addressQuery" + address + " took " + response.getQTime()
+    		    	+ " ms and returns " + numberOfResults + " results");
+    		    }
+    	    return builder.build(response);
+    	} else {
+    	    return new FulltextResultsDto();
+    	}
+        }
+    public FulltextResultsDto executeRawQuery(String q)
+    	    throws ServiceException {
+    	Assert.notNull(q, "Can not execute a null raw query");
+    	ModifiableSolrParams params = FulltextQuerySolrHelper.toRawQuery(q);
+    	QueryResponse response = null;
+    	try {
+    	    response = solrClient.getServer().query(params);
+    	} catch (SolrServerException e) {
+    	    throw new FullTextSearchException(e.getMessage(), e);
+    	} catch (RuntimeException e) {
+    	    throw new FullTextSearchException(e.getMessage(), e);
+    	}
+    	if (response != null) {
+    	    long numberOfResults = response.getResults() != null ? response
+    		    .getResults().getNumFound() : 0;
+    		  /*  if (!disableLogging){
+    		    	logger.info("rawQuery" + q + " took " + response.getQTime()
+    		    	+ " ms and returns " + numberOfResults + " results");
+    		    }*/
+    	    return builder.build(response);
+    	} else {
+    	    return new FulltextResultsDto();
+    	}
+        }
 
     /*
      * (non-Javadoc)

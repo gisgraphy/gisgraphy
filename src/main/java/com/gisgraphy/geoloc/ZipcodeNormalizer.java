@@ -39,11 +39,11 @@ public class ZipcodeNormalizer {
     private final static Pattern GB_PATTERN = Pattern.compile(GB_PATTERN_EXPRESSION, REGEXP_CASEINSENSITIVE_FLAG);
 
     public static String normalize_ca(String string) {
-	return normalize_contry(string, CA_PATTERN);
+	return normalize_country(string, CA_PATTERN);
     }
     
     public static String normalize_gb(String string) {
-	return normalize_contry(string, GB_PATTERN);
+	return normalize_country(string, GB_PATTERN);
     }
     
     /**
@@ -66,7 +66,7 @@ public class ZipcodeNormalizer {
 	
     }
 
-    private static String normalize_contry(String string, Pattern pattern) {
+    private static String normalize_country(String string, Pattern pattern) {
 	if (string==null){
 	    return null;
 	}

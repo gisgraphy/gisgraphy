@@ -89,6 +89,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 
 	public static int DEFAULT_RADIUS = 30000;
 
+	
 
 	public AddressResultsDto executeQuery(ReverseGeocodingQuery query)
 			throws ServiceException {
@@ -98,36 +99,63 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 		long start = System.currentTimeMillis();
 		statsUsageService.increaseUsage(StatsUsageType.REVERSEGEOCODING);
 		OpenStreetMap openStreetMap = openStreetMapDao.getNearestRoadFrom(point);
+		AddressResultsDto addressResultsDto = null;
 		if (openStreetMap==null){
 			logger.debug("no road found, try to search deeper");
 			openStreetMap =openStreetMapDao.getNearestFrom(point);
 		}
 		if (openStreetMap!= null){
+			//stupid patch
+	/*		logger.error("patch admname");
+			City city = cityDao.getByShape(point, null, false);
+			if (city == null){
+				logger.info("No city by shape found, try by vicinity");
+				city = cityDao.getNearest(point,null, false, DEFAULT_RADIUS);
+				if (city == null){
+					logger.error("No city by vicinity found");
+				} else {
+					logger.error("find a city by vicinity "+city.getName()+" / "+city.getId()+"/"+city.getAdm1Name());
+					if (city.getAdm1Name()!= null){
+						openStreetMap.setIsInAdm(city.getAdm1Name());
+					}
+				}
+			} else {
+				logger.info("find a city by shape "+city.getName()+" / "+city.getId()+"/"+city.getAdm1Name());
+				if (city.getAdm1Name()!= null){
+					openStreetMap.setIsInAdm(city.getAdm1Name());
+				}
+			}*/
+				//end of stupid patch
+			
+			
 			logger.debug("found a street "+openStreetMap);
 			if (openStreetMap.getHouseNumbers()!=null && openStreetMap.getHouseNumbers().size() >=1 ){
+				
 				logger.debug("the street has "+openStreetMap.getHouseNumbers().size()+" housenumbers");
 				HouseNumberDistance houseNumberDistance = addressHelper.getNearestHouse(openStreetMap.getHouseNumbers(), point);
 				if (houseNumberDistance!=null){
 					Address address = addressHelper.buildAddressFromHouseNumberDistance(houseNumberDistance);
 					if (address!=null){
-						logger.debug("found an address at a house number level");
+						logger.info("found an address at a house number level");
 						List<Address> addresses = new ArrayList<Address>();
 						addresses.add(address);
 						long end = System.currentTimeMillis();
 						long qTime = end - start;
 						logger.info(query + " took " + (qTime) + " ms and returns a result");
-						return new AddressResultsDto(addresses, qTime);
+						addressResultsDto =  new AddressResultsDto(addresses, qTime);
+						return  new AddressResultsDto(addresses, qTime);
 					}  else {
-						logger.debug("found an address at a street  level");
+						logger.info("found an address at a street  level");
 						List<Address> addresses = new ArrayList<Address>();
 						addresses.add(address);
 						long end = System.currentTimeMillis();
 						long qTime = end - start;
 						logger.info(query + " took " + (qTime) + " ms and returns a result");
-						return new AddressResultsDto(addresses, qTime);
+						return  new AddressResultsDto(addresses, qTime);
 					}
 				}
 			} else {
+				
 				logger.debug("the street has no housenumbers");
 				Address address = addressHelper.buildAddressFromOpenstreetMapAndPoint(openStreetMap,point);
 				if (address!=null){
@@ -136,9 +164,12 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 					long end = System.currentTimeMillis();
 					long qTime = end - start;
 					logger.info(query + " took " + (qTime) + " ms and returns a result");
-					return new AddressResultsDto(addresses, qTime);
+					return  new AddressResultsDto(addresses, qTime);
 				} 
 			}
+			
+			
+			
 		} else {
 			logger.info("No street found, try to find city by shape");
 			City city = cityDao.getByShape(point, null, false);

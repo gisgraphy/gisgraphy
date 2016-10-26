@@ -39,6 +39,7 @@ import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
+import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.ICityDao;
@@ -48,6 +49,7 @@ import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.geoloc.GeolocSearchEngine;
 import com.gisgraphy.helper.GeolocHelper;
@@ -87,9 +89,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     
     private static final Pattern pattern = Pattern.compile("(\\w+)\\s\\d+.*",Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     
-    public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "((?:(?!___).)+)(?:(?:___)|(?:$))";
     
-    public static final Pattern ALTERNATENAMES_EXTRACTION_PATTERN = Pattern.compile(ALTERNATENAMES_EXTRACTION_REGEXP);
 
 	public static final Float SUBURB_MAX_DISTANCE = 5000f;
     
@@ -138,10 +138,15 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	String[] fields = line.split("\t");
 
 	//
-	// Line table has the following fields :
+	// old Line table has the following fields :
 	// --------------------------------------------------- 
 	//0: id; 1 name; 2 location; 3 length ;4 countrycode; 5 : gid ;
 	//6 type; 7 oneway; 8 : shape; 9 : Alternate names
+	//
+	// new table has the following fields :
+	// --------------------------------------------------- 
+	//0: id; 	1: name;	2: location; 	3: length ;	4: countrycode; 	5 : is_in; 	6: postcode; 	7: is_in_adm;
+	//	8: type;	9: oneway;10: shape;  11: max_speed;	12: lanes; 	13: toll; 	14: surface; 15: alternatenames; 
 	//
 	checkNumberOfColumn(fields);
 	OpenStreetMap street = new OpenStreetMap();
@@ -175,59 +180,107 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	}
 	
 	if (!isEmptyField(fields, 3, false)) {
-	    street.setLength(new Double(fields[3].trim()));
+	    Double length;
+		try {
+			length = new Double(fields[3].trim());
+			street.setLength(length);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	if (!isEmptyField(fields, 8, true)) {
-	    try {
-		street.setShape((LineString)GeolocHelper.convertFromHEXEWKBToGeometry(fields[8]));
-	    } catch (RuntimeException e) {
-		logger.warn("can not parse shape for "+fields[8] +" : "+e);
-		return;
-	    }
-	    
-	}
 	if (!isEmptyField(fields, 4, false)) {
 	    street.setCountryCode(fields[4].trim());
 	}
-		
+	
+	//5 is_in see behind
+	
+	//6 zip
+	if (!isEmptyField(fields, 6, false)) {
+		 populateZip(fields[6].trim(),street);
+	}
+	
+	//7 is_in_adm for future use
+	//bypass
+	
+	//8 streettype
+	if (!isEmptyField(fields, 8, false)) {
+	    StreetType type;
+	    try {
+		type = StreetType.valueOf(fields[8].toUpperCase());
+		street.setStreetType(type);
+	    } catch (Exception e) {
+		logger.warn("can not determine streetType for "+fields[0]+"/"+fields[8]+" : "+e);
+		street.setStreetType(StreetType.UNCLASSIFIED);
+	    }
+	    
+	}
+	
+	//9 one way
+	if (!isEmptyField(fields, 9, false)) {
+	    boolean oneWay = false;
+	    try {
+		oneWay  = Boolean.valueOf(fields[9]);
+		street.setOneWay(oneWay);
+	    } catch (Exception e) {
+		logger.warn("can not determine oneway for "+fields[1]+"/"+fields[9]+" : "+e);
+	    }
+	    
+	}
+	//10 shape
+	if (!isEmptyField(fields, 10, true)) {
+	    try {
+	    	street.setShape((LineString)GeolocHelper.convertFromHEXEWKBToGeometry(fields[10]));
+	    } catch (RuntimeException e) {
+		logger.warn("can not parse shape for "+fields[0]+"/"+fields[10] +" : "+e);
+		return;
+	    }
+	}
+	
+	//11 max speed
+	if (!isEmptyField(fields,11 , false)) {
+		PopulateMaxSpeed(street,fields[11]);  
+	}
+	
+	//12 lanes
+	if (!isEmptyField(fields,12 , false)) {
+		try {
+			Integer lanes = Integer.parseInt(fields[12]);
+			street.setLanes(lanes);
+		} catch (NumberFormatException e) {
+			logger.warn("can not parse lanes for "+fields[0]+"/"+fields[12] +" : "+e);
+		}
+  
+	}
+	
+	//13 toll
+	if (!isEmptyField(fields, 13, false)) {
+	    	if (fields[13].equalsIgnoreCase("yes")){
+	    		street.setToll(true);
+	    	}
+	}
+	
+	
+	//14 surface
+	if (!isEmptyField(fields, 14, false)) {
+		street.setSurface(fields[14].trim());
+	}
+	
+	//5 is_in	
 	if (!isEmptyField(fields, 5, false)) {
 		street.setIsIn(fields[5].trim());
 	} if (shouldFillIsInField()) {
 		//we try to process is_in fields, because we want to fill adm and zip too
 		setIsInFields(street);
 	}
-
+	
 	long generatedId= idGenerator.getNextGId();
 	street.setGid(new Long(generatedId));
 
-	if (!isEmptyField(fields, 6, false)) {
-	    StreetType type;
-	    try {
-		type = StreetType.valueOf(fields[6].toUpperCase());
-		street.setStreetType(type);
-	    } catch (Exception e) {
-		logger.warn("can not determine streetType for "+fields[1]+" : "+e);
-		street.setStreetType(StreetType.UNCLASSIFIED);
-	    }
-	    
-	}
-	
-	if (!isEmptyField(fields, 7, false)) {
-	    boolean oneWay = false;
-	    try {
-		oneWay  = Boolean.valueOf(fields[7]);
-		street.setOneWay(oneWay);
-	    } catch (Exception e) {
-		logger.warn("can not determine oneway for "+fields[1]+" : "+e);
-	    }
-	    
-	}
 	
 	
-	
-	if (fields.length == 10 && !isEmptyField(fields, 9, false)){
-		populateAlternateNames(street,fields[9]);
+	if (fields.length == 16 && !isEmptyField(fields, 15, false)){
+		populateAlternateNames(street,fields[15]);
 	}
 		
 	try {
@@ -240,37 +293,48 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 
     }
     
-    OpenStreetMap populateAlternateNames(OpenStreetMap street,
-			String alternateNamesAsString) {
-		if (street ==null || alternateNamesAsString ==null){
-			return street;
-		}
-		Matcher matcher = ALTERNATENAMES_EXTRACTION_PATTERN.matcher(alternateNamesAsString);
-		int i = 0;
-		while (matcher.find()){
-			if (matcher.groupCount() != 1) {
-				logger.warn("wrong number of fields for street alternatename no " + i + "for line " + alternateNamesAsString);
-				continue;
+    protected void PopulateMaxSpeed(OpenStreetMap street, String string) {
+		if (string!=null && string.trim()!=""){
+			String[] fields= string.split("___");
+			String trimField= "";
+			if (fields.length>=1){
+				 trimField = fields[0].trim();
+				if (!"".equals(trimField)){
+					street.setMaxSpeed(trimField);
+					street.setSpeedMode(SpeedMode.OSM);
+				}
 			}
-			String alternateName = matcher.group(1);
-			if (alternateName!= null && !"".equals(alternateName.trim())){
-				if (street.getName()==null){
-					street.setName(alternateName);
-				} else {
-					if (alternateName.contains(",")|| alternateName.contains(";")|| alternateName.contains(":")){
-						String[] alternateNames = alternateName.split("[;\\:,]");
-						for (String name:alternateNames){
-							street.addAlternateName(new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP));
-						}
-					} else {
-						street.addAlternateName(new AlternateOsmName(alternateName.trim(),AlternateNameSource.OPENSTREETMAP));
-					}
+			if (fields.length>=2){
+				trimField = fields[1].trim();
+				if (!"".equals(trimField)){
+					street.setMaxSpeedBackward(trimField);
+					street.setSpeedMode(SpeedMode.OSM);
+				}
+			}
+			if (fields.length==3){
+				trimField = fields[2].trim();
+				if (!"".equals(trimField) && street.getMaxSpeed()==null){
+					street.setMaxSpeed(trimField);
+					street.setSpeedMode(SpeedMode.OSM);
 				}
 			}
 		}
-		return street;
+			
+		}
 		
+
+	OpenStreetMap populateAlternateNames(OpenStreetMap street,
+			String alternateNamesAsString) {
+		return ImporterHelper.populateAlternateNames(street, alternateNamesAsString);
 	}
+    
+    protected void populateZip(String zipAsString, OpenStreetMap osm) {
+		String[] zips = zipAsString.split(";|\\||,");
+		for (int i = 0;i<zips.length;i++){
+				osm.addZip(zips[i]);
+		}
+	
+}
 
     protected void setIsInFields(OpenStreetMap street) {
     	if (street != null && street.getLocation() != null) {
@@ -292,6 +356,10 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     						street.addIsInCitiesAlternateName(name.getName());
     					}
     				}
+    			}
+    			//we add the name of the city as well as the alternatename, so we can search in one filed (only is_in_city)
+    			if (cityByShape.getName()!=null & !"".equals(cityByShape.getName().trim())){
+    				street.addIsInCitiesAlternateName(cityByShape.getName());
     			}
     				street.setIsInAdm(getDeeperAdmName(cityByShape));//cityByShape.getAdm().getName()
     				setAdmNames(street, cityByShape);
@@ -523,7 +591,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
      */
     @Override
     protected void checkNumberOfColumn(String[] fields) {
-	if (fields.length != 9 && fields.length != 10) {
+	if (fields.length != 16 && fields.length != 15) {
 
 	    throw new WrongNumberOfFieldsException(
 		    "The number of fields is not correct. expected : "

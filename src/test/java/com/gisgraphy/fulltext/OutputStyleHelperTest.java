@@ -71,7 +71,7 @@ public class OutputStyleHelperTest {
     @Test
     public void outputStyleGetFieldListForMediumShouldBeCorrect() {
 	String list = outputStyleHelper.getFulltextFieldList(OutputStyle.MEDIUM,null);
-	assertEquals("The field list has a wrong size for MEDIUM :" + list, 47,
+	assertEquals("The field list has a wrong size for MEDIUM :" + list, 57,
 		list.split(",").length);
 	assertFalse("The field list for MEDIUM must not contains ',,' : "
 		+ list, list.contains(",,"));
@@ -80,7 +80,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.MEDIUM,"fr");
 	assertEquals(
 		"The field list for MEDIUM should not be different for a specified country : "
-			+ list, 47, list.split(",").length);
+			+ list, 57, list.split(",").length);
 	assertFalse("The field list for MEDIUM must not ends with ',' : "
 		+ list, list.endsWith(","));
 
@@ -89,7 +89,7 @@ public class OutputStyleHelperTest {
     @Test
     public void outputStyleGetFieldListForLongShouldBeCorrect() {
 	String list =outputStyleHelper.getFulltextFieldList(OutputStyle.LONG,null);
-	assertEquals("The field list has a wrong size for LONG :" + list, 55,
+	assertEquals("The field list has a wrong size for LONG :" + list, 65,
 		list.split(",").length);
 	assertFalse("The field list for LONG must not contains ',,' : " + list,
 		list.contains(",,"));
@@ -98,7 +98,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.LONG,"fr");
 	assertEquals(
 		"The field list for LONG should not be different for a specified country : "
-			+ list, 55, list.split(",").length);
+			+ list, 65, list.split(",").length);
 	assertFalse("The field list for LONG must not ends with ',' : " + list,
 		list.endsWith(","));
 
@@ -117,7 +117,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.FULL,"fr");
 	assertEquals(
 		"The field list for medium should be different for a specified country :"
-			+ list, 63, list.split(",").length);
+			+ list, 74, list.split(",").length);
 	assertFalse("The field list for FULL must not ends with ',' : " + list,
 		list.endsWith(","));
 

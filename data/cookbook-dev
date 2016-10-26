@@ -7,7 +7,6 @@
  car different de streaming : les champs peuvent etre present mais pas mis dans le dto)
  modify OutputStyleHelper
  
- solrsynchroniser+test
  
 doc
 
@@ -23,7 +22,7 @@ openstreetmap importer +test
  
  #geoloc dto
  gisfeaturedistance
- GisFeatureDistanceFactory
+ GisFeatureDistanceFactory+ GisFeatureDistanceFactorytest
  
  #street dto
  StreetSearchResultsDto

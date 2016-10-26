@@ -71,9 +71,6 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
     
     private static final Pattern pattern = Pattern.compile("(\\w+)\\s\\d+.*",Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     
-    public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "((?:(?!___).)+)(?:(?:___)|(?:$))";
-    
-    public static final Pattern ALTERNATENAMES_EXTRACTION_PATTERN = Pattern.compile(ALTERNATENAMES_EXTRACTION_REGEXP);
 
     @Autowired
 	protected IIdGenerator idGenerator;
@@ -240,9 +237,7 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 	protected String[] splitTags(String amenity) {
 		String[] tags= new String[14];
 		String[] tagsvalues = amenity.split("___");
-		//System.out.println(tagsvalues.length);
 		for (int j =0;j<tagsvalues.length;j++){
-		//	System.err.println(j+"="+tagsvalues[j]);
 			if (!"".equals(tagsvalues[j].trim())){
 				tags[j]=tagsvalues[j];
 			}
@@ -391,22 +386,7 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 
 	GisFeature populateAlternateNames(GisFeature poi,
 			String alternateNamesAsString) {
-		if (poi ==null || alternateNamesAsString ==null){
-			return poi;
-		}
-		Matcher matcher = ALTERNATENAMES_EXTRACTION_PATTERN.matcher(alternateNamesAsString);
-		int i = 0;
-		while (matcher.find()){
-			if (matcher.groupCount() != 1) {
-				logger.warn("wrong number of fields for alternatename no " + i + "for line " + alternateNamesAsString);
-				continue;
-			}
-			String alternateName = matcher.group(1);
-			if (alternateName!= null && !"".equals(alternateName.trim())){
-				poi.addAlternateName(new AlternateName(alternateName,AlternateNameSource.OPENSTREETMAP));
-			}
-		}
-		return poi;
+		return ImporterHelper.populateAlternateNames(poi,alternateNamesAsString);
 		
 	}
 

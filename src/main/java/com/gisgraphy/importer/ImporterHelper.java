@@ -40,6 +40,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -54,6 +55,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
+import com.gisgraphy.domain.geoloc.entity.AlternateName;
+import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
+import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
+import com.gisgraphy.domain.valueobject.AlternateNameSource;
 import com.gisgraphy.helper.FeatureClassCodeHelper;
 
 /**
@@ -88,6 +94,27 @@ public class ImporterHelper {
     public static final String SPLITED_GEONAMES_ALTERNATENAMES_FILE_ACCEPT_REGEX_STRING = "(US.)[0-9]+(.txt)";
     
     public static final String SPLITED_ALLCOUNTRIES_FILE_ACCEPT_REGEX_STRING = "(allCountries)(.)[0-9]+(.txt)";
+    
+    public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
+    		+ "(?:[_]{0,3})"//not the underscore (optionaly)
+    		+ "[,]?(?:(?!(?:(?:name|(?:___)))).)*" //something not name or ___ =>alt for instance
+    		+ "(?:(?:(?:[a-z_]{0,12})?name)[:]?)"//name:
+    		+ "((?:(?:(?!===).)*)"//lang: something not ===
+    		+ ")"
+    		+ "(?:===)"// don't take the 3 equals sign ===
+    		+ "((?:(?!___|\"|}|(?:,\\w+(?=(?:_name)))|(?:,(?=(?:name)))).)+)[,]?[}]?"// the name
+    		
+    		
+    /*		 public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
+    		+ "(?:[_]{0,3})"//not the underscore (optionaly)
+    		+ "[,]?(?:(?!(?:(?:name|(?:___)))).)*" //something not name or ___ =>alt for instance
+    		+ "(?:(?:(?:short_)?name)[:]?)"//name:
+    		+ "((?:(?:(?!===).)?)"//lang: something not ===
+    		+ ")"
+    		+ "(?:===)"// don't take the 3 equals sign ===
+    		+ "((?:(?!___|\"|}|(?:,\\w+(?=(?:_name)))|(?:,(?=(?:name)))).)+)[,]?[}]?"// the name*/
+    		;    
+    public static final Pattern ALTERNATENAMES_EXTRACTION_PATTERN = Pattern.compile(ALTERNATENAMES_EXTRACTION_REGEXP);
     
     /**
      * The regexp that every zipped country file dump matches
@@ -565,5 +592,119 @@ public class ImporterHelper {
     private static String getPlural(long count) {
 	return count > 1 ? "s " : " ";
     }
+    
+	public final static GisFeature populateAlternateNames(GisFeature feature,
+			String alternateNamesAsString) {
+		if (feature ==null || alternateNamesAsString ==null){
+			return feature;
+		}
+		Matcher matcher = ALTERNATENAMES_EXTRACTION_PATTERN.matcher(alternateNamesAsString);
+		int i = 0;
+		while (matcher.find()){
+					
+			if (matcher.groupCount() != 2) {
+				logger.warn("wrong number of fields for alternatename no " + i + "for line " + alternateNamesAsString);
+				continue;
+			}
+			String lang = matcher.group(1);
+			String alternateName = matcher.group(2);
+			if (alternateName!= null && !"".equals(alternateName.trim())){
+					String[] alternateNames = alternateName.split(";|\\||,");
+					
+					
+					//check for duplicates 
+					if (feature.getAlternateNames()!=null){
+						int counter=0;
+						String[] alternateNamesWODuplicates = new String[alternateNames.length];
+							toCheckNames :
+								for (String name:alternateNames){
+								currentNames :
+									for (AlternateName an :feature.getAlternateNames()){
+									if (an.getName().equals(name) && lang !=null && an.getLanguage().equals(lang)){
+										continue currentNames;
+									} else {
+										alternateNamesWODuplicates[counter]=name;
+										counter++;
+										continue toCheckNames;
+									}
+							}
+						}
+						alternateNames = alternateNamesWODuplicates;
+					}
+										
+					for (String name:alternateNames){
+						if (lang!=null &&  !"".equals(lang.trim())){
+							feature.addAlternateName(new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP));
+						} else {
+							feature.addAlternateName(new AlternateName(name.trim(),AlternateNameSource.OPENSTREETMAP));
+						}
+					}
+			}
+		}
+		return feature;
+		
+	}
+	
+	public final static OpenStreetMap populateAlternateNames(OpenStreetMap street,
+			String alternateNamesAsString) {
+		if (street ==null || alternateNamesAsString ==null){
+			return street;
+		}
+		Matcher matcher = ALTERNATENAMES_EXTRACTION_PATTERN.matcher(alternateNamesAsString);
+		int i = 0;
+		while (matcher.find()){
+			/*for (int j=1;j<matcher.groupCount()+1;j++){
+				
+				System.out.println(matcher.group(j));
+				
+			}
+			System.out.println("");*/
+			
+			if (matcher.groupCount() != 2) {
+				logger.warn("wrong number of fields for alternatename no " + i + "for line " + alternateNamesAsString);
+				continue;
+			}
+			String lang = matcher.group(1);
+			String alternateName = matcher.group(2);
+			if (alternateName!= null && !"".equals(alternateName.trim())){
+					String[] alternateNames = alternateName.split(";|\\||,");
+					
+					
+					//check for duplicates 
+					if (street.getAlternateNames()!=null){
+						int counter=0;
+						String[] alternateNamesWODuplicates = new String[alternateNames.length];
+							toCheckNames :
+								for (String name:alternateNames){
+								currentNames :
+									for (AlternateOsmName an :street.getAlternateNames()){
+									if (an.getName().equals(name) && lang !=null && an.getLanguage().equals(lang)){
+										continue currentNames;
+									} else {
+										alternateNamesWODuplicates[counter]=name;
+										counter++;
+										continue toCheckNames;
+									}
+							}
+						}
+						alternateNames = alternateNamesWODuplicates;
+					}
+										
+					for (String name:alternateNames){
+						if (street.getName()==null){
+							street.setName(name);
+							continue;
+						} 
+						if (lang!=null &&  !"".equals(lang.trim())){
+							street.addAlternateName(new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP));
+						} else {
+							street.addAlternateName(new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP));
+						}
+					}
+			}
+		}
+		return street;
+		
+	}
 
 }

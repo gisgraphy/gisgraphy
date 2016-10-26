@@ -52,6 +52,7 @@ import com.gisgraphy.domain.valueobject.AlternateNameSource;
 import com.gisgraphy.domain.valueobject.GisFeatureDistanceFactory;
 import com.gisgraphy.domain.valueobject.ImporterStatus;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.street.StreetType;
@@ -97,11 +98,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     
     @Test
     public void testImporterShouldImport() throws InterruptedException{
-	System.out.println(openStreetMapImporter.getClass());
 	openStreetMapImporter.process();
-	/*if (openStreetMapImporter.getClass() != OpenStreetMapImporter.class){
-	    Thread.sleep(10000L);
-	}*/
 	assertEquals(4L,openStreetMapDao.count());
 	openStreetMapDao.getAll();
 	Long firstIdAssigned = (idGenerator.getGid()-4+1);
@@ -117,31 +114,42 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 	assertEquals("The length is not correct",0.00142246604529, openStreetMap.getLength());
 	assertEquals("The shape is not correct ",GeolocHelper.convertFromHEXEWKBToGeometry("01020000000200000009B254CD6218024038E22428D9EF484075C93846B217024090A8AB96CFEF4840").toString(), openStreetMap.getShape().toString());
 	
+	assertEquals("The lanes is not correct ",4, openStreetMap.getLanes().intValue());
+	assertEquals("The maxspeed is not correct ","70", openStreetMap.getMaxSpeed());
+	
+	assertEquals("The maxspeed Backard is not correct ","30 mp/h",openStreetMap.getMaxSpeedBackward());
+	
+	assertEquals("The speedmode is not correct ",SpeedMode.OSM, openStreetMap.getSpeedMode());
+	
+	assertEquals("The surface is not correct ","asphalt", openStreetMap.getSurface());
+	
+	assertTrue("The toll is not correct ", openStreetMap.isToll());
+	
 	//check alternate names when there is 2
 	Assert.assertEquals(2, openStreetMap.getAlternateNames().size());
-	Assert.assertTrue(alternateNamesContain(openStreetMap.getAlternateNames(),"Rue de Bachlettenstrasse"));
-	Assert.assertTrue(alternateNamesContain(openStreetMap.getAlternateNames(),"Bachletten strasse"));
+	Assert.assertTrue(alternateNamesContains(openStreetMap.getAlternateNames(),"Rue de Bachlettenstrasse","FR"));
+	Assert.assertTrue(alternateNamesContains(openStreetMap.getAlternateNames(),"Bachletten strasse","DE"));
 	
 	//check alternate names when there is no name but alternate
 	openStreetMap = openStreetMapDao.getByGid(firstIdAssigned+1);
 		Assert.assertEquals(1, openStreetMap.getAlternateNames().size());
 		Assert.assertEquals("When there is no name and some alternatename, the first alternatename is set to name ","noName BUT an alternate",openStreetMap.getName());
-		Assert.assertTrue(alternateNamesContain(openStreetMap.getAlternateNames(),"other an"));
+		Assert.assertTrue(alternateNamesContains(openStreetMap.getAlternateNames(),"other an","FR"));
 		
 		//one alternate name
 		openStreetMap = openStreetMapDao.getByGid(firstIdAssigned+2);
 		Assert.assertEquals(1, openStreetMap.getAlternateNames().size());
-		Assert.assertTrue(alternateNamesContain(openStreetMap.getAlternateNames(),"Friedhof"));
+		Assert.assertTrue(alternateNamesContains(openStreetMap.getAlternateNames(),"Friedhof","DE"));
 		
 		//no alternate names
 		openStreetMap = openStreetMapDao.getByGid(firstIdAssigned+3);
 		Assert.assertEquals(0, openStreetMap.getAlternateNames().size());
     }
 
-    private boolean alternateNamesContain(List<AlternateOsmName> names, String name){
+    private boolean alternateNamesContains(List<AlternateOsmName> names, String name,String lang){
     	if (names!=null ){
     		for(AlternateOsmName nameToTest:names){
-    			if (nameToTest!=null && nameToTest.getName().equals(name)){
+    			if (nameToTest!=null && nameToTest.getName().equals(name) && (lang !=null && nameToTest.getLanguage().equals(lang))){
     				return true;
     			}
     		}
@@ -171,6 +179,71 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		}
 		
 	}
+    
+    @Test
+    public void testPopulateMaxSpeed(){
+    	OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
+    	OpenStreetMap street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "70___20___30");
+    	Assert.assertEquals("we keep the fisrt value even if there is some forward value","70", street.getMaxSpeed());
+    	Assert.assertEquals("20", street.getMaxSpeedBackward());
+    	Assert.assertEquals(SpeedMode.OSM, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "70___20___");
+    	Assert.assertEquals("we keep the fisrt value even if there is some forward value","70", street.getMaxSpeed());
+    	Assert.assertEquals("20", street.getMaxSpeedBackward());
+    	Assert.assertEquals(SpeedMode.OSM, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "___20___30");
+    	Assert.assertEquals("we keep the last value if there is no forward","30", street.getMaxSpeed());
+    	Assert.assertEquals("20", street.getMaxSpeedBackward());
+    	Assert.assertEquals(SpeedMode.OSM, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "50______");
+    	Assert.assertEquals("we keep the last value if there is no forward","50", street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(SpeedMode.OSM, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "50______30");
+    	Assert.assertEquals("we keep the last value if there is no forward","50", street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(SpeedMode.OSM, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "___50___30");
+    	Assert.assertEquals("we keep the last value if there is no forward","30", street.getMaxSpeed());
+    	Assert.assertEquals("50", street.getMaxSpeedBackward());
+    	Assert.assertEquals(SpeedMode.OSM, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "50 Mp/h______30");
+    	Assert.assertEquals("we keep the last value if there is no forward","50 Mp/h", street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(SpeedMode.OSM, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "______");
+    	Assert.assertEquals(null, street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(null, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "");
+    	Assert.assertEquals(null, street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(null, street.getSpeedMode());
+    	
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, null);
+    	Assert.assertEquals(null, street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(null, street.getSpeedMode());
+    	
+    }
    
     
     @Test
@@ -295,16 +368,11 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		Assert.assertNull(openStreetMapImporter.getDeeperAdmName(city));
 		
 	}
-	 @Test
-	    public void testProcessLineWithoutAlternateNames(){
-		String line = "		010100000029F2C9850F79E4BFFCAEFE473CE14740	19406.7343711266	FR	8257014	road	false	BADSHAPE\t";
-		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
-	 }
-	
+		
     
     @Test
     public void testProcessLineWithBadShapeShouldNotTryToSaveLine(){
-	String line = "		010100000029F2C9850F79E4BFFCAEFE473CE14740	19406.7343711266	FR	8257014	road	false	BADSHAPE\tfoo";
+	String line = "11\tBachlettenstrasse\t010100000006C82291A0521E4054CC39B16BC64740\t0.00142246604529\tFR\ta city\t59000\t\tresidential\ttrue\tBADSHAPE\t70___20___30\t4\tyes\tasphalt\tname:fr===Rue de Bachlettenstrasse___name:de===Bachletten strasse";
 	OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 	IOpenStreetMapDao dao = EasyMock.createMock(IOpenStreetMapDao.class);
 	//now we simulate the fact that the dao should not be called

@@ -210,7 +210,16 @@ public class FeedChecker {
 		+ result.getElevation() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/featureClass[.='" + result.getFeatureClass() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/featureCode[.='"
 		+ result.getFeatureCode() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/placeType[.='" + result.getPlaceType() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/featureId[.='"
 		+ result.getFeatureId() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/gtopo30[.='" + result.getGtopo30() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/population[.='"
-		+ result.getPopulation() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/timezone[.='" + result.getTimezone() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/lat[.='" + result.getLat()
+		+ result.getPopulation() + "']",
+		
+		parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/label[.='"
+				+ result.getLabel() + "']",parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/labelPostal[.='"
+						+ result.getLabelPostal() + "']",
+						
+						parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/fullyQualifiedName[.='"
+								+ result.getFullyQualifiedName() + "']",
+		
+		parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/timezone[.='" + result.getTimezone() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/lat[.='" + result.getLat()
 		+ "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/distance[.='" + result.getDistance() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/lng[.='" + result.getLng() + "']", parentXpath + "/"
 		+ GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/google_map_url[.='" + result.getGoogle_map_url() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/yahoo_map_url[.='" + result.getYahoo_map_url() + "']", parentXpath
 		+ "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/country_flag_url[.='" + result.getCountry_flag_url() + "']"

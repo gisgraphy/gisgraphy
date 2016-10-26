@@ -145,8 +145,21 @@ public class solrResponseDtoBuilder {
 	    solrResponseDto.is_in_place = getFieldAsString(solrDocument, FullTextFields.IS_IN_PLACE.getValue());
 	    solrResponseDto.is_in_zip = getFieldsToSet(solrDocument, FullTextFields.IS_IN_ZIP.getValue());
 	    solrResponseDto.is_in_adm = getFieldAsString(solrDocument, FullTextFields.IS_IN_ADM.getValue());
-	    solrResponseDto.fully_qualified_address = getFieldAsString(solrDocument, FullTextFields.FULLY_QUALIFIED_ADDRESS.getValue());
 	    solrResponseDto.house_numbers=getHouseNumber(solrDocument);
+	    
+	    solrResponseDto.label=getFieldAsString(solrDocument, FullTextFields.LABEL.getValue());
+	    solrResponseDto.label_postal=getFieldAsString(solrDocument, FullTextFields.LABEL_POSTAL.getValue());
+	    solrResponseDto.alternate_labels=getFieldsToSet(solrDocument, FullTextFields.ALTERNATE_LABELS.getValue());
+	    
+	    solrResponseDto.lanes=getFieldAsInteger(solrDocument, FullTextFields.LANES.getValue());
+	    solrResponseDto.toll = getFieldAsBoolean(solrDocument, FullTextFields.TOLL.getValue(), false);
+	    solrResponseDto.surface = getFieldAsString(solrDocument, FullTextFields.SURFACE.getValue());
+	    solrResponseDto.maxSpeed = getFieldAsString(solrDocument, FullTextFields.MAX_SPEED.getValue());
+	    solrResponseDto.speedMode = getFieldAsString(solrDocument, FullTextFields.SPEED_MODE.getValue());
+	    solrResponseDto.maxSpeed_backward =getFieldAsString(solrDocument, FullTextFields.MAX_SPEED_BACKWARD.getValue());
+	    solrResponseDto.azimuth_start = getFieldAsInteger(solrDocument, FullTextFields.AZIMUTH_START.getValue());
+	    solrResponseDto.azimuth_end=getFieldAsInteger(solrDocument, FullTextFields.AZIMUTH_END.getValue());
+	    
 	}
 	return solrResponseDto;
     }

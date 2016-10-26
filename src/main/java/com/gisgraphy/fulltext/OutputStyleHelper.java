@@ -78,11 +78,22 @@ public class OutputStyleHelper {
 		.append(",").append(FullTextFields.IS_IN_PLACE.getValue())
 		.append(",").append(FullTextFields.IS_IN_ADM.getValue())
 		.append(",").append(FullTextFields.IS_IN_ZIP.getValue())
-		.append(",").append(FullTextFields.FULLY_QUALIFIED_ADDRESS.getValue())
 		.append(",").append(FullTextFields.HOUSE_NUMBERS.getValue())
 		.append(",").append(FullTextFields.AMENITY.getValue())
 		.append(",").append(FullTextFields.MUNICIPALITY.getValue())
 		
+		.append(",").append(FullTextFields.LABEL.getValue())
+		.append(",").append(FullTextFields.LABEL_POSTAL.getValue())
+		
+		.append(",").append(FullTextFields.TOLL.getValue())
+		.append(",").append(FullTextFields.SURFACE.getValue())
+		.append(",").append(FullTextFields.LANES.getValue())
+		.append(",").append(FullTextFields.AZIMUTH_END.getValue())
+		.append(",").append(FullTextFields.AZIMUTH_START.getValue())
+		.append(",").append(FullTextFields.MUNICIPALITY.getValue())
+		.append(",").append(FullTextFields.MAX_SPEED.getValue())
+		.append(",").append(FullTextFields.SPEED_MODE.getValue())
+		.append(",").append(FullTextFields.MAX_SPEED_BACKWARD.getValue())
 		//adm only
 		.append(",").append(FullTextFields.LEVEL.getValue())
 		
@@ -112,6 +123,8 @@ public class OutputStyleHelper {
 		    StringBuffer sb = new StringBuffer(getFulltextFieldList(OutputStyle.LONG,languageCode)).append(",").append(
 			    FullTextFields.COUNTRYNAME.getValue()).append(
 			    FullTextFields.ALTERNATE_NAME_SUFFIX.getValue())
+			      .append(",").append(
+				    FullTextFields.ALTERNATE_LABELS.getValue())
 			    .append(",").append(
 				    FullTextFields.ADM1NAME.getValue()).append(
 				    FullTextFields.ALTERNATE_NAME_SUFFIX

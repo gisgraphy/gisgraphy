@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
+import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
@@ -21,6 +23,7 @@ public class AddressHelperTest {
 	
 	
 		AddressHelper addressHelper = new AddressHelper();
+		BasicAddressFormater formater = BasicAddressFormater.getInstance();
 	
 
 	@Test
@@ -132,6 +135,7 @@ public class AddressHelperTest {
 		osm.setAdm3Name("adm3Name");
 		osm.setAdm4Name("adm4Name");
 		osm.setAdm5Name("adm5Name");
+		osm.setCountryCode("US");
 		Address address = addressHelper.buildAddressFromOpenstreetMap(osm);
 		Assert.assertEquals(osm.getName(), address.getStreetName());
 		Assert.assertEquals(osm.getIsIn(), address.getCity());
@@ -147,7 +151,9 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
 		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
-		System.out.println(addressHelper.buildFullAddressString(address));
+		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
+		Assert.assertNotNull(address.getFormatedPostal());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
 		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
 		
 		
@@ -237,7 +243,6 @@ public class AddressHelperTest {
 		Assert.assertEquals(city.getLatitude(), address.getLat());
 		Assert.assertEquals(city.getLongitude(), address.getLng());
 		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
-		System.out.println(addressHelper.buildFullAddressString(address));
 		
 	}
 	
@@ -274,7 +279,6 @@ public class AddressHelperTest {
 		Assert.assertEquals(city.getLatitude(), address.getLat());
 		Assert.assertEquals(city.getLongitude(), address.getLng());
 		Assert.assertEquals(addressHelper.buildFullAddressString(address), address.getFormatedFull());
-		System.out.println(addressHelper.buildFullAddressString(address));
 		Assert.assertEquals(GeolocHelper.distance(point, city.getLocation()), address.getDistance().doubleValue(),0.0001);
 	}
 	

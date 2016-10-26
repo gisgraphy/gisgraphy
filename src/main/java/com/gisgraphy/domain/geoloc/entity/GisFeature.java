@@ -130,12 +130,21 @@ public class GisFeature{
     private Long featureId;
 
     private String name;
+    
+    private String label;
+    
+    private String labelPostal;
+    
+   private Set<String> alternateLabels;
 
     private String asciiName;
 
+    @IntrospectionIgnoredField
     private Set<AlternateName> alternateNames;
 
     private Point location;
+    
+    private Point adminCentreLocation;
     
     private String adm1Code;
 
@@ -195,6 +204,8 @@ public class GisFeature{
     
     private String isInAdm;
     
+    private String fullyQualifiedName;
+    
     @IntrospectionIgnoredField
     @Transient
     private Set<String> isInZip;
@@ -245,6 +256,22 @@ public class GisFeature{
 	}
 	return latitude;
     }
+    
+    
+    /**
+     * @return Returns the latitude (north-south) for the admin centre of the GisFeature
+     *         {@link #getLocation()}.
+     * @see #getLongitude()
+     * @see #getLocation()
+     */
+    @Transient
+    public Double getAdminCentreLatitude() {
+	Double latitude = null;
+	if (this.adminCentreLocation != null) {
+	    latitude = this.adminCentreLocation.getY();
+	}
+	return latitude;
+    }
 
     /**
      * Calculate the distance from the current GisFeature to the specified
@@ -278,6 +305,22 @@ public class GisFeature{
     }
     
     /**
+     * Returns The JTS location point of the admin centre of the GisFeature : The Geometry
+     * representation of the latitude, longitude. The Return type is a JTS
+     * point. The Location is calculate from the 4326 {@link SRID}
+     * 
+     * @see SRID
+     * @see #getLongitude()
+     * @see #getLocation()
+     * @return The JTS Point
+     */
+    @Column(nullable = true,name ="adminCentreLocation")
+    @Type(type = "org.hibernatespatial.GeometryUserType")
+    public Point getAdminCentreLocation() {
+	return adminCentreLocation;
+    }
+    
+    /**
      * Returns The JTS shape of the feature : The Return type is a JTS
      * geometry.
      * 
@@ -305,6 +348,21 @@ public class GisFeature{
 	Double longitude = null;
 	if (this.location != null) {
 	    longitude = this.location.getX();
+	}
+	return longitude;
+    }
+    
+    /**
+     * @return Returns the longitude (east-west) for the admin centre of the GisFeature
+     *         {@link #getLocation()}.
+     * @see #getLongitude()
+     * @see #getLocation()
+     */
+    @Transient
+    public Double getAdminCentreLongitude() {
+	Double longitude = null;
+	if (this.adminCentreLocation != null) {
+	    longitude = this.adminCentreLocation.getX();
 	}
 	return longitude;
     }
@@ -730,6 +788,76 @@ public class GisFeature{
     public String getName() {
 	return name;
     }
+    
+    
+
+    
+    /**
+	 * @return the label that represent the street
+	 */
+    public String getLabel() {
+    	return label;
+    }
+
+    /**
+     * @param label the label to set
+     */
+    public void setLabel(String label) {
+    	this.label = label;
+    }
+
+    /**
+     * @return the label that represent the Postal address
+     */
+    public String getLabelPostal() {
+    	return labelPostal;
+    }
+
+    /**
+     * @param labelPostal the labelPostal to set
+     */
+    public void setLabelPostal(String labelPostal) {
+    	this.labelPostal = labelPostal;
+    }
+
+	
+
+	/**
+	 * @return the alternate Labels of the streets
+	 */
+    @Transient
+	public Set<String> getAlternateLabels() {
+		return alternateLabels;
+	}
+
+	/**
+	 * @param alternateLabels the alternate Labels to set
+	 */
+	public void setAlternateLabels(Set<String> alternateLabels) {
+		this.alternateLabels = alternateLabels;
+	}
+	
+
+    
+    public void addAlternateLabel(String alternateLabel) {
+		if (alternateLabel!=null){
+			Set<String> currentLabels = getAlternateLabels();
+			if (currentLabels == null) {
+				currentLabels = new HashSet<String>();
+			}
+			currentLabels.add(alternateLabel);
+			this.setAlternateLabels(currentLabels);
+		}
+	}
+
+    public void addAlternateLabels(Collection<String> alternateLabels) {
+	if (alternateLabels != null) {
+	    for (String label : alternateLabels) {
+	    	addAlternateLabel(label);
+	    }
+	}
+    }
+    
 
     /**
      * @param name
@@ -802,6 +930,17 @@ public class GisFeature{
      */
     public void setLocation(Point location) {
 	this.location = location;
+    }
+    
+    /**
+     * @param location
+     *                The location of the GisFeature (JTS point)
+     * @see #getLocation()
+     * @see #getLatitude()
+     * @see #getLongitude()
+     */
+    public void setAdminCentreLocation(Point adminCentreLocation) {
+	this.adminCentreLocation = adminCentreLocation;
     }
     
     /**
@@ -1054,30 +1193,24 @@ public class GisFeature{
 	return true;
     }
 
-    /**
-     * Returns a name of the form : (adm1Name et adm2Name are printed) Paris,
-     * Département de Ville-De-Paris, Ile-De-France, (FR)
-     * 
-     * @param withCountry
-     *                Whether the country information should be added
-     * @return a name with the Administrative division and Country
-     */
-    @Transient
-    public String getFullyQualifiedName(boolean withCountry) {
-	return GisFeatureHelper.getInstance().getFullyQualifiedName(this, withCountry);
-    }
     
     /**
      * @return a name with the Administrative division (but without Country)
      * wrap {@link #getFullyQualifiedName(boolean)}
      * @see #getFullyQualifiedName(boolean)
      */
-    @Transient
     public String getFullyQualifiedName() {
-	return getFullyQualifiedName(false);
+	return fullyQualifiedName;
     }
 
-    /*
+    /**
+	 * @param fullyQualifiedName the fullyQualifiedName to set
+	 */
+	public void setFullyQualifiedName(String fullyQualifiedName) {
+		this.fullyQualifiedName = fullyQualifiedName;
+	}
+
+	/*
      * (non-Javadoc)
      * 
      * @see java.lang.Object#toString()
@@ -1214,6 +1347,49 @@ public class GisFeature{
 	 */
 	public void setIsInPlace(String isInPlace) {
 		this.isInPlace = isInPlace;
+	}
+	
+	@Transient
+	public void setAdmName(int level, String name){
+		switch (level) {
+		case 1:
+			setAdm1Name(name);
+			break;
+		case 2:
+			setAdm2Name(name);
+			break;
+		case 3:
+			setAdm3Name(name);
+			break;
+		case 4:
+			setAdm4Name(name);
+			break;
+		case 5:
+			setAdm5Name(name);
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	@Transient
+	public String getAdmName(int level){
+		switch (level) {
+		case 1:
+			return getAdm1Name();
+		case 2:
+			return getAdm2Name();
+		case 3:
+			return getAdm3Name();
+		case 4:
+			return getAdm4Name();
+		case 5:
+			return getAdm5Name();
+
+		default:
+			return null;
+		}
 	}
 
 	/**

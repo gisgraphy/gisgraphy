@@ -143,6 +143,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	}
 	
 	Long featureId = findFeature(fields, zipPoint, getAccurateDistance(accuracy));
+	
 	GisFeature gisFeature;
 	if (featureId != null) {
 	    logger.info(dumpFields(fields) +" returns "+ featureId );
@@ -273,7 +274,6 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	setAdmCodesWithLinkedAdmOnes(adm, city, importerConfig.isSyncAdmCodesWithLinkedAdmOnes());
 	setAdmNames(adm, city);
 	city.addZipCode(new ZipCode(fields[1]));
-
 	cityDao.save(city);
 	//we do not return the saved entity for test purpose
 	return city;
@@ -282,7 +282,6 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
     protected GisFeature addAndSaveZipCodeToFeature(String code, Long featureId) {
 	GisFeature feature = gisFeatureDao.getByFeatureId(featureId);
 	if (feature == null) {
-	    logger.error("can not add zip code " + code + " to " + featureId + ", because the feature doesn't exists");
 	    return null;
 	}
 	ZipCode zipCode = new ZipCode(code);

@@ -36,44 +36,58 @@ import com.gisgraphy.domain.geoloc.entity.Street;
  */
 public class StreetFactory implements IStreetFactory {
 
-   /* (non-Javadoc)
- * @see com.gisgraphy.domain.geoloc.service.geoloc.street.IStreetFactory#create(com.gisgraphy.domain.geoloc.entity.OpenStreetMap)
- */
-public Street create(OpenStreetMap openstreetmap){
-       if (openstreetmap !=null){
-	   Street street = new Street();
-	   street.setOpenstreetmapId(openstreetmap.getOpenstreetmapId());
-	   street.setFeatureId(openstreetmap.getGid());
-	   street.setName(openstreetmap.getName());
-	   street.setLocation(openstreetmap.getLocation());
-	   street.setCountryCode(openstreetmap.getCountryCode());
-	   street.setStreetType(openstreetmap.getStreetType());
-	   street.setLength(openstreetmap.getLength());
-	   street.setOneWay(openstreetmap.isOneWay());
-	   street.setIsIn(openstreetmap.getIsIn());
-	   street.setIsInPlace(openstreetmap.getIsInPlace());
-	   street.setIsInZip(openstreetmap.getIsInZip());
-	   street.setIsInAdm(openstreetmap.getIsInAdm());
-	   street.setAdm1Name(openstreetmap.getAdm1Name());
-	   street.setAdm2Name(openstreetmap.getAdm2Name());
-	   street.setAdm3Name(openstreetmap.getAdm3Name());
-	   street.setAdm4Name(openstreetmap.getAdm4Name());
-	   street.setAdm5Name(openstreetmap.getAdm5Name());
-	   street.setFullyQualifiedAddress(openstreetmap.getFullyQualifiedAddress());
-	   street.setPopulation(openstreetmap.getPopulation());
-	   street.setHouseNumbers(openstreetmap.getHouseNumbers());
-	   if (openstreetmap.getAlternateNames()!=null){
-		   for (AlternateOsmName alternateOsmName : openstreetmap.getAlternateNames()){
-			   street.addAlternateName(new AlternateName(alternateOsmName.getName(),alternateOsmName.getSource()));
-			   
-		   }
-	   }
-	   if (openstreetmap.getIsInCityAlternateNames()!=null){
-			   street.addIsInCitiesAlternateNames(openstreetmap.getIsInCityAlternateNames());
-	   }
-	   return street;
-       }
-       return null;
-   }
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.geoloc.service.geoloc.street.IStreetFactory#create(com.gisgraphy.domain.geoloc.entity.OpenStreetMap)
+	 */
+	public Street create(OpenStreetMap openstreetmap){
+		if (openstreetmap !=null){
+			Street street = new Street();
+			street.setOpenstreetmapId(openstreetmap.getOpenstreetmapId());
+			street.setFeatureId(openstreetmap.getGid());
+			street.setName(openstreetmap.getName());
+			street.setLocation(openstreetmap.getLocation());
+			street.setCountryCode(openstreetmap.getCountryCode());
+			street.setStreetType(openstreetmap.getStreetType());
+			street.setLength(openstreetmap.getLength());
+			street.setOneWay(openstreetmap.isOneWay());
+			street.setIsIn(openstreetmap.getIsIn());
+			street.setIsInPlace(openstreetmap.getIsInPlace());
+			street.setIsInZip(openstreetmap.getIsInZip());
+			street.setIsInAdm(openstreetmap.getIsInAdm());
+			street.setAdm1Name(openstreetmap.getAdm1Name());
+			street.setAdm2Name(openstreetmap.getAdm2Name());
+			street.setAdm3Name(openstreetmap.getAdm3Name());
+			street.setAdm4Name(openstreetmap.getAdm4Name());
+			street.setAdm5Name(openstreetmap.getAdm5Name());
+			street.setFullyQualifiedName(openstreetmap.getFullyQualifiedName());
+			street.setPopulation(openstreetmap.getPopulation());
+			street.setHouseNumbers(openstreetmap.getHouseNumbers());
+			street.setLanes(openstreetmap.getLanes());
+			street.setToll(openstreetmap.isToll());
+			street.setSurface(openstreetmap.getSurface());
+			street.setMaxSpeed(openstreetmap.getMaxSpeed());
+			street.setSpeedMode(openstreetmap.getSpeedMode());
+			street.setMaxSpeedBackward(openstreetmap.getMaxSpeedBackward());
+			street.setAzimuthStart(openstreetmap.getAzimuthStart());
+			street.setAzimuthEnd(openstreetmap.getAzimuthEnd());
+
+			street.setLabel(openstreetmap.getLabel());
+			street.setLabelPostal(openstreetmap.getLabelPostal());
+			if (openstreetmap.getAlternateLabels()!=null){
+				street.addAlternateLabels(openstreetmap.getAlternateLabels());
+			}
+			if (openstreetmap.getAlternateNames()!=null){
+				for (AlternateOsmName alternateOsmName : openstreetmap.getAlternateNames()){
+					street.addAlternateName(new AlternateName(alternateOsmName.getName(),alternateOsmName.getSource()));
+
+				}
+			}
+			if (openstreetmap.getIsInCityAlternateNames()!=null){
+				street.addIsInCitiesAlternateNames(openstreetmap.getIsInCityAlternateNames());
+			}
+			return street;
+		}
+		return null;
+	}
 
 }

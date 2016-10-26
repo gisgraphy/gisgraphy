@@ -71,15 +71,15 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
      */
     public OpenStreetMap getByGid(final Long gid) ;
     
-    /** 
+    /*
      * Update the ts_vector column for the street name search 
      * (partial search and fulltext search)
      * @return the number of line updated
      * @see StreetSearchMode
      */    
-    public Integer updateTS_vectorColumnForStreetNameSearch();
+   // public Integer updateTS_vectorColumnForStreetNameSearch();
     
-    /** 
+    /*
      * Update the ts_vector column for the street name search from the gid that are >= from and < to
      * @param from the start pagination index of gid
      * @param to the end pagination index 
@@ -87,7 +87,7 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
      * @return the number of line updated
      * @see StreetSearchMode
      */    
-    public Integer updateTS_vectorColumnForStreetNameSearchPaginate(long from, long to ) ;
+   // public Integer updateTS_vectorColumnForStreetNameSearchPaginate(long from, long to ) ;
     
     /**
      * Create the database GIST  for openstreetMap
@@ -95,11 +95,11 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
      */
     public void createSpatialIndexes();
     
-    /**
+   /* 
      * Create the fulltext index for openstreetMap
      * to improve performances
-     */
-    public void createFulltextIndexes();
+     *
+    public void createFulltextIndexes();*/
     
     
     

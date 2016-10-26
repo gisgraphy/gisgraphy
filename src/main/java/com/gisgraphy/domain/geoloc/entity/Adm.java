@@ -147,10 +147,10 @@ public class Adm extends GisFeature {
      *                 If level is not correct
      */
     public void setLevel(Integer level) {
-	if (level < 1 || level > 4) {
+	if (level < 1 || level > 5) {
 	    throw new IllegalArgumentException(
 		    "The level of an Adm can not be " + level
-			    + ". it must be beetween 1 and 4");
+			    + ". it must be beetween 1 and 5");
 	}
 	this.level = level;
     }

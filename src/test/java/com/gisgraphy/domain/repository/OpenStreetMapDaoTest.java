@@ -188,9 +188,9 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	openStreetMapDao.save(streetOSM2);
 	assertNotNull(openStreetMapDao.get(streetOSM2.getId()));
 	
-	int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
+//	int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
 	
-			assertEquals("It should have 2 lines updated : (streetosm +streetosm2) for fulltext",2, numberOfLineUpdated);
+	//		assertEquals("It should have 2 lines updated : (streetosm +streetosm2) for fulltext",2, numberOfLineUpdated);
 	
 	
 	Point searchPoint = GeolocHelper.createPoint(6.9412748F, 50.9155829F);
@@ -401,7 +401,7 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     }
     
     
-    @Test
+  /*  @Test
     public void testUpdateTS_vectorColumnForStreetNameSearch(){
     	OpenStreetMap streetOSM = GisgraphyTestHelper.createOpenStreetMapForPeterMartinStreet();
     	openStreetMapDao.save(streetOSM);
@@ -415,7 +415,7 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     	int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
     		assertEquals("It should have 1 lines updated : streetosm for fulltext",1, numberOfLineUpdated);
     	
-    }
+    }*/
     
     
     
@@ -424,10 +424,11 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     	openStreetMapDao.createSpatialIndexes();
     }
     
-    @Test
+   /* @Test
     public void testCreateFulltextIndexesShouldNotThrow(){
     	openStreetMapDao.createFulltextIndexes();
     }
+    */
     
 
     
@@ -573,8 +574,8 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	openStreetMapDao.save(streetOSM2);
 	assertNotNull(openStreetMapDao.get(streetOSM2.getId()));
 	
-	int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
-    assertEquals("It should have 2 lines updated : (streetosm +streetosm2) for fulltext",2, numberOfLineUpdated);
+	/*int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
+    assertEquals("It should have 2 lines updated : (streetosm +streetosm2) for fulltext",2, numberOfLineUpdated);*/
 	
 	Point searchPoint = GeolocHelper.createPoint(6.9412748F, 50.9155829F);
 	
@@ -619,8 +620,8 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	openStreetMapDao.save(streetCloserEmptyName);
 	assertNotNull(openStreetMapDao.get(streetCloserEmptyName.getId()));
 	openStreetMapDao.count();
-	int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
-    assertEquals("It should have 1 lines updated : (streetosm +streetosm2) for fulltext",1, numberOfLineUpdated);
+	/*int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
+    assertEquals("It should have 1 lines updated : (streetosm +streetosm2) for fulltext",1, numberOfLineUpdated);*/
 	
 	Point searchPoint = GeolocHelper.createPoint(6.9412748F, 50.9155829F);
 	
@@ -672,8 +673,8 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	openStreetMapDao.save(streetOSM2);
 	assertNotNull(openStreetMapDao.get(streetOSM2.getId()));
 	
-	int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
-    assertEquals("It should have 2 lines updated : (streetosm +streetosm2) for fulltext",2, numberOfLineUpdated);
+	/*int numberOfLineUpdated = openStreetMapDao.updateTS_vectorColumnForStreetNameSearch();
+    assertEquals("It should have 2 lines updated : (streetosm +streetosm2) for fulltext",2, numberOfLineUpdated);*/
 	
 	Point searchPoint = GeolocHelper.createPoint(6.9412748F, 50.9155829F);
 	

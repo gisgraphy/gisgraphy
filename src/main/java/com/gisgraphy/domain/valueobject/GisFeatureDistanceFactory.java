@@ -51,6 +51,10 @@ public class GisFeatureDistanceFactory {
 	    gisFeatureDistance.setTimezone(gisFeature.getTimezone());
 	    gisFeatureDistance.setOpenstreetmapId(gisFeature.getOpenstreetmapId());
 	    gisFeatureDistance.setAmenity(gisFeature.getAmenity());
+	    gisFeatureDistance.setLabel(gisFeature.getLabel());
+	    gisFeatureDistance.setLabelPostal(gisFeature.getLabelPostal());
+	    gisFeatureDistance.setFullyQualifiedName(gisFeature.getFullyQualifiedName());
+	    gisFeatureDistance.setAlternateLabels(gisFeature.getAlternateLabels());
 	    gisFeatureDistance.setZipCodes(new HashSet<String>());//TODO tests zip without zipcode
 		Set<ZipCode> gisFeatureZipCodes = gisFeature.getZipCodes();
 			if (gisFeatureZipCodes != null){
@@ -83,7 +87,14 @@ public class GisFeatureDistanceFactory {
 		gisFeatureDistance.setIsInZip(street.getIsInZip().iterator().next());
 	}
 	gisFeatureDistance.setIsInPlace(street.getIsInPlace());
-	gisFeatureDistance.setFullyQualifiedAddress(street.getFullyQualifiedAddress());
+	gisFeatureDistance.setLanes(street.getLanes());
+	gisFeatureDistance.setToll(street.isToll());
+	gisFeatureDistance.setSurface(street.getSurface());
+	gisFeatureDistance.setMaxSpeed(street.getMaxSpeed());
+	gisFeatureDistance.setMaxSpeedBackward(street.getMaxSpeedBackward());
+	gisFeatureDistance.setAzimuthStart(street.getAzimuthStart());
+	gisFeatureDistance.setAzimuthEnd(street.getAzimuthEnd());
+	
 	return gisFeatureDistance;
     }
     

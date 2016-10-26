@@ -304,6 +304,16 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			ex.setField(FullTextFields.NAME.getValue(), EncodingHelper
 				.toUTF8(gisFeature.getName()));
 			}
+			if (gisFeature.getLabel()!=null && !gisFeature.getLabel().trim().equals("")){
+				ex.setField(FullTextFields.LABEL.getValue(), EncodingHelper
+					.toUTF8(gisFeature.getLabel()));
+				}
+			if (gisFeature.getLabelPostal()!=null && !gisFeature.getLabelPostal().trim().equals("")){
+				ex.setField(FullTextFields.LABEL_POSTAL.getValue(), EncodingHelper
+					.toUTF8(gisFeature.getLabelPostal()));
+				}
+			ex.setField(FullTextFields.FULLY_QUALIFIED_NAME.getValue(),
+					EncodingHelper.toUTF8(gisFeature.getFullyQualifiedName()));
 			ex.setField(FullTextFields.LAT.getValue(), gisFeature.getLatitude());
 			ex.setField(FullTextFields.LONG.getValue(), gisFeature.getLongitude());
 			String latAsString = String.format(Locale.US, "%s", gisFeature.getLatitude().doubleValue());
@@ -339,11 +349,24 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			if (gisFeature.getIsInCityAlternateNames()!=null && gisFeature.getIsInCityAlternateNames().size()>0){
 				ex.setField(FullTextFields.IS_IN_CITIES.getValue(), gisFeature.getIsInCityAlternateNames() );
 			}
+			if (gisFeature.getAlternateLabels()!=null && gisFeature.getAlternateLabels().size()>0){
+				ex.setField(FullTextFields.ALTERNATE_LABELS.getValue(), gisFeature.getAlternateLabels());
+			}
 		    if (gisFeature instanceof Street) {
 		    	ex.setField(FullTextFields.LENGTH.getValue(), ((Street) gisFeature).getLength());
 		    	ex.setField(FullTextFields.ONE_WAY.getValue(), ((Street) gisFeature).isOneWay());
 		    	ex.setField(FullTextFields.STREET_TYPE.getValue(), ((Street) gisFeature).getStreetType());
 		    	ex.setField(FullTextFields.CITY_POPULATION.getValue(), ((Street) gisFeature).getPopulation());
+		    	
+		    	ex.setField(FullTextFields.LANES.getValue(), ((Street) gisFeature).getLanes());
+		    	ex.setField(FullTextFields.TOLL.getValue(), ((Street) gisFeature).isToll());
+		    	ex.setField(FullTextFields.SURFACE.getValue(), ((Street) gisFeature).getSurface());
+		    	ex.setField(FullTextFields.MAX_SPEED.getValue(), ((Street) gisFeature).getMaxSpeed());
+		    	ex.setField(FullTextFields.SPEED_MODE.getValue(), ((Street) gisFeature).getSpeedMode());
+		    	ex.setField(FullTextFields.MAX_SPEED_BACKWARD.getValue(), ((Street) gisFeature).getMaxSpeedBackward());
+		    	ex.setField(FullTextFields.AZIMUTH_START.getValue(), ((Street) gisFeature).getAzimuthStart());
+		    	ex.setField(FullTextFields.AZIMUTH_END.getValue(), ((Street) gisFeature).getAzimuthEnd());
+		    	
 		    	
 		    	/*if (((Street) gisFeature).getFullyQualifiedAddress()!=null && !((Street) gisFeature).getFullyQualifiedAddress().trim().equals("")){
 		    	    ex.setField(FullTextFields.FULLY_QUALIFIED_ADDRESS.getValue(), ((Street) gisFeature).getFullyQualifiedAddress());
@@ -385,10 +408,8 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			
 			ex.setField(FullTextFields.POPULATION.getValue(), gisFeature
 				.getPopulation());
-			//Since V 4.0 all processed field are not processed dur reduce datastorage)
-			/*ex.setField(FullTextFields.FULLY_QUALIFIED_NAME.getValue(),
-				EncodingHelper.toUTF8(gisFeature.getFullyQualifiedName(false)));
-			ex.setField(FullTextFields.GOOGLE_MAP_URL.getValue(), URLUtils
+		
+			/*ex.setField(FullTextFields.GOOGLE_MAP_URL.getValue(), URLUtils
 				.createGoogleMapUrl(gisFeature.getLocation(), gisFeature
 					.getName()));
 			ex.setField(FullTextFields.YAHOO_MAP_URL.getValue(), URLUtils

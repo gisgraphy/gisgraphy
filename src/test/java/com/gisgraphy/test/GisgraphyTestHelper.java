@@ -48,6 +48,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import junit.framework.Assert;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easymock.EasyMock;
@@ -194,6 +196,11 @@ public class GisgraphyTestHelper {
 	city.setTimezone("gmt+1");
 	city.addZipCode(new ZipCode("3456"));
 	city.addZipCode(new ZipCode("3457"));
+	
+	city.setFullyQualifiedName("fullyQualifiedName");
+	city.setLabel("label");
+	city.setLabelPostal("labelPostal");
+	city.addAlternateLabel("alternateLabel");
 	GisFeatureDistanceFactory factory = new GisFeatureDistanceFactory();
 	return factory.fromGisFeature(city, 3.6D);
 
@@ -224,6 +231,10 @@ public class GisgraphyTestHelper {
 	gisFeature.setSource(GISSource.PERSONAL);
 	gisFeature.setTimezone("gmt+1");
 	gisFeature.addZipCode(new ZipCode("75000"));
+	gisFeature.setFullyQualifiedName("fullyQualifiedName");
+	gisFeature.setLabel("label");
+	gisFeature.setLabelPostal("labelPostal");
+	gisFeature.addAlternateLabel("alternateLabel");
 
 	GisFeatureDistanceFactory factory = new GisFeatureDistanceFactory();
 	return factory.fromGisFeature(gisFeature, 3.6D);
@@ -254,6 +265,11 @@ public class GisgraphyTestHelper {
 	adm.setPopulation(1000000);
 	adm.setSource(GISSource.PERSONAL);
 	adm.setTimezone("gmt+1");
+	adm.setLabel("label");
+	adm.setLabelPostal("labelPostal");
+	adm.addAlternateLabel("alternateLabel");
+	adm.setFullyQualifiedName("fullyQualifiedName");
+
 
 	GisFeatureDistanceFactory factory = new GisFeatureDistanceFactory();
 	return factory.fromAdm(adm, 3.6D);
@@ -291,12 +307,26 @@ public class GisgraphyTestHelper {
 	zips.add("zip LA2");
 	street.setIsInZip(zips);
 	street.setIsInAdm("los angeles ADM");
-	street.setFullyQualifiedAddress("los angeles FQA");
+	street.setFullyQualifiedName("los angeles FQA");
+	
+	street.setLabel("label");
+	street.setLabelPostal("labelPostal");
+	street.addAlternateLabel("alternateLabel");
+	street.setFullyQualifiedName("fullyQualifiedName");
+
 	
 	street.setOneWay(true);
 	street.setLength(3.56D);
 	street.setStreetType(StreetType.SERVICE);
 	street.setOpenstreetmapId(982365L);
+	street.setLanes(2);
+	street.setToll(true);
+	street.setMaxSpeed("30");
+	street.setMaxSpeedBackward("50");
+	street.setAzimuthStart(70);
+	street.setAzimuthEnd(80);
+	street.setSurface("surface");
+	
 
 	GisFeatureDistanceFactory factory = new GisFeatureDistanceFactory();
 	return factory.fromStreet(street, 3.6D);
@@ -417,6 +447,12 @@ public class GisgraphyTestHelper {
 	country.setIso3166NumericCode(33);
 	country.setPhonePrefix("+33");
 	country.setPostalCodeMask("postalCodeMask");
+	
+	country.setFullyQualifiedName("fullyQualifiedName");
+	country.setLabel("label");
+	country.setLabelPostal("labelPostal");
+	country.addAlternateLabel("alternateLabel");
+	
 	return country;
 
     }
@@ -583,6 +619,7 @@ public class GisgraphyTestHelper {
 	paris.setTimezone("Europe/Paris");
 	paris.setAmenity("amenity");
 	paris.setMunicipality(true);
+	paris.setFullyQualifiedName("fullyQualifiedName");
 
 	paris.setAdm(parent);
 	this.cityDao.save(paris);
@@ -641,7 +678,7 @@ public class GisgraphyTestHelper {
 	zips.add("zip LA");
 	zips.add("zip LA2");
 	streetOSM.setIsInZip(zips);
-	streetOSM.setFullyQualifiedAddress("fullyqulified address LA");
+	streetOSM.setFullyQualifiedName("fullyqulified address LA");
 	streetOSM.setCountryCode("XX");
 	return StringHelper.updateOpenStreetMapEntityForIndexation(streetOSM);
 
@@ -661,7 +698,7 @@ public class GisgraphyTestHelper {
     	zips.add("zip PM2");
     	streetOSM.setIsInZip(zips);
     	streetOSM.setIsInAdm("adm PM");
-    	streetOSM.setFullyQualifiedAddress("fullyQualifiedAddress");
+    	streetOSM.setFullyQualifiedName("fullyQualifiedAddress");
     	streetOSM.setName("peter martin");
     	streetOSM.setOpenstreetmapId(12346L);
     	streetOSM.setLocation(GeolocHelper.createPoint(30.001F, 40F));
@@ -1133,16 +1170,19 @@ public class GisgraphyTestHelper {
     	return houseNumber;
     }
     
-    public static boolean alternateNameContains(Collection<AlternateName> alternateNames,String name){
-		if (alternateNames!=null){
-			for (AlternateName alternateName:alternateNames){
-				if (alternateName.getName().equals(name)){
-					return true;
-				}
-			}
-			
-		} return false;
-	}
+    public static boolean alternateNameContains(Collection<AlternateName> alternateNames,String name,String language){
+    	    	if (alternateNames!=null ){
+    	    		for(AlternateName nameToTest:alternateNames){
+    	    			if (nameToTest!=null && nameToTest.getName().equals(name) && ((language == null && nameToTest.getLanguage() ==null) || (language !=null && nameToTest.getLanguage().equals(language)))){
+    	    				return true;
+    	    			}
+    	    		}
+    	    	} else {
+    	    		return false;
+    	    	}
+    	    	Assert.fail("alternateNames doesn't contain "+name);
+    	    	return false;
+    	    }
     
     public static boolean alternateOsmNameContains(Collection<AlternateOsmName> alternateNames,String name){
 		if (alternateNames!=null){

@@ -22,6 +22,7 @@
 package com.gisgraphy.geocoding;
 
 import static com.gisgraphy.fulltext.Constants.ADDRESSES_PLACETYPE;
+import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.NUMBER_OF_STREET_TO_RETRIEVE;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
@@ -44,7 +45,9 @@ import com.gisgraphy.addressparser.commons.GeocodingLevels;
 import com.gisgraphy.addressparser.exception.AddressParserException;
 import com.gisgraphy.domain.valueobject.GisgraphyConfig;
 import com.gisgraphy.domain.valueobject.Pagination;
+import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.fulltext.FulltextQuery;
+import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
@@ -529,25 +532,25 @@ public class GeocodingServiceTest {
 	//street1
 	
 	//3 segment, number in street2=>we only keep the one that have the number
-	SolrResponseDto street1WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",houseNumbersOneAndTwo,1L);
+	SolrResponseDto street1WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",houseNumbersOneAndTwo,1L);
 	streets.add(street1WithName1);
-	SolrResponseDto street2WithName1AndNumberInSegment = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",houseNumbersThreeAndFour,2L);
+	SolrResponseDto street2WithName1AndNumberInSegment = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",houseNumbersThreeAndFour,2L);
 	streets.add(street2WithName1AndNumberInSegment);
-	SolrResponseDto street3WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",houseNumbersOneAndTwo,3L);
+	SolrResponseDto street3WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",houseNumbersOneAndTwo,3L);
 	streets.add(street3WithName1);
 	//only one segment number found=>we keep it
-	SolrResponseDto street4WithName2NumberFound = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname2",houseNumbersThreeAndFour,4L);
+	SolrResponseDto street4WithName2NumberFound = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname2",houseNumbersThreeAndFour,4L);
 	streets.add(street4WithName2NumberFound);
 	//only one segment, number not found
-	SolrResponseDto street5WithName3NumberNotFound = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname3",houseNumbersOneAndTwo,5L);
+	SolrResponseDto street5WithName3NumberNotFound = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname3",houseNumbersOneAndTwo,5L);
 	streets.add(street5WithName3NumberNotFound);
 	//one segment name null
-	SolrResponseDto street6WithNameNull = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,null,houseNumbersOneAndTwo,6L);
+	SolrResponseDto street6WithNameNull = GisgraphyTestHelper.createSolrResponseDtoForStreet("city",null,houseNumbersOneAndTwo,6L);
 	streets.add(street6WithNameNull);
 	//2 segments, no number not found
-	SolrResponseDto street7WithName4NumberNotFound = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname4",houseNumbersOneAndTwo,7L);
+	SolrResponseDto street7WithName4NumberNotFound = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname4",houseNumbersOneAndTwo,7L);
 	streets.add(street7WithName4NumberNotFound);
-	SolrResponseDto street8WithName4NumberNotFound = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname4",houseNumbersOneAndTwo,8L);
+	SolrResponseDto street8WithName4NumberNotFound = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname4",houseNumbersOneAndTwo,8L);
 	streets.add(street8WithName4NumberNotFound);
 	
 	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
@@ -654,27 +657,55 @@ public class GeocodingServiceTest {
 	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
 	cities.add(city);
 	
+	
+	//first we check that the city is took into account for the street deduplication
+		List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+		SolrResponseDto street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house12,1L);
+		streets.add(street1);
+		SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city2","streetname1",house34,2L);
+		streets.add(street2);
+		SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname2",house12,3L);
+		streets.add(street3);
+		SolrResponseDto street4 =null;
+		
+		
+		// exercise
+		AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, "5");
+		Assert.assertEquals(3, addressResultsDto.getResult().size());
+
+		//an other test when no housenumber
+		streets = new ArrayList<SolrResponseDto>();
+		street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",null,1L);
+		streets.add(street1);
+		street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",null,2L);
+		streets.add(street2);
+		street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname2",house12,3L);
+		streets.add(street3);
+		street4 =null;
+
+
+		// exercise
+		addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, "5");
+		Assert.assertEquals(2, addressResultsDto.getResult().size());
 
 	//12|34 =>5 and a 12 =>5 after
-	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house12,1L);
+	 streets = new ArrayList<SolrResponseDto>();
+	 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house12,1L);
 	streets.add(street1);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house34,2L);
+	 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house34,2L);
 	streets.add(street2);
-	SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname2",house12,3L);
+	 street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname2",house12,3L);
 	streets.add(street3);
-	SolrResponseDto street4 =null;
+	 street4 =null;
 	
 	
 	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, "5");
+	 addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, "5");
 
 	// verify
 	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
 	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	for (Address a :addressResultsDto.getResult()){
-		System.out.println(a);
-	}
+	
 	Assert.assertEquals(2, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
 	Assert.assertEquals(1L,address.getId().longValue());
@@ -697,13 +728,13 @@ public class GeocodingServiceTest {
 	
 	//12|34 =>5 and 12|34 =>5 after
 		streets = new ArrayList<SolrResponseDto>();
-		street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house12,1L);
+		street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house12,1L);
 		streets.add(street1);
-		street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house34,2L);
+		street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house34,2L);
 		streets.add(street2);
-		street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname2",house12,3L);
+		street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname2",house12,3L);
 		streets.add(street3);
-		street4 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname2",house34,4L);
+		street4 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname2",house34,4L);
 		streets.add(street4);
 		
 		
@@ -735,11 +766,11 @@ public class GeocodingServiceTest {
 		
 		//12|34 =>5 and 12|34 =>5 after but with null street name
 		streets = new ArrayList<SolrResponseDto>();
-		street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house12,1L);
+		street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house12,1L);
 		streets.add(street1);
-		street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house34,2L);
+		street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house34,2L);
 		streets.add(street2);
-		street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,null,house12,3L);
+		street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city",null,house12,3L);
 		streets.add(street3);
 
 
@@ -773,9 +804,9 @@ public class GeocodingServiceTest {
 	
 		//12|34 =>5 and no street after 
 		 streets = new ArrayList<SolrResponseDto>();
-		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house12,1L);
+		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house12,1L);
 		streets.add(street1);
-		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house34,2L);
+		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house34,2L);
 		streets.add(street2);
 			
 		// exercise
@@ -800,7 +831,7 @@ public class GeocodingServiceTest {
 		
 		//23456 =>5 and no street after 
 		 streets = new ArrayList<SolrResponseDto>();
-		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house23456,1L);
+		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house23456,1L);
 		streets.add(street1);
 			
 		// exercise
@@ -823,9 +854,9 @@ public class GeocodingServiceTest {
 		
 		//23|45 =>1 and no street after 
 		 streets = new ArrayList<SolrResponseDto>();
-		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house23,1L);
+		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house23,1L);
 		streets.add(street1);
-		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house45,2L);
+		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house45,2L);
 		streets.add(street2);
 			
 		// exercise
@@ -849,9 +880,9 @@ public class GeocodingServiceTest {
 		
 		//123|45 =>2 and no street after 
 		 streets = new ArrayList<SolrResponseDto>();
-		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house123,1L);
+		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house123,1L);
 		streets.add(street1);
-		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house45,2L);
+		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house45,2L);
 		streets.add(street2);
 			
 		// exercise
@@ -874,9 +905,9 @@ public class GeocodingServiceTest {
 		
 		//23|456 =>5 and no street after 
 		 streets = new ArrayList<SolrResponseDto>();
-		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house23,1L);
+		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house23,1L);
 		streets.add(street1);
-		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house456,2L);
+		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house456,2L);
 		streets.add(street2);
 			
 		// exercise
@@ -899,9 +930,9 @@ public class GeocodingServiceTest {
 		
 		//23|56 =>4 and no street after 
 		 streets = new ArrayList<SolrResponseDto>();
-		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house23,1L);
+		 street1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house23,1L);
 		streets.add(street1);
-		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",house56,2L);
+		 street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",house56,2L);
 		streets.add(street2);
 			
 		// exercise
@@ -956,11 +987,11 @@ public class GeocodingServiceTest {
 	//street1
 	
 	//3 segment, number in street2=>we only keep the one that have the number
-	SolrResponseDto street1WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",houseNumbersThreeAndFour,1L);
+	SolrResponseDto street1WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",houseNumbersThreeAndFour,1L);
 	streets.add(street1WithName1);
-	SolrResponseDto street3WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",no_house,3L);
+	SolrResponseDto street3WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",no_house,3L);
 	streets.add(street3WithName1);
-	SolrResponseDto street2WithName1AndNumberInSegment = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"streetname1",houseNumbersThreeAndFour,2L);
+	SolrResponseDto street2WithName1AndNumberInSegment = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",houseNumbersThreeAndFour,2L);
 	streets.add(street2WithName1AndNumberInSegment);
 	
 	
@@ -1108,8 +1139,8 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService();
 	String text = "toto";
 	String countryCode = "FR";
-	IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-	FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(40), GeocodingService.LONG_OUTPUT, com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, countryCode);
+	FullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(FullTextSearchEngine.class);
+	FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(NUMBER_OF_STREET_TO_RETRIEVE), GeocodingService.LONG_OUTPUT, com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, countryCode);
 	query.withAllWordsRequired(false).withoutSpellChecking();
 	EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
 	EasyMock.replay(mockfullFullTextSearchEngine);
@@ -1136,7 +1167,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService();
 	String text = "toto";
 	String countryCode = "FR";
-	IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
+	FullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(FullTextSearchEngine.class);
 	FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(40), GeocodingService.MEDIUM_OUTPUT, com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, countryCode);
 	query.withAllWordsRequired(false).withoutSpellChecking();
 	EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
@@ -1165,7 +1196,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService();
 	String text = "toto";
 	String countryCode = "FR";
-	IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
+	FullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(FullTextSearchEngine.class);
 	FulltextQuery query = new FulltextQuery(text, GeocodingService.FIVE_RESULT_PAGINATION, GeocodingService.LONG_OUTPUT, ADDRESSES_PLACETYPE, countryCode);
 	query.withAllWordsRequired(true).withoutSpellChecking();
 	EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
@@ -2252,6 +2283,8 @@ public class GeocodingServiceTest {
     	Assert.assertFalse(geocodingService.needParsing(" toto "));
     	Assert.assertFalse(geocodingService.needParsing(" to-to "));
     	Assert.assertTrue(geocodingService.needParsing(" toto toto "));
+    	Assert.assertTrue(geocodingService.needParsing("toto,toto"));
+    	Assert.assertTrue(geocodingService.needParsing("toto;toto"));
     }
 
    

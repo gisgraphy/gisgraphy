@@ -37,7 +37,9 @@ import org.springframework.beans.factory.annotation.Required;
 import com.gisgraphy.domain.repository.ICityDao;
 import com.gisgraphy.domain.repository.ICountryDao;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
+import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.test.GisgraphyTestHelper;
+import com.vividsolutions.jts.geom.Point;
 
 public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
 
@@ -314,7 +316,39 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
 	Assert.assertEquals("A double set should be done, gisfeature should be set in the the zipCode entity",
 		gisFeature.getFeatureId(), gisFeature.getZipCodes().iterator().next().getGisFeature().getFeatureId() );
     }
-
+    
+    @Test
+    public void getAdminCentreLocation(){
+    	Point p =GeolocHelper.createPoint(2D, 3D);
+    	GisFeature feature = new GisFeature();
+    	feature.setAdminCentreLocation(p);
+    	Assert.assertEquals(p.getX(), feature.getAdminCentreLongitude(),0.001);
+    	Assert.assertEquals(p.getY(), feature.getAdminCentreLatitude(),0.001);
+    	
+    }
+    
+    @Test
+    public void setAdmName (){
+    	GisFeature g = new GisFeature();
+    	g.setAdmName(1, "adm1name");
+    	Assert.assertEquals("adm1name",g.getAdm1Name());
+    	
+    	g.setAdmName(2, "adm2name");
+    	Assert.assertEquals("adm2name",g.getAdm2Name());
+    	
+    	g.setAdmName(3, "adm3name");
+    	Assert.assertEquals("adm3name",g.getAdm3Name());
+    	
+    	g.setAdmName(4, "adm4name");
+    	Assert.assertEquals("adm4name",g.getAdm4Name());
+    	
+    	g.setAdmName(5, "adm5name");
+    	Assert.assertEquals("adm5name",g.getAdm5Name());
+    	
+    	//silently ignore wrong level
+    	g.setAdmName(6, "adm6name");
+    	g.setAdmName(0, "adm0name");
+    }
     @Required
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;

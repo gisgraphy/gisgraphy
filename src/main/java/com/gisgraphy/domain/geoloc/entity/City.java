@@ -104,7 +104,7 @@ public class City extends GisFeature implements ZipCodesAware {
 	 *                Whether the country information should be added
 	 * @return a name with the Administrative division and Country
 	 */
-	@Transient
+	/*@Transient
 	@Override
 	public String getFullyQualifiedName(boolean withCountry) {
 		StringBuilder completeCityName = new StringBuilder();
@@ -131,7 +131,7 @@ public class City extends GisFeature implements ZipCodesAware {
 
 		return completeCityName.toString();
 	}
-
+*/
 	@Index(name = "cityMunicipalityIndex")
 	public boolean isMunicipality() {
 		return municipality;

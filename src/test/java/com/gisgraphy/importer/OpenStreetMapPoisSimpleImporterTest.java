@@ -34,15 +34,17 @@ public class OpenStreetMapPoisSimpleImporterTest {
 
 	@Test
 	public void populateAlternateNames() {
-		String RawAlternateNames="Karl-Franzens-Universität Graz___Universidad de Graz___Université de Graz___Грацский университет имени Карла и Франца";
+		String RawAlternateNames="name:de===Rheinpalast___name:en===Palace of the Rhine___name:fr===Palais du Rhin___old_name:de===Kaiserpalast___old_name:en===Imperial Palace___old_name:fr===Palais Imperial";
 		OpenStreetMapPoisSimpleImporter importer = new OpenStreetMapPoisSimpleImporter();
 		GisFeature poi = new GisFeature();
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
-		Assert.assertEquals(4, poi.getAlternateNames().size());
-		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Karl-Franzens-Universität Graz"));
-		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Universidad de Graz"));
-		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Université de Graz"));
-		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Грацский университет имени Карла и Франца"));
+		Assert.assertEquals(6, poi.getAlternateNames().size());
+		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Rheinpalast","DE"));
+		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Palace of the Rhine","EN"));
+		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Palais du Rhin","FR"));
+		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Kaiserpalast","DE"));
+		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Imperial Palace","EN"));
+		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Palais Imperial","FR"));
 		
 		Iterator<AlternateName> iterator = poi.getAlternateNames().iterator();
 		while (iterator.hasNext()){
@@ -106,7 +108,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
     	importerConfig.setOpenStreetMapFillIsIn(false);
     	importer.setImporterConfig(importerConfig);
 		
-		String line= "W\t90139043\tPfarrkirche Heiliger Johannes der Täufer\tAT\tPfarrkirche Heiliger Johannes der Täufer___Parish church Saint John Baptist\t0101000020E61000000E6D653509482C40B01EF706AB514740\tplace_of_worship__________________________________________";
+		String line= "W\t90139043\tPfarrkirche Heiliger Johannes der Täufer\tAT\tname:br===Traezh Porzh Sevigne\t0101000020E61000000E6D653509482C40B01EF706AB514740\tplace_of_worship__________________________________________";
 		String[] fields = line.split("\t");
 		String amenity= fields[6];
 		List<GisFeature> pois = importer.createAndpopulatePoi(fields, amenity);
@@ -125,10 +127,9 @@ public class OpenStreetMapPoisSimpleImporterTest {
 		
 		
 		//an
-		Assert.assertEquals(2, poi.getAlternateNames().size());
+		Assert.assertEquals(1, poi.getAlternateNames().size());
 		
-		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Pfarrkirche Heiliger Johannes der Täufer"));
-		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Parish church Saint John Baptist"));
+		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Traezh Porzh Sevigne","BR"));
 		
 		Iterator<AlternateName> iterator = poi.getAlternateNames().iterator();
 		while (iterator.hasNext()){

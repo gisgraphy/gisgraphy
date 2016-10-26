@@ -861,6 +861,37 @@
 				Geocoding : do interpolation for house number at run time
 			</action>
 			
+			<action dev="David Masclet" type="add">
+				features has a location and an adminCentreLocation that reflect more the center than a geometric one. it is feed only when data is available
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				city adm names are now based first on geometry and then osm field (is_in*)
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				remove legacy code for fulltext search in postgresql
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				we now managed the languages of the alternatenames in OSM (we used to only managed the names and don't care about the lang)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add an address formater
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				rename fullyqualifiedAddress field for street to fullyqualified name (common between feature and street)
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add some new fields for street : maxSpeed, maxSpeedBackward, speedMode, lanes, toll, surface, azimuthStart,azimuthEnd
+			</action>
+			<action dev="David Masclet" type="add">
+				add some new label fields : label, labelPostal, fullyQualifiedName, alternateLabels
+			</action>
+			
 			</release>
 			
 	</body>
