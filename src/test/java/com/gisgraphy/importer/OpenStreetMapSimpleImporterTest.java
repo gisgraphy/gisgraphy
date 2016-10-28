@@ -341,7 +341,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 	}
 	
 	@Test
-	public void getDeeperAdmName(){
+	public void getBestAdmName(){
 		OpenStreetMapSimpleImporter openStreetMapImporter = new OpenStreetMapSimpleImporter();
 		City city = new City();
 		city.setAdm5Name("adm5Name");
@@ -349,23 +349,44 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setAdm3Name("adm3Name");
 		city.setAdm2Name("adm2Name");
 		city.setAdm1Name("adm1Name");
-		GisFeatureDistanceFactory factory = new GisFeatureDistanceFactory();
-		Assert.assertEquals("adm5Name",openStreetMapImporter.getDeeperAdmName(city));
 		
-		city.setAdm5Name(null);
-		Assert.assertEquals("adm4Name",openStreetMapImporter.getDeeperAdmName(city));
-		
-		city.setAdm4Name(null);
-		Assert.assertEquals("adm3Name",openStreetMapImporter.getDeeperAdmName(city));
-		
-		city.setAdm3Name(null);
-		Assert.assertEquals("adm2Name",openStreetMapImporter.getDeeperAdmName(city));
-		
-		city.setAdm2Name(null);
-		Assert.assertEquals("adm1Name",openStreetMapImporter.getDeeperAdmName(city));
+		Assert.assertEquals("adm1Name",openStreetMapImporter.getBestAdmName(city));
 		
 		city.setAdm1Name(null);
-		Assert.assertNull(openStreetMapImporter.getDeeperAdmName(city));
+		Assert.assertEquals("adm2Name",openStreetMapImporter.getBestAdmName(city));
+		
+		city.setAdm2Name(null);
+		Assert.assertEquals("adm3Name",openStreetMapImporter.getBestAdmName(city));
+		
+		city.setAdm3Name(null);
+		Assert.assertEquals("adm4Name",openStreetMapImporter.getBestAdmName(city));
+		
+		city.setAdm4Name(null);
+		Assert.assertEquals("adm5Name",openStreetMapImporter.getBestAdmName(city));
+		
+		city.setAdm5Name(null);
+		Assert.assertNull(openStreetMapImporter.getBestAdmName(city));
+		
+	}
+	
+	@Test
+	public void getBestAdmName_specificLevel(){
+		OpenStreetMapSimpleImporter openStreetMapImporter = new OpenStreetMapSimpleImporter();
+		City city = new City();
+		city.setCountryCode("IT");//it has admlevel to 3
+		city.setAdm5Name("adm5Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm2Name("adm2Name");
+		city.setAdm1Name("adm1Name");
+		
+		Assert.assertEquals("adm3Name",openStreetMapImporter.getBestAdmName(city));
+		
+		city.setAdm3Name(null);
+		Assert.assertEquals("adm1Name",openStreetMapImporter.getBestAdmName(city));
+		
+		city.setAdm1Name(null);
+		Assert.assertNull(openStreetMapImporter.getBestAdmName(city));
 		
 	}
 		
@@ -504,7 +525,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm3Name", street.getIsInAdm());
+    	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -579,7 +600,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm3Name", street.getIsInAdm());
+    	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -606,11 +627,11 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setName(cityName);
 		city.setFeatureId(1L);
 		city.setId(123L);
-		city.setAdm1Name("adm1Name");
-    	city.setAdm2Name("adm2Name");
-    	city.setAdm3Name("adm3Name");
-    	city.setAdm4Name("adm4Name");
-    	city.setAdm5Name("adm5Name");
+		city.setAdm1Name("adm1NameCity");
+    	city.setAdm2Name("adm2NameCity");
+    	city.setAdm3Name("adm3NameCity");
+    	city.setAdm4Name("adm4NameCity");
+    	city.setAdm5Name("adm5NameCity");
 		city.setMunicipality(false);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
@@ -619,7 +640,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		
 		final String  cityName2= "cityName2";
 		final Integer population2 = 456;
-		final String adm2name2= "adm2name2";
+		final String adm2name2= "adm2name2City2";
 		final City city2 = new City();
 		city2.setPopulation(population2);
 		city2.setAdm2Name(adm2name2);
@@ -655,13 +676,12 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	expectedZip.add("ZIP1");
     	expectedZip.add("ZIP2");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm2name2", street.getIsInAdm());
-    	Assert.assertEquals("adm1Name", street.getAdm1Name());
-    	Assert.assertEquals("admnames should be mixed with preference to the non municipality","adm2name2", street.getAdm2Name());
-    	Assert.assertEquals("adm3Name", street.getAdm3Name());
-    	Assert.assertEquals("adm4Name", street.getAdm4Name());
-    	Assert.assertEquals("adm5Name", street.getAdm5Name());
-    	Assert.assertEquals("cityName", street.getIsIn());
+    	Assert.assertEquals("adm1NameCity", street.getIsInAdm());
+    	Assert.assertEquals("adm1NameCity", street.getAdm1Name());
+    	Assert.assertEquals("admnames should be mixed with preference to the municipality","adm2NameCity", street.getAdm2Name());
+    	Assert.assertEquals("adm3NameCity", street.getAdm3Name());
+    	Assert.assertEquals("adm4NameCity", street.getAdm4Name());
+    	Assert.assertEquals("adm5NameCity", street.getAdm5Name());
     	Assert.assertEquals(123L, street.getCityId().longValue());
     	Assert.assertEquals("isIn place should be filled if result are different and municipality is not the nearest",cityName2, street.getIsInPlace());
     	Assert.assertEquals("isIn should be filled with municipality if result are different and municipality is not the nearest",cityName, street.getIsIn());
@@ -737,7 +757,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm3Name", street.getIsInAdm());
+    	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -799,7 +819,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm3Name", street.getIsInAdm());
+    	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -861,7 +881,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm3Name", street.getIsInAdm());
+    	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -921,7 +941,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals(true, street.isCityConfident());
     	//3 is the deeper adm level we consider as the best one
-    	Assert.assertEquals("adm3Name", street.getIsInAdm());
+    	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());

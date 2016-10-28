@@ -60,9 +60,9 @@ import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.SRID;
 import com.gisgraphy.helper.FeatureClassCodeHelper;
 import com.gisgraphy.helper.GeolocHelper;
-import com.gisgraphy.helper.GisFeatureHelper;
 import com.gisgraphy.helper.IntrospectionIgnoredField;
 import com.gisgraphy.importer.ImporterConfig;
+import com.gisgraphy.importer.LabelGenerator;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
@@ -238,8 +238,8 @@ public class GisFeature{
      * @see #getCountryCode()
      */
     @Transient
-    public Country getCountry() {
-	return GisFeatureHelper.getInstance().getCountry(getCountryCode());
+    public String getCountry() {
+	return LabelGenerator.getInstance().getCountry(getCountryCode());
     }
 
     /**

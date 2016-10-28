@@ -155,10 +155,10 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
     }
 
     @Test
-    public void testGetCountryShouldReturnTheCountryObject() {
-	Country country = GisgraphyTestHelper.createCountryForFrance();
+    public void testGetCountryShouldReturnTheCountry() {
+	/*Country country = GisgraphyTestHelper.createCountryForFrance();
 	Country savedCountry = this.countryDao.save(country);
-	assertNotNull(savedCountry.getId());
+	assertNotNull(savedCountry.getId());*/
 
 	GisFeature gisFeature = GisgraphyTestHelper.createCity("cityGisFeature",
 		null, null, new Random().nextLong());
@@ -166,16 +166,15 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
 	paris.setCountryCode("FR");
 
 	// save city
-	City savedParis = this.cityDao.save(paris);
+	//City savedParis = this.cityDao.save(paris);
 
 	// chek city is well saved
-	City retrievedParis = this.cityDao.get(savedParis.getId());
-	assertNotNull(retrievedParis);
-	assertEquals(paris.getId(), retrievedParis.getId());
+	//City retrievedParis = this.cityDao.get(savedParis.getId());
+	//assertNotNull(retrievedParis);
+	//assertEquals(paris.getId(), retrievedParis.getId());
 
-	Country retrievedCountry = savedParis.getCountry();
-	assertNotNull(retrievedCountry);
-	assertEquals(savedCountry, retrievedCountry);
+	String retrievedCountry = paris.getCountry();
+	assertEquals("France", retrievedCountry);
 
     }
 
@@ -190,15 +189,9 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
 	City paris = new City(gisFeature);
 	paris.setCountryCode(null);
 
-	// save city
-	City savedParis = this.cityDao.save(paris);
 
-	// chek city is well saved
-	City retrievedParis = this.cityDao.get(savedParis.getId());
-	assertNotNull(retrievedParis);
-	assertEquals(paris.getId(), retrievedParis.getId());
 
-	Country retrievedCountry = savedParis.getCountry();
+	String retrievedCountry = paris.getCountry();
 	assertNull(retrievedCountry);
 
     }
@@ -212,17 +205,10 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
 	GisFeature gisFeature = GisgraphyTestHelper.createCity("cityGisFeature",
 		null, null, new Random().nextLong());
 	City paris = new City(gisFeature);
-	paris.setCountryCode("ER");
+	paris.setCountryCode("JJ");
 
-	// save city
-	City savedParis = this.cityDao.save(paris);
 
-	// chek city is well saved
-	City retrievedParis = this.cityDao.get(savedParis.getId());
-	assertNotNull(retrievedParis);
-	assertEquals(paris.getId(), retrievedParis.getId());
-
-	Country retrievedCountry = savedParis.getCountry();
+	String retrievedCountry = paris.getCountry();
 	assertNull(retrievedCountry);
 
     }

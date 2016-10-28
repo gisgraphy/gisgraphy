@@ -10,19 +10,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.StreetTypeOrder;
 
 /**
- * @author dmasclet
+ *  @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  *
  */
 public class BasicAddressFormater {
 	
+	private static final Pattern CAPITALIZE = Pattern.compile("(?:\\b([a-z0-9])([a-z0-9]*)\\b(\\W*))",Pattern.CASE_INSENSITIVE);
 	public static final String FILENAME = "format.tsv";
     private static int NUMBER_OF_FIELDS_BY_LINE = 9;
     Map<String, AddressFormatInfo> formatMap = new HashMap<String, AddressFormatInfo>();
+    
 
     static BasicAddressFormater instance = new BasicAddressFormater();
     
@@ -35,6 +39,15 @@ public class BasicAddressFormater {
     	return instance;
     }
     
+	
+	public AddressFormatInfo getCountryInfo(String countryCode){
+		if (countryCode!=null){
+			return formatMap.get(countryCode.toUpperCase());
+		} else {
+			return null;
+		}
+	}
+	
    void init() {
 	BufferedReader br = null;
 	InputStream bis = null;
@@ -118,9 +131,26 @@ public class BasicAddressFormater {
 			}
 		}
 		if (fields[8] != null && !"".equals(fields[8].trim())) {
-		    formatInfo.setCountryName(fields[8]);
+			Matcher m = CAPITALIZE.matcher(fields[8]);
+
+			StringBuilder sb = new StringBuilder();
+		    int last = 0;
+		    while (m.find()) {
+		    	if (m.group(2).length()==0){
+		    		 sb.append(m.group(1).toLowerCase());
+		    	} else {
+		         sb.append(m.group(1).toUpperCase());
+		         sb.append(m.group(2).toLowerCase());
+		    	}
+		         sb.append(m.group(3));
+		         last = m.end();
+		    }
+		    sb.append(fields[8].substring(last).toLowerCase());
+
+		    String stringCamel = sb.toString();
+		    formatInfo.setCountryName(stringCamel);
 		}
-		formatMap.put(fields[0], formatInfo);
+		formatMap.put(fields[0].toUpperCase(), formatInfo);
 
 	    }
 	} catch (Exception e) {
@@ -263,42 +293,7 @@ public class BasicAddressFormater {
 			else if (c == '6'){
 				AddressFormatInfo info = formatMap.get(regionCode);
 				if (info!=null && !info.getOptionalState()){
-					String state =null;
-					if ( address.getState()!=null){
-						state = address.getState();
-					} else if (address.getDistrict()!=null){
-						state = address.getDistrict();
-					}
-					if (info.getStateLevel()==1 && address.getAdm1Name()!=null){
-						state = address.getAdm1Name();
-					}
-					if (info.getStateLevel()==2){
-						if (address.getAdm2Name()!=null){
-						state = address.getAdm2Name();
-						} else if (address.getAdm1Name()!=null){
-							state = address.getAdm1Name();
-						}
-					}
-					if (info.getStateLevel()==3){
-						if (address.getAdm3Name()!=null){
-						state = address.getAdm3Name();
-						} else if (address.getAdm1Name()!=null){
-							state = address.getAdm1Name();
-						}
-					}
-					if (info.getStateLevel()==4){
-						if (address.getAdm4Name()!=null){
-						state = address.getAdm4Name();
-						} else if (address.getAdm1Name()!=null){
-							state = address.getAdm1Name();
-						}
-					}if (info.getStateLevel()==5){
-						if (address.getAdm5Name()!=null){
-						state = address.getAdm5Name();
-						} else if (address.getAdm1Name()!=null){
-							state = address.getAdm1Name();
-						}
-					}
+					String state = getState(address);
 					part = joinAndSkipNulls(" ",state);;
 				}
 			}
@@ -329,6 +324,58 @@ public class BasicAddressFormater {
 		
 	return lines;
     }
+
+	protected String getState(Address address) {
+		String state =null;
+		if (address.getCountryCode()==null){
+			if ( address.getState()!=null){
+				state = address.getState();
+			} else if (address.getDistrict()!=null){
+				state = address.getDistrict();
+			} else {
+				state = address.getAdm1Name();
+			}
+		}else {
+			
+		AddressFormatInfo info = formatMap.get(address.getCountryCode().toUpperCase());
+		if ( address.getState()!=null){
+			state = address.getState();
+		} else if (address.getDistrict()!=null){
+			state = address.getDistrict();
+		}
+		if (info.getStateLevel()==1 && address.getAdm1Name()!=null){
+			state = address.getAdm1Name();
+		}
+		if (info.getStateLevel()==2){
+			if (address.getAdm2Name()!=null){
+			state = address.getAdm2Name();
+			} else if (address.getAdm1Name()!=null){
+				state = address.getAdm1Name();
+			}
+		}
+		if (info.getStateLevel()==3){
+			if (address.getAdm3Name()!=null){
+			state = address.getAdm3Name();
+			} else if (address.getAdm1Name()!=null){
+				state = address.getAdm1Name();
+			}
+		}
+		if (info.getStateLevel()==4){
+			if (address.getAdm4Name()!=null){
+			state = address.getAdm4Name();
+			} else if (address.getAdm1Name()!=null){
+				state = address.getAdm1Name();
+			}
+		}if (info.getStateLevel()==5){
+			if (address.getAdm5Name()!=null){
+			state = address.getAdm5Name();
+			} else if (address.getAdm1Name()!=null){
+				state = address.getAdm1Name();
+			}
+		}
+		}
+		return state;
+	}
 
     /**
      * Joins input string with the given separator. If an input string is null,
@@ -420,6 +467,19 @@ public class BasicAddressFormater {
 	    }
 	}
 	return buffer.toString();
+    }
+    
+    public int getAdmLevelByContryCode(String countryCode){
+    	if (countryCode != null){
+    		AddressFormatInfo info = formatMap.get(countryCode);
+			if (info!=null){
+				Boolean optionalState = info.getOptionalState();
+				if (optionalState!=null && optionalState==false){
+    			return info.getStateLevel();
+				}
+    		}
+    	}
+    	return 0;
     }
    
 }

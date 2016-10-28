@@ -508,21 +508,15 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 				    EncodingHelper.toUTF8(country.getName()));
 			    }
 			} else {
-			    if (countryCode != null) {
-				Country country = gisFeature.getCountry();
+				String country = gisFeature.getCountry();
 				if (country != null) {
-				    populateAlternateNames(FullTextFields.COUNTRYNAME
-					    .getValue(), country.getAlternateNames(), ex);
-				    if (country.getName()!=null){
 				    ex.setField(FullTextFields.COUNTRYNAME.getValue(),
-					    EncodingHelper.toUTF8(country.getName()));
-				    }
+					    EncodingHelper.toUTF8(country));
 				} else {
 				    logger.error("Can not find country with code "
 					    + gisFeature.getCountryCode() + " for "
 					    + gisFeature);
 				}
-			    }
 			}
 			}
 			solClient.getServer().add(ex);

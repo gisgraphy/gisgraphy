@@ -38,6 +38,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -146,7 +147,7 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 	Iterator<ZipCode> ZipIterator = city.getZipCodes().iterator();
 	assertTrue(result.getZipcodes().contains(ZipIterator.next().getCode()));
 	assertTrue(result.getZipcodes().contains(ZipIterator.next().getCode()));
-	assertEquals(city.getCountry().getName(), result.getCountry_name());
+	assertEquals(city.getCountry(), BasicAddressFormater.getInstance().getCountryInfo(city.getCountryCode()).getCountryName());
 	assertEquals(null,
 			result.getCountry_flag_url());
 	assertEquals(null, result.getGoogle_map_url());
@@ -172,13 +173,7 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 	assertEquals(1, result.getAdm2_names_alternate().size());
 	assertTrue(result.getAdm2_names_alternate().contains(city.getAdm().getParent().getAlternateNames().iterator().next().getName()));
 
-	assertEquals(1, result.getCountry_names_alternate().size());
 	assertTrue(result.getAdm2_names_alternate().contains(city.getAdm().getParent().getAlternateNames().iterator().next().getName()));
-	assertTrue(result.getCountry_names_alternate().contains("francia"));
-
-	assertEquals(1, result.getCountry_names_alternate_localized().size());
-	assertEquals("franciaFR", result.getCountry_names_alternate_localized()
-		.get("FR").get(0));
 
 	assertEquals(1, result.getAdm1_names_alternate_localized().size());
 	assertEquals("admGGPalternateFR", result

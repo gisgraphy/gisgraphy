@@ -888,8 +888,17 @@
 			<action dev="David Masclet" type="add">
 				add some new fields for street : maxSpeed, maxSpeedBackward, speedMode, lanes, toll, surface, azimuthStart,azimuthEnd
 			</action>
+			
 			<action dev="David Masclet" type="add">
 				add some new label fields : label, labelPostal, fullyQualifiedName, alternateLabels
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add License attributions to feeds
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				add a country detector
 			</action>
 			
 			</release>

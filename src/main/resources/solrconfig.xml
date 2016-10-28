@@ -387,6 +387,7 @@
      </lst>
      <arr name="last-components">
       <str>spellcheck</str>
+       <str>attributions</str>
    	 </arr>
      </requestHandler>
      
@@ -409,6 +410,9 @@
        placetype:City^2 population^2
      </str>
      </lst>
+     <arr name="last-components">
+       <str>attributions</str>
+   	 </arr>
      </requestHandler>
      
       <!-- search in name and zipcodes -->
@@ -432,6 +436,7 @@
     </lst>
     <arr name="last-components">
       <str>spellcheck</str>
+       <str>attributions</str>
    	 </arr>
   </requestHandler>
      
@@ -455,6 +460,7 @@
     </lst>
     <arr name="last-components">
       <str>spellcheck</str>
+       <str>attributions</str>
    	 </arr>
   </requestHandler>
   
@@ -475,6 +481,7 @@
      </lst>
      <arr name="last-components">
       <str>spellcheck</str>
+       <str>attributions</str>
    	 </arr>
   </requestHandler>
 
@@ -558,6 +565,9 @@
 
    <!-- The spell check component can return a list of alternative spelling
   suggestions.  -->
+  
+   <searchComponent name="attributions" class="com.gisgraphy.compound.solr.AttributionComponent"/>
+  
   <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
 
     <str name="queryAnalyzerFieldType">textSpell</str>
@@ -604,6 +614,7 @@
     </lst>
     <arr name="last-components">
       <str>spellcheck</str>
+      <str>attributions</str>
     </arr>
   </requestHandler>
  

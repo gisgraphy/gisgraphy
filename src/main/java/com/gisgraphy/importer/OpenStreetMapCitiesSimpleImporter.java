@@ -298,8 +298,8 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			logger.error("can not parse openstreetmap id "+ osmId);
 		}
 	}
-	//adm level
-	/*if (!isEmptyField(fields, 7, true)) {
+	//adm level, we need it to populate adms
+	if (!isEmptyField(fields, 7, true)) {
 		String adminLevelStr =fields[7].trim();
 		
 		try {
@@ -307,7 +307,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		} catch (NumberFormatException e) {
 			logger.error("can not parse admin level "+adminLevelStr+" for "+osmId);
 		}
-	}*/
+	}
 	
 	//populate alternatenames
 	if (!isEmptyField(fields, 15, false)) {

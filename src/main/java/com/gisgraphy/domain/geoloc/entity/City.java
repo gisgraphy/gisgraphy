@@ -96,42 +96,8 @@ public class City extends GisFeature implements ZipCodesAware {
 	}
 
 	
-	/**
-	 * Returns a name with adm1Name and adm2Name added (if not null).
-	 * Paris(Zipcode), Département de Ville-De-Paris, Ile-De-France, (FR)
-	 * 
-	 * @param withCountry
-	 *                Whether the country information should be added
-	 * @return a name with the Administrative division and Country
-	 */
-	/*@Transient
-	@Override
-	public String getFullyQualifiedName(boolean withCountry) {
-		StringBuilder completeCityName = new StringBuilder();
-		completeCityName.append(getName());
-		Set<ZipCode> zipCodes = getZipCodes();
-		if (zipCodes != null && zipCodes.size() == 1) {
-			completeCityName.append(" (");
-			completeCityName.append(zipCodes.iterator().next());
-			completeCityName.append(")");
-		}
-		if (getAdm2Name() != null && !getAdm2Name().trim().equals("")) {
-			completeCityName.append(", " + getAdm2Name());
-		}
-		if (getAdm1Name() != null && !getAdm1Name().trim().equals("")) {
-			completeCityName.append(", " + getAdm1Name());
-		}
+	
 
-		if (withCountry) {
-			Country countryObj = getCountry();
-			if (countryObj != null && countryObj.getName() != null && !countryObj.getName().trim().equals("")) {
-				completeCityName.append(" , " + countryObj.getName() + "");
-			}
-		}
-
-		return completeCityName.toString();
-	}
-*/
 	@Index(name = "cityMunicipalityIndex")
 	public boolean isMunicipality() {
 		return municipality;

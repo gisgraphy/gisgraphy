@@ -162,7 +162,7 @@
         <hr/>
       </div>
       <div id="logos">
-		<span class="license">Copyrights : Data © OpenStreetMap contributors, <a href="http://www.openstreetmap.org/copyright" target="license">ODbL 1.0</a> | Geonames : <a href="http://creativecommons.org/licenses/by/3.0/" target="license">Creative Commons Attribution 3.0 License</a> | Includes data from <a href="https://github.com/foursquare/quattroshapes/blob/master/LICENSE.md">foursquare quattroshapes</a></span>
+		<span class="license">Copyrights : Data &#169; OpenStreetMap contributors, <a href="http://www.openstreetmap.org/copyright" target="license">ODbL 1.0</a> | Geonames : <a href="http://creativecommons.org/licenses/by/3.0/" target="license">Creative Commons Attribution 3.0 License</a> | Includes data from <a href="https://github.com/foursquare/quattroshapes/blob/master/LICENSE.md">foursquare quattroshapes</a></span>
       </div>
     </div>
 

@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -68,6 +69,8 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapSimpleImporter.class);
 	
     public static final int DISTANCE = 40000;
+    
+    BasicAddressFormater formater = BasicAddressFormater.getInstance();
 
 	@Autowired
     protected IIdGenerator idGenerator;
@@ -269,7 +272,8 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	//5 is_in	
 	if (!isEmptyField(fields, 5, false)) {
 		street.setIsIn(fields[5].trim());
-	} if (shouldFillIsInField()) {
+	}
+	if (shouldFillIsInField()) {
 		//we try to process is_in fields, because we want to fill adm and zip too
 		setIsInFields(street);
 	}
@@ -357,12 +361,13 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     					}
     				}
     			}
-    			//we add the name of the city as well as the alternatename, so we can search in one filed (only is_in_city)
+    			//we add the name of the city as well as the alternatename, so we can search in one field (only is_in_city)
     			if (cityByShape.getName()!=null & !"".equals(cityByShape.getName().trim())){
     				street.addIsInCitiesAlternateName(cityByShape.getName());
     			}
-    				street.setIsInAdm(getDeeperAdmName(cityByShape));//cityByShape.getAdm().getName()
     				setAdmNames(street, cityByShape);
+    				//AFTER setting admnames, we took the best one
+    				street.setIsInAdm(getBestAdmName(cityByShape));//cityByShape.getAdm().getName()
     				//set the is_in_place
     				CitySubdivision subdivision = citySubdivisionDao.getByShape(street.getLocation(),cityByShape.getCountryCode());
     				if (subdivision !=null){
@@ -373,8 +378,11 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     		City city = getNearestCity(street.getLocation(),street.getCountryCode(), true);
     		if (city != null) {
     			street.setPopulation(city.getPopulation());
-    			street.setIsInAdm(getDeeperAdmName(city));
     			setAdmNames(street, city);
+    			//AFTER setting admnames, we took the best one
+    			if (street.getIsInAdm()==null){
+					street.setIsInAdm(getBestAdmName(city));
+				}
     			if (city.getZipCodes() != null) {
     				for (ZipCode zip:city.getZipCodes()){
     					if (zip != null && zip.getCode()!=null){
@@ -416,8 +424,11 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     				} else {
     					street.setIsInPlace(pplxToPPL(city2.getName()));
     				}
-    				street.setIsInAdm(getDeeperAdmName(city2));
     				setAdmNames(street, city2);
+    				//AFTER setting admnames, we took the best one
+    				if (street.getIsInAdm()==null){
+    					street.setIsInAdm(getBestAdmName(city2));
+    				}
     				if (city2.getZipCodes() != null ) {//we merge the zipcodes for is_in and is_in_place, so we don't check
     					//if zipcodes are already filled
     					for (ZipCode zip:city2.getZipCodes()){
@@ -439,41 +450,72 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     	}
     }
     
-    protected void setAdmNames(OpenStreetMap street,City city) {
-		if (city != null) {
-			if (city.getAdm5Name() != null) {
+
+	protected void setAdmNames(OpenStreetMap street,City city) {
+		if (city != null && street !=null) {
+			//we only set admnames if it is not already filled
+			if (city.getAdm5Name() != null && street.getAdm5Name()==null) {
 				street.setAdm5Name(city.getAdm5Name());
 			}
-			if (city.getAdm4Name() != null) {
+			if (city.getAdm4Name() != null && street.getAdm4Name()==null) {
 				street.setAdm4Name(city.getAdm4Name());
 			} 
-			if (city.getAdm3Name() != null) {
+			if (city.getAdm3Name() != null && street.getAdm3Name()==null) {
 				street.setAdm3Name(city.getAdm3Name());
 			} 
-			if (city.getAdm2Name() != null) {
+			if (city.getAdm2Name() != null && street.getAdm2Name()==null) {
 				street.setAdm2Name(city.getAdm2Name());
 			} 
-			if (city.getAdm1Name() != null) {
+			if (city.getAdm1Name() != null && street.getAdm1Name()==null) {
 				street.setAdm1Name(city.getAdm1Name());
 			}
 		}
 	}
 
-	protected String getDeeperAdmName(City city) {
+	protected String getBestAdmName(GisFeature city) {
 		if (city != null) {
-			/*if (city.getAdm5Name() != null) {
-				return city.getAdm5Name();
+			if (city.getCountryCode()!= null  && formater.getAdmLevelByContryCode(city.getCountryCode())!=0){
+				int level = formater.getAdmLevelByContryCode(city.getCountryCode());
+				if (level == 1) {
+					return city.getAdm1Name();
+				} else if (level == 2) {
+					if (city.getAdm2Name()!=null){
+					return city.getAdm2Name();
+					} else {
+						return city.getAdm1Name();
+					}
+				} else if (level == 3) {
+					if (city.getAdm3Name()!=null){
+						return city.getAdm3Name();
+						} else {
+							return city.getAdm1Name();
+						}
+				} else if (level == 4) {
+					if (city.getAdm4Name()!=null){
+						return city.getAdm4Name();
+						} else {
+							return city.getAdm1Name();
+						}
+				}else if (level == 5) {
+					if (city.getAdm5Name()!=null){
+						return city.getAdm5Name();
+						} else {
+							return city.getAdm1Name();
+						}
+				} else {
+					return null;
+				}
 			}
-			if (city.getAdm4Name() != null) {
-				return city.getAdm4Name();
-			}*/
-			//we consider that level 4 and 5 are too precise and doesn't reflect the deeper adm
-			if (city.getAdm3Name() != null) {
-				return city.getAdm3Name();
+			if (city.getAdm1Name() != null) {
+				return city.getAdm1Name();
 			} else if (city.getAdm2Name() != null) {
 				return city.getAdm2Name();
-			} else if (city.getAdm1Name() != null) {
-				return city.getAdm1Name();
+			} else if (city.getAdm3Name() != null) {
+				return city.getAdm3Name();
+			} else if (city.getAdm4Name() != null) {
+				return city.getAdm4Name();
+			}else if (city.getAdm5Name() != null) {
+				return city.getAdm5Name();
 			} else {
 				return null;
 			}

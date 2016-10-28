@@ -754,15 +754,10 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='FR']",
 		"//*[@name='" + FullTextFields.COUNTRYNAME.getValue()
 			+ "'][.='France']",
-		"//*[@name='" + FullTextFields.COUNTRYNAME.getValue()
-			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]][.='francia']",
-		"//*[@name='" + FullTextFields.COUNTRYNAME.getValue()
-			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
-			+ "FR'][./str[1]][.='franciaFR']"
+		
 
 		// property
-		, "//*[@name='" + FullTextFields.FEATURECLASS.getValue()
+		 "//*[@name='" + FullTextFields.FEATURECLASS.getValue()
 			+ "'][.='P']",
 		"//*[@name='" + FullTextFields.FEATURECODE.getValue()
 			+ "'][.='PPL']", "//*[@name='"

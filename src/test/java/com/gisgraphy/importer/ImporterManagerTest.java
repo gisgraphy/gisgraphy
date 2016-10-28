@@ -1131,14 +1131,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 			,
 			
 			"//*[@name='" + FullTextFields.COUNTRYNAME.getValue()
-				+ "'][.='France']",
-			"//*[@name='" + FullTextFields.COUNTRYNAME.getValue()
-				+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-				+ "'][./str[1]][.='FranceAlter']",
-			"//*[@name='" + FullTextFields.COUNTRYNAME.getValue()
-				+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
-				+ "ES'][./str[1]][.='FranceAlteres']"
-
+				+ "'][.='France']"
 			
 		
 		);

@@ -269,5 +269,19 @@ public class AddressFormaterTest {
 	  
 	 
     }
+    
+    @Test
+    public void countryShouldBeCamelCase(){
+    	Assert.assertEquals("France", formater.getCountryInfo("Fr").getCountryName());
+    }
+    
+    @Test
+    public void getAdmLevelByContryCode(){
+    	Assert.assertEquals(0, formater.getAdmLevelByContryCode(null));
+    	Assert.assertEquals(0, formater.getAdmLevelByContryCode("toto"));
+    	Assert.assertEquals(1, formater.getAdmLevelByContryCode("US"));
+    	Assert.assertEquals(0, formater.getAdmLevelByContryCode("FR"));
+    	Assert.assertEquals(3, formater.getAdmLevelByContryCode("BS"));
+    }
 
 }

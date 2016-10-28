@@ -12,6 +12,7 @@
 * [Gisgraphoid](#gisgraphoid)
 * [Leaflet Plugins](#leaflet-plugins)
 * [A little bit further...](#a-little-bit-further)
+* [License and attributions...](#license)
 
 
 Since 2006, [Gisgraphy](http://www.gisgraphy.com) is a free, open source framework that offers the possibility to do geolocalisation and geocoding
@@ -152,3 +153,8 @@ In addition to the native openstreetmap data, some pre-calculated fields (length
 *   Plateform / language independent
 *   Provides all the countries flags in svg and png format
 *   ...
+
+## License and attributions ###
+-----------------
+*   Gisgraphy is under [LGPL license V3](https://github.com/gisgraphy/gisgraphy/blob/master/LICENSE.txt).
+*   See [Attribution page](http://www.gisgraphy.com/attributions.html)Attribution page for data atributions and license.
