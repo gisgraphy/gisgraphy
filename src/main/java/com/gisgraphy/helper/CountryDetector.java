@@ -22,17 +22,12 @@
  *******************************************************************************/
 package com.gisgraphy.helper;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.gisgraphy.addressparser.commons.CountriesStaticData;
-import com.gisgraphy.importer.AbstractAdvancedImporterProcessor;
 
 /**
  * 

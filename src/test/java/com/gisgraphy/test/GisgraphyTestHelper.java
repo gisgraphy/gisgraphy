@@ -181,6 +181,7 @@ public class GisgraphyTestHelper {
 	city.setAdm2Name("adm2 name");
 	city.setAdm3Name("adm3 name");
 	city.setAdm4Name("adm4 name");
+	city.setAdm5Name("adm5 name");
 
 	city.setAsciiName("ascii");
 	city.setCountryCode("FR");
@@ -217,6 +218,7 @@ public class GisgraphyTestHelper {
 	gisFeature.setAdm2Name("adm2 name");
 	gisFeature.setAdm3Name("adm3 name");
 	gisFeature.setAdm4Name("adm4 name");
+	gisFeature.setAdm5Name("adm5 name");
 
 	gisFeature.setAsciiName("ascii");
 	gisFeature.setCountryCode("FR");
@@ -252,6 +254,7 @@ public class GisgraphyTestHelper {
 	adm.setAdm2Name("adm2 name");
 	adm.setAdm3Name("adm3 name");
 	adm.setAdm4Name("adm4 name");
+	adm.setAdm5Name("adm5 name");
 
 	adm.setAsciiName("ascii");
 	adm.setCountryCode("FR");
@@ -287,6 +290,7 @@ public class GisgraphyTestHelper {
 	street.setAdm2Name("adm2 name");
 	street.setAdm3Name("adm3 name");
 	street.setAdm4Name("adm4 name");
+	street.setAdm5Name("adm5 name");
 
 	street.setAsciiName("ascii");
 	street.setCountryCode("FR");
@@ -419,6 +423,7 @@ public class GisgraphyTestHelper {
 	country.setAdm2Name("adm2 name");
 	country.setAdm3Name("adm3 name");
 	country.setAdm4Name("adm4 name");
+	country.setAdm5Name("adm5 name");
 
 	country.setAsciiName("ascii");
 	country.setCountryCode("FR");
@@ -519,6 +524,10 @@ public class GisgraphyTestHelper {
 	String adm2Name = "admGrandParent";
 	String adm3Code = "C3";
 	String adm3Name = "admParent";
+	String adm4Code = "C4";
+	String adm4Name = "adm4Parent";
+	String adm5Code = "C5";
+	String adm5Name = "adm5Parent";
 	City gisFeature = GisgraphyTestHelper.createCity("Saint-André", 1.5F, 2.5F,
 		featureId);
 	// the admXcodes and admXnames should be set by the importer according
@@ -529,13 +538,21 @@ public class GisgraphyTestHelper {
 	gisFeature.setAdm2Name(adm2Name);
 	gisFeature.setAdm3Code(adm3Code);
 	gisFeature.setAdm3Name(adm3Name);
+	gisFeature.setAdm4Code(adm4Code);
+	gisFeature.setAdm4Name(adm4Name);
+	gisFeature.setAdm5Code(adm5Code);
+	gisFeature.setAdm5Name(adm5Name);
 	// create Adms
 	Adm admGrandGrandParent = GisgraphyTestHelper.createAdm(adm1Name, "FR",
-		adm1Code, null, null, null, null, 1);
+		adm1Code, null, null, null, null,null, 1);
 	Adm admGrandParent = GisgraphyTestHelper.createAdm(adm2Name, "FR",
-		adm1Code, adm2Code, null, null, null, 2);
+		adm1Code, adm2Code, null, null, null,null, 2);
 	Adm admParent = GisgraphyTestHelper.createAdm(adm3Name, "FR", adm1Code,
-		adm2Code, adm3Code, null, null, 3);
+		adm2Code, adm3Code, null, null,null, 3);
+	Adm adm4 = GisgraphyTestHelper.createAdm(adm3Name, "FR", adm1Code,
+			adm2Code, adm3Code, adm4Code, null,null, 4);
+	Adm adm5 = GisgraphyTestHelper.createAdm(adm3Name, "FR", adm1Code,
+			adm2Code, adm3Code, adm4Code, adm5Code,null, 5);
 
 	Country france = GisgraphyTestHelper.createCountryForFrance();
 
@@ -582,6 +599,12 @@ public class GisgraphyTestHelper {
 	admGrandParent.addAlternateName(alternateNameGPFR);
 	admGrandParent.setParent(ggp);
 	Adm gp = this.admDao.save(admGrandParent);
+	
+	adm4.setParent(admParent);
+	this.admDao.save(adm4);
+	
+	adm5.setParent(adm4);
+	this.admDao.save(adm5);
 
 	AlternateName alternateNamePFR = new AlternateName();
 	alternateNamePFR.setName("admPAlternateFR");
@@ -732,7 +755,7 @@ public class GisgraphyTestHelper {
     }
 
     public static Adm createAdm(String name, String countryCode,
-	    String adm1Code, String adm2Code, String adm3Code, String adm4Code,
+	    String adm1Code, String adm2Code, String adm3Code, String adm4Code,String adm5Code,
 	    GisFeature gisFeature, Integer level) {
 	Adm adm = new Adm(level);
 	if (gisFeature != null) {
@@ -746,6 +769,7 @@ public class GisgraphyTestHelper {
 	adm.setAdm2Code(adm2Code);
 	adm.setAdm3Code(adm3Code);
 	adm.setAdm4Code(adm4Code);
+	adm.setAdm5Code(adm5Code);
 	if (gisFeature == null) {
 	    adm.setFeatureId(Math.abs(new Random().nextLong()));
 	} else {
@@ -755,19 +779,21 @@ public class GisgraphyTestHelper {
     }
 
     public static List<Adm> createAdms(String name, String countryCode,
-	    String adm1Code, String adm2Code, String adm3Code, String adm4Code,
+	    String adm1Code, String adm2Code, String adm3Code, String adm4Code,String adm5Code,
 	    GisFeature gisFeature, Integer level, int nbToCreate) {
 	List<Adm> adms = new ArrayList<Adm>();
 	String adm1Codetemp = "";
 	String adm2Codetemp = "";
 	String adm3Codetemp = "";
 	String adm4Codetemp = "";
+	String adm5Codetemp = "";
 	for (int i = 0; i < nbToCreate; i++) {
 	    // we chenge the admcode according to the level to be realist
 	    adm1Codetemp = adm1Code;
 	    adm2Codetemp = adm2Code;
 	    adm3Codetemp = adm3Code;
 	    adm4Codetemp = adm4Code;
+	    adm5Codetemp = adm5Code;
 	    if (level == 1) {
 		adm1Codetemp = adm1Code + i;
 	    } else if (level == 2) {
@@ -776,10 +802,12 @@ public class GisgraphyTestHelper {
 		adm3Codetemp = adm3Code + i;
 	    } else if (level == 4) {
 		adm4Codetemp = adm4Code + i;
+	    } else if (level == 5) {
+		adm5Codetemp = adm5Code + i;
 	    }
 	    adms
 		    .add(createAdm(name + i, countryCode, adm1Codetemp,
-			    adm2Codetemp, adm3Codetemp, adm4Codetemp,
+			    adm2Codetemp, adm3Codetemp, adm4Codetemp,adm5Codetemp,
 			    gisFeature, level));
 	}
 	return adms;
@@ -949,6 +977,9 @@ public class GisgraphyTestHelper {
 		SolrResponseDto city = EasyMock.createMock(SolrResponseDto.class);
     	EasyMock.expect(city.getAdm1_name()).andStubReturn("adm1 Name");
     	EasyMock.expect(city.getAdm2_name()).andStubReturn("adm2 Name");
+    	EasyMock.expect(city.getAdm3_name()).andStubReturn("adm3 Name");
+    	EasyMock.expect(city.getAdm4_name()).andStubReturn("adm4 Name");
+    	EasyMock.expect(city.getAdm5_name()).andStubReturn("adm5 Name");
     	EasyMock.expect(city.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(city.getLng()).andStubReturn(2.36D);
     	EasyMock.expect(city.getName()).andStubReturn("Name");
@@ -972,6 +1003,9 @@ public class GisgraphyTestHelper {
 		SolrResponseDto citySubdivision = EasyMock.createMock(SolrResponseDto.class);
     	EasyMock.expect(citySubdivision.getAdm1_name()).andStubReturn("adm1 Name");
     	EasyMock.expect(citySubdivision.getAdm2_name()).andStubReturn("adm2 Name");
+    	EasyMock.expect(citySubdivision.getAdm3_name()).andStubReturn("adm3 Name");
+    	EasyMock.expect(citySubdivision.getAdm4_name()).andStubReturn("adm4 Name");
+    	EasyMock.expect(citySubdivision.getAdm5_name()).andStubReturn("adm5 Name");
     	EasyMock.expect(citySubdivision.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(citySubdivision.getLng()).andStubReturn(2.36D);
     	EasyMock.expect(citySubdivision.getName()).andStubReturn("Name");
@@ -989,6 +1023,9 @@ public class GisgraphyTestHelper {
 		SolrResponseDto adm = EasyMock.createMock(SolrResponseDto.class);
     	EasyMock.expect(adm.getAdm1_name()).andStubReturn("adm1 Name");
     	EasyMock.expect(adm.getAdm2_name()).andStubReturn("adm2 Name");
+    	EasyMock.expect(adm.getAdm3_name()).andStubReturn("adm3 Name");
+    	EasyMock.expect(adm.getAdm4_name()).andStubReturn("adm4 Name");
+    	EasyMock.expect(adm.getAdm5_name()).andStubReturn("adm5 Name");
     	EasyMock.expect(adm.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(adm.getLng()).andStubReturn(2.36D);
     	EasyMock.expect(adm.getName()).andStubReturn("Name");
@@ -1004,6 +1041,9 @@ public class GisgraphyTestHelper {
 		SolrResponseDto feature = EasyMock.createMock(SolrResponseDto.class);
     	EasyMock.expect(feature.getAdm1_name()).andStubReturn("adm1 Name");
     	EasyMock.expect(feature.getAdm2_name()).andStubReturn("adm2 Name");
+      	EasyMock.expect(feature.getAdm3_name()).andStubReturn("adm3 Name");
+    	EasyMock.expect(feature.getAdm4_name()).andStubReturn("adm4 Name");
+      	EasyMock.expect(feature.getAdm5_name()).andStubReturn("adm5 Name");
     	EasyMock.expect(feature.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(feature.getLng()).andStubReturn(2.36D);
     	EasyMock.expect(feature.getName()).andStubReturn("Name");
@@ -1054,6 +1094,9 @@ public class GisgraphyTestHelper {
 		SolrResponseDto street = EasyMock.createMock(SolrResponseDto.class);
     	EasyMock.expect(street.getAdm1_name()).andStubReturn("adm1 Name");
     	EasyMock.expect(street.getAdm2_name()).andStubReturn("adm2 Name");
+    	EasyMock.expect(street.getAdm3_name()).andStubReturn("adm3 name");
+    	EasyMock.expect(street.getAdm4_name()).andStubReturn("adm4 name");
+    	EasyMock.expect(street.getAdm5_name()).andStubReturn("adm5 name");
     	EasyMock.expect(street.getLat()).andStubReturn(1.53D);
     	EasyMock.expect(street.getLng()).andStubReturn(2.35D);
     	EasyMock.expect(street.getName()).andStubReturn("street Name");
@@ -1085,6 +1128,9 @@ public class GisgraphyTestHelper {
 		EasyMock.expect(street.getFeature_id()).andStubReturn(featureId);
     	EasyMock.expect(street.getAdm1_name()).andStubReturn("adm1 Name");
     	EasyMock.expect(street.getAdm2_name()).andStubReturn("adm2 Name");
+    	EasyMock.expect(street.getAdm3_name()).andStubReturn("adm3 name");
+    	EasyMock.expect(street.getAdm4_name()).andStubReturn("adm4 name");
+    	EasyMock.expect(street.getAdm5_name()).andStubReturn("adm5 name");
     	EasyMock.expect(street.getLat()).andStubReturn(1.53D);
     	EasyMock.expect(street.getLng()).andStubReturn(2.35D);
     	EasyMock.expect(street.getName()).andStubReturn(streetName);

@@ -19,6 +19,7 @@ import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
+import com.gisgraphy.domain.repository.AdmDao;
 import com.gisgraphy.domain.repository.CitySubdivisionDao;
 import com.gisgraphy.domain.repository.IAdmDao;
 import com.gisgraphy.domain.repository.ICityDao;
@@ -399,10 +400,66 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	}
 	
 	@Test
+	public void linkAdm(){
+		
+		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
+
+			int call = 0;
+
+			protected SolrResponseDto getAdm(String name, String countryCode) {
+				if (call == 0){
+					call++;
+					return null;
+				} else if (call==1){
+					if (!name.equals("admName4") || !countryCode.equals("PL")){
+						Assert.fail("getAdm Is not call with the correct parameters : " +name+";"+countryCode);
+					}
+						final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
+						EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
+						EasyMock.expect(solrResponseDtoAdm.getName()).andReturn("admName");
+						EasyMock.replay(solrResponseDtoAdm);
+						return solrResponseDtoAdm;
+					
+				}else {
+						throw new RuntimeException("getAdmShouldOnlyBeCall 2 times");
+					}
+				}
+		};
+		City city = new City();
+		city.setCountryCode("PL");
+		
+		 List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+		 AdmDTO dto1 = new AdmDTO("admName1", 4, 123L);
+		 AdmDTO dto2 = new AdmDTO("admName2", 5, 123L);
+		 AdmDTO dto3 = new AdmDTO("admName2", 6, 123L);//should be ignre because same name as previous
+		 AdmDTO dto4 = new AdmDTO("admName4", 7, 123L);
+		 AdmDTO dto5 = new AdmDTO("admName5", 8, 123L);//should be ignore because 8 >= 8
+		 dtos.add(dto1);
+		 dtos.add(dto2);
+		 dtos.add(dto3);
+		 dtos.add(dto4);
+		 dtos.add(dto5);
+		 Collections.sort(dtos);
+		 
+		 IAdmDao admDao = EasyMock.createMock(IAdmDao.class);
+			Adm adm = new Adm(2);
+			adm.setName("admName");
+			EasyMock.expect(admDao.getByFeatureId(4356L)).andReturn(adm);
+			EasyMock.replay(admDao);
+			importer.setAdmDao(admDao);
+		
+		importer.LinkAdm(city, dtos);
+		Assert.assertEquals(adm, city.getAdm());
+		
+		EasyMock.verify(admDao);
+
+	}
+	
+	@Test
 	public void processWithUnknownCityAndKnownAdm(){
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
 		EasyMock.expect(solrResponseDtoAdm.getName()).andReturn("admName");
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
@@ -416,8 +473,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 			
 			@Override
 			protected SolrResponseDto getAdm(String name, String countryCode) {
-				if (!name.equals("Europe") || !countryCode.equals("FR")){
-					throw new RuntimeException("the getAdm() function is not called with the correct parameter");
+				if (!name.equals("gmina Bogoria") || !countryCode.equals("PL")){
+					throw new RuntimeException("the getAdm() function is not called with the correct parameter : "+name+";"+countryCode);
 				}
 				return solrResponseDtoAdm;
 			}
@@ -453,7 +510,25 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(idGenerator);
 		importer.setIdGenerator(idGenerator);
 		
-		
+		 List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+		 AdmDTO dto1 = new AdmDTO("admName1", 4, 123L);
+		 AdmDTO dto2 = new AdmDTO("admName2", 5, 123L);
+		 AdmDTO dto3 = new AdmDTO("admName2", 6, 123L);//should be ignre because same name as previous
+		 AdmDTO dto4 = new AdmDTO("admName4", 7, 123L);
+		 AdmDTO dto5 = new AdmDTO("admName5", 8, 123L);//should be ignore because 8 >= 8
+		 dtos.add(dto1);
+		 dtos.add(dto2);
+		 dtos.add(dto3);
+		 dtos.add(dto4);
+		 dtos.add(dto5);
+		 Collections.sort(dtos);
+		 
+		 IAdmDao admDao = EasyMock.createMock(IAdmDao.class);
+			Adm adm = new Adm(2);
+			adm.setName("admName");
+			EasyMock.expect(admDao.getByFeatureId(4356L)).andReturn(adm);
+			EasyMock.replay(admDao);
+			importer.setAdmDao(admDao);
 		
 		importer.setMunicipalityDetector(new MunicipalityDetector());
 		
@@ -476,7 +551,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoCity);
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
@@ -489,8 +564,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 			
 			@Override
 			protected SolrResponseDto getAdm(String name, String countryCode) {
-				if (!name.equals("Europe") || !countryCode.equals("FR")){
-					throw new RuntimeException("the function getAdm() is not called with the correct parameter");
+				if (!name.equals("gmina Bogoria") || !countryCode.equals("PL")){
+					throw new RuntimeException("the function getAdm() is not called with the correct parameter : "+name+";"+countryCode);
 				}
 				return solrResponseDtoAdm;
 			}
@@ -551,7 +626,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoCity);
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
@@ -564,7 +639,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 			
 			@Override
 			protected SolrResponseDto getAdm(String name, String countryCode) {
-				if (!name.equals("Europe") || !countryCode.equals("FR")){
+				if (!name.equals("gmina Bogoria") || !countryCode.equals("PL")){
 					throw new RuntimeException("the getAdm() function is not called with the correct parameter");
 				}
 				return solrResponseDtoAdm;
@@ -621,12 +696,12 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	@Test
 	public void processWithknownCityAndAdm_CityThatIsAlreadyAMunicipalityShouldAlwaysBe(){
 		final SolrResponseDto solrResponseDtoCity = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L);
+		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L).times(2);
 
 		EasyMock.replay(solrResponseDtoCity);
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
@@ -639,7 +714,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 			
 			@Override
 			protected SolrResponseDto getAdm(String name, String countryCode) {
-				if (!name.equals("Europe") || !countryCode.equals("FR")){
+				if (!name.equals("gmina Bogoria") || !countryCode.equals("PL")){
 					throw new RuntimeException("the function is not called with the correct parameter");
 				}
 				return solrResponseDtoAdm;
@@ -683,6 +758,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		adm.setName("admName");
 		EasyMock.expect(admDao.getByFeatureId(4356L)).andReturn(adm);
 		EasyMock.replay(admDao);
+		importer.setAdmDao(admDao);
 		
 		importer.setMunicipalityDetector(new MunicipalityDetector());
 		
@@ -701,7 +777,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoCity);
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
@@ -714,8 +790,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 			
 			@Override
 			protected SolrResponseDto getAdm(String name, String countryCode) {
-				if (!name.equals("Europe") || !countryCode.equals("FR")){
-					throw new RuntimeException("the function is not called with the correct parameter");
+				if (!name.equals("gmina Bogoria") || !countryCode.equals("PL")){
+					throw new RuntimeException("the function is not called with the correct parameter : "+name+";"+countryCode);
 				}
 				return solrResponseDtoAdm;
 			}
@@ -777,7 +853,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoCity);
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
@@ -837,7 +913,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoCity);
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L);
+		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
@@ -863,6 +939,26 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.expect(cityDao.save(city)).andReturn(city);
 		EasyMock.replay(cityDao);
 		importer.setCityDao(cityDao);
+		
+		 List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+		 AdmDTO dto1 = new AdmDTO("admName1", 4, 123L);
+		 AdmDTO dto2 = new AdmDTO("admName2", 5, 123L);
+		 AdmDTO dto3 = new AdmDTO("admName2", 6, 123L);//should be ignre because same name as previous
+		 AdmDTO dto4 = new AdmDTO("admName4", 7, 123L);
+		 AdmDTO dto5 = new AdmDTO("admName5", 8, 123L);//should be ignore because 8 >= 8
+		 dtos.add(dto1);
+		 dtos.add(dto2);
+		 dtos.add(dto3);
+		 dtos.add(dto4);
+		 dtos.add(dto5);
+		 Collections.sort(dtos);
+		 
+		 IAdmDao admDao = EasyMock.createMock(IAdmDao.class);
+			Adm adm = new Adm(2);
+			adm.setName("admName");
+			EasyMock.expect(admDao.getByFeatureId(4356L)).andReturn(adm);
+			EasyMock.replay(admDao);
+			importer.setAdmDao(admDao);
 		
 		
 		
@@ -891,9 +987,6 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 			
 			@Override
 			protected SolrResponseDto getAdm(String name, String countryCode) {
-				if (!name.equals("Europe") || !countryCode.equals("FR")){
-					throw new RuntimeException("the function is not called with the correct parameter");
-				}
 				return null;
 			}
 			
@@ -961,9 +1054,6 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 			
 			@Override
 			protected SolrResponseDto getAdm(String name, String countryCode) {
-				if (!name.equals("Europe") || !countryCode.equals("FR")){
-					throw new RuntimeException("the function is not called with the correct parameter");
-				}
 				return null;
 			}
 			

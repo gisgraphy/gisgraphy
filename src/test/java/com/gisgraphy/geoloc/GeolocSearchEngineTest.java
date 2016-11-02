@@ -228,7 +228,7 @@ public class GeolocSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
 	this.cityDao.save(p1);
 	this.cityDao.save(p2);
 	this.cityDao.save(p3);
-	Adm adm1 = GisgraphyTestHelper.createAdm("name", "FR", "A1", "B2", "C3", "D4", p2, 4);
+	Adm adm1 = GisgraphyTestHelper.createAdm("name", "FR", "A1", "B2", "C3", "D4", "E5",p2, 4);
 	this.admDao.save(adm1);
 
 	//true
@@ -277,6 +277,8 @@ public class GeolocSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
 		.createAndSaveCityWithFullAdmTreeAndCountry(10000000L);
 	p1.setAdm4Code("D4");
 	p1.setAdm4Name("adm");
+	p1.setAdm5Code("D5");
+	p1.setAdm5Name("adm5");
 
 	this.cityDao.save(p1);
 

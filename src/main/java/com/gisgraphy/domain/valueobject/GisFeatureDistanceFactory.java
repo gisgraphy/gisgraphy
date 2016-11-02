@@ -33,6 +33,7 @@ public class GisFeatureDistanceFactory {
 	    gisFeatureDistance.setAdm2Name(gisFeature.getAdm2Name());
 	    gisFeatureDistance.setAdm3Name(gisFeature.getAdm3Name());
 	    gisFeatureDistance.setAdm4Name(gisFeature.getAdm4Name());
+	    gisFeatureDistance.setAdm5Name(gisFeature.getAdm5Name());
 
 	    if (gisFeature.getAsciiName() != null) {
 		gisFeatureDistance.setAsciiName(gisFeature.getAsciiName().trim());

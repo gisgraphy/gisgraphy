@@ -91,7 +91,7 @@ public class CitySubdivisionDaoTest extends AbstractIntegrationHttpSolrTestCase 
 		City city1 = GisgraphyTestHelper.createCity("paris", 48.86667F,
 				2.3333F, 1L);
 		city1.setCountryCode("FR");
-		Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3", "D4",
+		Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3", "D4","E5",
 			    null, 2);
 		admDao.save(adm);
 		city1.setAdm(adm);

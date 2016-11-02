@@ -48,7 +48,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithoutChildsShouldSaveAdm() {
 	// save Adm
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4","E5", null, 4);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -61,9 +61,9 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmShouldSaveChildsInCascade() {
 	int nbChilds = 2;
 	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-		null, null, null, null, 1);
+		null, null, null, null,null, 1);
 	List<Adm> childs = GisgraphyTestHelper.createAdms("admchilds", "FR", "A1",
-		"B2", null, null, null, 2, nbChilds);
+		"B2", null, null, null,null, 2, nbChilds);
 	// double set
 	admParent.setChildren(childs);
 	Adm savedAdmParent = this.admDao.save(admParent);
@@ -81,11 +81,11 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	int nbChildsSubLevel = 2;
 	int nbChildsSubSublevel = 3;
 	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-		null, null, null, null, 1);
+		null, null, null, null,null, 1);
 	List<Adm> childs = GisgraphyTestHelper.createAdms("admchilds", "FR", "A1",
-		"B2", null, null, null, 2, nbChildsSubLevel);
+		"B2", null, null, null,null, 2, nbChildsSubLevel);
 	List<Adm> ChildsLevel2 = GisgraphyTestHelper.createAdms("admchilds", "FR",
-		"A1", "B2", null, null, null, 3, nbChildsSubSublevel);
+		"A1", "B2", null, null, null, null,3, nbChildsSubSublevel);
 	// set childs
 	admParent.setChildren(childs);
 	childs.get(0).setChildren(ChildsLevel2);
@@ -109,11 +109,11 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testSaveAdmWithParentShouldUpdateParentSChilds() {
 	Adm parent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1", null,
-		null, null, null, 1);
+		null, null, null,null, 1);
 	Adm child1 = GisgraphyTestHelper.createAdm("admchilds", "FR", "A1", "B2",
-		null, null, null, 2);
+		null, null, null,null, 2);
 	Adm child2 = GisgraphyTestHelper.createAdm("admchilds", "FR", "A1", "B2",
-		null, null, null, 2);
+		null, null, null,null, 2);
 
 	List<Adm> childs = new ArrayList<Adm>();
 	childs.add(child1);
@@ -148,9 +148,9 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	// save adm with childs
 	int nbChilds = 2;
 	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-		null, null, null, null, 1);
+		null, null, null, null,null, 1);
 	List<Adm> childs = GisgraphyTestHelper.createAdms("admchilds", "FR", "A1",
-		"B2", null, null, null, 2, nbChilds);
+		"B2", null, null, null,null, 2, nbChilds);
 
 	admParent.addChildren(childs);
 	Adm savedAdmParent = this.admDao.save(admParent);
@@ -166,7 +166,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve11WithoutAdm1CodeShouldthrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", null, "B2", "C3",
-		    "D4", null, 1);
+		    "D4", null,null, 1);
 	    admDao.save(adm);
 	    fail("adm1 could not be saved if adm1code is missing");
 	} catch (RuntimeException e) {
@@ -177,7 +177,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve2WithoutAdm1CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", null, "B2", "C3",
-		    "D4", null, 2);
+		    "D4", null,null, 2);
 	    admDao.save(adm);
 	    fail("adm2 could not be saved if adm1code is missing");
 	} catch (RuntimeException e) {
@@ -188,7 +188,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve2WithoutAdm2CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, "C3",
-		    "D4", null, 2);
+		    "D4", null,null, 2);
 	    admDao.save(adm);
 	    fail("adm2 could not be saved if adm2code is missing");
 	} catch (RuntimeException e) {
@@ -199,7 +199,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve3WithoutAdm1CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", null, "B2", "C3",
-		    "D4", null, 3);
+		    "D4", "E5",null, 3);
 	    admDao.save(adm);
 	    fail("adm3 could not be saved if adm1code is missing");
 	} catch (RuntimeException e) {
@@ -210,7 +210,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve3WithoutAdm2CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, "C3",
-		    "D4", null, 3);
+		    "D4", "E5",null, 3);
 	    admDao.save(adm);
 	    fail("adm3 could not be saved if adm2code is missing");
 	} catch (RuntimeException e) {
@@ -221,7 +221,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve3WithoutAdm3CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		    "D4", null, 3);
+		    "D4","E5", null, 3);
 	    admDao.save(adm);
 	    fail("adm3 could not be saved if adm3code is missing");
 	} catch (RuntimeException e) {
@@ -232,7 +232,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve4WithoutAdm1CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", null, "B2", "C3",
-		    "D4", null, 4);
+		    "D4","E5", null, 4);
 	    admDao.save(adm);
 	    fail("adm4 could not be saved if adm1code is missing");
 	} catch (RuntimeException e) {
@@ -243,7 +243,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve4WithoutAdm2CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, "C3",
-		    "D4", null, 4);
+		    "D4","E5", null, 4);
 	    admDao.save(adm);
 	    fail("adm4 could not be saved if adm2code is missing");
 	} catch (RuntimeException e) {
@@ -254,7 +254,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve4WithoutAdm3CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		    "D4", null, 4);
+		    "D4","E5", null, 4);
 	    admDao.save(adm);
 	    fail("adm4 could not be saved if adm3code is missing");
 	} catch (RuntimeException e) {
@@ -265,7 +265,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithLeve4WithoutAdm4CodeShouldThrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		    null, null, 4);
+		    null, null,null, 4);
 	    admDao.save(adm);
 	    fail("adm4 could not be saved if adm4code is missing");
 	} catch (RuntimeException e) {
@@ -276,7 +276,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSaveAdmWithNoCountryCodeShouldthrow() {
 	try {
 	    Adm adm = GisgraphyTestHelper.createAdm("adm", null, "A1", "B2", "C3",
-		    "D4", null, 4);
+		    "D4", "E5",null, 4);
 	    admDao.save(adm);
 	    fail("adm could not be saved if countrycode is missing");
 	} catch (RuntimeException e) {
@@ -290,7 +290,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	String newname = "adm_gisFeature";
 	// save Adm
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", "E5",null, 4);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -323,7 +323,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testDeleteAdmShouldDeleteAdm() {
 	// save Adm
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", "E5",null, 4);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -343,9 +343,9 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	// save adm with childs
 	int nbChilds = 2;
 	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-		null, null, null, null, 1);
+		null, null, null, null,null, 1);
 	List<Adm> childs = GisgraphyTestHelper.createAdms("admchilds", "FR", "A1",
-		"B2", null, null, null, 2, nbChilds);
+		"B2", null, null, null,null, 2, nbChilds);
 	// double set
 	admParent.setChildren(childs);
 	Adm savedAdmParent = this.admDao.save(admParent);
@@ -376,11 +376,11 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	int nbChildsSubLevel = 2;
 	int nbChildsSubSublevel = 3;
 	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-		null, null, null, null, 1);
+		null, null, null, null,null, 1);
 	List<Adm> childs = GisgraphyTestHelper.createAdms("admchilds", "FR", "A1",
-		"B2", null, null, null, 2, nbChildsSubLevel);
+		"B2", null, null,null, null, 2, nbChildsSubLevel);
 	List<Adm> ChildsLevel2 = GisgraphyTestHelper.createAdms("admchilds", "FR",
-		"A1", "B2", null, null, null, 3, nbChildsSubSublevel);
+		"A1", "B2", null, null,null, null, 3, nbChildsSubSublevel);
 	// set childs
 	admParent.setChildren(childs);
 	childs.get(0).setChildren(ChildsLevel2);
@@ -425,9 +425,9 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testDeleteAdmShouldNotDeleteHisParentInCascade() {
 	int nbChilds = 2;
 	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-		null, null, null, null, 1);
+		null, null, null, null,null, 1);
 	List<Adm> childs = GisgraphyTestHelper.createAdms("admchilds", "FR", "A1",
-		"B2", null, null, null, 2, nbChilds);
+		"B2", null, null, null,null, 2, nbChilds);
 	// double set
 	admParent.setChildren(childs);
 	Adm savedAdmParent = this.admDao.save(admParent);
@@ -460,7 +460,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testDeleteAdmShouldDeleteGisFeatureContainedInCascade() {
 	// save Adm
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4","E5", null, 4);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm is saved
@@ -517,16 +517,16 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testSuggestAdmShouldReturnCorrectValues() {
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null,null, 1);
 	Adm savedAdm1 = this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	Adm savedAdm2 = this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null,null, 3);
 	Adm savedAdm3 = this.admDao.save(adm3);
 	Adm adm4 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", null,null, 4);
 	Adm savedAdm4 = this.admDao.save(adm4);
 	// check all are saved
 	assertEquals(4, this.admDao.count());
@@ -598,7 +598,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm1ShouldRetrieveTheCorrectAdm() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null,null, 1);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -611,7 +611,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm1ShouldBeCaseInsensitiveForCountryCode() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null, null,1);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -624,7 +624,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm2ShouldRetrieveTheCorrectAdm() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm2 is saved
@@ -637,7 +637,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm2ShouldBeCaseInsensitiveForCountryCode() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm2 is saved
@@ -650,7 +650,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm3ShouldRetrieveTheCorrectAdm() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null,null, 3);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm3 is saved
@@ -663,7 +663,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm3ShouldBeCaseInsensitiveForCountryCode() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null, null,3);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm3 is saved
@@ -676,7 +676,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm4ShouldRetrieveTheCorrectAdm() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", null, null,4);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm4 is saved
@@ -689,7 +689,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm4BeCaseInsensitiveForCountryCode() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", null,null, 4);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm4 is saved
@@ -703,16 +703,16 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testGetAdmShouldretrieveTheCorrectAdmAccordingToNullParameters() {
 	// create and save an Adm of each Level
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null,null, 1);
 	Adm savedAdm1 = this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	Adm savedAdm2 = this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null,null, 3);
 	Adm savedAdm3 = this.admDao.save(adm3);
 	Adm adm4 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", null,null, 4);
 	Adm savedAdm4 = this.admDao.save(adm4);
 
 	// test for adm1Code=null
@@ -745,16 +745,16 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testGetAdmShouldBeCaseInsensitiveForCountryCode() {
 	// create and save an Adm of each Level
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null,null, 1);
 	Adm savedAdm1 = this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	Adm savedAdm2 = this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null, null,3);
 	Adm savedAdm3 = this.admDao.save(adm3);
 	Adm adm4 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", null,null, 4);
 	Adm savedAdm4 = this.admDao.save(adm4);
 
 	// test for adm1Code=null
@@ -787,16 +787,16 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testGetAdmShouldretrieveTheCorrectAdmAccordingToEmptyStringParameters() {
 	// create and save an Adm of each Level
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null, null,1);
 	Adm savedAdm1 = this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	Adm savedAdm2 = this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null, null,3);
 	Adm savedAdm3 = this.admDao.save(adm3);
 	Adm adm4 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", null,null, 4);
 	Adm savedAdm4 = this.admDao.save(adm4);
 
 	Adm retrievedAdm = this.admDao.getAdm("", "A1", "B2", "C3", "D4");
@@ -832,9 +832,9 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	// save two adm1 with one unused
 
 	Adm admUsed = GisgraphyTestHelper.createAdm("adm_used", "FR", "A1", "B2",
-		"C3", "D4", null, 4);
+		"C3", "D4", "E5",null, 4);
 	Adm admUnUsed = GisgraphyTestHelper.createAdm("adm_unused", "FR", "A1",
-		"B2", "C3", "D5", null, 4);
+		"B2", "C3", "D5","E5", null, 4);
 
 	// save Admused and check it is well saved
 	Adm savedAdmUsed = this.admDao.save(admUsed);
@@ -873,10 +873,10 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	Long durtyFeatureId = -3L;
 	Long cleanfeatureId = 3L;
 	Adm cleanAdm = GisgraphyTestHelper.createAdm("adm4_1", "FR", "A1", "B2",
-		"C3", "D4", null, 4);
+		"C3", "D4","E5", null, 4);
 	cleanAdm.setFeatureId(cleanfeatureId);
 	Adm durtyAdm = GisgraphyTestHelper.createAdm("adm4_2", "FR", "A1", "B2",
-		"C3", "D5", null, 4);
+		"C3", "D5", "E5",null, 4);
 	durtyAdm.setFeatureId(durtyFeatureId);
 
 	// save Adm durty and check it is well saved
@@ -902,7 +902,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdmByCountryAndCodeAndLevelShouldRetrieveTheCorrectAdm() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null,null, 1);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -923,7 +923,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdmByCountryAndCodeAndLevelShouldBeCaseInsensitiveForCountryCode() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null, null,1);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -952,13 +952,13 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdmOrFirstValidParentIfNotFoundShouldReturnTheExistingParentIfTheAdmDoesnTExists() {
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null,null, 1);
 	this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	Adm savedAdm2 = this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null,null, 3);
 	this.admDao.save(adm3);
 	Adm retrieved = this.admDao.getAdmOrFirstValidParentIfNotFound("FR",
 		"A1", "B2", "C4", null);
@@ -969,13 +969,13 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdmOrFirstValidParentifNotFoundShouldReturnTheExistingGrandParentIfTheAdmDoesnTExists() {
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null,null, 1);
 	Adm savedAdm1 = this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null, null,2);
 	this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null,null, 3);
 	this.admDao.save(adm3);
 	Adm retrieved = this.admDao.getAdmOrFirstValidParentIfNotFound("FR",
 		"A1", "B3", "C4", null);
@@ -987,13 +987,13 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdmOrFirstValidParentifNotFoundShouldReturnTheAdmIfExists() {
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null, null,1);
 	this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null, null,2);
 	this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null,null, 3);
 	Adm savedAdm3 = this.admDao.save(adm3);
 	Adm retrieved = this.admDao.getAdmOrFirstValidParentIfNotFound("FR",
 		"A1", "B2", "C3", null);
@@ -1004,13 +1004,13 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdmOrFirstValidParentifNotFoundShouldReturnNullIfNoParentExists() {
 	Adm adm1 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", null, null,
-		null, null, 1);
+		null, null, null,1);
 	this.admDao.save(adm1);
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", null,
-		null, null, 2);
+		null, null,null, 2);
 	this.admDao.save(adm2);
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		null, null, 3);
+		null, null,null, 3);
 	this.admDao.save(adm3);
 	Adm retrieved = this.admDao.getAdmOrFirstValidParentIfNotFound("FR",
 		"A2", "B3", "C4", null);
@@ -1036,7 +1036,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testAdmConstructorShouldAutomaticalySetTheCorrectFeatureClass() {
 	Adm adm = GisgraphyTestHelper.createAdm("adm1_1", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", null, null,4);
 	assertEquals("A", adm.getFeatureClass());
     }
 
@@ -1229,10 +1229,10 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm2ShouldReturnNullWhenAmbiguousResultInFlexMode() {
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", null,
-		null, null, 2);
+		null, null,null, 2);
 	this.admDao.save(adm2);
 	Adm adm2bis = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", null,
-		null, null, 2);
+		null, null,null, 2);
 	this.admDao.save(adm2bis);
 
 	assertNull(this.admDao.getAdm2("FR", "00", "B1"));
@@ -1243,10 +1243,10 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm2ShouldThrowsWhenAmbiguousResultInNonFlexMode() {
 	Adm adm2 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", null,
-		null, null, 2);
+		null, null,null, 2);
 	this.admDao.save(adm2);
 	Adm adm2bis = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", null,
-		null, null, 2);
+		null, null, null,2);
 	this.admDao.save(adm2bis);
 
 	try {
@@ -1267,10 +1267,10 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm3ShouldReturnNullWhenAmbiguousResultInFlexMode() {
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		null, null, 3);
+		null, null,null, 3);
 	this.admDao.save(adm3);
 	Adm adm3bis = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		null, null, 3);
+		null, null,null, 3);
 	this.admDao.save(adm3bis);
 
 	assertNull(this.admDao.getAdm3("FR", "00", "B1", "C1"));
@@ -1281,10 +1281,10 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm3ShouldThrowsWhenAmbiguousResultInNonFlexMode() {
 	Adm adm3 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		null, null, 3);
+		null, null, null,3);
 	this.admDao.save(adm3);
 	Adm adm3bis = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		null, null, 3);
+		null, null, null,3);
 	this.admDao.save(adm3bis);
 
 	try {
@@ -1306,10 +1306,10 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm4ShouldReturnNullWhenAmbiguousResultInFlexMode() {
 	Adm adm4 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		"D1", null, 4);
+		"D1", null, null,4);
 	this.admDao.save(adm4);
 	Adm adm4bis = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		"D1", null, 4);
+		"D1", null, null,4);
 	this.admDao.save(adm4bis);
 
 	assertNull(this.admDao.getAdm4("FR", "00", "B1", "C1", "D1"));
@@ -1320,10 +1320,10 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetAdm4ShouldThrowsWhenAmbiguousResultInNonFlexMode() {
 	Adm adm4 = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		"D1", null, 4);
+		"D1", null, null,4);
 	this.admDao.save(adm4);
 	Adm adm4bis = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B1", "C1",
-		"D1", null, 4);
+		"D1", null,null, 4);
 	this.admDao.save(adm4bis);
 
 	try {
@@ -1346,9 +1346,9 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testListFeatureIdByLevel(){
     	int nbChilds = 2;
     	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-    		null, null, null, null, 1);
+    		null, null, null, null,null, 1);
     	List<Adm> childs = GisgraphyTestHelper.createAdms("admchilds", "FR", "A1",
-    		"B2", null, null, null, 2, nbChilds);
+    		"B2", null, null, null,null, 2, nbChilds);
     	// double set
     	admParent.setChildren(childs);
     	this.admDao.save(admParent);

@@ -383,10 +383,11 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			    		ex.setField(FullTextFields.HOUSE_NUMBERS.getValue(),houseNumbersToAdd );
 		    	}
 				populateAlternateNamesForStreet(gisFeature.getAlternateNames(),ex);
-				 ex.setField(FullTextFields.ADM1NAME.getValue(), gisFeature.getAdm1Name());
+				    ex.setField(FullTextFields.ADM1NAME.getValue(), gisFeature.getAdm1Name());
 				    ex.setField(FullTextFields.ADM2NAME.getValue(), gisFeature.getAdm2Name());
 				    ex.setField(FullTextFields.ADM3NAME.getValue(), gisFeature.getAdm3Name());
 				    ex.setField(FullTextFields.ADM4NAME.getValue(), gisFeature.getAdm4Name());
+				    ex.setField(FullTextFields.ADM5NAME.getValue(), gisFeature.getAdm5Name());
 		    } else {
 			
 			ex.setField(FullTextFields.FEATURECLASS.getValue(), gisFeature
@@ -435,27 +436,28 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			    ex.setField(FullTextFields.ADM2CODE.getValue(), adm.getAdm2Code());
 			    ex.setField(FullTextFields.ADM3CODE.getValue(), adm.getAdm3Code());
 			    ex.setField(FullTextFields.ADM4CODE.getValue(), adm.getAdm4Code());
+			    ex.setField(FullTextFields.ADM5CODE.getValue(), adm.getAdm5Code());
 			}
 			while (adm != null) {
-			    int level = adm.getLevel();
-			    String admLevelName = FullTextFields
-				    .valueOf("ADM" + level + "NAME").getValue();
-			    ex.setField(admLevelName, EncodingHelper.toUTF8(adm.getName()));
-			    if (level == 1 || level == 2) {
-				populateAlternateNames(admLevelName, adm.getAlternateNames(),
-					ex);
-			    }
-			    adm = adm.getParent();
-			}
-				Set<ZipCode> zipCodes =gisFeature.getZipCodes();
-				if (zipCodes != null) {
-					List<String> zipCodesToAdd = new ArrayList<String>();
-					for (ZipCode zipCode:zipCodes){
-						zipCodesToAdd.add(zipCode.getCode().trim());
-					}
-				    ex.setField(FullTextFields.ZIPCODE.getValue(),zipCodesToAdd);
+				int level = adm.getLevel();
+				String admLevelName = FullTextFields
+						.valueOf("ADM" + level + "NAME").getValue();
+				ex.setField(admLevelName, EncodingHelper.toUTF8(adm.getName()));
+				if (level == 1 || level == 2) {
+					populateAlternateNames(admLevelName, adm.getAlternateNames(),
+							ex);
 				}
-			   
+				adm = adm.getParent();
+			}
+			Set<ZipCode> zipCodes =gisFeature.getZipCodes();
+			if (zipCodes != null) {
+				List<String> zipCodesToAdd = new ArrayList<String>();
+				for (ZipCode zipCode:zipCodes){
+					zipCodesToAdd.add(zipCode.getCode().trim());
+				}
+				ex.setField(FullTextFields.ZIPCODE.getValue(),zipCodesToAdd);
+			}
+
 
 			// No prefix for cities
 

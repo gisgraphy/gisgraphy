@@ -878,7 +878,7 @@
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				add an address formater
+				add an address formater and a label generator 
 			</action>
 			
 			<action dev="David Masclet" type="update">

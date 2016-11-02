@@ -203,7 +203,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
     public void testThatAnAdmSouldNotHaveAlevelsuperiorTo4() {
 	try {
 	    GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3", "D4",
-		    null, 6);
+		    null, null,6);
 	    fail("An adm should not have a level > 5");
 	} catch (IllegalArgumentException e) {
 	}
@@ -213,7 +213,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
     public void testThatAnAdmSouldNotHaveAlevelInferiorTo1() {
 	try {
 	    GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3", "D4",
-		    null, 0);
+		    null,null, 0);
 	    fail("An adm should not have a level < 1");
 	} catch (IllegalArgumentException e) {
 	}

@@ -43,6 +43,8 @@ import com.gisgraphy.addressparser.IAddressParserService;
 import com.gisgraphy.addressparser.StructuredAddressQuery;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
 import com.gisgraphy.addressparser.exception.AddressParserException;
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
+import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.valueobject.GisgraphyConfig;
 import com.gisgraphy.domain.valueobject.Pagination;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
@@ -53,6 +55,7 @@ import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.importer.ImporterConfig;
+import com.gisgraphy.importer.LabelGenerator;
 import com.gisgraphy.serializer.common.OutputFormat;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.stats.StatsUsageType;
@@ -70,6 +73,9 @@ public class GeocodingServiceTest {
     public boolean findStreetCalled = false;
     public boolean GeocodeAdressCalled = false;
     public boolean populatecalled = false;
+    
+    private LabelGenerator labelGenerator = LabelGenerator.getInstance();
+	private BasicAddressFormater addressFormater = BasicAddressFormater.getInstance();
 
     @Before
     public void beforeTest() {
@@ -349,6 +355,9 @@ public class GeocodingServiceTest {
 	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
 	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
 	EasyMock.expect(cityResult.getAdm1_name()).andStubReturn("paris region");
+	EasyMock.expect(cityResult.getAdm3_name()).andStubReturn("adm3 name");
+	EasyMock.expect(cityResult.getAdm4_name()).andStubReturn("adm4 name");
+	EasyMock.expect(cityResult.getAdm5_name()).andStubReturn("adm5 name");
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
 	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
 	EasyMock.expect(cityResult.getFeature_id()).andStubReturn(123L);
@@ -402,6 +411,9 @@ public class GeocodingServiceTest {
 	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
 	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
 	EasyMock.expect(cityResult.getAdm1_name()).andStubReturn("paris");
+	EasyMock.expect(cityResult.getAdm3_name()).andStubReturn("adm3 name");
+	EasyMock.expect(cityResult.getAdm4_name()).andStubReturn("adm4 name");
+	EasyMock.expect(cityResult.getAdm5_name()).andStubReturn("adm5 name");
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
 	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
 	EasyMock.expect(cityResult.getFeature_id()).andStubReturn(123L);
@@ -457,9 +469,14 @@ public class GeocodingServiceTest {
 	final Double longitude = 5.2d;
 	EasyMock.expect(cityResult.getLng()).andStubReturn(longitude);
 	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
-	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
 	EasyMock.expect(cityResult.getAdm1_name()).andStubReturn("paris region");
+	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
+	EasyMock.expect(cityResult.getAdm3_name()).andStubReturn("adm3 name");
+	EasyMock.expect(cityResult.getAdm4_name()).andStubReturn("adm4 name");
+	EasyMock.expect(cityResult.getAdm5_name()).andStubReturn("adm5 name");
+	
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
+	EasyMock.expect(cityResult.getIs_in_zip()).andStubReturn(null);
 	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
 	EasyMock.expect(cityResult.getFeature_id()).andStubReturn(123L);
 	EasyMock.replay(cityResult);
@@ -591,6 +608,9 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("the 5th street should have name 4", "streetname4",address.getStreetName());
 	Assert.assertEquals("because housenumber is not found, level should be "+GeocodingLevels.STREET, GeocodingLevels.STREET,address.getGeocodingLevel());
 	
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+	
 	
     }
     
@@ -721,6 +741,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals(GeocodingLevels.STREET,address.getGeocodingLevel());
 	Assert.assertEquals(5D,address.getLat(),0.001);
 	Assert.assertEquals(4D,address.getLng(),0.001);
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
 	
 	
@@ -1257,6 +1279,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("zip is not correct", street.getIs_in_zip().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should not be the deeper one but the is_inadm one", street.getIs_in_adm(), address.getState());
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
     }
     
@@ -1289,6 +1313,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("zip is not correct", street.getIs_in_zip().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should not be the deeper one but the is_inadm one", street.getIs_in_adm(), address.getState());
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
     }
     
@@ -1338,8 +1364,10 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("name is not correct", city.getName(), address.getName());
 	Assert.assertNull("street type is not correct", address.getStreetType());
 	Assert.assertEquals("zipcode is not correct", city.getZipcodes().iterator().next(), address.getZipCode());
-	Assert.assertEquals("Adm Name should be the deeper one", city.getAdm2_name(), address.getState());
+	Assert.assertEquals("Adm Name should be the lower one", city.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
     @Test
@@ -1367,8 +1395,10 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("name is not correct", citySubdivision.getName(), address.getName());
 	Assert.assertNull("street type is not correct", address.getStreetType());
 	Assert.assertEquals("zipcode is not correct", citySubdivision.getZipcodes().iterator().next(), address.getZipCode());
-	Assert.assertEquals("Adm Name should be the deeper one", citySubdivision.getAdm2_name(), address.getState());
+	Assert.assertEquals("Adm Name should be the lower one", citySubdivision.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", citySubdivision.getCountry_code(), address.getCountryCode());
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
     @Test
@@ -1396,6 +1426,9 @@ public class GeocodingServiceTest {
     	Assert.assertNull("zipcode is not correct", address.getZipCode());
     	Assert.assertEquals("Adm Name should be the deeper one", adm.getName(), address.getState());
     	Assert.assertEquals("countrycode is not correct", adm.getCountry_code(), address.getCountryCode());
+    	
+    	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+    	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
     @Test
@@ -1421,8 +1454,10 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("name is not correct", feature.getName(), address.getName());
     	Assert.assertNull("street type is not correct", address.getStreetType());
     	Assert.assertNull("zipcode is not correct", address.getZipCode());
-    	Assert.assertEquals("Adm Name should be the deeper one", feature.getAdm2_name(), address.getState());
+    	Assert.assertEquals("Adm Name should be the lower one", feature.getAdm1_name(), address.getState());
     	Assert.assertEquals("countrycode is not correct", feature.getCountry_code(), address.getCountryCode());
+    	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+    	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
 
     @Test
@@ -1451,6 +1486,9 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
 	Assert.assertEquals("Adm Name should be the deeper one", city.getAdm2_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
+	
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
 
@@ -1478,6 +1516,9 @@ public class GeocodingServiceTest {
 	Assert.assertNull("city name is not correct", address.getCity());
 	Assert.assertNull("Adm Name should be the deeper one", address.getState());
 	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
+	
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
     @Test
@@ -1511,6 +1552,9 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
 	
 	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
+	
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
 
     @Test
@@ -1542,6 +1586,9 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
 	
 	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
+	
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
 
     @Test
@@ -1569,6 +1616,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
 	Assert.assertEquals("Adm Name should be the deeper one", city.getAdm2_name(), address.getState());
 	Assert.assertEquals("countryCode should be filled",city.getCountry_code(),address.getCountryCode());
+	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
 
     @Test
@@ -1692,7 +1741,7 @@ public class GeocodingServiceTest {
 	address.setCity("city");
 	geocodingService.setImporterConfig(new ImporterConfig());
 	AddressResultsDto addressResultsDto = geocodingService.geocode(address, "fr");
-	Assert.assertEquals("parsed address should be null when a structured address is provided",null, addressResultsDto.getParsedAddress());
+	Assert.assertEquals("parsed address should be filled with the providedone ",address, addressResultsDto.getParsedAddress());
 	EasyMock.verify(statsUsageService);
     }
     

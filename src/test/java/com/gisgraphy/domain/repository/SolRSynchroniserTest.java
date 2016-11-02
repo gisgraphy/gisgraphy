@@ -1001,7 +1001,7 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSynchronizeAcountryShouldSynchronizeAdmSpecificFields() {
     
     Adm adm = GisgraphyTestHelper
-	.createAdm("AdmName", "FR", "A1", "B2", null, null, null, 2);
+	.createAdm("AdmName", "FR", "A1", "B2", null, null, null,null, 2);
 
         admDao.save(adm);
 
@@ -1331,6 +1331,8 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='"+street.getAdm3Name()+"']",
 			"//*[@name='" + FullTextFields.ADM4NAME.getValue()
 			+ "'][.='"+street.getAdm4Name()+"']",
+			"//*[@name='" + FullTextFields.ADM5NAME.getValue()
+			+ "'][.='"+street.getAdm5Name()+"']",
 			"//*[@name='" + FullTextFields.IS_IN_PLACE.getValue()
 			+ "'][.='"+street.getIsInPlace()+"']",
 			"//*[@name='" + FullTextFields.FULLY_QUALIFIED_NAME.getValue()

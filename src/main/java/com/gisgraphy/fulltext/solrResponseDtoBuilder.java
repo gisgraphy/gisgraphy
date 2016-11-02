@@ -59,6 +59,8 @@ public class solrResponseDtoBuilder {
 		    FullTextFields.ADM3CODE.getValue());
 	    solrResponseDto.adm4_code = getFieldAsString(solrDocument,
 		    FullTextFields.ADM4CODE.getValue());
+	    solrResponseDto.adm5_name = getFieldAsString(solrDocument,
+	    		 FullTextFields.ADM5CODE.getValue());
 	    solrResponseDto.adm1_name = getFieldAsString(solrDocument,
 		    FullTextFields.ADM1NAME.getValue());
 	    solrResponseDto.adm2_name = getFieldAsString(solrDocument,
@@ -67,6 +69,8 @@ public class solrResponseDtoBuilder {
 		    FullTextFields.ADM3NAME.getValue());
 	    solrResponseDto.adm4_name = getFieldAsString(solrDocument,
 		    FullTextFields.ADM4NAME.getValue());
+	    solrResponseDto.adm5_name = getFieldAsString(solrDocument,
+			    FullTextFields.ADM5NAME.getValue());
 	    solrResponseDto.zipcodes = getFieldsToSet(solrDocument,
 		    FullTextFields.ZIPCODE.getValue());
 	    solrResponseDto.country_name = getFieldAsString(solrDocument,

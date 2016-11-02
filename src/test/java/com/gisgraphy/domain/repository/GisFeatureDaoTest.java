@@ -226,7 +226,7 @@ public class GisFeatureDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testDeleteAdmShouldNotDeleteTheGisFeaturesContainedInCascade() {
 	// save Adm
 	Adm adm = GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3",
-		"D4", null, 4);
+		"D4", "E5",null, 4);
 	Adm savedAdm = this.admDao.save(adm);
 	assertNotNull(savedAdm.getId());
 	// check adm1 is saved
@@ -263,13 +263,13 @@ public class GisFeatureDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	gisFeatureDao.save(gisFeatureWithNotNullFeatureCode);
 	// check 3 adm, country,city, and gisFeature are saved
 	assertEquals(1, countryDao.count());
-	assertEquals(7, gisFeatureDao.count());
+	assertEquals(9, gisFeatureDao.count());
 	// 1 city + 1 gis with null FeatureCode + 1 GIS with not null featureCode
-	assertEquals(3, gisFeatureDao.deleteAllExceptAdmsAndCountries());
-	assertEquals(3, admDao.count());
+	assertEquals(4, gisFeatureDao.deleteAllExceptAdmsAndCountries());
+	assertEquals(4, admDao.count());
 	assertEquals(1, countryDao.count());
 	// 3 adm + 1 country
-	assertEquals(4, gisFeatureDao.count());
+	assertEquals(5, gisFeatureDao.count());
 	assertEquals(1, countryDao.count());
 	assertEquals(0, cityDao.count());
 
@@ -616,7 +616,7 @@ public class GisFeatureDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	paris.addZipCode(new ZipCode("50263"));
 
 	Adm admParent = GisgraphyTestHelper.createAdm("admparent", "FR", "A1",
-		"B2", "C3", null, null, 3);
+		"B2", "C3", null, null,null, 3);
 
 	Adm p = this.admDao.save(admParent);
 	paris.setAdm(p);
@@ -869,7 +869,7 @@ public class GisFeatureDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	GisFeature gisAdm = GisgraphyTestHelper.createGisFeatureForAdm(
 		"Saint-andré", 2.5F, 3.5F, 40L, 4);
 	Adm adm = GisgraphyTestHelper.createAdm("Saint-André", "FR", "A1", "B2",
-		"C3", "D4", gisAdm, 4);
+		"C3", "D4", null,gisAdm, 4);
 
 	// create a second city
 	Long featureId2 = 1002L;

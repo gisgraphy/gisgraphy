@@ -333,11 +333,13 @@ decompound after lower because words of dictionary are in lower, unpunct
    
   <!--Long  --><field name="adm3_name" type="string_casesensitive" indexed="true" stored="true"/>
   <!--Long  --><field name="adm4_name" type="string_casesensitive" indexed="true" stored="true"/>
+  <!--Long  --><field name="adm5_name" type="string_casesensitive" indexed="true" stored="true"/>
    
-  <!--Long  --><field name="adm1_code" type="string" indexed="true" stored="true"/>
-  <!--Long  --><field name="adm2_code" type="string" indexed="true" stored="true"/>
-  <!--Long  --><field name="adm3_code" type="string" indexed="true" stored="true"/>
-  <!--Long  --><field name="adm4_code" type="string" indexed="true" stored="true"/>
+  <!--Long  --><field name="adm1_code" type="string" indexed="false" stored="true"/>
+  <!--Long  --><field name="adm2_code" type="string" indexed="false" stored="true"/>
+  <!--Long  --><field name="adm3_code" type="string" indexed="false" stored="true"/>
+  <!--Long  --><field name="adm4_code" type="string" indexed="false" stored="true"/>
+  <!--Long  --><field name="adm5_code" type="string" indexed="false" stored="true"/>
    
    
   <!--  --><field name="spell" type="string" indexed="true" stored="false"/>

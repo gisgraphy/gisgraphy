@@ -113,10 +113,12 @@ public class OutputStyleHelper {
 			FullTextFields.ADM2NAME.getValue()).append(",").append(
 			FullTextFields.ADM3NAME.getValue()).append(",").append(
 			FullTextFields.ADM4NAME.getValue()).append(",").append(
+			FullTextFields.ADM5NAME.getValue()).append(",").append(
 			FullTextFields.ADM1CODE.getValue()).append(",").append(
 			FullTextFields.ADM2CODE.getValue()).append(",").append(
 			FullTextFields.ADM3CODE.getValue()).append(",").append(
-			FullTextFields.ADM4CODE.getValue());
+			FullTextFields.ADM4CODE.getValue()).append(
+					FullTextFields.ADM5CODE.getValue());
 		return sb.toString();
 	}else if (outputStyle == Output.OutputStyle.FULL){
 	    if (languageCode != null) {

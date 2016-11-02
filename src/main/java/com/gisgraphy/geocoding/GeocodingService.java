@@ -21,7 +21,6 @@
  ******************************************************************************/
 package com.gisgraphy.geocoding;
 
-import static com.gisgraphy.fulltext.Constants.ADDRESSES_PLACETYPE;
 import static com.gisgraphy.helper.StringHelper.isEmptyString;
 import static com.gisgraphy.helper.StringHelper.isNotEmptyString;
 
@@ -46,6 +45,8 @@ import com.gisgraphy.addressparser.AddressResultsDto;
 import com.gisgraphy.addressparser.IAddressParserService;
 import com.gisgraphy.addressparser.StructuredAddressQuery;
 import com.gisgraphy.addressparser.exception.AddressParserException;
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
+import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
@@ -60,13 +61,13 @@ import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.fulltext.FulltextQuery;
 import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
-import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SmartStreetDetection;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.fulltext.SolrResponseDtoDistanceComparator;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.importer.ImporterConfig;
+import com.gisgraphy.importer.LabelGenerator;
 import com.gisgraphy.serializer.UniversalSerializer;
 import com.gisgraphy.serializer.common.UniversalSerializerConstant;
 import com.gisgraphy.service.IStatsUsageService;
@@ -89,6 +90,9 @@ public class GeocodingService implements IGeocodingService {
 	private IAddressParserService addressParser;
 	private FullTextSearchEngine fullTextSearchEngine;
 	private GisgraphyConfig gisgraphyConfig;
+	
+	private LabelGenerator labelGenerator = LabelGenerator.getInstance();
+	private BasicAddressFormater addressFormater = BasicAddressFormater.getInstance();
 	
 	SmartStreetDetection smartStreetDetection = new SmartStreetDetection();
 
@@ -551,6 +555,11 @@ public class GeocodingService implements IGeocodingService {
 				  if  (!isEmptyString(is_in)) {
 					address.setCity(is_in);
 					address.setState(street.getIs_in_adm());
+					address.setAdm1Name(street.getAdm1_name());
+					address.setAdm2Name(street.getAdm2_name());
+					address.setAdm3Name(street.getAdm3_name());
+					address.setAdm4Name(street.getAdm4_name());
+					address.setAdm5Name(street.getAdm5_name());
 					if (street.getIs_in_zip()!=null && street.getIs_in_zip().size()>=1){
 						address.setZipCode(street.getIs_in_zip().iterator().next());
 					}
@@ -667,6 +676,8 @@ public class GeocodingService implements IGeocodingService {
 				if (city!=null){
 				address.setDistance(GeolocHelper.distance(GeolocHelper.createPoint(address.getLng(), address.getLat()), GeolocHelper.createPoint(cityLng, cityLat)));
 				}
+				address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
+				address.setFormatedPostal(addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA));
 				addresses.add(address);
 
 			}
@@ -830,11 +841,16 @@ public class GeocodingService implements IGeocodingService {
 				address.setCountryCode(countryCode);
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Adm.class.getSimpleName())) {
 					address.setState(solrResponseDto.getName());
-				}else if (solrResponseDto.getAdm2_name() != null) {
-					address.setState(solrResponseDto.getAdm2_name());
-				} else if (solrResponseDto.getAdm1_name() != null) {
+				}else if (solrResponseDto.getAdm1_name() != null) {
 					address.setState(solrResponseDto.getAdm1_name());
+				} else if (solrResponseDto.getAdm2_name() != null) {
+					address.setState(solrResponseDto.getAdm2_name());
 				} 
+				address.setAdm1Name(solrResponseDto.getAdm1_name());
+				address.setAdm2Name(solrResponseDto.getAdm2_name());
+				address.setAdm3Name(solrResponseDto.getAdm3_name());
+				address.setAdm4Name(solrResponseDto.getAdm4_name());
+				address.setAdm5Name(solrResponseDto.getAdm5_name());
 				if (solrResponseDto.getZipcodes() != null && solrResponseDto.getZipcodes().size() > 0) {
 					address.setZipCode(solrResponseDto.getZipcodes().iterator().next());
 				}
@@ -957,6 +973,8 @@ public class GeocodingService implements IGeocodingService {
 					logger.debug("=>place (" + solrResponseDto.getFeature_id()+") : "+solrResponseDto.getName() +" in "+solrResponseDto.getIs_in());
 				}
 				address.getGeocodingLevel();//force calculation of geocodingLevel
+				address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
+				address.setFormatedPostal(addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA));
 				addresses.add(address);
 
 			}
@@ -984,13 +1002,20 @@ public class GeocodingService implements IGeocodingService {
 			} else if (city.getIs_in_adm()!=null){
 				address.setState(city.getIs_in_adm());
 			}
+			address.setAdm1Name(city.getAdm1_name());
+			address.setAdm2Name(city.getAdm2_name());
+			address.setAdm3Name(city.getAdm3_name());
+			address.setAdm4Name(city.getAdm4_name());
+			address.setAdm5Name(city.getAdm5_name());
 			if (city.getZipcodes() != null && city.getZipcodes().size() > 0) {
-				address.setZipCode(city.getZipcodes().iterator().next());
+				address.setZipCode(labelGenerator.getBestZipString(city.getZipcodes()));
 			} else if (city.getIs_in_zip()!=null && city.getIs_in_zip().size()>=1){
-				address.setZipCode(city.getIs_in_zip().iterator().next());
+				address.setZipCode(labelGenerator.getBestZipString(city.getIs_in_zip()));
 			}
 			address.setCountryCode(city.getCountry_code());
 			address.setDependentLocality(city.getIs_in_place());
+			address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
+			address.setFormatedPostal(addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA));
 		}
 	}
 

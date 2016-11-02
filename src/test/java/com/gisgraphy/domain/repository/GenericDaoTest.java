@@ -38,7 +38,7 @@ public class GenericDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testCount() {
 	int nbToCreate = 10;
 	List<Adm> adms = GisgraphyTestHelper.createAdms("adm", "FR", "A1", "B2",
-		"C3", "D4", null, 4, nbToCreate);
+		"C3", "D4", null,null, 4, nbToCreate);
 	// set durty/clean featureid
 
 	// double set adm1 for adm1=>adm2s cascade

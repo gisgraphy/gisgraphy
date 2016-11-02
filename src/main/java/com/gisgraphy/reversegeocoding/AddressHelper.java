@@ -35,6 +35,7 @@ import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.countryInfo;
+import com.gisgraphy.importer.LabelGenerator;
 import com.vividsolutions.jts.geom.Point;
 
 
@@ -47,6 +48,8 @@ import com.vividsolutions.jts.geom.Point;
 public class AddressHelper {
 	
 	BasicAddressFormater formater = BasicAddressFormater.getInstance();
+	
+	LabelGenerator labelGenerator = LabelGenerator.getInstance();
 	
 	public  HouseNumberDistance getNearestHouse(SortedSet<HouseNumber> houses, Point location){
 		if (location==null || houses==null || houses.size()==0){
@@ -131,9 +134,8 @@ public class AddressHelper {
 			address.setCountryCode(openStreetMap.getCountryCode());
 		}
 		address.setGeocodingLevel(GeocodingLevels.STREET);//We set it and don't calculate it cause if streetname is null
-		//geocoding level will be street
 		
-		address.setFormatedFull(buildFullAddressString(address));
+		address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
 		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
 		return address;
 	}
@@ -180,53 +182,7 @@ public class AddressHelper {
 		return address;
 	}
 	
-	public String buildFullAddressString(Address address){
-		StringBuffer sb = new StringBuffer();
-		if (address.getHouseNumber()!=null){
-			sb.append(address.getHouseNumber()).append(", ");
-		}
-		if (address.getStreetName()!=null){
-			sb.append(address.getStreetName()).append(", ");
-		}
-		if (address.getCitySubdivision()!=null){
-			sb.append(address.getCitySubdivision()).append(", ");
-		}
-		if (address.getCity()!=null){
-			sb.append(address.getCity()).append(", ");
-		}
-		if (address.getAdm1Name()==null && address.getAdm2Name()==null && address.getAdm3Name()==null && address.getAdm4Name()==null && address.getAdm5Name()==null && address.getState()!=null ){
-			sb.append(address.getState()).append(", ");
-		} else {
-			if (address.getAdm5Name()!=null){
-				sb.append(address.getAdm5Name()).append(", ");
-			}
-			if (address.getAdm4Name()!=null){
-				sb.append(address.getAdm4Name()).append(", ");
-			}
-			if (address.getAdm3Name()!=null){
-				sb.append(address.getAdm3Name()).append(", ");
-			}
-			if (address.getAdm2Name()!=null){
-				sb.append(address.getAdm2Name()).append(", ");
-			}
-			if (address.getAdm1Name()!=null){
-				sb.append(address.getAdm1Name()).append(", ");
-			}
-		}
-		if (address.getZipCode() != null){
-			sb.append(address.getZipCode()).append(", ");
-		} 
-		if (address.getCountryCode()!=null){
-			String countryName = countryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase());
-			if (countryName!=null){
-				sb.append(countryName).append(", ");
-			}
-			sb.append(address.getCountryCode().toUpperCase());
-		}
-		String str =  sb.toString();
-		//System.out.println(str);
-		return str;
-	}
+
 
 	public Address buildAddressFromCityAndPoint(City city,Point point) {
 		if (city==null || point == null){
@@ -279,7 +235,8 @@ public class AddressHelper {
 		address.setGeocodingLevel(GeocodingLevels.CITY);//We set it and don't calculate it cause if streetname is null
 		//geocoding level will be street
 		
-		address.setFormatedFull(buildFullAddressString(address));
+		address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
+		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
 		return address;
 	}
 

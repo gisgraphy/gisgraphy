@@ -27,6 +27,7 @@ import static com.gisgraphy.fulltext.Constants.ONLY_ADM_PLACETYPE;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -318,8 +319,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 	//isinadm
 	if(!isEmptyField(fields, 14, false)){
-		populateAdmNames(city,adminLevel,parseIsInAdm(fields[14]));
-		
+		List<AdmDTO> adms = parseIsInAdm(fields[14]);
+		populateAdmNames(city,adminLevel,adms);
+		if (city.getAdm()==null){
+			LinkAdm(city,adms);
+		}
 	} 
 	else if(!isEmptyField(fields, 13, false)){
 		if (city.getAdm()==null){
@@ -343,6 +347,30 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 
     }
     
+	
+
+	protected void LinkAdm(GisFeature city, List<AdmDTO> adms) {
+		if (adms!=null){
+			Collections.reverse(adms);
+			for (AdmDTO admDTO:adms){
+				if (admDTO.getAdmName()!=null){
+					SolrResponseDto solrResponseDto= getAdm(admDTO.getAdmName(),city.getCountryCode());
+					if (solrResponseDto!=null && solrResponseDto.getFeature_id()!=null){
+						Adm adm = admDao.getByFeatureId(solrResponseDto.getFeature_id());
+						if (adm != null){
+							city.setAdm(adm);
+							Collections.reverse(adms);
+							return;
+						}
+					}
+					
+				}
+			}
+		}
+		
+		
+	}
+
 	protected boolean isACitySubdivision(String placeType) {
 		if ("neighbourhood".equalsIgnoreCase(placeType)
 				|| "quarter".equalsIgnoreCase(placeType)

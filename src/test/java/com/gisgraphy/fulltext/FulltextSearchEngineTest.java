@@ -534,7 +534,7 @@ public class FulltextSearchEngineTest extends
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	Adm adm = GisgraphyTestHelper.createAdm("paris", "FR", "A1",
-			null, null, null, null, 1);
+			null, null, null, null,null, 1);
 	this.admDao.save(adm);
 	// commit changes
 	this.solRSynchroniser.commit();
@@ -602,7 +602,7 @@ public class FulltextSearchEngineTest extends
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	Adm adm = GisgraphyTestHelper.createAdm("paris", "FR", "A1",
-			null, null, null, null, 1);
+			null, null, null, null,null, 1);
 	this.admDao.save(adm);
 	// commit changes
 	this.solRSynchroniser.commit();
@@ -630,7 +630,7 @@ public class FulltextSearchEngineTest extends
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	Adm adm = GisgraphyTestHelper.createAdm("paris", "FR", "A1",
-			null, null, null, null, 1);
+			null, null, null, null,null, 1);
 	this.admDao.save(adm);
 	// commit changes
 	this.solRSynchroniser.commit();
@@ -658,7 +658,7 @@ public class FulltextSearchEngineTest extends
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	Adm adm = GisgraphyTestHelper.createAdm("paris", "FR", "A1",
-			null, null, null, null, 1);
+			null, null, null, null, null,1);
 	this.admDao.save(adm);
 	// commit changes
 	this.solRSynchroniser.commit();

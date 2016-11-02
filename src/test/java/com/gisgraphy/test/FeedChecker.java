@@ -169,6 +169,7 @@ public class FeedChecker {
 	    Assert.assertEquals(gisFeatureDistance.getAdm2Name(), jsTester.eval("evalresult.result[0]['adm2Name']"));
 	    Assert.assertEquals(gisFeatureDistance.getAdm3Name(), jsTester.eval("evalresult.result[0]['adm3Name']"));
 	    Assert.assertEquals(gisFeatureDistance.getAdm4Name(), jsTester.eval("evalresult.result[0]['adm4Name']"));
+	    Assert.assertEquals(gisFeatureDistance.getAdm5Name(), jsTester.eval("evalresult.result[0]['adm5Name']"));
 	    Assert.assertEquals(gisFeatureDistance.getFeatureClass(), jsTester.eval("evalresult.result[0]['featureClass']"));
 	    Assert.assertEquals(gisFeatureDistance.getFeatureCode(), jsTester.eval("evalresult.result[0]['featureCode']"));
 	    Assert.assertEquals(gisFeatureDistance.getCountryCode(), jsTester.eval("evalresult.result[0]['countryCode']"));
@@ -205,7 +206,7 @@ public class FeedChecker {
 		+ "/adm1Code[.='" + result.getAdm1Code() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm2Code[.='" + result.getAdm2Code() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm3Code[.='"
 		+ result.getAdm3Code() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm4Code[.='" + result.getAdm4Code() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm1Name[.='"
 		+ result.getAdm1Name() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm2Name[.='" + result.getAdm2Name() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm3Name[.='"
-		+ result.getAdm3Name() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm4Name[.='" + result.getAdm4Name() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/asciiName[.='"
+		+ result.getAdm3Name() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm4Name[.='" + result.getAdm4Name() + "']",parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/adm5Name[.='" + result.getAdm5Name() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/asciiName[.='"
 		+ result.getAsciiName() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/countryCode[.='" + result.getCountryCode() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/elevation[.='"
 		+ result.getElevation() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/featureClass[.='" + result.getFeatureClass() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/featureCode[.='"
 		+ result.getFeatureCode() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/placeType[.='" + result.getPlaceType() + "']", parentXpath + "/" + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME + "/featureId[.='"
