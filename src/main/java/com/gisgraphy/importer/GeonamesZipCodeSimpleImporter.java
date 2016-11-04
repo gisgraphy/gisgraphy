@@ -122,6 +122,9 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 
 	if (!isEmptyField(fields, 1, true)) {
 	    code = fields[1];
+	    if (ImporterHelper.isUnwantedZipCode(code)){
+	    	return;
+	    }
 	}
 
 	//check required field

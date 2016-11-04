@@ -45,6 +45,19 @@ public class ImporterHelperTest {
 		Assert.assertEquals(-1, ImporterHelper.getHttpFileSize("http://www.gisgraphy.com/FileThatNotExists"));
 		Assert.assertEquals(-1, ImporterHelper.getHttpFileSize("http://download.geonames.org/export/zip/notexist.zip"));
 	}
+	
+	
+	@Test
+	public void isUnwantedZipCode(){
+		Assert.assertTrue(ImporterHelper.isUnwantedZipCode("75004 CEDEX"));
+		Assert.assertTrue(ImporterHelper.isUnwantedZipCode("75004 cedex"));
+		Assert.assertTrue(ImporterHelper.isUnwantedZipCode(" "));
+		Assert.assertTrue(ImporterHelper.isUnwantedZipCode(null));
+		
+		Assert.assertFalse(ImporterHelper.isUnwantedZipCode("75009"));
+		
+	}
+	
 
 	@Test
 	public void virtualizeADMDshouldChangeADMDTOADMXAccordingToTheAdmcodes() {

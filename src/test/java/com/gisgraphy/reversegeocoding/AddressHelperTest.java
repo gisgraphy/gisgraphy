@@ -15,6 +15,7 @@ import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.importer.LabelGenerator;
 import com.gisgraphy.test.GisgraphyTestHelper;
@@ -98,7 +99,14 @@ public class AddressHelperTest {
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
 		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
 		
-		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 	}
 	
@@ -116,6 +124,15 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
 		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
+		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
@@ -158,6 +175,15 @@ public class AddressHelperTest {
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
 		Assert.assertTrue(address.getFormatedFull().contains(number));
 		Assert.assertTrue(address.getFormatedPostal().contains(number));
+		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 	}
 	

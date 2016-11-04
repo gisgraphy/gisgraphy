@@ -242,7 +242,7 @@ public class BasicAddressFormater {
 		lines.add(joinAndSkipNulls(" ",address.getName(),address.getRecipientName()).trim());
 	}
 	
-	String[] substrings = getFormatString(scriptType, regionCode).split("\\*");
+	String[] substrings = getFormatString(scriptType, regionCode, address).split("\\*");
 	for (String substr : substrings) {
 		StringBuilder currentLine = new StringBuilder();
 		for (char c : substr.toCharArray()) {
@@ -278,7 +278,7 @@ public class BasicAddressFormater {
 				part = joinAndSkipNulls(" ",address.getPreDirection(), nameAndType, address.getPostDirection());
 			}
 			else if (c == '3'){
-				part = joinAndSkipNulls(" ",address.getCitySubdivision(), address.getDependentLocality(),address.getDependentLocality(), address.getQuarter(),address.getDistrict());
+				part = joinAndSkipNulls(" ",address.getCitySubdivision(), address.getDependentLocality(), address.getQuarter(),address.getDistrict());
 			}
 			else if (c == '4'){
 				//not managed yet
@@ -304,7 +304,7 @@ public class BasicAddressFormater {
 				//for future use
 			}
 			else if (c == '9'){
-				part = joinAndSkipNulls(" ",address.getPOBox(),address.getPOBoxInfo(),address.getPOBoxAgency());
+				part = joinAndSkipNulls(" ",address.getPOBox(),address.getPOBoxInfo(),address.getPOBoxAgency(),address.getPostOfficeBox());
 			}
 			else {
 				part=c+"";
@@ -433,8 +433,16 @@ public class BasicAddressFormater {
 		return str;
 	    }
    
-    private String getFormatString(ScriptType scriptType, String countrycode) {
+    protected String getFormatString(ScriptType scriptType, String countrycode, Address address) {
+    	
 	AddressFormatInfo formatInfo = formatMap.get(countrycode);
+	if (address !=null && formatInfo!=null && formatInfo.isPoBoxOnly() && address.getPOBox()==null && address.getPOBoxInfo()==null && address.getPostOfficeBox()==null){
+		 formatInfo = formatMap.get("ZZ");
+		    if (formatInfo==null){
+		    	throw new RuntimeException("no default pattern found");
+		    }
+		    return formatInfo.getFormatString();
+	}
 	if (formatInfo == null) {
 	    formatInfo = formatMap.get("ZZ");
 	    if (formatInfo==null){

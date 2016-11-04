@@ -901,6 +901,14 @@
 				add a country detector
 			</action>
 			
+			<action dev="David Masclet" type="add">
+				don't import zip with cedex
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				reverse geocoding service and street service returns more informations on street (number of lanes, speed limit, surface, if the street is toll or not, the azimuth for the beginning of the street and for the end)
+			</action>
+			
 			</release>
 			
 	</body>

@@ -164,6 +164,26 @@ public class AddressFormaterTest {
     }
     
     @Test
+    public void testPoboxShouldFallBackOnDefaultPatternIfThereIsNoPOBoxInfo(){
+    	Address address= new Address();
+    	Assert.assertEquals(formater.getCountryInfo("ZZ").getFormatString(), formater.getFormatString(ScriptType.LTR, "AG", address));
+    	Assert.assertEquals(formater.getCountryInfo("ZZ").getFormatString(), formater.getFormatString(ScriptType.RTL, "AG", address));
+    	
+    }
+    
+    @Test
+    public void testPobox(){
+    	Address address= new Address();
+    	address.setPOBox("pOBox");
+    	address.setPOBoxAgency("POBoxAgency");
+    	//address.setPOBoxInfo("boxInfo");
+    	address.setPostOfficeBox("postOfficeBox");
+    	Assert.assertEquals(formater.getCountryInfo("AG").getFormatString(), formater.getFormatString(ScriptType.LTR, "AG", address));
+    	Assert.assertEquals(formater.getCountryInfo("AG").getFormatString(), formater.getFormatString(ScriptType.RTL, "AG", address));
+    	
+    }
+    
+    @Test
     public void testState_statelevel() {
 	Address address = new Address();
 	address.setStreetName("california");

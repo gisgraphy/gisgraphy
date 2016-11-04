@@ -177,6 +177,32 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.verify(fullTextSearchEngine);
     }
     
+    @Test
+    public void importerShouldNotImportUnwantedZipsAsCEDEX(){
+    	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
+    		@Override
+    		protected GisFeature addAndSaveZipCodeToFeature(String code,
+    				Long featureId) {
+    			Assert.fail("unwanted zip should not be saved");
+    			return super.addAndSaveZipCodeToFeature(code, featureId);
+    		}
+    		
+    		
+    		@Override
+    		protected GisFeature addNewEntityAndZip(String[] fields) {
+    			Assert.fail("unwanted zip should not be saved");
+    			return super.addNewEntityAndZip(fields);
+    		}
+    	};
+    	importer.processData("AD\t75021 CEDEX 01\tCanillo\t\t\t\t\t\t\t42.5833\t1.6667\t6");
+    	//with space
+    	importer.processData("AD\t 75021 CEDEX 01\tCanillo\t\t\t\t\t\t\t42.5833\t1.6667\t6");
+    	//case insensitive
+    	importer.processData("AD\t75021 CedEx 01\tCanillo\t\t\t\t\t\t\t42.5833\t1.6667\t6");
+    	
+    }
+   
+    
    
     
     final StringBuffer count = new StringBuffer();

@@ -38,6 +38,28 @@ public class LabelGenerator {
 	public static LabelGenerator getInstance() {
 		return instance;
 	}
+	
+	public String generateLabel(OpenStreetMap street) {
+		if (street!=null & street.getName()!=null){
+			if (street.getIsIn()!=null){
+				return street.getName()+", "+street.getIsIn();
+			} else {
+				return street.getName();
+			}
+		}
+		return null;
+	}
+	
+	public String generateLabel(GisFeature feature) {
+		if (feature!=null & feature.getName()!=null){
+			if (feature.getIsIn()!=null){
+				return feature.getName()+", "+feature.getIsIn();
+			} else {
+				return feature.getName();
+			}
+		}
+		return null;
+	}
 
 	public Set<String> generateLabels(OpenStreetMap street) {
 		Set<String> labels = new HashSet<String>();
@@ -57,6 +79,8 @@ public class LabelGenerator {
 		}
 		if (street.getIsIn() != null) {
 			altcities.add(street.getIsIn());
+		} else if (street.getIsInPlace()!=null){
+			altcities.add(street.getIsInPlace());
 		}
 
 		if (altnames.size() > 0) {
@@ -64,15 +88,17 @@ public class LabelGenerator {
 			if (altcities.size() > 0) {
 				for (String city : altcities) {
 					// cross all data
+					if (city !=null){
 					for (AlternateOsmName name : altnames) {
 						if (name.getName() != null && !name.getName().startsWith("http") && !city.startsWith("http")) {
 							labels.add(name.getName() + ", " + city);
 						}
 					}
+					}
 				}
 			} else {
 				// no cities alt names =>label = street alternatenames
-				for (AlternateOsmName name : street.getAlternateNames()) {
+				for (AlternateOsmName name : altnames) {
 					if (name.getName() != null && !name.getName().startsWith("http")) {
 						labels.add(name.getName());
 					}
@@ -144,8 +170,8 @@ public class LabelGenerator {
 					}
 				}
 			} else {
-				// no cities alt names =>label = street alternatenames
-				for (AlternateName name : poi.getAlternateNames()) {
+				// no cities alt names =>label = alternatenames
+				for (AlternateName name : altnames) {
 					if (name.getName() != null && !name.getName().startsWith("http")) {
 						labels.add(name.getName());
 					}
@@ -169,6 +195,16 @@ public class LabelGenerator {
 			completeCityName.append(gisFeature.getName());
 		}
 		String lastname = "";
+		String isInPlace = gisFeature.getIsInPlace();
+		if (isInPlace != null && !isInPlace.trim().equals("")) {
+			completeCityName.append(", " + isInPlace);
+			lastname = isInPlace;
+		}
+		String isIn = gisFeature.getIsIn();
+		if (isIn != null && !isIn.trim().equals("")) {
+			completeCityName.append(", " + isIn);
+			lastname = isIn;
+		}
 		String adm5Name = gisFeature.getAdm5Name();
 		if (adm5Name != null && !adm5Name.trim().equals("")) {
 			completeCityName.append(", " + adm5Name);
@@ -231,6 +267,15 @@ public class LabelGenerator {
 		if (address.getStreetName()!=null){
 			sb.append(address.getStreetName()).append(", ");
 		}
+		if (address.getDependentLocality()!=null){
+			sb.append(address.getDependentLocality()).append(", ");
+		}
+		if (address.getDistrict()!=null){
+			sb.append(address.getDistrict()).append(", ");
+		}
+		if (address.getQuarter()!=null){
+			sb.append(address.getQuarter()).append(", ");
+		}
 		if (address.getCitySubdivision()!=null){
 			sb.append(address.getCitySubdivision()).append(", ");
 		}
@@ -267,9 +312,12 @@ public class LabelGenerator {
 		if (address.getCountryCode()!=null){
 			String countryName = countryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase());
 			if (countryName!=null){
-				sb.append(countryName).append(", ");
+				sb.append(countryName);
+				//.append(", ");
+			} else {
+				return sb.substring(0, sb.length()-2);
 			}
-			sb.append(address.getCountryCode().toUpperCase());
+			//sb.append(address.getCountryCode().toUpperCase());
 		}
 		String str =  sb.toString();
 		//System.out.println(str);

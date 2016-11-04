@@ -125,6 +125,9 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 	
 	assertTrue("The toll is not correct ", openStreetMap.isToll());
 	
+	assertEquals("The azimuth is not correct ",100, openStreetMap.getAzimuthStart().intValue());
+	assertEquals("The azimuth is not correct ",150, openStreetMap.getAzimuthEnd().intValue());
+	
 	//check alternate names when there is 2
 	Assert.assertEquals(2, openStreetMap.getAlternateNames().size());
 	Assert.assertTrue(alternateNamesContains(openStreetMap.getAlternateNames(),"Rue de Bachlettenstrasse","FR"));
@@ -158,6 +161,22 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	}
     	Assert.fail("alternateNames doesn't contain "+name);
     	return false;
+    }
+    
+    @Test
+    public void testParseAzimuth(){
+    	OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
+    	Assert.assertNull(importer.parseAzimuth(null));
+    	Assert.assertNull(importer.parseAzimuth(""));
+    	Assert.assertNull(importer.parseAzimuth("-400"));
+    	Assert.assertNull(importer.parseAzimuth("toto"));
+    	Assert.assertNull(importer.parseAzimuth("400"));
+    	
+    	Assert.assertEquals(0,importer.parseAzimuth("0").intValue());
+    	Assert.assertEquals(100,importer.parseAzimuth("100").intValue());
+    	Assert.assertEquals(360,importer.parseAzimuth("360").intValue());
+    	
+    	Assert.assertEquals(200,importer.parseAzimuth("200.58").intValue());
     }
     
     @Test
@@ -242,6 +261,21 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(null, street.getMaxSpeed());
     	Assert.assertEquals(null, street.getMaxSpeedBackward());
     	Assert.assertEquals(null, street.getSpeedMode());
+    	
+    	//no_digit_back
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "Mp/h______toto");
+    	Assert.assertEquals("we don't populate if there is no digit",null, street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(null, street.getSpeedMode());
+    	
+    	//no_digit_speed
+    	street = new OpenStreetMap();
+    	importer.PopulateMaxSpeed(street, "___toto___tata");
+    	Assert.assertEquals("we keep the last value if there is no forward",null, street.getMaxSpeed());
+    	Assert.assertEquals(null, street.getMaxSpeedBackward());
+    	Assert.assertEquals(null, street.getSpeedMode());
+    	
     	
     }
    
@@ -393,7 +427,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     
     @Test
     public void testProcessLineWithBadShapeShouldNotTryToSaveLine(){
-	String line = "11\tBachlettenstrasse\t010100000006C82291A0521E4054CC39B16BC64740\t0.00142246604529\tFR\ta city\t59000\t\tresidential\ttrue\tBADSHAPE\t70___20___30\t4\tyes\tasphalt\tname:fr===Rue de Bachlettenstrasse___name:de===Bachletten strasse";
+	String line = "11\tBachlettenstrasse\t010100000006C82291A0521E4054CC39B16BC64740\t0.00142246604529\tFR\ta city\t59000\t\tresidential\ttrue\tBADSHAPE\t70___20___30\t4\tyes\tasphalt\t100\t200name:fr===Rue de Bachlettenstrasse___name:de===Bachletten strasse";
 	OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 	IOpenStreetMapDao dao = EasyMock.createMock(IOpenStreetMapDao.class);
 	//now we simulate the fact that the dao should not be called

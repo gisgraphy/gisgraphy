@@ -123,6 +123,34 @@ public class AddressHelper {
 		if (openStreetMap.getAdm5Name()!=null){
 			address.setAdm5Name(openStreetMap.getAdm5Name());
 		}
+		
+		if (openStreetMap.isToll()!=null){
+			address.setToll(openStreetMap.isToll());
+		}
+		if (openStreetMap.getLanes()!=null){
+			address.setLanes(openStreetMap.getLanes());
+		}
+		if (openStreetMap.getSurface()!=null){
+			address.setSurface(openStreetMap.getSurface());
+		}
+		
+		if (openStreetMap.getMaxSpeed()!=null){
+			address.setMaxSpeed(openStreetMap.getMaxSpeed());
+		}
+		if (openStreetMap.getMaxSpeedBackward()!=null){
+			address.setMaxSpeedBackward(openStreetMap.getMaxSpeedBackward());
+		}
+		if (openStreetMap.getSpeedMode()!=null){
+			address.setSpeedMode(openStreetMap.getSpeedMode().toString());
+		}
+		if (openStreetMap.getAzimuthStart()!=null){
+			address.setAzimuthStart(openStreetMap.getAzimuthStart());
+		}
+		if (openStreetMap.getAzimuthEnd()!=null){
+			address.setAzimuthEnd(openStreetMap.getAzimuthEnd());
+		}
+		
+		
 		if (openStreetMap.getIsInZip()!=null && openStreetMap.getIsInZip().size() >=1){  
 			address.setZipCode(openStreetMap.getIsInZip().iterator().next());
 		}

@@ -477,6 +477,7 @@ public class GeocodingServiceTest {
 	
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
 	EasyMock.expect(cityResult.getIs_in_zip()).andStubReturn(null);
+	EasyMock.expect(cityResult.getIs_in_place()).andStubReturn("is_in_place");
 	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
 	EasyMock.expect(cityResult.getFeature_id()).andStubReturn(123L);
 	EasyMock.replay(cityResult);
@@ -1282,6 +1283,17 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
+	Assert.assertNotNull(address.getAdm1Name());
+	Assert.assertEquals("adm1Name is not correct", street.getAdm1_name(), address.getAdm1Name());
+	Assert.assertNotNull(address.getAdm2Name());
+	Assert.assertEquals("adm2Name is not correct", street.getAdm2_name(), address.getAdm2Name());
+	Assert.assertNotNull(address.getAdm3Name());
+	Assert.assertEquals("adm3Name is not correct", street.getAdm3_name(), address.getAdm3Name());
+	Assert.assertNotNull(address.getAdm4Name());
+	Assert.assertEquals("adm4Name is not correct", street.getAdm4_name(), address.getAdm4Name());
+	Assert.assertNotNull(address.getAdm5Name());
+	Assert.assertEquals("adm5Name is not correct", street.getAdm5_name(), address.getAdm5Name());
+	
     }
     
     @Test
@@ -1316,6 +1328,17 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
+	Assert.assertNotNull(address.getAdm1Name());
+	Assert.assertEquals("adm1Name is not correct", street.getAdm1_name(), address.getAdm1Name());
+	Assert.assertNotNull(address.getAdm2Name());
+	Assert.assertEquals("adm2Name is not correct", street.getAdm2_name(), address.getAdm2Name());
+	Assert.assertNotNull(address.getAdm3Name());
+	Assert.assertEquals("adm3Name is not correct", street.getAdm3_name(), address.getAdm3Name());
+	Assert.assertNotNull(address.getAdm4Name());
+	Assert.assertEquals("adm4Name is not correct", street.getAdm4_name(), address.getAdm4Name());
+	Assert.assertNotNull(address.getAdm5Name());
+	Assert.assertEquals("adm5Name is not correct", street.getAdm5_name(), address.getAdm5Name());
+	
     }
     
     @Test
@@ -1338,6 +1361,8 @@ public class GeocodingServiceTest {
 	Address address2 = addressResultsDto.getResult().get(1);
 	Assert.assertEquals("id is not correct for address 1", street.getFeature_id(), address1.getId());
 	Assert.assertEquals("id is not correct for address 2", city.getFeature_id(), address2.getId());
+	
+	
     }
     
     @Test

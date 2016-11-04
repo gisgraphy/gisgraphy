@@ -59,6 +59,8 @@ public class LabelGeneratorTest {
 			Assert.assertTrue(labels.contains("altname2, city1"));
 			Assert.assertTrue(labels.contains("altname2, city2"));
 			
+			
+			
 			//noname
 			street = new OpenStreetMap();
 			street.addAlternateNames(altnames);
@@ -155,6 +157,17 @@ public class LabelGeneratorTest {
 			street.addIsInCitiesAlternateNames(cities);
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(0, labels.size());
+			
+			//if is_in is null, we should use is_in_place
+			street = new OpenStreetMap();
+			street.setName("name");
+			street.setIsIn(null);
+			street.setIsInPlace("isInPlace");
+			street.addAlternateNames(altnames);
+			street.addIsInCitiesAlternateNames(cities);
+			labels = generator.generateLabels(street);
+			Assert.assertEquals(9, labels.size());
+			Assert.assertTrue(labels.contains("name, isInPlace"));
 		
 	}
 	
@@ -607,6 +620,8 @@ public class LabelGeneratorTest {
 	    private GisFeature createGisFeatureMock() {
 		GisFeature gisFeature = EasyMock.createMock(GisFeature.class);
 		EasyMock.expect(gisFeature.getAdm1Name()).andReturn("adm1name").times(1);
+		EasyMock.expect(gisFeature.getIsInPlace()).andReturn("IsInPlace").times(1);
+		EasyMock.expect(gisFeature.getIsIn()).andReturn("IsIn").times(1);
 		EasyMock.expect(gisFeature.getAdm2Name()).andReturn("adm2name").times(1);
 		EasyMock.expect(gisFeature.getAdm3Name()).andReturn("adm3name").times(1);
 		EasyMock.expect(gisFeature.getAdm4Name()).andReturn("adm4name").times(1);
@@ -674,7 +689,7 @@ public class LabelGeneratorTest {
 			address.setAdm5Name("adm5");
 			address.setCountryCode("FR");
 			String actual = generator.getFullyQualifiedName(address);
-			Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, adm5, adm4, adm3, adm2, adm1, France, FR", actual);
+			Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, adm5, adm4, adm3, adm2, adm1, France", actual);
 
 			//with only state fill
 			address.setAdm1Name(null);
@@ -684,7 +699,7 @@ public class LabelGeneratorTest {
 			address.setAdm5Name(null);
 			address.setState("state");
 			actual = generator.getFullyQualifiedName(address);
-			Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, state, France, FR", actual);
+			Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, state, France", actual);
 
 			//without any state info
 			address.setAdm1Name(null);
@@ -694,7 +709,7 @@ public class LabelGeneratorTest {
 			address.setAdm5Name(null);
 			address.setState(null);
 			actual = generator.getFullyQualifiedName(address);
-			Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, France, FR", actual);
+			Assert.assertEquals("3, foo bar street, 3e arrondissement, paris, France", actual);
 
 			//without any state info and city subdivision
 			address.setAdm1Name(null);
@@ -705,7 +720,7 @@ public class LabelGeneratorTest {
 			address.setState(null);
 			address.setCitySubdivision(null);
 			actual = generator.getFullyQualifiedName(address);
-			Assert.assertEquals("3, foo bar street, paris, France, FR", actual);
+			Assert.assertEquals("3, foo bar street, paris, France", actual);
 			//withunknow country
 			address.setAdm1Name(null);
 			address.setAdm2Name(null);
@@ -717,7 +732,7 @@ public class LabelGeneratorTest {
 
 			address.setCitySubdivision(null);
 			actual = generator.getFullyQualifiedName(address);
-			Assert.assertEquals("3, foo bar street, paris, XX", actual);
+			Assert.assertEquals("3, foo bar street, paris", actual);
 			
 			//with one state and some admin name
 			address.setAdm1Name(null);
@@ -728,7 +743,7 @@ public class LabelGeneratorTest {
 			address.setCountryCode("FR");
 			address.setState("state");
 			actual = generator.getFullyQualifiedName(address);
-			Assert.assertEquals("3, foo bar street, paris, adm4, adm2, France, FR", actual);
+			Assert.assertEquals("3, foo bar street, paris, adm4, adm2, France", actual);
 			
 			//with duplicate adm name
 			address.setAdm1Name(null);
@@ -739,7 +754,21 @@ public class LabelGeneratorTest {
 			address.setCountryCode("FR");
 			address.setState("state");
 			actual = generator.getFullyQualifiedName(address);
-			Assert.assertEquals("3, foo bar street, paris, adm2, France, FR", actual);
+			Assert.assertEquals("3, foo bar street, paris, adm2, France", actual);
+			
+			//test city subdivisions
+			address.setDependentLocality("dependentLocality");
+			address.setDistrict("district");
+			address.setQuarter("quarter");
+			address.setAdm1Name(null);
+			address.setAdm2Name("adm2");
+			address.setAdm3Name(null);
+			address.setAdm4Name("adm2");
+			address.setAdm5Name(null);
+			address.setCountryCode("FR");
+			address.setState("state");
+			actual = generator.getFullyQualifiedName(address);
+			Assert.assertEquals("3, foo bar street, dependentLocality, district, quarter, paris, adm2, France", actual);
 
 		}
 

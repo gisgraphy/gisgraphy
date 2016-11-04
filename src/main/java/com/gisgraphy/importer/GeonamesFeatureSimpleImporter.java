@@ -90,6 +90,8 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     @Autowired
     protected IMunicipalityDetector municipalityDetector;
     
+    LabelGenerator labelGenerator = LabelGenerator.getInstance();
+    
 
     /**
      * Default constructor
@@ -340,6 +342,9 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	setAdmCodesWithLinkedAdmOnes(adm, gisFeature, importerConfig
 		.isSyncAdmCodesWithLinkedAdmOnes());
 	setAdmNames(adm, gisFeature);
+	
+	gisFeature.setAlternateLabels(labelGenerator.generateLabels(gisFeature));
+	gisFeature.setLabel(labelGenerator.generateLabel(gisFeature));
 
 	if (featureCode_ != null) {
 	   if (gisFeature instanceof City){

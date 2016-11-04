@@ -75,6 +75,7 @@ import com.gisgraphy.domain.valueobject.Constants;
 import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.GisFeatureDistance;
 import com.gisgraphy.domain.valueobject.GisFeatureDistanceFactory;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.domain.valueobject.StreetDistance;
 import com.gisgraphy.domain.valueobject.StreetDistance.StreetDistanceBuilder;
 import com.gisgraphy.domain.valueobject.StreetSearchResultsDto;
@@ -553,6 +554,7 @@ public class GisgraphyTestHelper {
 			adm2Code, adm3Code, adm4Code, null,null, 4);
 	Adm adm5 = GisgraphyTestHelper.createAdm(adm3Name, "FR", adm1Code,
 			adm2Code, adm3Code, adm4Code, adm5Code,null, 5);
+	gisFeature.setAdmName(1, "preferedAdm1Name");
 
 	Country france = GisgraphyTestHelper.createCountryForFrance();
 
@@ -703,6 +705,14 @@ public class GisgraphyTestHelper {
 	streetOSM.setIsInZip(zips);
 	streetOSM.setFullyQualifiedName("fullyqulified address LA");
 	streetOSM.setCountryCode("XX");
+	streetOSM.setToll(true);
+	streetOSM.setSurface("surface");
+	streetOSM.setLanes(2);
+	streetOSM.setSpeedMode(SpeedMode.OSM);
+	streetOSM.setAzimuthStart(100);
+	streetOSM.setAzimuthEnd(200);
+	streetOSM.setMaxSpeedBackward("50 km/h");
+	streetOSM.setMaxSpeed("70 km/h");
 	return StringHelper.updateOpenStreetMapEntityForIndexation(streetOSM);
 
     }

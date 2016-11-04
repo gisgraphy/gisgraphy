@@ -91,8 +91,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     		+ "(\\d+)(?:___|$)?";    
     public static final Pattern ISINADM_EXTRACTION_PATTERN = Pattern.compile(ISINADM_EXTRACTION_REGEXP);
     
-    public static final String UNWANTED_ZIPCODE_REGEXP = ".*(CEDEX).*";
-    public static final Pattern UNWANTED_ZIPCODE_PATTERN = Pattern.compile(UNWANTED_ZIPCODE_REGEXP,Pattern.CASE_INSENSITIVE);
+   
 
 	protected IIdGenerator idGenerator;
     
@@ -332,6 +331,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			if (solrResponseDto!=null){
 				Adm adm = admDao.getByFeatureId(solrResponseDto.getFeature_id());
 				if (adm!=null){
+					city.setAdm(adm);
 					populateAdmNamesFromAdm(city, adm);
 				}
 			}
@@ -383,12 +383,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		return false;
 	}
 	
-	protected boolean isUnwantedZipCode(String zipcode){
-		if (zipcode == null || "".equals(zipcode.trim()) || UNWANTED_ZIPCODE_PATTERN.matcher(zipcode).matches()){
-			return true ; 
-		}
-		return false;
-	}
+	
 
 	/**
      * @param fields
@@ -410,7 +405,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	protected void populateZip(String zipAsString, GisFeature city) {
 			String[] zips = zipAsString.split(";|\\||,");
 			for (int i = 0;i<zips.length;i++){
-				if (!isUnwantedZipCode(zips[i])){
+				if (!ImporterHelper.isUnwantedZipCode(zips[i])){
 					city.addZipCode(new ZipCode(zips[i]));
 				}
 			}
@@ -546,14 +541,18 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		String lastName="";
 		int gisLevel = 1;
 		for (int admlevel=1;admlevel <=5;admlevel++){
+			if (adm !=null){
 			String nameToSet = adm.getAdmName(admlevel);
 			if (!lastName.equalsIgnoreCase(nameToSet) ){
 				//only if adm level < or not set
 				gisFeature.setAdmName(gisLevel++,nameToSet );
-				lastName = nameToSet;
+				if (nameToSet!=null){
+					lastName = nameToSet;
+				}
+			}
 			}
 		}
-
+		
 		return gisFeature;
 		
 	}

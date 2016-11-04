@@ -658,6 +658,7 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 	Long featureId = 1001L;
 	City paris = geolocTestHelper
 		.createAndSaveCityWithFullAdmTreeAndCountry(featureId);
+	
 	// commit changes
 	this.solRSynchroniser.commit();
 	//buildIndex
@@ -722,7 +723,7 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 		"//*[@name='" + FullTextFields.ADM1CODE.getValue()
 			+ "'][.='A1']",
 		"//*[@name='" + FullTextFields.ADM1NAME.getValue()
-			+ "'][.='admGrandGrandParent']",
+			+ "'][.='preferedAdm1Name']",//we prefer adm name if set in the admXfields of the feature
 		"//*[@name='" + FullTextFields.ADM1NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
 			+ "'][./str[1]='admGGPalternate']",

@@ -383,11 +383,11 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			    		ex.setField(FullTextFields.HOUSE_NUMBERS.getValue(),houseNumbersToAdd );
 		    	}
 				populateAlternateNamesForStreet(gisFeature.getAlternateNames(),ex);
-				    ex.setField(FullTextFields.ADM1NAME.getValue(), gisFeature.getAdm1Name());
-				    ex.setField(FullTextFields.ADM2NAME.getValue(), gisFeature.getAdm2Name());
-				    ex.setField(FullTextFields.ADM3NAME.getValue(), gisFeature.getAdm3Name());
-				    ex.setField(FullTextFields.ADM4NAME.getValue(), gisFeature.getAdm4Name());
-				    ex.setField(FullTextFields.ADM5NAME.getValue(), gisFeature.getAdm5Name());
+				ex.setField(FullTextFields.ADM1NAME.getValue(), gisFeature.getAdm1Name());
+				ex.setField(FullTextFields.ADM2NAME.getValue(), gisFeature.getAdm2Name());
+				ex.setField(FullTextFields.ADM3NAME.getValue(), gisFeature.getAdm3Name());
+				ex.setField(FullTextFields.ADM4NAME.getValue(), gisFeature.getAdm4Name());
+				ex.setField(FullTextFields.ADM5NAME.getValue(), gisFeature.getAdm5Name());
 		    } else {
 			
 			ex.setField(FullTextFields.FEATURECLASS.getValue(), gisFeature
@@ -442,7 +442,13 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 				int level = adm.getLevel();
 				String admLevelName = FullTextFields
 						.valueOf("ADM" + level + "NAME").getValue();
-				ex.setField(admLevelName, EncodingHelper.toUTF8(adm.getName()));
+				String admName = gisFeature.getAdmName(level);
+				//we prefer the specified one
+				if (admName !=null){
+					ex.setField(admLevelName, EncodingHelper.toUTF8(admName));
+				} else {
+					ex.setField(admLevelName, EncodingHelper.toUTF8(adm.getName()));
+				}
 				if (level == 1 || level == 2) {
 					populateAlternateNames(admLevelName, adm.getAlternateNames(),
 							ex);

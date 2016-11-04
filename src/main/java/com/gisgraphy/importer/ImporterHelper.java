@@ -95,6 +95,9 @@ public class ImporterHelper {
     
     public static final String SPLITED_ALLCOUNTRIES_FILE_ACCEPT_REGEX_STRING = "(allCountries)(.)[0-9]+(.txt)";
     
+    public static final String UNWANTED_ZIPCODE_REGEXP = ".*(CEDEX).*";
+    public static final Pattern UNWANTED_ZIPCODE_PATTERN = Pattern.compile(UNWANTED_ZIPCODE_REGEXP,Pattern.CASE_INSENSITIVE);
+    
     public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
     		+ "(?:[_]{0,3})"//not the underscore (optionaly)
     		+ "[,]?(?:(?!(?:(?:name|(?:___)))).)*" //something not name or ___ =>alt for instance
@@ -491,7 +494,6 @@ public class ImporterHelper {
     private static final void copyInputStream(InputStream in, OutputStream out) throws IOException {
 	byte[] buffer = new byte[1024];
 	int len;
-
 	while ((len = in.read(buffer)) >= 0) {
 	    out.write(buffer, 0, len);
 	}
@@ -705,6 +707,15 @@ public class ImporterHelper {
 		}
 		return street;
 		
+	}
+	
+	
+	
+	public static boolean isUnwantedZipCode(String zipcode){
+		if (zipcode == null || "".equals(zipcode.trim()) || UNWANTED_ZIPCODE_PATTERN.matcher(zipcode).matches()){
+			return true ; 
+		}
+		return false;
 	}
 
 }

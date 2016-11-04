@@ -56,6 +56,7 @@ import com.gisgraphy.geoloc.GeolocSearchEngine;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.street.StreetType;
+import com.gisgraphy.util.StringUtil;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
@@ -71,6 +72,8 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     public static final int DISTANCE = 40000;
     
     BasicAddressFormater formater = BasicAddressFormater.getInstance();
+    
+    LabelGenerator labelGenerator = LabelGenerator.getInstance();
 
 	@Autowired
     protected IIdGenerator idGenerator;
@@ -149,7 +152,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	// new table has the following fields :
 	// --------------------------------------------------- 
 	//0: id; 	1: name;	2: location; 	3: length ;	4: countrycode; 	5 : is_in; 	6: postcode; 	7: is_in_adm;
-	//	8: type;	9: oneway;10: shape;  11: max_speed;	12: lanes; 	13: toll; 	14: surface; 15: alternatenames; 
+	//	8: type;	9: oneway;10: shape;  11: max_speed;	12: lanes; 	13: toll; 	14: surface; 15 azimuth start ; 16 azimut end; 17: alternatenames; 
 	//
 	checkNumberOfColumn(fields);
 	OpenStreetMap street = new OpenStreetMap();
@@ -283,9 +286,21 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 
 	
 	
-	if (fields.length == 16 && !isEmptyField(fields, 15, false)){
-		populateAlternateNames(street,fields[15]);
+	
+	
+	if (!isEmptyField(fields, 15, false)){
+		street.setAzimuthStart(parseAzimuth(fields[15]));
 	}
+	
+	if (!isEmptyField(fields, 16, false)){
+		street.setAzimuthEnd(parseAzimuth(fields[16]));
+	}
+	if (fields.length == 18 && !isEmptyField(fields, 17, false)){
+		populateAlternateNames(street,fields[17]);
+	}
+	
+	street.setAlternateLabels(labelGenerator.generateLabels(street));
+	street.setLabel(labelGenerator.generateLabel(street));
 		
 	try {
 		openStreetMapDao.save(street);
@@ -296,6 +311,24 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	}
 
     }
+
+	protected Integer parseAzimuth(String azimutStr) {
+		if (azimutStr==null){
+			return null;
+		}
+		Float azimuth = null;
+		try {
+			azimuth = Float.parseFloat(azimutStr);
+			if (azimuth == null || azimuth.intValue()<0 || azimuth >360){
+				return null;
+			}
+			return azimuth.intValue();
+			
+		} catch (NumberFormatException e) {
+			logger.warn("can not parse azimuth "+azimutStr +" : "+e);
+			return null;
+		}
+	}
     
     protected void PopulateMaxSpeed(OpenStreetMap street, String string) {
 		if (string!=null && string.trim()!=""){
@@ -303,21 +336,21 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 			String trimField= "";
 			if (fields.length>=1){
 				 trimField = fields[0].trim();
-				if (!"".equals(trimField)){
+				if (!"".equals(trimField) && StringUtil.containsDigit(trimField)){
 					street.setMaxSpeed(trimField);
 					street.setSpeedMode(SpeedMode.OSM);
 				}
 			}
 			if (fields.length>=2){
 				trimField = fields[1].trim();
-				if (!"".equals(trimField)){
+				if (!"".equals(trimField)  && StringUtil.containsDigit(trimField)){
 					street.setMaxSpeedBackward(trimField);
 					street.setSpeedMode(SpeedMode.OSM);
 				}
 			}
 			if (fields.length==3){
 				trimField = fields[2].trim();
-				if (!"".equals(trimField) && street.getMaxSpeed()==null){
+				if (!"".equals(trimField) && street.getMaxSpeed()==null && StringUtil.containsDigit(trimField)){
 					street.setMaxSpeed(trimField);
 					street.setSpeedMode(SpeedMode.OSM);
 				}
@@ -633,7 +666,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
      */
     @Override
     protected void checkNumberOfColumn(String[] fields) {
-	if (fields.length != 16 && fields.length != 15) {
+	if (fields.length != 18 && fields.length != 17) {
 
 	    throw new WrongNumberOfFieldsException(
 		    "The number of fields is not correct. expected : "
