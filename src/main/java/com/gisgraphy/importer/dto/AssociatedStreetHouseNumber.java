@@ -26,6 +26,8 @@ package com.gisgraphy.importer.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.LineString;
+
 /**
  * Represents a house number with an associated street in the Karlsruhe schema.
  * 

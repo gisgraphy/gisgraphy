@@ -1237,6 +1237,7 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
     	street.setAdm4Name("adm4Name");
     	street.setAdm5Name("adm5Name");
     	street.setIsInZip(isInZip);
+    	street.setZipCode("bestzip");
     	street.setIsInPlace(isInPlace);
 		street.setFullyQualifiedName("fullyQualifiedName");
 		street.addHouseNumbers(houseNumbers);
@@ -1379,6 +1380,9 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			"//*[@name='" + FullTextFields.ALTERNATE_LABELS.getValue()
 			+ "'][./str[2]/.='"+labelIterator.next()+"']",
 			
+
+			"//*[@name='" + FullTextFields.ZIPCODE.getValue()
+			+ "'][.='"+street.getZipCode()+"']",
 			
 			"//*[@name='" + FullTextFields.IS_IN_ZIP.getValue()
 			+ "'][./str[1]/.='"+zipIterator.next()+"']",

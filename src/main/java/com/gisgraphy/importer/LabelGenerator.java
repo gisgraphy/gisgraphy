@@ -251,6 +251,74 @@ public class LabelGenerator {
 			return completeCityName.toString();
 		}
 	}
+	
+	
+	public String getFullyQualifiedName(OpenStreetMap osm,
+			boolean withCountry) {
+		StringBuilder completeCityName = new StringBuilder();
+		if (osm.getName()!=null){
+			completeCityName.append(osm.getName());
+		}
+		String lastname = "";
+		String isInPlace = osm.getIsInPlace();
+		if (isInPlace != null && !isInPlace.trim().equals("")) {
+			completeCityName.append(", " + isInPlace);
+			lastname = isInPlace;
+		}
+		String isIn = osm.getIsIn();
+		if (isIn != null && !isIn.trim().equals("")) {
+			completeCityName.append(", " + isIn);
+			lastname = isIn;
+		}
+		String adm5Name = osm.getAdm5Name();
+		if (adm5Name != null && !adm5Name.trim().equals("")) {
+			completeCityName.append(", " + adm5Name);
+			lastname = adm5Name;
+		}
+		String adm4Name = osm.getAdm4Name();
+		if (adm4Name != null && !adm4Name.trim().equals("") && !adm4Name.equalsIgnoreCase(lastname)) {
+			completeCityName.append(", " + adm4Name);
+			lastname = adm4Name;
+		}
+		String adm3Name = osm.getAdm3Name();
+		if (adm3Name != null && !adm3Name.trim().equals("") && !adm3Name.equalsIgnoreCase(lastname)) {
+			completeCityName.append(", " + adm3Name);
+			lastname = adm3Name;
+		}
+		String adm2Name = osm.getAdm2Name();
+		if (adm2Name != null && !adm2Name.trim().equals("")&& !adm2Name.equalsIgnoreCase(lastname)) {
+			completeCityName.append(", " + adm2Name);
+			lastname = adm2Name;
+		}
+		String adm1Name = osm.getAdm1Name();
+		if (adm1Name != null && !adm1Name.trim().equals("") && !adm1Name.equalsIgnoreCase(lastname)) {
+			completeCityName.append(", " + adm1Name);
+		}
+		String bestZip = null;
+		if (osm.getZipCode()!=null){
+			bestZip = osm.getZipCode();
+		}
+		else if (osm.getIsInZip()!=null ){
+			bestZip = getBestZipString(osm.getIsInZip());
+		}
+		if (bestZip != null){
+			completeCityName.append(", (");
+			completeCityName.append(bestZip);
+			completeCityName.append(")");
+		}
+
+		if (withCountry && osm.getCountryCode() != null) {
+			String country = getCountry(osm.getCountryCode());
+			if (country != null) {
+				completeCityName.append(" , " + country);
+			}
+		}
+		if (completeCityName.length()==0){
+			return null;
+		} else {
+			return completeCityName.toString();
+		}
+	}
 
 	/**
 	 * @return a name with the Administrative division (but without Country)

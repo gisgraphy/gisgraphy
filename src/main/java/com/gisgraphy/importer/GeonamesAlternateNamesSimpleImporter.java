@@ -200,11 +200,11 @@ public class GeonamesAlternateNamesSimpleImporter extends AbstractSimpleImporter
 
     }
 
-    private boolean isAnUnWantedLanguageField(String languageField) {
+    protected boolean isAnUnWantedLanguageField(String languageField) {
 	boolean unWanted = false;
 	// TODO v2 option : || languageField.equals("icao") ||
 	// languageField.equals("iata")
-	if (languageField.equals("fr-1793")) {
+	if (languageField.equalsIgnoreCase("fr-1793") || languageField.equalsIgnoreCase("link")) {
 	    unWanted = true;
 	}
 	return unWanted;

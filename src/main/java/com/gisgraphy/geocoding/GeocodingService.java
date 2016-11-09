@@ -560,8 +560,10 @@ public class GeocodingService implements IGeocodingService {
 					address.setAdm3Name(street.getAdm3_name());
 					address.setAdm4Name(street.getAdm4_name());
 					address.setAdm5Name(street.getAdm5_name());
-					if (street.getIs_in_zip()!=null && street.getIs_in_zip().size()>=1){
-						address.setZipCode(street.getIs_in_zip().iterator().next());
+					if (street.getZipcodes()!=null && street.getZipcodes().size()==1){
+						address.setZipCode(street.getZipcodes().iterator().next());
+					} else if (street.getIs_in_zip()!=null && street.getIs_in_zip().size()>=1){
+						address.setZipCode(labelGenerator.getBestZipString(street.getZipcodes()));
 					}
 					address.setDependentLocality(street.getIs_in_place());
 				} else if (city!=null){
@@ -851,8 +853,10 @@ public class GeocodingService implements IGeocodingService {
 				address.setAdm3Name(solrResponseDto.getAdm3_name());
 				address.setAdm4Name(solrResponseDto.getAdm4_name());
 				address.setAdm5Name(solrResponseDto.getAdm5_name());
-				if (solrResponseDto.getZipcodes() != null && solrResponseDto.getZipcodes().size() > 0) {
+				if (solrResponseDto.getZipcodes()!=null && solrResponseDto.getZipcodes().size()==1){
 					address.setZipCode(solrResponseDto.getZipcodes().iterator().next());
+				} else if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
+					address.setZipCode(labelGenerator.getBestZipString(solrResponseDto.getZipcodes()));
 				}
 				Integer houseNumberToFindAsInt;
 				if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){

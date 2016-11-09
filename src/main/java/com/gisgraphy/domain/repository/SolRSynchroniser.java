@@ -340,11 +340,11 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 	    	if (gisFeature.getIsInAdm()!=null && !gisFeature.getIsInAdm().trim().equals("")){
 	    	    ex.setField(FullTextFields.IS_IN_ADM.getValue(), gisFeature.getIsInAdm());
 	    	}
-	    	if (gisFeature.getIsInZip()!=null && gisFeature.getIsInZip().size()>0){
-	    	    ex.setField(FullTextFields.IS_IN_ZIP.getValue(), gisFeature.getIsInZip() );
-	    	}
 			if (gisFeature instanceof City){
 				ex.setField(FullTextFields.MUNICIPALITY.getValue(), ((City) gisFeature).isMunicipality());
+			}
+			if (gisFeature.getIsInZip()!=null && gisFeature.getIsInZip().size()>0){
+				ex.setField(FullTextFields.IS_IN_ZIP.getValue(), gisFeature.getIsInZip() );
 			}
 			if (gisFeature.getIsInCityAlternateNames()!=null && gisFeature.getIsInCityAlternateNames().size()>0){
 				ex.setField(FullTextFields.IS_IN_CITIES.getValue(), gisFeature.getIsInCityAlternateNames() );
@@ -388,6 +388,7 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 				ex.setField(FullTextFields.ADM3NAME.getValue(), gisFeature.getAdm3Name());
 				ex.setField(FullTextFields.ADM4NAME.getValue(), gisFeature.getAdm4Name());
 				ex.setField(FullTextFields.ADM5NAME.getValue(), gisFeature.getAdm5Name());
+				ex.setField(FullTextFields.ZIPCODE.getValue(),((Street) gisFeature).getZipCode());
 		    } else {
 			
 			ex.setField(FullTextFields.FEATURECLASS.getValue(), gisFeature
@@ -455,6 +456,7 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 				}
 				adm = adm.getParent();
 			}
+			
 			Set<ZipCode> zipCodes =gisFeature.getZipCodes();
 			if (zipCodes != null) {
 				List<String> zipCodesToAdd = new ArrayList<String>();

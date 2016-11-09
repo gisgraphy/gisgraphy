@@ -83,7 +83,7 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
     public void testAllfulltextfieldsShouldBeMapped(){
     	//there is some fields present in fulltextfields but stored=false,some Fulltextfields are suffix, distance is calculated in solrdto
     	//but not in ftf and the score is not mapped.. the difference beetween FulltextFields and dto is 2
-    	int numFieldDifference = 2;
+    	int numFieldDifference = 3;
     	FullTextFields[] fulltextfields = 	FullTextFields.class.getEnumConstants();
     	Field[] dtoFields = SolrResponseDto.class.getDeclaredFields();
     	List<String> dtoFieldsName = new ArrayList<String>();

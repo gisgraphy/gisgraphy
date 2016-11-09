@@ -72,14 +72,14 @@ public class IntrospectionHelperTest  {
 	assertTrue(fields.contains("timezone"));
 	assertTrue(fields.contains("amenity"));
 	assertTrue(fields.contains("openstreetmapId"));
-	assertEquals(31, fields.size());
+	assertEquals(32, fields.size());
     }
 
     @Test
     public void getGisFeatureFieldsAsListShouldExploreSubClass() {
 	List<String> fields = IntrospectionHelper
 		.getFieldsAsList(City.class);
-	assertEquals(31, fields.size());
+	assertEquals(32, fields.size());
 	assertTrue(fields.contains("id"));
 	assertTrue(fields.contains("featureId"));
 	assertTrue(fields.contains("name"));
@@ -109,21 +109,21 @@ public class IntrospectionHelperTest  {
     public void getGisFeatureFieldsAsArrayShouldIgnoreAnnotedFields() {
 	String[] fields = IntrospectionHelper
 		.getFieldsAsArray(GisFeature.class);
-	assertEquals(31, fields.length);
+	assertEquals(32, fields.length);
     }
     
     @Test
     public void getGisFeatureFieldsAsArrayShouldIgnoreFinalFields() {
 	String[] fields = IntrospectionHelper
 		.getFieldsAsArray(FakeBean.class);
-	assertEquals(32, fields.length);
+	assertEquals(33, fields.length);
     }
 
     @Test
     public void getGisFeatureFieldsAsArrayShouldExploreSubClass() {
 	String[] fields = IntrospectionHelper
 		.getFieldsAsArray(City.class);
-	assertEquals(31, fields.length);//TODO do with a subclass
+	assertEquals(32, fields.length);//TODO do with a subclass
     }
 
     @Test
@@ -132,18 +132,18 @@ public class IntrospectionHelperTest  {
 		.getFieldsAsArray(GisFeature.class);
 	fields = IntrospectionHelper
 		.getFieldsAsArray(GisFeature.class);
-	assertEquals(31, fields.length);
+	assertEquals(32, fields.length);
 	}
 
     @Test
     public void clearCache() {
 	String[] fields = IntrospectionHelper
 		.getFieldsAsArray(GisFeature.class);
-	assertEquals(31, fields.length);
+	assertEquals(32, fields.length);
 	IntrospectionHelper.clearCache();
 	fields = IntrospectionHelper
 		.getFieldsAsArray(GisFeature.class);
-	assertEquals(31, fields.length);
+	assertEquals(32, fields.length);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class IntrospectionHelperTest  {
 		.getFieldsAsList(GisFeature.class);
 	fields = IntrospectionHelper
 		.getFieldsAsList(GisFeature.class);
-	assertEquals(31, fields.size());
+	assertEquals(32, fields.size());
     }
     
     

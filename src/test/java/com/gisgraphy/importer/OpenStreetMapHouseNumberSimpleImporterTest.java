@@ -35,22 +35,22 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 	@Test
 	public void parseAssociatedStreetHouseNumber() {
 		String line = "A	" +
-				"2069647	1661205474___0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540___24___Avenue de Fontvieille___N___house___" +
-				"158189815___0101000020E61000002AA4070C99A81D40227F492749DD4540___Avenue de Fontvieille___Avenue de Fontvieille___W___street___" +
-				"176577460___0101000020E61000004522EE9504A81D4081BAA66957DD4540___Avenue de Fontvieille___Avenue de Fontvieille___W___street";
+				"2069647	1661205474___0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540___24___housename1___Avenue de Fontvieille___city___zip___suburb___0102000020E6100000070000002CB583B641206340D4F36E2C28723BC0F07F91E142206340187FDB1324723BC0E4E8E04F43206340EBE74D452A723BC0A638FD8F42206340311812E62C723BC0F6FA496B42206340EB9F96D52A723BC070E01F004220634061E4654D2C723BC02CB583B641206340D4F36E2C28723BC0___N___house___" +
+				"8035911___0101000020E61000002CDEB7197720634062A071EC8A753BC0______Kelvin Grove Road___Kelvin Grove Road___city___zip___suburb______W___street___" +
+				"178308979___0101000020E610000084BCC39277206340114C7F40B1753BC0______Kelvin Grove Road___Kelvin Grove Road_______________W___street";
 		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter();
 			AssociatedStreetHouseNumber actual = importer.parseAssociatedStreetHouseNumber(line);
 			//TODO wrong number of fields, null
 			Assert.assertEquals("2069647", actual.getRelationID());
 			Assert.assertNotNull(actual.getAssociatedStreetMember());
 			Assert.assertEquals(3,actual.getAssociatedStreetMember().size());
-			AssociatedStreetMember m1 = new AssociatedStreetMember("1661205474", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540"),"24","Avenue de Fontvieille","N","house");
-			AssociatedStreetMember m2 = new AssociatedStreetMember("158189815", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000002AA4070C99A81D40227F492749DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street");
-			AssociatedStreetMember m3 = new AssociatedStreetMember("176577460", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000004522EE9504A81D4081BAA66957DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street");
+			AssociatedStreetMember m1 = new AssociatedStreetMember("1661205474", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540"),"24","Avenue de Fontvieille","N","house","housename1","city","zip","suburb", GeolocHelper.convertFromHEXEWKBToGeometry("0102000020E6100000070000002CB583B641206340D4F36E2C28723BC0F07F91E142206340187FDB1324723BC0E4E8E04F43206340EBE74D452A723BC0A638FD8F42206340311812E62C723BC0F6FA496B42206340EB9F96D52A723BC070E01F004220634061E4654D2C723BC02CB583B641206340D4F36E2C28723BC0"));
+			AssociatedStreetMember m2 = new AssociatedStreetMember("8035911", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000002CDEB7197720634062A071EC8A753BC0"),null,"Kelvin Grove Road","W","street","Kelvin Grove Road","city","zip","suburb", null);
+			AssociatedStreetMember m3 = new AssociatedStreetMember("178308979", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000084BCC39277206340114C7F40B1753BC0"),null,"Kelvin Grove Road","W","street","Kelvin Grove Road",null,null,null, null);
 			
-			Assert.assertTrue(actual.getAssociatedStreetMember().contains(m1));
-			Assert.assertTrue(actual.getAssociatedStreetMember().contains(m2));
-			Assert.assertTrue(actual.getAssociatedStreetMember().contains(m3));
+			Assert.assertEquals(actual.getAssociatedStreetMember().get(0),m1);
+			Assert.assertEquals(actual.getAssociatedStreetMember().get(1),m2);
+			Assert.assertEquals(actual.getAssociatedStreetMember().get(2),m3);
 	}
 	
 	@Test
@@ -74,19 +74,22 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 	@Test
 	public void parseAssociatedStreetHouseNumberUnderscoreInName() {
 		String line = "A	" +
-				"2069647	1661205474___0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540___24___Ave_nue de Fontvieille___N___house___" +
-				"176577460___0101000020E61000004522EE9504A81D4081BAA66957DD4540___Avenue de Fontvieil_le___Avenue_ de Fontvieille___W___street";
+				"2069647	1661205474___0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540___24___housename1___Avenue de Fontvieille___city___zip___suburb___0102000020E6100000070000002CB583B641206340D4F36E2C28723BC0F07F91E142206340187FDB1324723BC0E4E8E04F43206340EBE74D452A723BC0A638FD8F42206340311812E62C723BC0F6FA496B42206340EB9F96D52A723BC070E01F004220634061E4654D2C723BC02CB583B641206340D4F36E2C28723BC0___N___house___" +
+				"8035911___0101000020E61000002CDEB7197720634062A071EC8A753BC0______Kelvin_Grove Road___Kelvin Grove_Road___ci_ty___z_ip___s_uburb______W___street___" +
+				"178308979___0101000020E610000084BCC39277206340114C7F40B1753BC0______Kelvin_Grove Road___Kelvin Grove_Road_______________W___street";
 		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter();
 			AssociatedStreetHouseNumber actual = importer.parseAssociatedStreetHouseNumber(line);
 			//TODO wrong number of fields, null
 			Assert.assertEquals("2069647", actual.getRelationID());
 			Assert.assertNotNull(actual.getAssociatedStreetMember());
-			Assert.assertEquals(2,actual.getAssociatedStreetMember().size());
-			AssociatedStreetMember m1 = new AssociatedStreetMember("1661205474", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540"),"24","Ave_nue de Fontvieille","N","house");
-			AssociatedStreetMember m2 = new AssociatedStreetMember("176577460", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000004522EE9504A81D4081BAA66957DD4540"),"Avenue de Fontvieil_le","Avenue_ de Fontvieille","W","street");
+			Assert.assertEquals(3,actual.getAssociatedStreetMember().size());
+			AssociatedStreetMember m1 = new AssociatedStreetMember("1661205474", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540"),"24","Avenue de Fontvieille","N","house","housename1","city","zip","suburb", GeolocHelper.convertFromHEXEWKBToGeometry("0102000020E6100000070000002CB583B641206340D4F36E2C28723BC0F07F91E142206340187FDB1324723BC0E4E8E04F43206340EBE74D452A723BC0A638FD8F42206340311812E62C723BC0F6FA496B42206340EB9F96D52A723BC070E01F004220634061E4654D2C723BC02CB583B641206340D4F36E2C28723BC0"));
+			AssociatedStreetMember m2 = new AssociatedStreetMember("8035911", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000002CDEB7197720634062A071EC8A753BC0"),null,"Kelvin Grove_Road","W","street","Kelvin_Grove Road","ci_ty","z_ip","s_uburb", null);
+			AssociatedStreetMember m3 = new AssociatedStreetMember("178308979", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000084BCC39277206340114C7F40B1753BC0"),null,"Kelvin Grove_Road","W","street","Kelvin_Grove Road",null,null,null, null);
 			
-			Assert.assertTrue(actual.getAssociatedStreetMember().contains(m1));
-			Assert.assertTrue(actual.getAssociatedStreetMember().contains(m2));
+			Assert.assertEquals(actual.getAssociatedStreetMember().get(0),m1);
+			Assert.assertEquals(actual.getAssociatedStreetMember().get(1),m2);
+			Assert.assertEquals(actual.getAssociatedStreetMember().get(2),m3);
 	}
 	
 	
@@ -216,19 +219,19 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 	@Test
 	public void parseNodeHouseNumber(){
-		String line = "N	247464344	0101000020E610000044BC1A457B304DC018737C597F4B41C0	405	Museo Ferroviario	Avenida Del Libertador";
+		String line = "N	247464344	0101000020E610000044BC1A457B304DC018737C597F4B41C0	405	Museo Ferroviario	Avenida Del Libertador	city	zip	suburb	";
 		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter();
 		NodeHouseNumber actual = importer.parseNodeHouseNumber(line);
-		NodeHouseNumber expected = new NodeHouseNumber("247464344",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador") ;
+		NodeHouseNumber expected = new NodeHouseNumber("247464344",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador","city","zip","suburb",null) ;
 		Assert.assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void parseNodeHouseNumber_W(){
-		String line = "W	247464344	0101000020E610000044BC1A457B304DC018737C597F4B41C0	405	Museo Ferroviario	Avenida Del Libertador";
+		String line = "W	247464344	0101000020E610000044BC1A457B304DC018737C597F4B41C0	405	Museo Ferroviario	Avenida Del Libertador	city	zip	suburb	0102000020E61000000700000048066FFE15216340CA79B5920C813BC04E0B5EF4152163403510CB660E813BC0348D81D0152163404D24873E0E813BC0AEE584BF1521634081A1A24511813BC0D1590B581721634020C1430713813BC036AC4E731721634082AD122C0E813BC048066FFE15216340CA79B5920C813BC0";
 		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter();
 		NodeHouseNumber actual = importer.parseNodeHouseNumber(line);
-		NodeHouseNumber expected = new NodeHouseNumber("247464344",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador") ;
+		NodeHouseNumber expected = new NodeHouseNumber("247464344",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador","city","zip","suburb",null) ;
 		Assert.assertEquals(expected, actual);
 	}
 	
@@ -506,7 +509,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		final Point point = (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540");
 		final AssociatedStreetHouseNumber associatedStreetHouseNumber = new AssociatedStreetHouseNumber();
-		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", point,"24","Avenue de Fontvieille","N","house");
+		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", point,"24","Avenue de Fontvieille","N","house","housename1","city","zip","suburb", GeolocHelper.createLineString("LINESTRING (0 0, 10 10, 20 30)"));
 		associatedStreetHouseNumber.addMember(number);
 		
 		findNearestStreetCalled=false;
@@ -557,7 +560,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		final Point point = (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540");
 		final AssociatedStreetHouseNumber associatedStreetHouseNumber = new AssociatedStreetHouseNumber();
-		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", point,"24","Avenue de Fontvieille","N","house");
+		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", point,"24","Avenue de Fontvieille","N","house","housename1","city","zip","suburb", GeolocHelper.createLineString("LINESTRING (0 0, 10 10, 20 30)"));
 		associatedStreetHouseNumber.addMember(number);
 		
 		findNearestStreetCalled=false;
@@ -601,8 +604,8 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		
 		final AssociatedStreetHouseNumber associatedStreetHouseNumber = new AssociatedStreetHouseNumber();
-		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540"),"24","Avenue de Fontvieille","N","house");
-		final AssociatedStreetMember street = new AssociatedStreetMember("158189815", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000002AA4070C99A81D40227F492749DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street");
+		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540"),"24","Avenue de Fontvieille","N","house","housename1","city","zip","suburb", GeolocHelper.createLineString("LINESTRING (0 0, 10 10, 20 20)"));
+		final AssociatedStreetMember street = new AssociatedStreetMember("158189815", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000002AA4070C99A81D40227F492749DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street","housename2","city","zip","suburb", GeolocHelper.createLineString("LINESTRING (0 0, 10 10, 20 30)"));
 		associatedStreetHouseNumber.addMember(number);
 		associatedStreetHouseNumber.addMember(street);
 		
@@ -652,9 +655,9 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		
 		Point point = (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540");
-		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", point,"24","Avenue de Fontvieille","N","house");
-		final AssociatedStreetMember street = new AssociatedStreetMember("158189815", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000002AA4070C99A81D40227F492749DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street");
-		AssociatedStreetMember street2 = new AssociatedStreetMember("176577460", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000004522EE9504A81D4081BAA66957DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street");
+		final AssociatedStreetMember number = new AssociatedStreetMember("1661205474", point,"24","Avenue de Fontvieille","N","house","housename1","city","zip","suburb", GeolocHelper.createLineString("LINESTRING (0 0, 10 10, 20 30)"));
+		final AssociatedStreetMember street = new AssociatedStreetMember("158189815", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000002AA4070C99A81D40227F492749DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street","housename2","city","zip","suburb", GeolocHelper.createLineString("LINESTRING (0 0, 10 10, 20 30)"));
+		AssociatedStreetMember street2 = new AssociatedStreetMember("176577460", (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E61000004522EE9504A81D4081BAA66957DD4540"),"Avenue de Fontvieille","Avenue de Fontvieille","W","street","housename3","city","zip","suburb", GeolocHelper.createLineString("LINESTRING (0 0, 10 10, 20 30)"));
 		associatedStreetHouseNumber.addMember(number);
 		associatedStreetHouseNumber.addMember(street);
 		associatedStreetHouseNumber.addMember(street2);
@@ -685,12 +688,99 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		Assert.assertTrue(buildHouseNumberFromAssociatedHouseNumberCalled);
 	}
 	
+	@Test
+	public void processNodeHouseNumber_populateOsmFields(){
+		Long openstreetmapId =247464344L;
+		final NodeHouseNumber house = new NodeHouseNumber(openstreetmapId+"",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador","city","zip","suburb",null) ;
+		house.setHouseNumber("12345");
+		house.setName("name");
+		house.setStreetName("streetName");
+		final Point point = GeolocHelper.createPoint(2F, 1F);
+		house.setLocation(point);
+		house.setCity("city");
+		house.setSuburb("suburb");
+		house.setZipCode("zipCode");
+		
+		HouseNumber houseNumber = new HouseNumber();
+		houseNumber.setNumber(house.getHouseNumber());
+		houseNumber.setName(house.getName());
+		houseNumber.setType(HouseNumberType.NODE);
+		Point location = house.getLocation();
+		houseNumber.setLocation(location);
+		houseNumber.setOpenstreetmapId(openstreetmapId);
+		
+		final OpenStreetMap osm = new OpenStreetMap();
+		osm.setCityConfident(false);
+		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter(){
+		
+			@Override
+			protected OpenStreetMap findNearestStreet(String streetName,
+					Point location) {
+					return osm;
+			}
+			@Override
+			protected void saveOsm(OpenStreetMap osm) {
+				Assert.assertEquals("isInPlace should be filled",house.getSuburb(), osm.getIsInPlace());
+				Assert.assertEquals("isIn  should be filled if it is not city confident",house.getCity(), osm.getIsIn());
+				Assert.assertTrue("zip should be filled",osm.getIsInZip().contains(house.getZipCode()));
+				super.saveOsm(osm);
+			}
+			
+		};
+		importer.processNodeHouseNumber(house);
+		
+		
+	}
+	
+	
+	@Test
+	public void processNodeHouseNumber_populateOsmFields_cityconfident(){
+		Long openstreetmapId =247464344L;
+		final NodeHouseNumber house = new NodeHouseNumber(openstreetmapId+"",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador","city","zip","suburb",null) ;
+		house.setHouseNumber("12345");
+		house.setName("name");
+		house.setStreetName("streetName");
+		final Point point = GeolocHelper.createPoint(2F, 1F);
+		house.setLocation(point);
+		house.setCity("city");
+		house.setSuburb("suburb");
+		house.setZipCode("zipCode");
+		
+		HouseNumber houseNumber = new HouseNumber();
+		houseNumber.setNumber(house.getHouseNumber());
+		houseNumber.setName(house.getName());
+		houseNumber.setType(HouseNumberType.NODE);
+		Point location = house.getLocation();
+		houseNumber.setLocation(location);
+		houseNumber.setOpenstreetmapId(openstreetmapId);
+		
+		final OpenStreetMap osm = new OpenStreetMap();
+		osm.setIsIn("isIn");
+		osm.setCityConfident(true);
+		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter(){
+		
+			@Override
+			protected OpenStreetMap findNearestStreet(String streetName,
+					Point location) {
+					return osm;
+			}
+			@Override
+			protected void saveOsm(OpenStreetMap osm) {
+				Assert.assertEquals("isIn should not be filled if it is city confident","isIn", osm.getIsIn());
+				super.saveOsm(osm);
+			}
+			
+		};
+		importer.processNodeHouseNumber(house);
+		
+		
+	}
 	
 
 	@Test
 	public void processNodeHouseNumber(){
 		Long openstreetmapId =247464344L;
-		NodeHouseNumber house = new NodeHouseNumber(openstreetmapId+"",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador") ;
+		NodeHouseNumber house = new NodeHouseNumber(openstreetmapId+"",(Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E610000044BC1A457B304DC018737C597F4B41C0"),"405","Museo Ferroviario","Avenida Del Libertador","city","zip","suburb",null) ;
 		house.setHouseNumber("12345");
 		house.setName("name");
 		house.setStreetName("streetName");
@@ -701,7 +791,6 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		houseNumber.setNumber(house.getHouseNumber());
 		houseNumber.setName(house.getName());
 		houseNumber.setType(HouseNumberType.NODE);
-		String streetName = house.getStreetName();
 		Point location = house.getLocation();
 		houseNumber.setLocation(location);
 		houseNumber.setOpenstreetmapId(openstreetmapId);
@@ -709,6 +798,9 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		final OpenStreetMap osm = EasyMock.createMock(OpenStreetMap.class);
 		EasyMock.expect(osm.getOpenstreetmapId()).andStubReturn(openstreetmapId);
+		EasyMock.expect(osm.getIsInZip()).andStubReturn(null);
+		EasyMock.expect(osm.isCityConfident()).andStubReturn(true);
+		osm.setIsInPlace(house.getSuburb());
 		osm.addHouseNumber(houseNumber);
 		EasyMock.replay(osm);
 		

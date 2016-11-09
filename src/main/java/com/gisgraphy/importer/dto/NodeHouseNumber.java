@@ -23,6 +23,7 @@
 
 package com.gisgraphy.importer.dto;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -40,13 +41,17 @@ public class NodeHouseNumber {
 		super();
 	}
 
-	public NodeHouseNumber(String nodeId, Point location, String houseNumber, String name, String streetName) {
+	public NodeHouseNumber(String nodeId, Point location, String houseNumber, String name, String streetName,String city,String zipCode,String suburb,Geometry shape) {
 		super();
 		this.nodeId = nodeId;
 		this.location = location;
 		this.houseNumber = houseNumber;
 		this.name = name;
 		this.streetName = streetName;
+		this.city=city;
+		this.zipCode = zipCode;
+		this.suburb = suburb;
+		this.shape = shape;
 	}
 
 	/**
@@ -72,7 +77,68 @@ public class NodeHouseNumber {
 	 *  the name of the street associated to the way, not to the node
 	 */
 	private String streetName;
+	
+	private String city;
+	private String zipCode;
+	private String suburb;
+	private Geometry shape;
 
+
+	/**
+	 * @return the city
+	 */
+	public String getCity() {
+		return city;
+	}
+
+	/**
+	 * @param city the city to set
+	 */
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	/**
+	 * @return the zipCode
+	 */
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	/**
+	 * @param zipCode the zipCode to set
+	 */
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
+
+	/**
+	 * @return the suburb
+	 */
+	public String getSuburb() {
+		return suburb;
+	}
+
+	/**
+	 * @param suburb the suburb to set
+	 */
+	public void setSuburb(String suburb) {
+		this.suburb = suburb;
+	}
+
+	/**
+	 * @return the shape
+	 */
+	public Geometry getShape() {
+		return shape;
+	}
+
+	/**
+	 * @param shape the shape to set
+	 */
+	public void setShape(Geometry shape) {
+		this.shape = shape;
+	}
 
 	/**
 	 * @return the nodeId

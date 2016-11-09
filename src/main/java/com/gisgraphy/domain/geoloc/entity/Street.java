@@ -22,6 +22,9 @@
  *******************************************************************************/
 package com.gisgraphy.domain.geoloc.entity;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 
 import javax.persistence.Entity;
@@ -51,7 +54,6 @@ public class Street extends GisFeature {
     //there are not used to be stored in Datastore
     
     @IntrospectionIgnoredField
-    private String fullyQualifiedAddress;
     private SortedSet<HouseNumber> houseNumbers;
  
     private Integer lanes;
@@ -66,7 +68,14 @@ public class Street extends GisFeature {
     
     private SpeedMode speedMode;
     
-    /**
+    
+  
+    
+  
+    
+    
+  
+	/**
 	 * @return the speedMode
 	 */
 	public SpeedMode getSpeedMode() {
@@ -264,6 +273,9 @@ public class Street extends GisFeature {
 	public void setHouseNumbers(SortedSet<HouseNumber> houseNumbers) {
 		this.houseNumbers = houseNumbers;
 	}
+	
+	
+
 	
 	
 }

@@ -281,6 +281,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 		setIsInFields(street);
 	}
 	
+	
 	long generatedId= idGenerator.getNextGId();
 	street.setGid(new Long(generatedId));
 
@@ -301,6 +302,10 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	
 	street.setAlternateLabels(labelGenerator.generateLabels(street));
 	street.setLabel(labelGenerator.generateLabel(street));
+	street.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(street, false));
+	street.setLabelPostal(labelGenerator.generatePostal(street));
+	
+	
 		
 	try {
 		openStreetMapDao.save(street);
@@ -311,6 +316,14 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	}
 
     }
+
+	private void setBestZip(OpenStreetMap street) {
+		//we set the zipcode as the best one
+		if (street.getIsInZip()!=null && street.getIsInZip().size() >0 && street.getZipCode()==null){
+			street.setZipCode(labelGenerator.getBestZipString(street.getIsInZip()));
+		}
+		
+	}
 
 	protected Integer parseAzimuth(String azimutStr) {
 		if (azimutStr==null){
@@ -370,6 +383,9 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 		for (int i = 0;i<zips.length;i++){
 				osm.addZip(zips[i]);
 		}
+		if (osm.getIsInZip()!=null && osm.getIsInZip().size() >0){
+			osm.setZipCode(labelGenerator.getBestZipString(osm.getIsInZip()));
+		}
 	
 }
 
@@ -382,7 +398,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     			street.setCityId(cityByShape.getId());
     			street.setCityConfident(true);
     			street.setPopulation(cityByShape.getPopulation());
-    			if (cityByShape.getZipCodes() != null) {
+    			if (street.getZipCode()== null && cityByShape.getZipCodes() != null) {//only if the zipcode is not previously set with the value from CSV
     				for (ZipCode zip:cityByShape.getZipCodes()){
     					street.addZip(zip.getCode());
     				}
@@ -406,8 +422,10 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     				if (subdivision !=null){
     					street.setIsInPlace(subdivision.getName());
     				}
-    			return;
+    				setBestZip(street);
+    				return;
     		}
+    		//
     		City city = getNearestCity(street.getLocation(),street.getCountryCode(), true);
     		if (city != null) {
     			street.setPopulation(city.getPopulation());
@@ -416,7 +434,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     			if (street.getIsInAdm()==null){
 					street.setIsInAdm(getBestAdmName(city));
 				}
-    			if (city.getZipCodes() != null) {
+    			if (street.getZipCode()== null && city.getZipCodes() != null) {//only if the zipcode is not previously set with the value from CSV
     				for (ZipCode zip:city.getZipCodes()){
     					if (zip != null && zip.getCode()!=null){
     						street.addZip(zip.getCode());
@@ -436,13 +454,16 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     				}
     			}
     		}
+    		//
     		City city2 = getNearestCity(street.getLocation(),street.getCountryCode(), false);
     		if (city2 != null) {
     			if (city != null){
     					if (city.getFeatureId() == city2.getFeatureId()) {
+    						setBestZip(street);
     						return;
     					}
     					if (city2.getLocation()!=null && city.getLocation()!=null && GeolocHelper.distance(street.getLocation(),city2.getLocation())>GeolocHelper.distance(street.getLocation(),city.getLocation())){
+    						setBestZip(street);
     						return;
     					}
     			}
@@ -462,13 +483,17 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     				if (street.getIsInAdm()==null){
     					street.setIsInAdm(getBestAdmName(city2));
     				}
-    				if (city2.getZipCodes() != null ) {//we merge the zipcodes for is_in and is_in_place, so we don't check
+    				if (street.getZipCode()== null && city2.getZipCodes() != null ) {//we merge the zipcodes for is_in and is_in_place, so we don't check
+    					//only if the zipcode is not previously set with the value from CSV
     					//if zipcodes are already filled
     					for (ZipCode zip:city2.getZipCodes()){
     						if (zip!=null && zip.getCode()!=null){
     							street.addZip(zip.getCode());
     						}
         				}
+    					/*if (street.getIsInZip()!=null && street.getIsInZip().size() >0){
+        					street.setZipCode(labelGenerator.getBestZipString(street.getIsInZip()));
+        				}*/
     				}
     				if (city==null && city2!=null){//add AN only if there are not added yet
 	        			if (city2.getAlternateNames()!=null){
@@ -480,6 +505,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	        			}
     				}
     		}
+    		setBestZip(street);
     	}
     }
     

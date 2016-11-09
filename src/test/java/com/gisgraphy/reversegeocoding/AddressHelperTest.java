@@ -15,7 +15,6 @@ import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
-import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.importer.LabelGenerator;
 import com.gisgraphy.test.GisgraphyTestHelper;
@@ -79,6 +78,7 @@ public class AddressHelperTest {
 		osm.setAdm3Name("adm3Name");
 		osm.setAdm4Name("adm4Name");
 		osm.setAdm5Name("adm5Name");
+		osm.setZipCode("zipCodeSet");
 		osm.setCountryCode("US");
 		Address address = addressHelper.buildAddressFromOpenstreetMap(osm);
 		Assert.assertEquals(osm.getName(), address.getStreetName());
@@ -90,7 +90,7 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
 		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
 		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
-		Assert.assertEquals(osm.getIsInZip().iterator().next(), address.getZipCode());
+		Assert.assertEquals("When there is a zipcode, we take it","zipCodeSet", address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
@@ -108,6 +108,56 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
+		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
+		Assert.assertEquals(osm.getStreetType().toString(), address.getStreetType());
+		Assert.assertEquals(osm.getLength(), address.getLength());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+	}
+	
+	@Test
+	public void buildAddressFromOpenstreetMap_severalZip(){
+		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		osm.setAdm1Name("adm1Name");
+		osm.setAdm2Name("adm2Name");
+		osm.setAdm3Name("adm3Name");
+		osm.setAdm4Name("adm4Name");
+		osm.setAdm5Name("adm5Name");
+		osm.setCountryCode("US");
+		Assert.assertTrue("the zipcodes should be filled for this set, please fix the dataset",osm.getIsInZip().size()>0);
+		Address address = addressHelper.buildAddressFromOpenstreetMap(osm);
+		Assert.assertEquals(osm.getName(), address.getStreetName());
+		Assert.assertEquals(osm.getIsIn(), address.getCity());
+		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
+		Assert.assertEquals(osm.getIsInAdm(), address.getState());
+		Assert.assertEquals(osm.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(osm.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals("When there is more than one zipcode, we take the best one",generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
+		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(osm.getLatitude(), address.getLat());
+		Assert.assertEquals(osm.getLongitude(), address.getLng());
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertNotNull(address.getFormatedPostal());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
+		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
+		Assert.assertEquals(osm.getStreetType().toString(), address.getStreetType());
+		Assert.assertEquals(osm.getLength(), address.getLength());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
 	}
 	
 	@Test
@@ -119,7 +169,7 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getIsIn(), address.getCity());
 		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
 		Assert.assertEquals(osm.getIsInAdm(), address.getState());
-		Assert.assertEquals(osm.getIsInZip().iterator().next(), address.getZipCode());
+		Assert.assertEquals(generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
@@ -159,7 +209,7 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getIsIn(), address.getCity());
 		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
 		Assert.assertEquals(osm.getIsInAdm(), address.getState());
-		Assert.assertEquals(osm.getIsInZip().iterator().next(), address.getZipCode());
+		Assert.assertEquals(generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(houseNumber.getLatitude(),address.getLat());
 		Assert.assertEquals(houseNumber.getLongitude(), address.getLng());

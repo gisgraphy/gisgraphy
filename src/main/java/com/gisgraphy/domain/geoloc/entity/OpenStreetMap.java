@@ -209,7 +209,11 @@ public class OpenStreetMap {
     
     private String labelPostal;
     
-    @IntrospectionIgnoredField
+    //the zipcode, it is the best choice between all isInZip
+    private String zipCode;
+    
+   
+	@IntrospectionIgnoredField
     private Set<String> alternateLabels;
     
     /**
@@ -927,6 +931,21 @@ public class OpenStreetMap {
 	public void setAdm5Name(String adm5Name) {
 		this.adm5Name = adm5Name;
 	}
+	
+	 	/**
+		 * @return the zipCode
+		 */
+		public String getZipCode() {
+			return zipCode;
+		}
+
+		/**
+		 * @param zipCode the zipCode to set
+		 */
+		public void setZipCode(String zipCode) {
+			this.zipCode = zipCode;
+		}
+
 
 	/**
 	 * @return the houseNumbers associated to that street

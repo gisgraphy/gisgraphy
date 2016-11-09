@@ -35,9 +35,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.PostOffice;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.ICityDao;
@@ -70,6 +72,10 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
     public static final Output MINIMUM_OUTPUT_STYLE = Output.withDefaultFormat().withStyle(OutputStyle.SHORT);
     
     private static final Pattern pattern = Pattern.compile("(\\w+)\\s\\d+.*",Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+    
+    BasicAddressFormater formater = BasicAddressFormater.getInstance();
+    
+    LabelGenerator labelGenerator = LabelGenerator.getInstance();
     
 
     @Autowired
@@ -244,6 +250,14 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 		}
 		return tags;
 	}
+	
+	private void setBestZip(GisFeature gisgeature) {
+		//we set the zipcode as the best one
+		if (gisgeature.getIsInZip()!=null && gisgeature.getIsInZip().size() >0 && gisgeature.getZipCode()==null){
+			gisgeature.setZipCode(labelGenerator.getBestZipString(gisgeature.getIsInZip()));
+		}
+		
+	}
 
 	
 	 protected void setIsInFields(GisFeature poi) {
@@ -252,6 +266,8 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 	    		City cityByShape = cityDao.getByShape(poi.getLocation(),poi.getCountryCode(),true);
 	    		if (cityByShape != null){
 	    			poi.setIsIn(cityByShape.getName());
+	    			poi.setCityId(cityByShape.getId());
+	    			poi.setCityConfident(true);
 	    			poi.setPopulation(cityByShape.getPopulation());
 	    			if (cityByShape.getZipCodes() != null) {
 	    				for (ZipCode zip:cityByShape.getZipCodes()){
@@ -268,6 +284,7 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 	    			if (cityByShape.getAdm()!=null){
 	    				poi.setIsInAdm(cityByShape.getAdm().getName());
 	    			}
+	    			setBestZip(poi);
 	    			return;
 	    		}
 	    		City city = getNearestCity(poi.getLocation(),poi.getCountryCode(), true);
@@ -297,9 +314,11 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 	    		if (city2 != null) {
 	    			if (city != null){
 	    					if (city.getFeatureId() == city2.getFeatureId()) {
+	    						setBestZip(poi);
 	    						return;
 	    					}
 	    					if (city2.getLocation()!=null && city.getLocation()!=null && GeolocHelper.distance(poi.getLocation(),city2.getLocation())>GeolocHelper.distance(poi.getLocation(),city.getLocation())){
+	    						setBestZip(poi);
 	    						return;
 	    					}
 	    			}
@@ -334,6 +353,7 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 		        			}
 	    				}
 	    		}
+	    		setBestZip(poi);
 	    	}
 	    }
 	 

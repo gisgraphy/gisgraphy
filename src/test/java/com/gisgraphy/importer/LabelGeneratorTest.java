@@ -630,6 +630,20 @@ public class LabelGeneratorTest {
 		
 		return gisFeature;
 	    }
+	   
+	    private OpenStreetMap createOsmMock() {
+			OpenStreetMap osm = EasyMock.createMock(OpenStreetMap.class);
+			EasyMock.expect(osm.getAdm1Name()).andReturn("adm1name").times(1);
+			EasyMock.expect(osm.getIsInPlace()).andReturn("IsInPlace").times(1);
+			EasyMock.expect(osm.getIsIn()).andReturn("IsIn").times(1);
+			EasyMock.expect(osm.getAdm2Name()).andReturn("adm2name").times(1);
+			EasyMock.expect(osm.getAdm3Name()).andReturn("adm3name").times(1);
+			EasyMock.expect(osm.getAdm4Name()).andReturn("adm4name").times(1);
+			EasyMock.expect(osm.getAdm5Name()).andReturn("adm5name").times(1);
+			EasyMock.expect(osm.getName()).andReturn("name").times(2);
+			
+			return osm;
+		    }
 
 	    @Test
 	    public void testGetFullyQualifiedNameGisFeature() {
@@ -639,6 +653,67 @@ public class LabelGeneratorTest {
 		System.out.println(fullyQualifiedName);
 		
 		EasyMock.verify(gisFeature);
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm3Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm4Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm5Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm2Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm1Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"^name"));
+		
+	    }
+	    
+	    @Test
+	    public void testGetFullyQualifiedNameOsm_oneZip() {
+		OpenStreetMap osm = createOsmMock();
+		EasyMock.expect(osm.getZipCode()).andStubReturn("zip");
+		EasyMock.replay(osm);
+		String fullyQualifiedName = generator.getFullyQualifiedName(osm, false);
+		System.out.println(fullyQualifiedName);
+		
+		EasyMock.verify(osm);
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm3Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm4Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm5Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm2Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm1Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"^name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"zip"));
+		
+	    }
+	    
+	    @Test
+	    public void testGetFullyQualifiedNameOsm_severalZip() {
+		OpenStreetMap osm = createOsmMock();
+		EasyMock.expect(osm.getZipCode()).andStubReturn(null);
+		Set<String> zips = new HashSet<String>();
+		zips.add("123");
+		zips.add("456");
+		EasyMock.expect(osm.getIsInZip()).andStubReturn(zips);
+		EasyMock.replay(osm);
+		String fullyQualifiedName = generator.getFullyQualifiedName(osm, false);
+		System.out.println(fullyQualifiedName);
+		
+		EasyMock.verify(osm);
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm3Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm4Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm5Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm2Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm1Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"^name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"123"));
+		
+	    }
+	    
+	    @Test
+	    public void testGetFullyQualifiedNameOsm_noZip() {
+		OpenStreetMap osm = createOsmMock();
+		EasyMock.expect(osm.getZipCode()).andStubReturn(null);
+		EasyMock.expect(osm.getIsInZip()).andStubReturn(null);
+		EasyMock.replay(osm);
+		String fullyQualifiedName = generator.getFullyQualifiedName(osm, false);
+		System.out.println(fullyQualifiedName);
+		
+		EasyMock.verify(osm);
 		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm3Name"));
 		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm4Name"));
 		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm5Name"));

@@ -33,6 +33,7 @@ import junit.framework.Assert;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
+import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
@@ -73,6 +74,19 @@ public class GeonamesFeatureImporterTest {
 	assertEquals(
 		"if zero elements are deleted(lake), it should not have an entry",
 		2, deleted.size());
+    }
+    
+    @Test
+    public void  splitAlternateNames() {
+    	String alternateNamesString = "foo,bar,http://wikipedia,bar2";
+    	GeonamesFeatureSimpleImporter featureImporter = new GeonamesFeatureSimpleImporter();
+		List<AlternateName> names =  featureImporter.splitAlternateNames(alternateNamesString,
+    			    new GisFeature());
+		Assert.assertEquals("names that starts with http should not be imported",3, names.size());
+		Assert.assertEquals("foo", names.get(0).getName());
+		Assert.assertEquals("bar", names.get(1).getName());
+		Assert.assertEquals("bar2", names.get(2).getName());
+    	
     }
     
     @Test

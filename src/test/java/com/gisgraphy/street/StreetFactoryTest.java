@@ -83,6 +83,7 @@ public class StreetFactoryTest {
 	
 	openStreetMap.setIsInPlace(isInPlace);
 	openStreetMap.setIsInZip(isInZip);
+	openStreetMap.setZipCode("zipCode");
 	openStreetMap.setFullyQualifiedName(fullyQualifiedName);
 	HouseNumber houseNumber = new HouseNumber();
 	houseNumber.setLocation(GeolocHelper.createPoint(10.3F, 9.6F));
@@ -134,6 +135,7 @@ public class StreetFactoryTest {
 	Assert.assertEquals("adm4Name", street.getAdm4Name());
 	Assert.assertEquals("adm5Name", street.getAdm5Name());
 	Assert.assertEquals(isInZip, street.getIsInZip());
+	Assert.assertEquals(openStreetMap.getZipCode(), street.getZipCode());
 	
 	
 	Assert.assertEquals("label",street.getLabel());

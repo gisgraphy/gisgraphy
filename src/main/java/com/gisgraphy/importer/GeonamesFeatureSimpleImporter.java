@@ -538,16 +538,18 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 
     
     
-    private List<AlternateName> splitAlternateNames(String alternateNamesString,
+    protected List<AlternateName> splitAlternateNames(String alternateNamesString,
 	    GisFeature gisFeature) {
 	String[] alternateNames = alternateNamesString.split(",");
 	List<AlternateName> alternateNamesList = new ArrayList<AlternateName>();
 	for (String name : alternateNames) {
+		if (name!=null && !name.startsWith("http")){
 	    AlternateName alternateName = new AlternateName();
 	    alternateName.setName(name.trim());
 	    alternateName.setSource(AlternateNameSource.EMBEDED);
 	    alternateName.setGisFeature(gisFeature);
 	    alternateNamesList.add(alternateName);
+		}
 	}
 	return alternateNamesList;
     }

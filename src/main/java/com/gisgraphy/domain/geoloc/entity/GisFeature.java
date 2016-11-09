@@ -207,17 +207,47 @@ public class GisFeature{
     private String fullyQualifiedName;
     
     @IntrospectionIgnoredField
+    private Long cityId;
+    /**
+     * if the associated city has been found by shape 
+     * (only for sttistics and relevance purpose
+     */
+    @IntrospectionIgnoredField
+    private boolean cityConfident = false;
+    
+    
+    @IntrospectionIgnoredField
     @Transient
     private Set<String> isInZip;
+    /**
+     *  it is the best zipcode when there is several one (for instance when we set the zipcodes from the city and if there
+     *  is several one we populate this field with the most accurate one
+     */
+    private String zipCode;
     
+    /**
+	 * @return the zipCode
+	 */
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	/**
+	 * @param zipCode the zipCode to set
+	 */
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
+
+    
+   
+   
     /**
      * This field is only for relevance and allow to search for street<->cities in 
      * many alternateNames. It is not in stored
      */
     @IntrospectionIgnoredField
     private Set<String> isInCityAlternateNames;
-   
-
 	
 
 
@@ -763,6 +793,29 @@ public class GisFeature{
     public void setElevation(Integer elevation) {
 	this.elevation = elevation;
     }
+    
+    /**
+     * @return the id of the city, we don't use the object because we don't want to link objects
+     * for performance reasons
+     */
+    public Long getCityId() {
+    	return cityId;
+    }
+    
+    /**
+     * @param set the id of the city of this street
+     */
+    public void setCityId(Long cityId) {
+    	this.cityId = cityId;
+    }
+    
+    public boolean isCityConfident() {
+		return cityConfident;
+	}
+
+	public void setCityConfident(boolean cityConfident) {
+		this.cityConfident = cityConfident;
+	}
 
     /**
      * @return The average elevation of 30'x30' (900mx900m) area in meters
@@ -1253,6 +1306,42 @@ public class GisFeature{
 		    }
 		}
 	}
+	//we don't sync it, because we don't want join table, for the moment
+			@Transient
+			public Set<String> getIsInZip() {
+				return isInZip;
+			}
+
+			/**
+			 * @param isInZip the zipcode where the street is located.
+			 */
+			public void setIsInZip(Set<String> isInZip) {
+				this.isInZip = isInZip;
+			}
+			
+
+			 /**
+		     * add a zip
+		     */
+		    public void addZip(String zip) {
+			Set<String> currentZips = getIsInZip();
+			if (currentZips == null) {
+				currentZips = new HashSet<String>();
+			}
+			currentZips.add(zip);
+			this.setIsInZip(currentZips);
+		    }
+
+		    /**
+		     * add zips
+		     */
+		    public void addZips(Collection<String> zips) {
+			if (zips != null) {
+			    for (String zip : zips) {
+			    	addZip(zip);
+			    }
+			}
+		    }
 
 	 /**
      * @return the zip codes for the city
@@ -1406,41 +1495,10 @@ public class GisFeature{
 		this.isInAdm = isInAdm;
 	}
 
-	//we don't sync it, because we don't want join table, for the moment
-	@Transient
-	public Set<String> getIsInZip() {
-		return isInZip;
-	}
+	
 
-	/**
-	 * @param isInZip the zipcode where the street is located.
-	 */
-	public void setIsInZip(Set<String> isInZip) {
-		this.isInZip = isInZip;
-	}
+	
 
-	 /**
-     * add a zip
-     */
-    public void addZip(String zip) {
-	Set<String> currentZips = getIsInZip();
-	if (currentZips == null) {
-		currentZips = new HashSet<String>();
-	}
-	currentZips.add(zip);
-	this.setIsInZip(currentZips);
-    }
-
-    /**
-     * add zips
-     */
-    public void addZips(Collection<String> zips) {
-	if (zips != null) {
-	    for (String zip : zips) {
-	    	addZip(zip);
-	    }
-	}
-    }
 	
 	/**
 	 * This field is only for relevance and allow to search for street<->cities in 
@@ -1456,22 +1514,21 @@ public class GisFeature{
 		this.isInCityAlternateNames = isInCityAlternateNames;
 	}
 	
+	 public void addIsInCitiesAlternateName(String isInCityAlternateName) {
+			Set<String> currentCitiesAlternateNames = getIsInCityAlternateNames();
+			if (currentCitiesAlternateNames == null) {
+				currentCitiesAlternateNames = new HashSet<String>();
+			}
+			currentCitiesAlternateNames.add(isInCityAlternateName);
+			this.setIsInCityAlternateNames(currentCitiesAlternateNames);
+		    }
 
-    public void addIsInCitiesAlternateName(String isInCityAlternateName) {
-	Set<String> currentCitiesAlternateNames = getIsInCityAlternateNames();
-	if (currentCitiesAlternateNames == null) {
-		currentCitiesAlternateNames = new HashSet<String>();
-	}
-	currentCitiesAlternateNames.add(isInCityAlternateName);
-	this.setIsInCityAlternateNames(currentCitiesAlternateNames);
-    }
-
-    public void addIsInCitiesAlternateNames(Collection<String> isInCityAlternateNames) {
-	if (isInCityAlternateNames != null) {
-	    for (String isInCityAlternateName : isInCityAlternateNames) {
-	    	addIsInCitiesAlternateName(isInCityAlternateName);
-	    }
-	}
-    }
+		    public void addIsInCitiesAlternateNames(Collection<String> isInCityAlternateNames) {
+			if (isInCityAlternateNames != null) {
+			    for (String isInCityAlternateName : isInCityAlternateNames) {
+			    	addIsInCitiesAlternateName(isInCityAlternateName);
+			    }
+			}
+		    }
 	
 }

@@ -48,7 +48,16 @@ public class GeonamesAlternateNamesImporterTest extends AbstractIntegrationHttpS
     
     private ISpellCheckerIndexer spellCheckerIndexer;
 
-  
+  @Test
+  public void isAnUnWantedLanguageField(){
+	  GeonamesAlternateNamesSimpleImporter importer = new GeonamesAlternateNamesSimpleImporter();
+	  Assert.assertTrue(importer.isAnUnWantedLanguageField("fr-1793"));
+	  Assert.assertTrue(importer.isAnUnWantedLanguageField("FR-1793"));
+	  
+	  Assert.assertTrue(importer.isAnUnWantedLanguageField("lInk"));
+	  Assert.assertTrue(importer.isAnUnWantedLanguageField("link"));
+	  
+  }
 
    
 

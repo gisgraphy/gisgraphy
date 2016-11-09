@@ -149,10 +149,19 @@ public class AddressHelper {
 		if (openStreetMap.getAzimuthEnd()!=null){
 			address.setAzimuthEnd(openStreetMap.getAzimuthEnd());
 		}
-		
-		
-		if (openStreetMap.getIsInZip()!=null && openStreetMap.getIsInZip().size() >=1){  
-			address.setZipCode(openStreetMap.getIsInZip().iterator().next());
+		if (openStreetMap.getStreetType()!=null){
+			address.setStreetType(openStreetMap.getStreetType().toString());
+		}
+		if (openStreetMap.getLength()!=null){
+			address.setLength(openStreetMap.getLength());
+		}
+		if (openStreetMap.isOneWay()){
+			address.setOneWay(openStreetMap.isOneWay());
+		}
+		if (openStreetMap.getZipCode()!=null) {
+			address.setZipCode(openStreetMap.getZipCode());
+		} else 	if (openStreetMap.getIsInZip()!=null && openStreetMap.getIsInZip().size() >=1){  
+			address.setZipCode(labelGenerator.getBestZipString(openStreetMap.getIsInZip()));
 		}
 		if (openStreetMap.getLocation()!=null){
 			address.setLng(openStreetMap.getLongitude());

@@ -234,7 +234,7 @@ decompound after lower because words of dictionary are in lower, unpunct
   <!-- Medium --><field name="is_in_cities" type="text" indexed="true" stored="false" multiValued="true"/>
   <!-- Medium --><field name="is_in_place" type="text" indexed="true" stored="true"/>
   <!-- Medium --><field name="is_in_adm" type="text" indexed="true" stored="true"/>
-  <!-- Medium --><field name="is_in_zip" type="text" indexed="true" stored="true" multiValued="true"/>
+  <!-- Medium --><field name="is_in_zip" type="exact_string_ci" indexed="true" stored="true" multiValued="true"/>
   <!-- Medium --><field name="one_way" type="boolean" indexed="false" stored="true"/>
   <!-- Medium --><field name="length" type="double" indexed="false" stored="true"/>
   <!-- Medium --><field name="openstreetmap_id" type="long" indexed="true" stored="true"/>

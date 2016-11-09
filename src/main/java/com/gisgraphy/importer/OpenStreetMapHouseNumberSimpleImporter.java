@@ -79,8 +79,8 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	protected ISolRSynchroniser solRSynchroniser;
 
 	protected IFullTextSearchEngine fullTextSearchEngine;
-
-	private static final String ASSOCIATED_HOUSE_NUMBER_REGEXP = "([0-9]+)___([^_]*)___((?:(?!___).)*)___((?:(?!___).)*)___([NW])___([^_]*)(?:___)?";
+																//id		location	number			 name				streetname		city                zip				  suburb           shape             tpe		role	
+	private static final String ASSOCIATED_HOUSE_NUMBER_REGEXP = "([0-9]+)___([^_]*)___((?:(?!___).)*)___((?:(?!___).)*)___((?:(?!___).)*)___((?:(?!___).)*)___((?:(?!___).)*)___((?:(?!___).)*)___((?:(?!___).)*)___([NW])___([^_]*)(?:___)?";
 
 	private static final String INTERPOLATION_HOUSE_NUMBER_REGEXP = "([0-9]+)___([0-9])___((?:(?!___).)+)*___((?:(?!___).)+)*___((?:(?!___).)+)*(?:___)?";
 
@@ -139,10 +139,10 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	protected AssociatedStreetHouseNumber parseAssociatedStreetHouseNumber(String line) {
 		/*
 		 * A 1264114 "{"
-		 * "47129758___0101000020E61000005CCBD3C231E76240AA6514FE5BF440C0___Bowral Street___Bowral Street___W___street"
-		 * ", ""84623507
-		 * ___0101000020E6100000546690CC36E76240A417D5545AF440C0___71___Bowral
-		 * Street___W___house""} SHAPE"
+		 * "30296860___0101000020E61000000AC435854620634009464AF440723BC0___288______Kelvin Grove Road___Kelvin Grove_________0102000020E610000005000000B3BA302D4520634069BFFFA03F723BC089940B3A462063408EE
+9094B3C723BC0F73E5585462063404A16E6F340723BC021657A78452063404F6B894B44723BC0B3BA302D4520634069BFFFA03F723BC0___W___house___30296861___0101000020E6100000F45C72F545206340E75472EF3A723BC0___290______Kelvin Grove Ro
+ad___Kelvin Grove_________0102000020E6100000050000001F5A1AAE44206340662E15C039723BC09E1095A1452063409762FD5536723BC0C2E677F545206340DC16C0EF3A723BC027E0320245206340ABE2D7593E723BC01F5A1AAE44206340662E15C039723BC0
+___W___house"} SHAPE"
 		 */
 		if (line == null || "".equals(line.trim())) {
 			return null;
@@ -165,7 +165,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 			int i = 0;
 			while (matcher.find()) {
 				AssociatedStreetMember member = new AssociatedStreetMember();
-				if (matcher.groupCount() != 6) {
+				if (matcher.groupCount() != 11) {
 					logger.warn("wrong number of fields for AssociatedStreetMember no " + i + "for line " + line);
 					continue;
 				}
@@ -182,11 +182,29 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 					continue;
 				}
 				member.setLocation(point);
-				String role = matcher.group(6);
-				member.setRole(role);
-				member.setHouseNumber(matcher.group(3));
-				member.setStreetName(matcher.group(4));
-				member.setType(matcher.group(5));
+				if (isNotEmpty(matcher.group(3))){
+					member.setHouseNumber(matcher.group(3));
+				}
+				if (isNotEmpty(matcher.group(4))){
+					member.setHouseName(matcher.group(4));
+				}
+				if (isNotEmpty(matcher.group(5))){
+					member.setStreetName(matcher.group(5));
+				}
+				if (isNotEmpty(matcher.group(6))){
+					member.setCity(matcher.group(6));
+				}
+				if (isNotEmpty(matcher.group(7))){
+					member.setZipCode(matcher.group(7));
+				}
+				if (isNotEmpty(matcher.group(8))){
+					member.setSuburb(matcher.group(8));
+				}
+				
+				//we ignore shape 9
+				
+				member.setType(matcher.group(10));
+				member.setRole(matcher.group(11));
 
 				houseNumber.addMember(member);
 				i++;
@@ -196,6 +214,10 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 			return null;
 		}
 		return houseNumber;
+	}
+
+	protected boolean isNotEmpty(String number) {
+		return number!=null && !number.trim().equals("");
 	}
 
 	protected InterpolationHouseNumber parseInterpolationHouseNumber(String line) {
@@ -289,13 +311,14 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	}
 
 	protected NodeHouseNumber parseNodeHouseNumber(String line) {
+		//N	598495945	0101000020E61000002D1DBD2BCC2462401E37FC6EBAF042C0	46		Dunscombe Avenue	Glen Waverley	3150	Glen Waverley
 		//N	1053493828	0101000020E610000060910486D17250C05D4B6D4ECA753CC0	75	Sandwichs La Estrellita	Estanislao Maldones 6:CITY 7:POSTCODE 8:SUBURB 9:SHAPE
 		if (line == null || "".equals(line.trim())) {
 			return null;
 		}
 		String[] fields = line.split("\t");
-		if (fields.length < 4 ) {
-			logger.warn("wrong number of fields for line " + line + " expected 4 but was " + fields.length);
+		if (fields.length < 7 ) {
+			logger.warn("wrong number of fields for line " + line + " expected 7 but was " + fields.length);
 			return null;
 		}
 		if (!"N".equals(fields[0]) && !"W".equals(fields[0])) {
@@ -330,6 +353,19 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 		if (!isEmptyField(fields, 5, false)) {
 			node.setStreetName(fields[5].trim());
 		}
+		if (!isEmptyField(fields, 6, false)) {
+			node.setCity(fields[6].trim());
+		}
+		if (!isEmptyField(fields, 7, false)) {
+			node.setZipCode(fields[7].trim());
+		}
+		if (!isEmptyField(fields, 8, false)) {
+			node.setSuburb(fields[8].trim());
+		}
+		//we ignore shape for the moment
+		/*if (!isEmptyField(fields, 9, false)) {
+			node.setshape(fields[5].trim());
+		}*/
 		return node;
 	}
 	
@@ -386,7 +422,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 			List<HouseNumber> houseNumbers = processInterpolationHouseNumber(house);
 			if (houseNumbers.size()!=0){
 				osm.addHouseNumbers(houseNumbers);
-				openStreetMapDao.save(osm);
+				saveOsm(osm);
 			}
 		} else {
 			logger.warn("unknow node type for line " + line);
@@ -406,7 +442,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 			return;
 		} 
 		if (streetMembers.size()==0){
-			//treet as node, it is often the case when associated with a relation and our script don't manage it so we link it here
+			//street as node, it is often the case when associated with a relation and our script don't manage it so we link it here
 			if (houseMembers!=null){
 				String streetname = null;
 				boolean allHouseHaveTheSameStreetName = true;
@@ -436,7 +472,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 						HouseNumber houseNumber = buildHouseNumberFromAssociatedHouseNumber(houseMember);
 						if (houseNumber!=null){
 							street.addHouseNumber(houseNumber);
-							openStreetMapDao.save(street);
+							saveOsm(street);
 						}
 					} else {
 						logger.warn("can not find associated street for name "+houseMember.getStreetName()+", position :"+ houseMember.getLocation());
@@ -469,7 +505,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 					associatedStreet.addHouseNumber(houseNumber);
 				}
 			}
-			openStreetMapDao.save(associatedStreet);
+			saveOsm(associatedStreet);
 		}
 		else if (streetMembers.size()>1){
 			//for each house, search the nearest street
@@ -490,7 +526,7 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 				OpenStreetMap associatedStreet = openStreetMapDao.getNearestByosmIds(houseMember.getLocation(), streetIds);
 				if (associatedStreet!=null && houseNumber!=null){
 					associatedStreet.addHouseNumber(houseNumber);
-					openStreetMapDao.save(associatedStreet);
+					saveOsm(associatedStreet);
 				} else {
 					
 					logger.warn("associated street "+associatedStreet+", or house numer "+houseNumber+" is null");
@@ -521,7 +557,17 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 		if (osm!=null){
 					try {
 						osm.addHouseNumber(houseNumber);
-						openStreetMapDao.save(osm);
+						if (house.getZipCode()!=null && osm.getIsInZip()!=null){
+							//we override even if it is already present because it is a set
+							osm.addZip(house.getZipCode());
+						}
+						if (house.getCity()!= null && !osm.isCityConfident()){//we override if it not cityConfident 
+							osm.setIsIn(house.getCity());
+						}
+						if (house.getSuburb()!= null){//we override if it not cityConfident 
+							osm.setIsInPlace(house.getSuburb());
+						}
+						saveOsm(osm);
 					} catch (Exception e) {
 						logger.error("error processing node housenumber, we ignore it but you should consider it : "+ e.getMessage(),e);
 					}
@@ -530,6 +576,10 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 			logger.warn("can not find node street for name "+house.getStreetName()+", position :"+ location+ " for "+house);
 		}
 		return null;
+	}
+
+	protected void saveOsm(OpenStreetMap osm) {
+		openStreetMapDao.save(osm);
 	}
 
 	protected List<HouseNumber> processInterpolationHouseNumber(InterpolationHouseNumber house) {

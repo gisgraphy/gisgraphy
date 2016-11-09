@@ -70,6 +70,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     
     static boolean setupIsCalled = false;
     
+   LabelGenerator labelGenerator =  LabelGenerator.getInstance();
+    
     @Test
     public void testSetup(){
     	OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
@@ -127,6 +129,14 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 	
 	assertEquals("The azimuth is not correct ",100, openStreetMap.getAzimuthStart().intValue());
 	assertEquals("The azimuth is not correct ",150, openStreetMap.getAzimuthEnd().intValue());
+	
+	assertEquals("label is not correct ",labelGenerator.generateLabel(openStreetMap), openStreetMap.getLabel());
+	assertEquals("label postal is not correct ",labelGenerator.generatePostal(openStreetMap), openStreetMap.getLabelPostal());
+	assertEquals("fully qualified name is not correct ",labelGenerator.getFullyQualifiedName(openStreetMap, false), openStreetMap.getFullyQualifiedName());
+//	
+	Assert.assertNull("alternate labels are only for fulltext ", openStreetMap.getAlternateLabels());
+	
+	
 	
 	//check alternate names when there is 2
 	Assert.assertEquals(2, openStreetMap.getAlternateNames().size());
@@ -558,6 +568,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	openStreetMapSimpleImporter.setIsInFields(street);
     	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
+    	Assert.assertEquals(labelGenerator.getBestZipString(expectedZip), street.getZipCode());
+    	
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
@@ -634,6 +646,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
+    	Assert.assertEquals(labelGenerator.getBestZipString(expectedZip), street.getZipCode());
     	Assert.assertEquals("adm1Name", street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
@@ -710,6 +723,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	expectedZip.add("ZIP1");
     	expectedZip.add("ZIP2");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
+    	Assert.assertEquals(labelGenerator.getBestZipString(expectedZip), street.getZipCode());
     	Assert.assertEquals("adm1NameCity", street.getIsInAdm());
     	Assert.assertEquals("adm1NameCity", street.getAdm1Name());
     	Assert.assertEquals("admnames should be mixed with preference to the municipality","adm2NameCity", street.getAdm2Name());
@@ -726,6 +740,83 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     }
     
+    @Test
+    public void testSetIsInFields_shouldNotOverrideTheZipcodeIsAlreadySpecified(){
+    	OpenStreetMapSimpleImporter openStreetMapSimpleImporter = new OpenStreetMapSimpleImporter();
+    	
+    	final String  cityName= "cityName";
+		final Integer population = 123;
+		final City city = new City();
+		city.setPopulation(population);
+		city.setName(cityName);
+		city.setFeatureId(1L);
+		city.setId(123L);
+		city.setAdm1Name("adm1NameCity");
+    	city.setAdm2Name("adm2NameCity");
+    	city.setAdm3Name("adm3NameCity");
+    	city.setAdm4Name("adm4NameCity");
+    	city.setAdm5Name("adm5NameCity");
+		city.setMunicipality(false);
+		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
+		zipCodes.add(new ZipCode("zip1"));
+		city.addZipCodes(zipCodes);
+		city.setLocation(GeolocHelper.createPoint(4F, 5F));
+		
+		final String  cityName2= "cityName2";
+		final Integer population2 = 456;
+		final String adm2name2= "adm2name2City2";
+		final City city2 = new City();
+		city2.setPopulation(population2);
+		city2.setAdm2Name(adm2name2);
+		city2.setName(cityName2);
+		city2.setFeatureId(2L);
+		city2.setId(456L);
+		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
+		zipCodes2.add(new ZipCode("zip2"));
+		city2.addZipCodes(zipCodes2);
+		city2.setLocation(GeolocHelper.createPoint(2.1F, 5.1F));
+		
+		Point location= GeolocHelper.createPoint(2F, 3F);
+    	String countryCode = "FR";
+    	
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		city.addAlternateName(an1);
+		city.addAlternateName(an2);
+    	
+    	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
+		EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
+		EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
+		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);
+		EasyMock.replay(cityDao);
+		openStreetMapSimpleImporter.setCityDao(cityDao);
+    	    	
+    	OpenStreetMap street = new OpenStreetMap();
+    	street.setCountryCode(countryCode);
+    	street.setLocation(location);
+    	street.setZipCode("alreadySetzipCode");
+    	openStreetMapSimpleImporter.setIsInFields(street);
+    	
+     	Set<String> expectedZip =new HashSet<String>();
+    	expectedZip.add("ZIP1");
+    	expectedZip.add("ZIP2");
+    	Assert.assertEquals("if the zipcode is already set, we don't populate the isInZip",null, street.getIsInZip());
+    	Assert.assertEquals("alreadySetzipCode", street.getZipCode());
+    	Assert.assertEquals("adm1NameCity", street.getIsInAdm());
+    	Assert.assertEquals("adm1NameCity", street.getAdm1Name());
+    	Assert.assertEquals("admnames should be mixed with preference to the municipality","adm2NameCity", street.getAdm2Name());
+    	Assert.assertEquals("adm3NameCity", street.getAdm3Name());
+    	Assert.assertEquals("adm4NameCity", street.getAdm4Name());
+    	Assert.assertEquals("adm5NameCity", street.getAdm5Name());
+    	Assert.assertEquals(123L, street.getCityId().longValue());
+    	Assert.assertEquals("isIn place should be filled if result are different and municipality is not the nearest",cityName2, street.getIsInPlace());
+    	Assert.assertEquals("isIn should be filled with municipality if result are different and municipality is not the nearest",cityName, street.getIsIn());
+    	Assert.assertTrue(street.getIsInCityAlternateNames().size()==2);
+    	
+    	
+    	EasyMock.verify(cityDao);
+    	
+    }
     
     
     

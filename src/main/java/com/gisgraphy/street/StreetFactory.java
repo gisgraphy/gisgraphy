@@ -52,7 +52,10 @@ public class StreetFactory implements IStreetFactory {
 			street.setOneWay(openstreetmap.isOneWay());
 			street.setIsIn(openstreetmap.getIsIn());
 			street.setIsInPlace(openstreetmap.getIsInPlace());
+			
 			street.setIsInZip(openstreetmap.getIsInZip());
+			street.setZipCode(openstreetmap.getZipCode());
+			
 			street.setIsInAdm(openstreetmap.getIsInAdm());
 			street.setAdm1Name(openstreetmap.getAdm1Name());
 			street.setAdm2Name(openstreetmap.getAdm2Name());
