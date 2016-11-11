@@ -286,20 +286,19 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	street.setGid(new Long(generatedId));
 
 	
-	
-	
-	
+	//azimuth *2
 	if (!isEmptyField(fields, 15, false)){
 		street.setAzimuthStart(parseAzimuth(fields[15]));
 	}
-	
 	if (!isEmptyField(fields, 16, false)){
 		street.setAzimuthEnd(parseAzimuth(fields[16]));
 	}
+	//alternate names
 	if (fields.length == 18 && !isEmptyField(fields, 17, false)){
 		populateAlternateNames(street,fields[17]);
 	}
 	
+	//labels
 	street.setAlternateLabels(labelGenerator.generateLabels(street));
 	street.setLabel(labelGenerator.generateLabel(street));
 	street.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(street, false));
@@ -316,9 +315,20 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	}
 
     }
+    
+    protected void populateZip(String zipAsString, OpenStreetMap osm) {
+  		String[] zips = zipAsString.split(";|\\||,");
+  		for (int i = 0;i<zips.length;i++){
+  				osm.addIsInZip(zips[i]);
+  		}
+  		if (osm.getIsInZip()!=null && osm.getIsInZip().size() >0){
+  			osm.setZipCode(labelGenerator.getBestZipString(osm.getIsInZip()));
+  		}
+  	
+  }
 
 	private void setBestZip(OpenStreetMap street) {
-		//we set the zipcode as the best one
+		//we set the zipcode as the best one (when necessary)
 		if (street.getIsInZip()!=null && street.getIsInZip().size() >0 && street.getZipCode()==null){
 			street.setZipCode(labelGenerator.getBestZipString(street.getIsInZip()));
 		}
@@ -378,16 +388,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 		return ImporterHelper.populateAlternateNames(street, alternateNamesAsString);
 	}
     
-    protected void populateZip(String zipAsString, OpenStreetMap osm) {
-		String[] zips = zipAsString.split(";|\\||,");
-		for (int i = 0;i<zips.length;i++){
-				osm.addZip(zips[i]);
-		}
-		if (osm.getIsInZip()!=null && osm.getIsInZip().size() >0){
-			osm.setZipCode(labelGenerator.getBestZipString(osm.getIsInZip()));
-		}
-	
-}
+  
 
     protected void setIsInFields(OpenStreetMap street) {
     	if (street != null && street.getLocation() != null) {
@@ -400,7 +401,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     			street.setPopulation(cityByShape.getPopulation());
     			if (street.getZipCode()== null && cityByShape.getZipCodes() != null) {//only if the zipcode is not previously set with the value from CSV
     				for (ZipCode zip:cityByShape.getZipCodes()){
-    					street.addZip(zip.getCode());
+    					street.addIsInZip(zip.getCode());
     				}
     			}
     			if (cityByShape.getAlternateNames()!=null){
@@ -437,7 +438,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     			if (street.getZipCode()== null && city.getZipCodes() != null) {//only if the zipcode is not previously set with the value from CSV
     				for (ZipCode zip:city.getZipCodes()){
     					if (zip != null && zip.getCode()!=null){
-    						street.addZip(zip.getCode());
+    						street.addIsInZip(zip.getCode());
     					}
     				}
     			}
@@ -488,7 +489,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     					//if zipcodes are already filled
     					for (ZipCode zip:city2.getZipCodes()){
     						if (zip!=null && zip.getCode()!=null){
-    							street.addZip(zip.getCode());
+    							street.addIsInZip(zip.getCode());
     						}
         				}
     					/*if (street.getIsInZip()!=null && street.getIsInZip().size() >0){
@@ -531,50 +532,50 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 		}
 	}
 
-	protected String getBestAdmName(GisFeature city) {
-		if (city != null) {
-			if (city.getCountryCode()!= null  && formater.getAdmLevelByContryCode(city.getCountryCode())!=0){
-				int level = formater.getAdmLevelByContryCode(city.getCountryCode());
+	protected String getBestAdmName(GisFeature gisFeature) {
+		if (gisFeature != null) {
+			if (gisFeature.getCountryCode()!= null  && formater.getAdmLevelByContryCode(gisFeature.getCountryCode())!=0){
+				int level = formater.getAdmLevelByContryCode(gisFeature.getCountryCode());
 				if (level == 1) {
-					return city.getAdm1Name();
+					return gisFeature.getAdm1Name();
 				} else if (level == 2) {
-					if (city.getAdm2Name()!=null){
-					return city.getAdm2Name();
+					if (gisFeature.getAdm2Name()!=null){
+					return gisFeature.getAdm2Name();
 					} else {
-						return city.getAdm1Name();
+						return gisFeature.getAdm1Name();
 					}
 				} else if (level == 3) {
-					if (city.getAdm3Name()!=null){
-						return city.getAdm3Name();
+					if (gisFeature.getAdm3Name()!=null){
+						return gisFeature.getAdm3Name();
 						} else {
-							return city.getAdm1Name();
+							return gisFeature.getAdm1Name();
 						}
 				} else if (level == 4) {
-					if (city.getAdm4Name()!=null){
-						return city.getAdm4Name();
+					if (gisFeature.getAdm4Name()!=null){
+						return gisFeature.getAdm4Name();
 						} else {
-							return city.getAdm1Name();
+							return gisFeature.getAdm1Name();
 						}
 				}else if (level == 5) {
-					if (city.getAdm5Name()!=null){
-						return city.getAdm5Name();
+					if (gisFeature.getAdm5Name()!=null){
+						return gisFeature.getAdm5Name();
 						} else {
-							return city.getAdm1Name();
+							return gisFeature.getAdm1Name();
 						}
 				} else {
 					return null;
 				}
 			}
-			if (city.getAdm1Name() != null) {
-				return city.getAdm1Name();
-			} else if (city.getAdm2Name() != null) {
-				return city.getAdm2Name();
-			} else if (city.getAdm3Name() != null) {
-				return city.getAdm3Name();
-			} else if (city.getAdm4Name() != null) {
-				return city.getAdm4Name();
-			}else if (city.getAdm5Name() != null) {
-				return city.getAdm5Name();
+			if (gisFeature.getAdm1Name() != null) {
+				return gisFeature.getAdm1Name();
+			} else if (gisFeature.getAdm2Name() != null) {
+				return gisFeature.getAdm2Name();
+			} else if (gisFeature.getAdm3Name() != null) {
+				return gisFeature.getAdm3Name();
+			} else if (gisFeature.getAdm4Name() != null) {
+				return gisFeature.getAdm4Name();
+			}else if (gisFeature.getAdm5Name() != null) {
+				return gisFeature.getAdm5Name();
 			} else {
 				return null;
 			}

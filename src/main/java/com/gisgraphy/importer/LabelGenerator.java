@@ -9,6 +9,7 @@ import java.util.Set;
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.format.AddressFormatInfo;
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
+import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
@@ -27,12 +28,11 @@ import com.gisgraphy.helper.countryInfo;
  */
 public class LabelGenerator {
 
-	BasicAddressFormater formater;
+	BasicAddressFormater formater =  BasicAddressFormater.getInstance();
 
 	private static LabelGenerator instance = new LabelGenerator();
 
 	protected LabelGenerator() {
-		formater = BasicAddressFormater.getInstance();
 	}
 
 	public static LabelGenerator getInstance() {
@@ -400,8 +400,9 @@ public class LabelGenerator {
 		return "";
 	}
 	
-	public String generatePostal(GisFeature gisFeature){
-		return "";
+	
+	public String generatePostal(Address address){
+		return formater.getEnvelopeAddress(address, DisplayMode.COMMA);
 	}
 	
 	

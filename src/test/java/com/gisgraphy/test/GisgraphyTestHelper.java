@@ -703,6 +703,7 @@ public class GisgraphyTestHelper {
 	zips.add("zip LA");
 	zips.add("zip LA2");
 	streetOSM.setIsInZip(zips);
+	streetOSM.setZipCode("zipCode");
 	streetOSM.setFullyQualifiedName("fullyqulified address LA");
 	streetOSM.setCountryCode("XX");
 	streetOSM.setToll(true);

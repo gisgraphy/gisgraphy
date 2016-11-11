@@ -571,7 +571,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(labelGenerator.getBestZipString(expectedZip), street.getZipCode());
     	
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm1Name", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(city), street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -647,7 +647,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals(labelGenerator.getBestZipString(expectedZip), street.getZipCode());
-    	Assert.assertEquals("adm1Name", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(city), street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -724,7 +724,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	expectedZip.add("ZIP2");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals(labelGenerator.getBestZipString(expectedZip), street.getZipCode());
-    	Assert.assertEquals("adm1NameCity", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(city), street.getIsInAdm());
     	Assert.assertEquals("adm1NameCity", street.getAdm1Name());
     	Assert.assertEquals("admnames should be mixed with preference to the municipality","adm2NameCity", street.getAdm2Name());
     	Assert.assertEquals("adm3NameCity", street.getAdm3Name());
@@ -802,7 +802,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	expectedZip.add("ZIP2");
     	Assert.assertEquals("if the zipcode is already set, we don't populate the isInZip",null, street.getIsInZip());
     	Assert.assertEquals("alreadySetzipCode", street.getZipCode());
-    	Assert.assertEquals("adm1NameCity", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(city), street.getIsInAdm());
     	Assert.assertEquals("adm1NameCity", street.getAdm1Name());
     	Assert.assertEquals("admnames should be mixed with preference to the municipality","adm2NameCity", street.getAdm2Name());
     	Assert.assertEquals("adm3NameCity", street.getAdm3Name());
@@ -882,7 +882,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm1Name", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(city), street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -944,7 +944,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm1Name", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(city), street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -1006,7 +1006,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
      	Set<String> expectedZip =new HashSet<String>();
     	expectedZip.add("ZIP1");
     	Assert.assertEquals(expectedZip, street.getIsInZip());
-    	Assert.assertEquals("adm1Name", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(city), street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());
@@ -1066,7 +1066,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	Assert.assertEquals(expectedZip, street.getIsInZip());
     	Assert.assertEquals(true, street.isCityConfident());
     	//3 is the deeper adm level we consider as the best one
-    	Assert.assertEquals("adm1Name", street.getIsInAdm());
+    	Assert.assertEquals("isInAdm should contains the best admlevel",openStreetMapSimpleImporter.getBestAdmName(cityByShape), street.getIsInAdm());
     	Assert.assertEquals("adm1Name", street.getAdm1Name());
     	Assert.assertEquals("adm2Name", street.getAdm2Name());
     	Assert.assertEquals("adm3Name", street.getAdm3Name());

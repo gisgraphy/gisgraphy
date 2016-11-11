@@ -308,6 +308,8 @@ public class StreetSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
 	assertEquals(street.getOpenstreetmapId(), results.getResult().get(0).getOpenstreetmapId());
 	assertEquals(street.isOneWay(), results.getResult().get(0).getOneWay().booleanValue());
 	assertEquals(street.getStreetType(), results.getResult().get(0).getStreetType());
+	Assert.assertNotNull("zipcode should be filled", results.getResult().get(0).getZipCode());
+	assertEquals(street.getZipCode(), results.getResult().get(0).getZipCode());
 	assertNotNull(results.getResult().get(0).getDistance());
 	
 	

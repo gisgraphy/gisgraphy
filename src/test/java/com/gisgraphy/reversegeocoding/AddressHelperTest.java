@@ -124,6 +124,7 @@ public class AddressHelperTest {
 		osm.setAdm4Name("adm4Name");
 		osm.setAdm5Name("adm5Name");
 		osm.setCountryCode("US");
+		osm.setZipCode(null);
 		Assert.assertTrue("the zipcodes should be filled for this set, please fix the dataset",osm.getIsInZip().size()>0);
 		Address address = addressHelper.buildAddressFromOpenstreetMap(osm);
 		Assert.assertEquals(osm.getName(), address.getStreetName());
@@ -135,7 +136,7 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
 		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
 		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
-		Assert.assertEquals("When there is more than one zipcode, we take the best one",generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
+		Assert.assertEquals("When there is more than one zipcode, and zip is null, we take the best one",generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
@@ -169,7 +170,7 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getIsIn(), address.getCity());
 		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
 		Assert.assertEquals(osm.getIsInAdm(), address.getState());
-		Assert.assertEquals(generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
+		Assert.assertEquals("when zipcode is set, we don't take bestzip of is_in",osm.getZipCode(), address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
 		Assert.assertEquals(osm.getLongitude(), address.getLng());
@@ -202,6 +203,7 @@ public class AddressHelperTest {
 		String name = "houseName";
 		houseNumber.setName(name);
 		osm.addHouseNumber(houseNumber);
+		osm.setZipCode(null);
 		Double distance =55D;
 		HouseNumberDistance houseNumberDistance = new HouseNumberDistance(houseNumber, distance );
 		Address address = addressHelper.buildAddressFromHouseNumberDistance(houseNumberDistance);
@@ -209,7 +211,7 @@ public class AddressHelperTest {
 		Assert.assertEquals(osm.getIsIn(), address.getCity());
 		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
 		Assert.assertEquals(osm.getIsInAdm(), address.getState());
-		Assert.assertEquals(generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
+		Assert.assertEquals("when zip is null, we take the best one",generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(houseNumber.getLatitude(),address.getLat());
 		Assert.assertEquals(houseNumber.getLongitude(), address.getLng());

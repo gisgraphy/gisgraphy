@@ -236,6 +236,11 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 		
 		//featureId
 		poi.setFeatureId(idGenerator.getNextFeatureId());
+		
+		//labels
+		poi.setLabel(labelGenerator.generateLabel(poi));
+		poi.setAlternateLabels(labelGenerator.generateLabels(poi));
+		poi.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(poi));
 		}
 		return pois;
 	}

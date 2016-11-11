@@ -12,6 +12,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.addressparser.Address;
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
+import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
@@ -26,6 +28,20 @@ import com.gisgraphy.test.GisgraphyTestHelper;
 public class LabelGeneratorTest {
 
 	LabelGenerator generator = LabelGenerator.getInstance();
+	
+	BasicAddressFormater formater =  BasicAddressFormater.getInstance();
+	
+	@Test
+	public void generatePostal_Address(){
+		Address address = new Address();
+		String actual =  generator.generatePostal(address);
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), actual);
+	}
+	
+	@Test
+	public void generatePostal_Openstreetmap(){
+		Assert.fail("not implemented TODO");
+	}
 	
 	@Test
 	public void generateLabels_street() {

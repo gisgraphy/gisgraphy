@@ -31,6 +31,7 @@ import com.gisgraphy.helper.StringHelper;
 import com.vividsolutions.jts.geom.Point;
 
 public class OpenStreetMapPoisSimpleImporterTest {
+	 LabelGenerator generator =  LabelGenerator.getInstance();
 
 	@Test
 	public void populateAlternateNames() {
@@ -124,6 +125,11 @@ public class OpenStreetMapPoisSimpleImporterTest {
 		Assert.assertEquals(Religious.class, poi.getClass());
 		Assert.assertEquals(1234L, poi.getFeatureId().longValue());
 		Assert.assertNotNull(poi.getLocation());
+		
+		Assert.assertEquals(generator.generateLabel(poi), poi.getLabel());
+		Assert.assertTrue("alternate labels are empty and shouldn't be", poi.getAlternateLabels().size()!=0);
+		Assert.assertEquals(generator.generateLabels(poi).size(), poi.getAlternateLabels().size());
+		Assert.assertEquals(generator.getFullyQualifiedName(poi), poi.getFullyQualifiedName());
 		
 		
 		//an

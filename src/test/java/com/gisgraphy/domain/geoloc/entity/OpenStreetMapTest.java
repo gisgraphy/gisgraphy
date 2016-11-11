@@ -103,10 +103,10 @@ public class OpenStreetMapTest {
 		List<String> zips = new ArrayList<String>();
 		
 		zips.add("75000");
-		street.addZips(zips);
+		street.addIsInZips(zips);
 		
 		Assert.assertEquals(1, street.getIsInZip().size());
-		street.addZip("78000");
+		street.addIsInZip("78000");
 		Assert.assertEquals(2, street.getIsInZip().size());
 		
 		

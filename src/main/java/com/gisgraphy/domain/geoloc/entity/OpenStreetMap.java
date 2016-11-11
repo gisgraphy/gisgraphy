@@ -151,7 +151,7 @@ public class OpenStreetMap {
     @IntrospectionIgnoredField
     private Set<String> isInCityAlternateNames;
     
-    private Set<String> isInZip;
+   
     
     private String fullyQualifiedName;
 
@@ -209,6 +209,10 @@ public class OpenStreetMap {
     
     private String labelPostal;
     
+    //the zip often one (often from the city), we don't want to have an associated database so we stock this here as transcient field
+    // and populate the fulltext engine with that.
+    @IntrospectionIgnoredField
+    private Set<String> isInZip;
     //the zipcode, it is the best choice between all isInZip
     private String zipCode;
     
@@ -855,7 +859,7 @@ public class OpenStreetMap {
     /**
      * add a zip
      */
-    public void addZip(String zip) {
+    public void addIsInZip(String zip) {
 	Set<String> currentZips = getIsInZip();
 	if (currentZips == null) {
 		currentZips = new HashSet<String>();
@@ -867,10 +871,10 @@ public class OpenStreetMap {
     /**
      * add zips
      */
-    public void addZips(Collection<String> zips) {
+    public void addIsInZips(Collection<String> zips) {
 	if (zips != null) {
 	    for (String zip : zips) {
-	    	addZip(zip);
+	    	addIsInZip(zip);
 	    }
 	}
     }

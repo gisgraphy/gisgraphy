@@ -679,7 +679,7 @@ public class GeocodingService implements IGeocodingService {
 				address.setDistance(GeolocHelper.distance(GeolocHelper.createPoint(address.getLng(), address.getLat()), GeolocHelper.createPoint(cityLng, cityLat)));
 				}
 				address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
-				address.setFormatedPostal(addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA));
+				address.setFormatedPostal(labelGenerator.generatePostal(address));
 				addresses.add(address);
 
 			}

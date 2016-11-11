@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -91,6 +92,8 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     protected IMunicipalityDetector municipalityDetector;
     
     LabelGenerator labelGenerator = LabelGenerator.getInstance();
+    
+    BasicAddressFormater addressFormater = new BasicAddressFormater();
     
 
     /**
@@ -342,9 +345,10 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	setAdmCodesWithLinkedAdmOnes(adm, gisFeature, importerConfig
 		.isSyncAdmCodesWithLinkedAdmOnes());
 	setAdmNames(adm, gisFeature);
-	
 	gisFeature.setAlternateLabels(labelGenerator.generateLabels(gisFeature));
 	gisFeature.setLabel(labelGenerator.generateLabel(gisFeature));
+	gisFeature.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(gisFeature));
+	//we don't set postal
 
 	if (featureCode_ != null) {
 	   if (gisFeature instanceof City){

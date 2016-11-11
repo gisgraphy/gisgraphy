@@ -48,6 +48,7 @@ import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.IAdmDao;
 import com.gisgraphy.domain.repository.ICityDao;
 import com.gisgraphy.domain.repository.ICitySubdivisionDao;
+import com.gisgraphy.domain.repository.IGisFeatureDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
@@ -102,11 +103,15 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     
     protected IAdmDao admDao;
     
+    protected IGisFeatureDao gisFeatureDao;
+    
     protected ISolRSynchroniser solRSynchroniser;
     
     protected IFullTextSearchEngine fullTextSearchEngine;
     
     protected IMunicipalityDetector municipalityDetector;
+    
+    LabelGenerator generator = LabelGenerator.getInstance();
     
     
 
@@ -153,7 +158,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	String countrycode=null;
 	String name=null;
 	Point location=null;
-	Point adminCentrelocation=null;
+	Point adminCentreLocation=null;
 	int  adminLevel =0;
 	Long osmId = 0L;
 	
@@ -204,85 +209,88 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	//admin_centre_location
 		if (!isEmptyField(fields, 10, false)) {
 		    try {
-		    	adminCentrelocation = (Point) GeolocHelper.convertFromHEXEWKBToGeometry(fields[10]);
+		    	adminCentreLocation = (Point) GeolocHelper.convertFromHEXEWKBToGeometry(fields[10]);
 		    } catch (RuntimeException e) {
 		    	logger.warn("can not parse admin centre location for "+fields[10]+" : "+e);
 		    }
 		}
 	
-	GisFeature city=null;
-	if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12])){
-		SolrResponseDto  nearestCity = getNearestCity(location, name, countrycode,Constants.ONLY_CITYSUBDIVISION_PLACETYPE);
+	GisFeature place=null;
+	if (isPoi(fields[12], fields[7])) {
+		//todo
+		place = createNewPoi(name, countrycode, location, adminCentreLocation);
+	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12])){
+		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.ONLY_CITYSUBDIVISION_PLACETYPE);
 		if (nearestCity != null ){
-			city = citySubdivisionDao.getByFeatureId(nearestCity.getFeature_id());
-			if (city==null){
-				city = createNewCitySubdivision(name,countrycode,location,adminCentrelocation);
+			place = citySubdivisionDao.getByFeatureId(nearestCity.getFeature_id());
+			if (place==null){
+				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
 
 			} else{ 
-				city.setSource(GISSource.GEONAMES_OSM);
+				place.setSource(GISSource.GEONAMES_OSM);
 				//generally osm data is better than geonames, we overide geonames values
-				city.setName(name);
-				city.setCountryCode(countrycode);
-				city.setAdminCentreLocation(adminCentrelocation);
-				city.setLocation(location);
+				place.setName(name);
+				place.setCountryCode(countrycode);
+				place.setAdminCentreLocation(adminCentreLocation);
+				place.setLocation(location);
 			}
 		} else {
 			logger.warn("'"+name+"'/'"+fields[1]+"' is not found");
-			city = createNewCitySubdivision(name,countrycode,location,adminCentrelocation);
+			place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
 		}
 		
-	} else {
-		SolrResponseDto  nearestCity = getNearestCity(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE);
+	}  else {
+		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE);
 		if (nearestCity != null ){
-			city = cityDao.getByFeatureId(nearestCity.getFeature_id());
-			if (city==null){
-				city = createNewCity(name,countrycode,location,adminCentrelocation);
+			place = cityDao.getByFeatureId(nearestCity.getFeature_id());
+			if (place==null){
+				place = createNewCity(name,countrycode,location,adminCentreLocation);
 
 			} else{ 
-				city.setSource(GISSource.GEONAMES_OSM);
-				city.setSource(GISSource.GEONAMES_OSM);
+				place.setSource(GISSource.GEONAMES_OSM);
+				place.setSource(GISSource.GEONAMES_OSM);
 				//generally osm data is better than geonames, we overide geonames values
-				city.setName(name);
-				city.setCountryCode(countrycode);
-				city.setAdminCentreLocation(adminCentrelocation);
-				city.setLocation(location);
+				place.setName(name);
+				place.setCountryCode(countrycode);
+				place.setAdminCentreLocation(adminCentreLocation);
+				place.setLocation(location);
 			}
 		} else {
-			city = createNewCity(name,countrycode,location,adminCentrelocation);
+			place = createNewCity(name,countrycode,location,adminCentreLocation);
 		}
 		//set municipality if needed
-		if ( !((City)city).isMunicipality()){ 
+		if ( !((City)place).isMunicipality()){ 
 			//only if not already a city, because, a node can be after a relation and then node set the municipality to false
-			((City)city).setMunicipality(municipalityDetector.isMunicipality(countrycode, fields[12], fields[0], GISSource.OSM));
+			((City)place).setMunicipality(municipalityDetector.isMunicipality(countrycode, fields[12], fields[0], GISSource.OSM));
 		}
 	}
 	//populate new fields
 	//population
-	if(city.getPopulation()==null && !isEmptyField(fields, 8, false)){
+	if(place.getPopulation()==null && !isEmptyField(fields, 8, false)){
 		try {
 			int population = Integer.parseInt(fields[8].replaceAll("\\s+", ""));
-			city.setPopulation(population);
+			place.setPopulation(population);
 		} catch (NumberFormatException e) {
 			logger.error("can not parse population :"+fields[8]);
 		}
 	}
 	//zip code
-	if(!isEmptyField(fields, 5, false) && (city.getZipCodes()==null || !city.getZipCodes().contains(new ZipCode(fields[5])))){
-			populateZip(fields[5], city);
+	if(!isEmptyField(fields, 5, false) && (place.getZipCodes()==null || !place.getZipCodes().contains(new ZipCode(fields[5])))){
+			populateZip(fields[5], place);
 	}
 	//subdivision zip code
-		if(!isEmptyField(fields, 6, false) && (city.getZipCodes()==null || !city.getZipCodes().contains(new ZipCode(fields[6])))){
-				populateZip(fields[6], city);
+		if(!isEmptyField(fields, 6, false) && (place.getZipCodes()==null || !place.getZipCodes().contains(new ZipCode(fields[6])))){
+				populateZip(fields[6], place);
 		}
 	//place tag/amenity
 	if(!isEmptyField(fields, 12, false)){
-		city.setAmenity(fields[12]);
+		place.setAmenity(fields[12]);
 }
 	//shape
 	if(!isEmptyField(fields, 11, false)){
 		try {
 			Geometry shape = (Geometry) GeolocHelper.convertFromHEXEWKBToGeometry(fields[11]);
-			city.setShape(shape);
+			place.setShape(shape);
 		    } catch (RuntimeException e) {
 		    	logger.warn("can not parse shape for id "+fields[1]+" : "+e);
 		    }
@@ -293,7 +301,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		
 		try {
 			osmId = Long.parseLong(osmIdAsString);
-			city.setOpenstreetmapId(osmId);
+			place.setOpenstreetmapId(osmId);
 		} catch (NumberFormatException e) {
 			logger.error("can not parse openstreetmap id "+ osmId);
 		}
@@ -312,33 +320,38 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	//populate alternatenames
 	if (!isEmptyField(fields, 15, false)) {
 		String alternateNamesAsString=fields[15].trim();
-		populateAlternateNames(city,alternateNamesAsString);
+		populateAlternateNames(place,alternateNamesAsString);
 	}
 
 	
 	//isinadm
 	if(!isEmptyField(fields, 14, false)){
 		List<AdmDTO> adms = parseIsInAdm(fields[14]);
-		populateAdmNames(city,adminLevel,adms);
-		if (city.getAdm()==null){
-			LinkAdm(city,adms);
+		populateAdmNames(place,adminLevel,adms);
+		if (place.getAdm()==null){
+			LinkAdm(place,adms);
 		}
 	} 
 	else if(!isEmptyField(fields, 13, false)){
-		if (city.getAdm()==null){
+		if (place.getAdm()==null){
 			String admname =fields[13];
 			SolrResponseDto solrResponseDto= getAdm(admname,countrycode);
 			if (solrResponseDto!=null){
 				Adm adm = admDao.getByFeatureId(solrResponseDto.getFeature_id());
 				if (adm!=null){
-					city.setAdm(adm);
-					populateAdmNamesFromAdm(city, adm);
+					place.setAdm(adm);
+					populateAdmNamesFromAdm(place, adm);
 				}
 			}
 		}
 	}
+	place.setAlternateLabels(generator.generateLabels(place));
+	place.setLabel(generator.generateLabel(place));
+	place.setFullyQualifiedName(generator.getFullyQualifiedName(place));
+	//postal is not set because it is only for street
+	
 	try {
-		savecity(city);
+		savecity(place);
 	} catch (ConstraintViolationException e) {
 		logger.error("Can not save "+dumpFields(fields)+"(ConstraintViolationException) we continue anyway but you should consider this",e);
 	}catch (Exception e) {
@@ -348,6 +361,13 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     }
     
 	
+
+	protected boolean isPoi(String placeType,String admlevel) {
+		if ("locality".equalsIgnoreCase(placeType) && admlevel!=null && !"8".equals(admlevel)) {
+			return true;
+		}
+		return false;
+	}
 
 	protected void LinkAdm(GisFeature city, List<AdmDTO> adms) {
 		if (adms!=null){
@@ -418,12 +438,25 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				cityDao.save((City)city);
 			} else if (city instanceof CitySubdivision){
 				citySubdivisionDao.save((CitySubdivision)city);
+			} else {
+				gisFeatureDao.save(city);
 			}
 		}
 	}
 
 	City createNewCity(String name,String countryCode,Point location,Point adminCentreLocation) {
 		City city = new City();
+		city.setFeatureId(idGenerator.getNextFeatureId());
+		city.setSource(GISSource.OSM);
+		city.setName(name);
+		city.setLocation(location);
+		city.setAdminCentreLocation(adminCentreLocation);
+		city.setCountryCode(countryCode);
+		return city;
+	}
+	
+	GisFeature createNewPoi(String name,String countryCode,Point location,Point adminCentreLocation) {
+		GisFeature city = new GisFeature();
 		city.setFeatureId(idGenerator.getNextFeatureId());
 		city.setSource(GISSource.OSM);
 		city.setName(name);
@@ -455,7 +488,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 
 
-	protected SolrResponseDto getNearestCity(Point location, String name,String countryCode,Class[] placetypes) {
+	protected SolrResponseDto getNearestByPlaceType(Point location, String name,String countryCode,Class[] placetypes) {
 		if (location ==null || name==null || "".equals(name.trim())){
 			return null;
 		}
@@ -685,6 +718,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     @Required
     public void setCityDao(ICityDao cityDao) {
 		this.cityDao = cityDao;
+	}
+    
+    @Required
+    public void setGisFeatureDao(IGisFeatureDao gisFeatureDao) {
+		this.gisFeatureDao = gisFeatureDao;
 	}
     
 

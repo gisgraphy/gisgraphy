@@ -132,6 +132,8 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
     private IImporterProcessor geonamesAlternateNamesAdmImporter;
     
     private IImporterProcessor geonamesAlternateNamesExtracter;
+    
+    LabelGenerator generator =  LabelGenerator.getInstance();
 
     private ImporterConfig importerConfig;
     
@@ -1197,6 +1199,11 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 		new Long(3017382), country.getFeatureId());
 	assertEquals("wrong featureCode for country " + country, "PCLI",
 		country.getFeatureCode());
+	
+	
+	
+	
+	
 	try {
 	    assertNotNull(gisFeatureDao.getByFeatureId(4043988L));
 	} catch (RuntimeException e1) {
@@ -1371,6 +1378,12 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 			+ flexAdm
 			+ " even if its Adm1code is 00 (autodetection of Adm1code if it is equals to 0)",
 		flexAdm, actualAdm);
+	
+	Assert.assertEquals(generator.generateLabel(flexGisFeature), flexGisFeature.getLabel());
+	//alternate label is not stock and retrieve in DB so we can not check alternate labels here
+	/*Assert.assertTrue("alternate labels are empty and shouldn't be", flexGisFeature.getAlternateLabels().size()!=0);
+	Assert.assertEquals(generator.generateLabels(flexGisFeature).size(), flexGisFeature.getAlternateLabels().size());*/
+	Assert.assertEquals(generator.getFullyQualifiedName(flexGisFeature), flexGisFeature.getFullyQualifiedName());
 
 	if (importerConfig.isTryToDetectAdmIfNotFound()) {
 
@@ -1609,6 +1622,8 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 		    "According to the ImportGisFeatureEmbededAlternateNames option, the city with featureId 0000001 (0 zipcode and 1 alternateNames) should have 0 alternateNames",
 		    0, allAlternateNames.size());
 	}
+	
+	
 
 	// Check that an unkwown country won't throw and won't be imported
 	Country unknowCountry = this.countryDao.getByFeatureId(-3017382L);

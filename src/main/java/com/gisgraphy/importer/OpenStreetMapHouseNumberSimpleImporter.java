@@ -559,7 +559,7 @@ ___W___house"} SHAPE"
 						osm.addHouseNumber(houseNumber);
 						if (house.getZipCode()!=null && osm.getIsInZip()!=null){
 							//we override even if it is already present because it is a set
-							osm.addZip(house.getZipCode());
+							osm.addIsInZip(house.getZipCode());
 						}
 						if (house.getCity()!= null && !osm.isCityConfident()){//we override if it not cityConfident 
 							osm.setIsIn(house.getCity());

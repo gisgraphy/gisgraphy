@@ -925,6 +925,10 @@
 				improve housenumber importer with the new CSV fields (city, zipcode, suburb,shape)
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				city tag as locality are considered as Poi if adm level is not 8
+			</action>
+			
 			</release>
 			
 	</body>

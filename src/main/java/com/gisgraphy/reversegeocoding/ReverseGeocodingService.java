@@ -49,7 +49,6 @@ import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.repository.ICityDao;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.valueobject.Constants;
-import com.gisgraphy.geoloc.GeolocQuery;
 import com.gisgraphy.serializer.common.UniversalSerializerConstant;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.service.ServiceException;
@@ -99,7 +98,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 		long start = System.currentTimeMillis();
 		statsUsageService.increaseUsage(StatsUsageType.REVERSEGEOCODING);
 		OpenStreetMap openStreetMap = openStreetMapDao.getNearestRoadFrom(point);
-		AddressResultsDto addressResultsDto = null;
+		//AddressResultsDto addressResultsDto = null;
 		if (openStreetMap==null){
 			logger.debug("no road found, try to search deeper");
 			openStreetMap =openStreetMapDao.getNearestFrom(point);
@@ -142,7 +141,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 						long end = System.currentTimeMillis();
 						long qTime = end - start;
 						logger.info(query + " took " + (qTime) + " ms and returns a result");
-						addressResultsDto =  new AddressResultsDto(addresses, qTime);
+						//addressResultsDto =  new AddressResultsDto(addresses, qTime);
 						return  new AddressResultsDto(addresses, qTime);
 					}  else {
 						logger.info("found an address at a street  level");
