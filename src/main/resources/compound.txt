@@ -13,7 +13,8 @@ dorf
 df.
 kogel
 kg.
-kreuz kz.
+kreuz
+kz.
 feld
 felde
 fleck

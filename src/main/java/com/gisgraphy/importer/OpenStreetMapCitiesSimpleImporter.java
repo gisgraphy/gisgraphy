@@ -271,7 +271,8 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	//population
 	if(place.getPopulation()==null && !isEmptyField(fields, 8, false)){
 		try {
-			int population = Integer.parseInt(fields[8].replaceAll("\\s+", ""));
+			String populationStr = fields[8];
+			int population = parsePopulation(populationStr);
 			place.setPopulation(population);
 		} catch (NumberFormatException e) {
 			logger.error("can not parse population :"+fields[8]);
@@ -362,6 +363,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	}
 
     }
+
+	protected int parsePopulation(String populationStr) {
+		int population = Integer.parseInt(populationStr.replaceAll("[\\s\\,]", ""));
+		return population;
+	}
     
 	
 

@@ -26,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -314,6 +315,11 @@ public class ImporterHelperTest {
 		urls.add("http://www.goolge.com/notExistingUri");
 		
 		Assert.assertFalse(ImporterHelper.checkUrls(urls));
+	}
+	
+	@Test
+	public void testDownload() throws FileNotFoundException{
+		ImporterHelper.download("http://www.gisgraphy.com/protectfiles/test.php", "/tmp/testdl.txt");
 	}
 	
 }

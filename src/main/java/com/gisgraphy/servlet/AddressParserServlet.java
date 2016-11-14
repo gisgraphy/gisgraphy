@@ -121,7 +121,7 @@ public class AddressParserServlet extends AbstractAddressServlet {
 
 	@Override
 	public boolean checkparameter() {
-		return true;
+		return false;
 	}
 
 }

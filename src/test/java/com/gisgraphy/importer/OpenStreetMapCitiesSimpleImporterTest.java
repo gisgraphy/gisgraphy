@@ -73,6 +73,15 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	}
 	
 	@Test
+	public void parsePopulation(){
+		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
+		Assert.assertEquals(5000,importer.parsePopulation("5000"));
+		Assert.assertEquals(5000,importer.parsePopulation("5 000"));
+		Assert.assertEquals(5000,importer.parsePopulation("5,000"));
+		
+	}
+	
+	@Test
 	public void populatezip(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		City city = new City();

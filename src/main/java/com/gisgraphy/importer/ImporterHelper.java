@@ -68,7 +68,8 @@ import com.gisgraphy.helper.FeatureClassCodeHelper;
  */
 public class ImporterHelper {
 
-    /**
+	
+	/**
      * The readme filename (it must not be processed)
      */
     public static final String EXCLUDED_README_FILENAME = "readme.txt";
@@ -402,6 +403,7 @@ public class ImporterHelper {
 	    URL url = new URL(address);
 	    conn = (HttpURLConnection) url.openConnection();
 	    if (conn instanceof HttpURLConnection) {
+	    	conn.setRequestProperty("User-Agent", "gisgraphy_");
     	((HttpURLConnection) conn).setInstanceFollowRedirects(false);
 	    	
 		int responseCode = ((HttpURLConnection) conn).getResponseCode();
