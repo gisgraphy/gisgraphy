@@ -71,6 +71,9 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     static boolean setupIsCalled = false;
     
    LabelGenerator labelGenerator =  LabelGenerator.getInstance();
+   
+   
+  
     
     @Test
     public void testSetup(){
@@ -328,7 +331,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 
 	}
 	
-	@Test
+	/*@Test
 	public void testGetNearestCity(){
 		ImporterConfig importerConfig = new ImporterConfig();
 		importerConfig.setGeonamesImporterEnabled(true);
@@ -354,9 +357,9 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		Assert.assertEquals(population, actual.getPopulation());
 		EasyMock.verify(citydao);
 		
-	}
+	}*/
 	
-	@Test
+	/*@Test
 	public void testGetNearestCity_filterMunicipality(){
 		ImporterConfig importerConfig = new ImporterConfig();
 		importerConfig.setGeonamesImporterEnabled(true);
@@ -382,7 +385,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		Assert.assertEquals(population, actual.getPopulation());
 		EasyMock.verify(citydao);
 		
-	}
+	}*/
 	
 	@Test
 	public void getBestAdmName(){
@@ -543,6 +546,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm3Name("adm3Name");
     	city.setAdm4Name("adm4Name");
     	city.setAdm5Name("adm5Name");
+    	city.setMunicipality(false);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
 		city.addZipCodes(zipCodes);
@@ -557,8 +561,10 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
 		EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(null);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
+		List<City> cities = new ArrayList<City>();
+		cities.add(city);
+		EasyMock.expect(cityDao.getNearests(location, countryCode, false,OpenStreetMapSimpleImporter.DISTANCE,10)).andReturn(cities);
+		//EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
 		EasyMock.replay(cityDao);
 		openStreetMapSimpleImporter.setCityDao(cityDao);
     	
@@ -603,6 +609,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm3Name("adm3Name");
     	city.setAdm4Name("adm4Name");
     	city.setAdm5Name("adm5Name");
+    	city.setMunicipality(true);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
 		city.addZipCodes(zipCodes);
@@ -611,6 +618,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		final Integer population2 = 456;
 		final String adm2name2= "adm2name2";
 		final City city2 = new City();
+		city2.setMunicipality(true);
 		city2.setPopulation(population2);
 		city2.setAdm2Name(adm2name2);
 		city2.setName(cityName2);
@@ -632,8 +640,14 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
     	EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
-    	EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);
+    	
+    	List<City> cities = new ArrayList<City>();
+		cities.add(city);
+		cities.add(city2);
+		EasyMock.expect(cityDao.getNearests(location, countryCode, false,OpenStreetMapSimpleImporter.DISTANCE,10)).andReturn(cities);
+    	
+    	/*EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
+		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);*/
     	EasyMock.replay(cityDao);
     	openStreetMapSimpleImporter.setCityDao(cityDao);
 
@@ -679,7 +693,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm3Name("adm3NameCity");
     	city.setAdm4Name("adm4NameCity");
     	city.setAdm5Name("adm5NameCity");
-		city.setMunicipality(false);
+		city.setMunicipality(true);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
 		zipCodes.add(new ZipCode("zip1"));
 		city.addZipCodes(zipCodes);
@@ -694,6 +708,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city2.setName(cityName2);
 		city2.setFeatureId(2L);
 		city2.setId(456L);
+		city2.setMunicipality(false);
 		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
 		zipCodes2.add(new ZipCode("zip2"));
 		city2.addZipCodes(zipCodes2);
@@ -709,8 +724,15 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
 		EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);
+		
+		List<City> cities = new ArrayList<City>();
+		cities.add(city2);
+		cities.add(city);
+		EasyMock.expect(cityDao.getNearests(location, countryCode, false,OpenStreetMapSimpleImporter.DISTANCE,10)).andReturn(cities);
+		
+		
+		/*EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
+		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);*/
 		EasyMock.replay(cityDao);
 		openStreetMapSimpleImporter.setCityDao(cityDao);
     	    	
@@ -775,6 +797,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		zipCodes2.add(new ZipCode("zip2"));
 		city2.addZipCodes(zipCodes2);
 		city2.setLocation(GeolocHelper.createPoint(2.1F, 5.1F));
+		city.setMunicipality(true);
 		
 		Point location= GeolocHelper.createPoint(2F, 3F);
     	String countryCode = "FR";
@@ -786,8 +809,14 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
 		EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);
+		/*EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
+		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);*/
+		
+		List<City> cities = new ArrayList<City>();
+		cities.add(city2);
+		cities.add(city);
+		EasyMock.expect(cityDao.getNearests(location, countryCode, false,OpenStreetMapSimpleImporter.DISTANCE,10)).andReturn(cities);
+		
 		EasyMock.replay(cityDao);
 		openStreetMapSimpleImporter.setCityDao(cityDao);
     	    	
@@ -855,6 +884,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		zipCodes2.add(new ZipCode("zip2"));
 		city2.addZipCodes(zipCodes2);
 		city2.setLocation(GeolocHelper.createPoint(4F, 5F));
+		city.setMunicipality(true);
 		
 		
 		Point location= GeolocHelper.createPoint(2F, 3F);
@@ -868,8 +898,15 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
     	EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
-    	EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);
+    	/*EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
+		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city2);*/
+    	
+    	
+    	List<City> cities = new ArrayList<City>();
+		cities.add(city2);
+		cities.add(city);
+		EasyMock.expect(cityDao.getNearests(location, countryCode, false,OpenStreetMapSimpleImporter.DISTANCE,10)).andReturn(cities);
+    	
     	EasyMock.replay(cityDao);
     	openStreetMapSimpleImporter.setCityDao(cityDao);
 
@@ -898,8 +935,11 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     }
     
+    /* this test is not possible in the real life because if we filter first the first city is to be a municipality,
+     *  and if we want the second to be null, it is impossible because if we don't filter we will find 
+     * at least the municipality
     
-    @Test
+  /*  @Test
     public void testSetIsInFields_first_ok_second_null(){
     	OpenStreetMapSimpleImporter openStreetMapSimpleImporter = new OpenStreetMapSimpleImporter();
     	
@@ -913,7 +953,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm4Name("adm4Name");
     	city.setAdm5Name("adm5Name");
 		city.setName(cityName);
-		city.setMunicipality(false);
+		city.setMunicipality(true);
 		city.setFeatureId(1L);
 		city.setId(123L);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
@@ -930,8 +970,13 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
     	EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
-    	EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(null);
+    	
+    	List<City> cities = new ArrayList<City>();
+		cities.add(city);
+		EasyMock.expect(cityDao.getNearests(location, countryCode, false,OpenStreetMapSimpleImporter.DISTANCE,10)).andReturn(cities);
+    	
+    	
+    	
     	EasyMock.replay(cityDao);
     	openStreetMapSimpleImporter.setCityDao(cityDao);
     	
@@ -1021,7 +1066,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     }
     
-    
+    */
     @Test
     public void testSetIsInFields_GetByShape(){
     	OpenStreetMapSimpleImporter openStreetMapSimpleImporter = new OpenStreetMapSimpleImporter();
@@ -1094,8 +1139,11 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
     	EasyMock.expect(cityDao.getByShape(EasyMock.anyObject(Point.class),EasyMock.anyObject(String.class),EasyMock.eq(true))).andReturn(null);
-    	EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
-		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(null);
+    /*	EasyMock.expect(cityDao.getNearest(location, countryCode, true, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(city);
+		EasyMock.expect(cityDao.getNearest(location, countryCode, false, OpenStreetMapSimpleImporter.DISTANCE)).andReturn(null);*/
+    	List<City> cities = new ArrayList<City>();
+		EasyMock.expect(cityDao.getNearests(location, countryCode, false,OpenStreetMapSimpleImporter.DISTANCE,10)).andReturn(cities);
+    	
     	EasyMock.replay(cityDao);
     	openStreetMapSimpleImporter.setCityDao(cityDao);
 
@@ -1143,6 +1191,70 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	
     	
     	
+    }
+    
+    @Test
+    public void testGetNearestCityFromList(){
+ 	   List<City> cities = new ArrayList<City>();
+ 	   City municipality1 = new City();
+ 	   
+ 	   municipality1.setId(1L);
+ 	   municipality1.setMunicipality(true);
+ 	   
+ 	   City municipality2 = new City();
+ 	   municipality2.setId(2L);
+ 	   municipality2.setMunicipality(true);
+ 	   
+ 	   City notMunicipality1 = new City();
+ 	   notMunicipality1.setId(3L);
+ 	   notMunicipality1.setMunicipality(false);
+ 	   
+ 	   City municipality3 = new City();
+ 	   municipality3.setId(4L);
+ 	   municipality3.setMunicipality(true);
+ 	   cities.add(municipality1);
+ 	   cities.add(municipality2);
+ 	   cities.add(notMunicipality1);
+ 	   cities.add(municipality3);
+ 	   
+ 	   OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
+ 	   
+ 	   City actual = importer.getNearestCityFromList(cities, false);
+ 	   Assert.assertEquals(1L, actual.getId().longValue());
+ 	   
+ 	    actual = importer.getNearestCityFromList(cities, true);
+ 	   Assert.assertEquals(1L, actual.getId().longValue());
+ 	   
+ 	   cities = new ArrayList<City>();
+ 	   cities.add(notMunicipality1);
+ 	   cities.add(municipality1);
+ 	   cities.add(municipality2);
+ 	   
+ 	    actual = importer.getNearestCityFromList(cities, false);
+ 	   Assert.assertEquals(3L, actual.getId().longValue());
+ 	   
+ 	    actual = importer.getNearestCityFromList(cities, true);
+ 	   Assert.assertEquals(1L, actual.getId().longValue());
+ 	   
+ 	  cities = new ArrayList<City>();
+	   cities.add(notMunicipality1);
+	   
+	   actual = importer.getNearestCityFromList(cities, false);
+ 	   Assert.assertEquals(3L, actual.getId().longValue());
+ 	   
+ 	    actual = importer.getNearestCityFromList(cities, true);
+ 	   Assert.assertEquals(null, actual);
+ 	   
+ 	   
+ 	  cities = new ArrayList<City>();
+	   cities.add(municipality1);
+	   
+	   actual = importer.getNearestCityFromList(cities, false);
+ 	   Assert.assertEquals(1L, actual.getId().longValue());
+ 	   
+ 	    actual = importer.getNearestCityFromList(cities, true);
+ 	   Assert.assertEquals(1L, actual.getId().longValue());
+ 	   
     }
     
 	  

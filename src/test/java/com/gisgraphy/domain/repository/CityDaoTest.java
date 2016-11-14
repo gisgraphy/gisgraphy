@@ -370,6 +370,87 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
 		.getNearest(p1.getLocation(),"FR",true, 1000000);
 	Assert.assertNull(result);
     }
+    
+    
+    
+    
+    
+    
+    @Test
+    public void testGetNearests() {
+	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
+		3L);
+	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
+		2.46667F, 2L);
+
+	this.cityDao.save(p1);
+	this.cityDao.save(p2);
+	this.cityDao.save(p3);
+	List<City> result = this.cityDao
+		.getNearests(p1.getLocation(),"FR",false, 1000000,100);
+	Assert.assertNotNull(result);
+	Assert.assertEquals(3, result.size());
+	Assert.assertEquals("paris", result.get(0).getName());
+    }
+    
+    @Test
+    public void testGetNearests_limit() {
+	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
+		3L);
+	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
+		2.46667F, 2L);
+
+	this.cityDao.save(p1);
+	this.cityDao.save(p2);
+	this.cityDao.save(p3);
+	List<City> result = this.cityDao
+		.getNearests(p1.getLocation(),"FR",false, 1000000,2);
+	Assert.assertNotNull(result);
+	Assert.assertEquals(2, result.size());
+	Assert.assertEquals("paris", result.get(0).getName());
+    }
+    
+    @Test
+    public void testGetNearests_wrongCountryCode() {
+	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
+		3L);
+	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
+		2.46667F, 2L);
+
+	this.cityDao.save(p1);
+	this.cityDao.save(p2);
+	this.cityDao.save(p3);
+	List<City> result = this.cityDao
+		.getNearests(p1.getLocation(),"DE",false, 1000000,100);
+	Assert.assertNotNull(result);
+	Assert.assertEquals(0, result.size());
+    }
+    
+    @Test
+    public void testGetNearests_filterMunicipality() {
+	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
+		3L);
+	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
+		2.46667F, 2L);
+
+	this.cityDao.save(p1);
+	this.cityDao.save(p2);
+	this.cityDao.save(p3);
+	List<City> result = this.cityDao
+		.getNearests(p1.getLocation(),"FR",true, 1000000,100);
+	Assert.assertNotNull(result);
+	Assert.assertEquals(0, result.size());
+    }
+    
+    
 
     @Test
     public void testGetNearestAndDistanceFromShouldReturnAfullFilledDTO() {

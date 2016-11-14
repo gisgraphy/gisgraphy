@@ -157,9 +157,11 @@ public class GisHelper {
     double lat = Math.toRadians(latInDegree);
     double lon = Math.toRadians(longInDegree);
 
-	double deltaXInDegrees = Math.abs(Math.asin(Math
-		.sin(distance / Constants.RADIUS_OF_EARTH_IN_METERS)
-		/ Math.cos(lat)));
+	double deltaXInDegrees = Math.abs(
+				Math.asin(
+						Math.sin(distance / Constants.RADIUS_OF_EARTH_IN_METERS)/ Math.cos(lat)
+						)
+			);
 	double deltaYInDegrees = Math.abs(distance
 		/ Constants.RADIUS_OF_EARTH_IN_METERS);
 

@@ -427,7 +427,8 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     				return;
     		}
     		//
-    		City city = getNearestCity(street.getLocation(),street.getCountryCode(), true);
+    		List<City> cities = getNearestCities(street.getLocation(),street.getCountryCode());
+    		City city = getNearestCityFromList(cities, true);
     		if (city != null) {
     			street.setPopulation(city.getPopulation());
     			setAdmNames(street, city);
@@ -456,7 +457,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     			}
     		}
     		//
-    		City city2 = getNearestCity(street.getLocation(),street.getCountryCode(), false);
+    		City city2 = getNearestCityFromList(cities, false);
     		if (city2 != null) {
     			if (city != null){
     					if (city.getFeatureId() == city2.getFeatureId()) {
@@ -585,11 +586,40 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	}
     
    
-	protected City getNearestCity(Point location, String countryCode, boolean filterMunicipality) {
+	/*protected City getNearestCity(Point location, String countryCode, boolean filterMunicipality) {
 		if (location ==null){
 			return null;
 		}
 		return cityDao.getNearest(location, countryCode, filterMunicipality, DISTANCE);
+	}*/
+	
+	protected List<City> getNearestCities(Point location, String countryCode) {
+		if (location ==null){
+			return null;
+		}
+		List<City> cities = cityDao.getNearests(location, countryCode, false, DISTANCE,10);
+		if (cities ==null || cities.size()==0){
+			return null;
+		} else {
+			return cities;
+		}
+	}
+	
+	protected City getNearestCityFromList(List<City> cities, boolean filterMunicipality) {
+		if (cities ==null){
+			return null;
+		}
+		for (City city:cities){
+			if (!filterMunicipality  ){
+				return city;
+			} else if (filterMunicipality)
+				if (!city.isMunicipality()){
+					continue;
+				} else {
+				return city;
+			}
+		}
+		return null;
 	}
     
     /**

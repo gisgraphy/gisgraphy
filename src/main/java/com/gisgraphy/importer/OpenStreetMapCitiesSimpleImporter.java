@@ -263,6 +263,9 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			//only if not already a city, because, a node can be after a relation and then node set the municipality to false
 			((City)place).setMunicipality(municipalityDetector.isMunicipality(countrycode, fields[12], fields[0], GISSource.OSM));
 		}
+		if ("locality".equalsIgnoreCase(fields[12])){
+			((City)place).setMunicipality(false);
+		}
 	}
 	//populate new fields
 	//population

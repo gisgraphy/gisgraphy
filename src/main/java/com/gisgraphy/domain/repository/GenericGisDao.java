@@ -639,8 +639,8 @@ public class GenericGisDao<T extends GisFeature> extends
 		    public Object doInHibernate(Session session)
 			    throws PersistenceException {
 		    String pointAsString = "ST_GeometryFromText('POINT("+location.getX()+" "+location.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
-		    String bbox = "st_setSRID(cast ('BOX3D(39.875947845588854 -6.649904839690944,57.85738955675488 11.316505067046899)'as box3d), 4326)";
-		    String bbox2 = "ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";
+		   /* String bbox = "st_setSRID(cast ('BOX3D(39.875947845588854 -6.649904839690944,57.85738955675488 11.316505067046899)'as box3d), 4326)";
+		    String bbox2 = "ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";*/
 			String queryString = "from " + persistentClass.getSimpleName()
 				+ " as c  where st_distance_sphere(c.location,"+pointAsString+") < "+distance
 				//+" AND st_contains("+bbox2+",c.location)=true ";
@@ -661,12 +661,55 @@ public class GenericGisDao<T extends GisFeature> extends
 			Query qry = session.createQuery(queryString).setMaxResults(1);
 
 			//qry.setParameter("point2", location);
-			City result = (City) qry.uniqueResult();
+			T result = (T) qry.uniqueResult();
 
 			return result;
 		    }
 		});
 	}
+    
+    @SuppressWarnings("unchecked")
+  	public List<T> getNearests(final Point location,final String countryCode,final boolean filterMunicipality,final int distance,final  int limit) {
+  		Assert.notNull(location);
+  		return (List<T>) this.getHibernateTemplate().execute(new HibernateCallback() {
+
+  		    public Object doInHibernate(Session session)
+  			    throws PersistenceException {
+  		    String pointAsString = "ST_GeometryFromText('POINT("+location.getX()+" "+location.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
+  		  /*  String bbox = "st_setSRID(cast ('BOX3D(39.875947845588854 -6.649904839690944,57.85738955675488 11.316505067046899)'as box3d), 4326)";
+  		    String bbox2 = "ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";*/
+  			String queryString = "from " + persistentClass.getSimpleName()
+  				+ " as c  where st_distance_sphere(c.location,"+pointAsString+") < "+distance
+  				//+" AND st_contains("+bbox2+",c.location)=true ";
+  				+ " AND "+GisHelper.makeEnvelope("c", location.getY(),location.getX(), distance)
+  	
+  						//GisHelper.getBoundingBox(criteriaQuery.getSQLAlias(criteria), this.point
+  							//	.getY(), this.point.getX(), distance)
+  				
+  				;//left outer join c.zipCodes z
+  			if (filterMunicipality){
+  				queryString+=" and c.municipality=true";
+  			}
+  			if (countryCode!=null ){
+  				queryString+=" and c.countryCode='"+countryCode+"'";
+  			}
+  			queryString = queryString+ " order by st_distance_sphere(c.location,"+pointAsString+")";
+
+  			Query qry = session.createQuery(queryString);
+  			if (limit >0){
+  				qry.setMaxResults(limit);
+  			}
+
+  			//qry.setParameter("point2", location);
+  			List<T> results = (List<T>) qry.list();
+  			if (results == null) {
+			    results = new ArrayList<T>();
+			}
+
+  			return results;
+  		    }
+  		});
+  	}
 
     public void createGISTIndexForShapeColumn() {
 		 this.getHibernateTemplate().execute(

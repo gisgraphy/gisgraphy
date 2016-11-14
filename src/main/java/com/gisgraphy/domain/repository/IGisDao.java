@@ -218,6 +218,14 @@ public interface IGisDao<T> extends IDao<T, java.lang.Long> {
      */
     public T getNearest(final Point location,final String countryCode,final boolean filterMunicipality,final int distance);
 
+    /**
+     * @param location The point from which we want to find GIS Object
+     * @param countryCode restrict the search to a given country code (useful for feature near a frontier
+     * @param filterMunicipality if  we should  filter municipality or not
+     * @param distance te distance in meter
+     * @return the nearests city differ from getnearestAndDistance because doesn't return distance field and with zip and alternateNames are populated
+     */
+    public List<T> getNearests(final Point location,final String countryCode,final boolean filterMunicipality,final int distance,int limit);
 
     /**
      * create the shape index for the entity if it doesn't already exists. 
