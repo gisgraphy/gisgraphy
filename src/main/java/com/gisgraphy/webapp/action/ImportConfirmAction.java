@@ -147,6 +147,7 @@ public class ImportConfirmAction extends ActionSupport {
 			importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapHouseNumberFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
+			importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapPoisFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
 			
@@ -169,6 +170,7 @@ public class ImportConfirmAction extends ActionSupport {
 				importerConfig.setOpenStreetMapFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapHouseNumberFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapCitiesFilesToDownload(openstreetmapCountryFileListAsString);
+				importerConfig.setOpenStreetMapAdmFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapPoisFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setGeonamesFilesToDownload(geonamesFileList);
 				// TODO +log
@@ -177,6 +179,7 @@ public class ImportConfirmAction extends ActionSupport {
 				importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapHouseNumberFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
+				importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapPoisFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
 			}

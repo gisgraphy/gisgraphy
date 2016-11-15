@@ -164,6 +164,7 @@ public class ImportConfirmActionTest {
     	 action.setConfig();
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapAdmFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapCitiesFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapPoisFilesToDownload());
     	Assert.assertEquals(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getGeonamesFilesToDownload());
@@ -179,6 +180,7 @@ public class ImportConfirmActionTest {
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapCitiesFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapAdmFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapPoisFilesToDownload());
     	Assert.assertEquals(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getGeonamesFilesToDownload());
     }
@@ -199,6 +201,7 @@ public class ImportConfirmActionTest {
     	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapFilesToDownload());
     	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
     	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapCitiesFilesToDownload());
+    	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapAdmFilesToDownload());
     	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapPoisFilesToDownload());
     	Assert.assertEquals("FR.zip;DE.zip;US.zip;"+ImporterConfig.GEONAMES_ALTERNATENAME_ZIP_FILE, importerConfig.getGeonamesFilesToDownload());
     }

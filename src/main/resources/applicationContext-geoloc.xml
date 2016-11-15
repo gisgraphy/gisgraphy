@@ -162,6 +162,10 @@
 		class="com.gisgraphy.importer.OpenStreetMapHouseNumberFileRetriever" >
 	</bean>
 	
+	<bean id="openStreetMapAdmFileRetriever"
+		class="com.gisgraphy.importer.OpenStreetMapAdmFileRetriever" >
+	</bean>
+	
 	<bean id="openStreetMapHouseNumberSimpleImporter" class="com.gisgraphy.importer.OpenStreetMapHouseNumber${classifier}Importer"
 	parent="abstract${classifier}ImporterProcessor">
 		<property name="openStreetMapDao" ref= "openStreetMapDao" />
@@ -190,6 +194,7 @@
 		<list>
 				<ref bean="geonamesFileRetriever"/>
 				<ref bean="quattroshapesFileRetriever"/>
+				<ref bean="openStreetMapAdmFileRetriever"/>
 				<ref bean="openStreetMapCitiesFileRetriever"/>
 				<ref bean="geonamesZipCodeFileRetriever" />
 				<ref bean="openstreetmapFileRetriever" />
@@ -286,6 +291,7 @@
 		<property name="openStreetMapDir" value="${importer.openstreetmap.dir}"/>
 		<property name="openStreetMapHouseNumberDir" value="${importer.openstreetmap.housenumbers.dir}"/>
 		<property name="openStreetMapCitiesDir" value="${importer.openstreetmap.cities.dir}"/>
+		<property name="openStreetMapAdmDir" value="${importer.openstreetmap.adms.dir}"/>
 		<property name="openStreetMapPoisDir" value="${importer.openstreetmap.pois.dir}"/>
 		<property name="geonamesZipCodeDir" value="${importer.geonames.zipcode.dir}"/>
 		<property name="quattroshapesDir" value="${importer.quattroshapes.dir}"/>
@@ -297,6 +303,7 @@
 		<property name="openStreetMapFilesToDownload" value="${importer.openstreetmapFilesToDownload}"/>
 		<property name="openStreetMapHouseNumberFilesToDownload" value="${importer.openstreetmapHouseNumberFilesToDownload}"/>
 		<property name="openStreetMapCitiesFilesToDownload" value="${importer.openStreetMapCitiesFilesToDownload}"/>
+		<property name="openStreetMapAdmFilesToDownload" value="${importer.openStreetMapAdmFilesToDownload}"/>
 		<property name="openStreetMapPoisFilesToDownload" value="${importer.openStreetMapPoisFilesToDownload}"/>
 		<property name="quattroshapesFilesToDownload" value="${importer.quattroshapesFilesToDownload}"/>
 		
@@ -311,6 +318,7 @@
 		<property name="openstreetMapDownloadURL" value="${importer.openstreetmap.downloadURL}"/>
 		<property name="openstreetMaphouseNumbersDownloadURL" value="${importer.openstreetmap.housenumbers.downloadURL}"/>
 		<property name="openstreetMapCitiesDownloadURL" value="${importer.openstreetmap.cities.downloadURL}"/>
+		<property name="openstreetMapAdmDownloadURL" value="${importer.openstreetmap.adms.downloadURL}"/>
 		<property name="openstreetMapPoisDownloadURL" value="${importer.openstreetmap.pois.downloadURL}"/>
 		<property name="quattroshapesDownloadURL" value="${importer.quattroshapes.downloadURL}"/>
 		

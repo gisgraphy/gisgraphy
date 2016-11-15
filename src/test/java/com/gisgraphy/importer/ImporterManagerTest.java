@@ -306,7 +306,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	
     }
 
-    @Test
+   /* @Test
     public void testImportAdm2WithBadGisFeatureIdFormatShouldNotThrows() {
 	// save option
 	String savedAdmFileName = importerConfig.getAdm2FileName();
@@ -352,7 +352,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	}
 
     }
-
+*/
     //
     @Test
     /*
@@ -492,41 +492,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	}
     }
 
-    @Test
-    public void testImportAdm1WithWrongNumberOfFieldsThrowsOptionsToTrueShouldThrows() {
-	// save option
-	boolean savedWNOFOption = importerConfig.isWrongNumberOfFieldsThrows();
-	String savedAdmFileName = importerConfig.getAdm1FileName();
-	AdmExtracterStrategyOptions admStrategy = importerConfig
-		.getAdm1ExtracterStrategyIfAlreadyExists();
-	// set option
-
-	this.importerConfig
-		.setAdm1FileName(ADM1_FILENAME_WITH_WRONG_NUMBER_OF_FIELDS);
-	this.importerConfig
-		.setAdm1ExtracterStrategyIfAlreadyExists(AdmExtracterStrategyOptions.skip);
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	this.importerConfig.setWrongNumberOfFieldsThrows(true);
-	try {
-	    processAndCheckGeonamesAdm1Importer(true);
-	    fail("the wrongNumberOfFieldsThrows option should be set to true and is "
-		    + importerConfig.isWrongNumberOfFieldsThrows()
-		    + " and should has been throws");
-	} catch (ImporterException e) {
-	    assertEquals(
-		    "The cause of the exception is not of type WrongNumberOfFieldsException",
-		    e.getCause().getClass(), WrongNumberOfFieldsException.class);
-
-	} finally {
-	    // restore option
-	    importerConfig.setWrongNumberOfFieldsThrows(savedWNOFOption);
-	    importerConfig.setAdm1FileName(savedAdmFileName);
-	    importerConfig.setAdm1ExtracterStrategyIfAlreadyExists(admStrategy);
-	}
-    }
+  
 
   
 
@@ -560,12 +526,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	}
     }
 
-    @Test
-    public void testImportAlternateNamesWithWrongNumberOfFieldsThrowsOptionsToTrueShouldThrows() {
-	// this test is unuseful because the format has optional fields
-	// (shortNames,preferredNamed,...)
-	return;
-    }
+   
 
     /* test missing fields */
 
@@ -593,320 +554,8 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	}
     }
 
-    @Test
-    public void testAdmExtracterWithMissingRequiredFieldThrowsOptionsToFalseShouldNotThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-
-	// set option
-	this.importerConfig.setMissingRequiredFieldThrows(false);
-	try {
-	    processAndCheckGeonamesAdmExtracter(false);
-	} catch (ImporterException e) {
-	    fail("The MissingRequiredFieldThrows option should be set to false and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should nothas been throws");
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	}
-    }
-
-    @Test
-    public void testImportAdm1WithMissingRequiredFieldThrowsOptionsToTrueShouldThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm1FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	// set option
-	this.importerConfig.setAdm1FileName(ADM1_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(true);
-	try {
-	    processAndCheckGeonamesAdm1Importer(true);
-	    fail("the MissingRequiredFieldThrows option should be set to true and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should has been throws");
-	} catch (ImporterException e) {
-	    assertEquals(
-		    "the cause of the exception is not of type MissingRequiredFieldThrows",
-		    e.getCause().getClass(),
-		    MissingRequiredFieldException.class);
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm1FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportAdm1WithMissingRequiredFieldThrowsOptionsToFalseShouldNotThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm1FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	// set option
-	this.importerConfig.setAdm1FileName(ADM1_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(false);
-	try {
-	    processAndCheckGeonamesAdm1Importer(false);
-
-	} catch (ImporterException e) {
-	    fail("the MissingRequiredFieldThrows option should be set to false and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should not has been throws");
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm1FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportAdm2WithMissingRequiredFieldThrowsOptionsToTrueShouldThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm2FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	// set option
-	this.importerConfig.setAdm2FileName(ADM2_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(true);
-	try {
-	    processAndCheckGeonamesAdm2Importer();
-	    fail("the MissingRequiredFieldThrows option should be set to true and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should has been throws");
-	} catch (ImporterException e) {
-	    assertEquals(
-		    "the cause of the exception is not of type MissingRequiredFieldThrows",
-		    e.getCause().getClass(),
-		    MissingRequiredFieldException.class);
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm2FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportAdm2WithMissingRequiredFieldThrowsOptionsToFalseShouldNotThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm2FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	// set option
-	this.importerConfig.setAdm2FileName(ADM2_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(false);
-	try {
-	    processAndCheckGeonamesAdm2Importer();
-	} catch (ImporterException e) {
-	    fail("the MissingRequiredFieldThrows option should be set to false and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should not has been throws");
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm2FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportAdm3WithMissingRequiredFieldThrowsOptionsToTrueShouldThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm3FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	processAndCheckGeonamesAdm2Importer();
-	// set option
-	this.importerConfig.setAdm3FileName(ADM3_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(true);
-	try {
-	    processAndCheckGeonamesAdm3Importer();
-	    fail("the MissingRequiredFieldThrows option should be set to true and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should has been throws");
-	} catch (ImporterException e) {
-	    assertEquals(
-		    "the cause of the exception is not of type MissingRequiredFieldThrows",
-		    e.getCause().getClass(),
-		    MissingRequiredFieldException.class);
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm3FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportAdm3WithMissingRequiredFieldThrowsOptionsToFalseShouldNotThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm3FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	processAndCheckGeonamesAdm2Importer();
-	// set option
-	this.importerConfig.setAdm3FileName(ADM3_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(false);
-	try {
-	    processAndCheckGeonamesAdm3Importer();
-
-	} catch (ImporterException e) {
-	    fail("The MissingRequiredFieldThrows option should be set to false and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should not has been throws");
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm3FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportAdm4WithMissingRequiredFieldThrowsOptionsToTrueShouldThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm4FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	processAndCheckGeonamesAdm2Importer();
-	processAndCheckGeonamesAdm3Importer();
-	// set option
-	this.importerConfig.setAdm4FileName(ADM4_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(true);
-	try {
-	    processAndCheckGeonamesAdm4Importer();
-	    fail("the MissingRequiredFieldThrows option should be set to true and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should has been throws");
-	} catch (ImporterException e) {
-	    assertEquals(
-		    "the cause of the exception is not of type MissingRequiredFieldThrows",
-		    e.getCause().getClass(),
-		    MissingRequiredFieldException.class);
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm4FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportAdm4WithMissingRequiredFieldThrowsOptionsToFalseShouldNotThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	String savedAdmFileName = importerConfig.getAdm4FileName();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	processAndCheckGeonamesAdm2Importer();
-	processAndCheckGeonamesAdm3Importer();
-	// set option
-	try {
-	    this.importerConfig
-		    .setAdm4FileName(ADM4_FILENAME_WITH_MISSING_FIELDS);
-	    this.importerConfig.setMissingRequiredFieldThrows(false);
-	    processAndCheckGeonamesAdm4Importer();
-	} catch (ImporterException e) {
-	    fail("the MissingRequiredFieldThrows option should be set to false and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should not has been throws");
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig.setAdm4FileName(savedAdmFileName);
-	}
-    }
-
-    @Test
-    public void testImportFeaturesWithMissingRequiredFieldThrowsOptionsToTrueShouldThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	processAndCheckGeonamesAdm2Importer();
-	processAndCheckGeonamesAdm3Importer();
-	processAndCheckGeonamesAdm4Importer();
-	// set option
-	this.importerConfig.setMissingRequiredFieldThrows(true);
-	try {
-	    processAndCheckGeonamesFeatureImporter();
-	    fail("the MissingRequiredFieldThrows option should be set to true and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should has been throws");
-	} catch (ImporterException e) {
-	    assertEquals(
-		    "the cause of the exception is not of type MissingRequiredFieldThrows",
-		    e.getCause().getClass(),
-		    MissingRequiredFieldException.class);
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	}
-    }
-
-    @Test
-    public void testImportFeaturesWithMissingRequiredFieldThrowsOptionsToFalseShouldNotThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	processAndCheckGeonamesAdm2Importer();
-	processAndCheckGeonamesAdm3Importer();
-	processAndCheckGeonamesAdm4Importer();
-	// set option
-	this.importerConfig.setMissingRequiredFieldThrows(false);
-	try {
-	    processAndCheckGeonamesFeatureImporter();
-	} catch (ImporterException e) {
-	    fail("the MissingRequiredFieldThrows option should be set to false and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should not has been throws");
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	}
-    }
-
+  
+   
     
     @Test
     public void testImportAlternateNamesWithMissingRequiredFieldThrowsOptionsToTrueShouldNotThrowsbeCauseItshouldBeFilteredByAlternateNameExtracter() {
@@ -954,48 +603,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	}
     }
 
-    @Test
-    public void testImportAlternateNamesWithMissingRequiredFieldThrowsOptionsToFalseShouldNotThrows() {
-	// save option
-	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
-	boolean savedIGFAOption = importerConfig
-		.isImportGisFeatureEmbededAlternateNames();
-	String savedFileName = importerConfig.getAlternateNamesFileName();
-	// force alternateNames to be imported from alternatenames file
-
-	importerConfig.setImportGisFeatureEmbededAlternateNames(false);
-	processAndCheckGeonamesFileRetriever();
-	processAndCheckGeonamesAdmExtracter(false);
-	processAndCheckGeonamesLanguageImporter();
-	processAndCheckGeonamesCountryImporter();
-	processAndCheckGeonamesAdm1Importer(true);
-	processAndCheckGeonamesAdm2Importer();
-	processAndCheckGeonamesAdm3Importer();
-	processAndCheckGeonamesAdm4Importer();
-	int allAlternateNamesSize = processAndCheckGeonamesFeatureImporter();
-
-	// set option
-	this.importerConfig
-		.setAlternateNamesFileName(ALTERNATENAME_FEATURES_FILENAME_WITH_MISSING_FIELDS);
-	this.importerConfig.setMissingRequiredFieldThrows(false);
-	try {
-		 processAndCheckGeonamesAlternateNamesAdmImporter(allAlternateNamesSize);
-	    processAndCheckGeonamesAlternateNamesImporter(allAlternateNamesSize);
-
-	} catch (ImporterException e) {
-	    fail("the MissingRequiredFieldThrows option should be set to false and is "
-		    + importerConfig.isMissingRequiredFieldThrows()
-		    + " and should not has been throws");
-
-	} finally {
-	    // restore option
-	    importerConfig.setMissingRequiredFieldThrows(savedMRFOption);
-	    importerConfig
-		    .setImportGisFeatureEmbededAlternateNames(savedIGFAOption);
-	    importerConfig.setAlternateNamesFileName(savedFileName);
-	}
-    }
-
+  
     /**
      * test all the geonames processor in the correct order and check Expected
      * Results

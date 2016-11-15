@@ -49,7 +49,7 @@ public class AddressParserServletTest {
     @Test
     public void checkParameter() throws IOException{
     	AddressParserServlet addressParserServlet = new AddressParserServlet();
-        Assert.assertTrue(addressParserServlet.checkparameter());
+        Assert.assertFalse(addressParserServlet.checkparameter());
     }
     
    @Test

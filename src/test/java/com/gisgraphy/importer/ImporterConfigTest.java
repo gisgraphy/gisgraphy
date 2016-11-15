@@ -292,6 +292,7 @@ public class ImporterConfigTest {
 		importerConfig.setOpenStreetMapHouseNumberFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setOpenStreetMapPoisFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
+		importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
 		
@@ -299,6 +300,7 @@ public class ImporterConfigTest {
 		importerConfig.setGeonamesDownloadURL("http://download.geonames.org/export/dump/");
 		importerConfig.setOpenstreetMapDownloadURL(baseUrl+"/streets/");
 		importerConfig.setOpenstreetMapCitiesDownloadURL(baseUrl+"/cities/");
+		importerConfig.setOpenstreetMapAdmDownloadURL(baseUrl+"/adms/");
 		importerConfig.setOpenstreetMapPoisDownloadURL(baseUrl+"/pois/");
 		importerConfig.setOpenstreetMaphouseNumbersDownloadURL(baseUrl+"/housenumbers/");
 		importerConfig.setQuattroshapesDownloadURL(baseUrl+"/quattroshapes/");

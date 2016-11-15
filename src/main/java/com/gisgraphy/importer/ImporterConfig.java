@@ -111,6 +111,8 @@ public class ImporterConfig {
     
     public final static String OPENSTREETMAP_CITIES_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
     
+    public final static String OPENSTREETMAP_ADM_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
+    
     public final static String OPENSTREETMAP_POI_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
     
     public final static String QUATTROSHAPES_DEFAULT_FILES_TO_DOWNLOAD = "shapes.tar.bz2";
@@ -174,6 +176,8 @@ public class ImporterConfig {
 
     private String openStreetMapCitiesDir;
     
+    private String openStreetMapAdmDir;
+    
     private String openStreetMapPoisDir;
     
     private String geonamesZipCodeDir;
@@ -185,6 +189,8 @@ public class ImporterConfig {
     private String openstreetMapHouseNumbersDownloadURL;
     
     private String openstreetMapCitiesDownloadURL;
+    
+    private String openstreetMapAdmDownloadURL;
     
     private String openstreetMapPoisDownloadURL;
 
@@ -203,6 +209,8 @@ public class ImporterConfig {
     private String openStreetMapHouseNumberFilesToDownload = "";
     
     private String openStreetMapCitiesFilesToDownload = "";
+    
+    private String openStreetMapAdmFilesToDownload = "";
     
     private String openStreetMapPoisFilesToDownload = "";
 
@@ -817,6 +825,126 @@ public class ImporterConfig {
     public List<String> getOpenStreetMapCitiesDownloadFilesListFromOption() {
     	return splitSemiColmunStringToList(openStreetMapCitiesFilesToDownload);
     }
+    
+    
+    /*
+     *
+     *   
+           _           
+  __ _  __| |_ __ ___  
+ / _` |/ _` | '_ ` _ \ 
+| (_| | (_| | | | | | |
+ \__,_|\__,_|_| |_| |_|
+                       
+
+   	
+   	
+   	
+     */
+     
+     
+     /**
+      * @return The option
+      * @see #setOpenstreetMapAdmDownloadURL(String)
+      */
+     public String getOpenstreetMapAdmDownloadURL() {
+     	return openstreetMapAdmDownloadURL;
+     }
+     
+     /**
+      * The HTTP URL of the directory Where openstreetmap cities files are to be
+      * download from
+      * 
+      * @param openstreetMapAdmDownloadURL
+      *            The option
+      */
+     @Required
+     public void setOpenstreetMapAdmDownloadURL(String openstreetMapAdmDownloadURL) {
+ 	if (!openstreetMapAdmDownloadURL.endsWith("/")) {
+ 	    this.openstreetMapAdmDownloadURL = openstreetMapAdmDownloadURL + "/";
+ 	} else {
+ 	    this.openstreetMapAdmDownloadURL = openstreetMapAdmDownloadURL;
+ 	}
+ 	logger.debug("set openstreetMapAdmDownloadURL to " + this.openstreetMapAdmDownloadURL);
+     }
+     
+
+     /**
+      * @return The option
+      * @see #setOpenStreetMapAdmDir(String)
+      */
+     public String getOpenStreetMapAdmDir() {
+     	return this.openStreetMapAdmDir;
+     }
+     
+
+     /**
+      * The directory where the openStreetMap adm files will be retrieved and
+      * processed. It must ends with / or \ according to the System
+      * 
+      * @param openStreetMapAdmDir
+      *            the option
+      */
+     @Required
+     public void setOpenStreetMapAdmDir(String openStreetMapAdmDir) {
+ 	if (!openStreetMapAdmDir.endsWith(File.separator)) {
+ 	    logger.debug(openStreetMapAdmDir + " does not end with " + File.separator);
+ 	    this.openStreetMapAdmDir = openStreetMapAdmDir + File.separator;
+ 	} else {
+ 	    this.openStreetMapAdmDir = openStreetMapAdmDir;
+ 	}
+ 	logger.debug("set openStreetMapAdmDir to " + this.openStreetMapAdmDir);
+     }
+     
+     
+     
+     /**
+      * @return true if the directory with the osm Adm file to import exists and is
+      *         accessible
+      */
+     public boolean isOpenStreetMapAdmDirectoryAccessible() {
+     	return isDirectoryAccessible(getOpenStreetMapAdmDir());
+     }
+     
+     /**
+      * @return The option
+      * @see #setOpenStreetMapAdmFilesToDownload(String)
+      */
+     public String getOpenStreetMapAdmFilesToDownload() {
+     	return this.openStreetMapAdmFilesToDownload;
+     }
+     
+     
+    
+     
+     
+     /**
+      * The list of the cities Openstreetmap to be download from the
+      * {@link #openstreetMapCitiesDownloadURL}. the several files will be separated by
+      * {@link #OPTION_SEPARATOR}. if null or empty, will be set to {
+      * {@link #OPENSTREETMAP_CITIES_DEFAULT_FILES_TO_DOWNLOAD}
+      * 
+      * @param openStreetMapCitiesFilesToDownload
+      *            The openstreetmap filesToDownload to set
+      */
+     @Required
+     public void setOpenStreetMapAdmFilesToDownload(String openStreetMapAdmFilesToDownload) {
+ 	if (openStreetMapAdmFilesToDownload == null || openStreetMapAdmFilesToDownload.trim().equals("")) {
+ 	    logger.warn("the option openStreetMapAdmFilesToDownload is not set and will be set to his default value : " + OPENSTREETMAP_ADM_DEFAULT_FILES_TO_DOWNLOAD);
+ 	    this.openStreetMapAdmFilesToDownload = OPENSTREETMAP_ADM_DEFAULT_FILES_TO_DOWNLOAD;
+ 	} else {
+ 	    this.openStreetMapAdmFilesToDownload = openStreetMapAdmFilesToDownload;
+ 	    logger.info("openStreetMapAdmFilesToDownload=" + openStreetMapAdmFilesToDownload);
+ 	}
+     }
+     
+     /**
+      * @return A list of string with the files to be download, processed from
+      *         {@link #openStreetMapCitiesFilesToDownload}
+      */
+     public List<String> getOpenStreetMapAdmDownloadFilesListFromOption() {
+     	return splitSemiColmunStringToList(openStreetMapAdmFilesToDownload);
+     }
     
     /*
   	 ___  ___ _ __ ___    _ __   ___ (_)
