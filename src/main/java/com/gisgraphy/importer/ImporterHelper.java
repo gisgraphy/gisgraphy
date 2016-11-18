@@ -38,6 +38,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -107,18 +109,13 @@ public class ImporterHelper {
     		+ ")"
     		+ "(?:===)"// don't take the 3 equals sign ===
     		+ "((?:(?!___|\"|}|(?:,\\w+(?=(?:_name)))|(?:,(?=(?:name)))).)+)[,]?[}]?"// the name
-    		
-    		
-    /*		 public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
-    		+ "(?:[_]{0,3})"//not the underscore (optionaly)
-    		+ "[,]?(?:(?!(?:(?:name|(?:___)))).)*" //something not name or ___ =>alt for instance
-    		+ "(?:(?:(?:short_)?name)[:]?)"//name:
-    		+ "((?:(?:(?!===).)?)"//lang: something not ===
-    		+ ")"
-    		+ "(?:===)"// don't take the 3 equals sign ===
-    		+ "((?:(?!___|\"|}|(?:,\\w+(?=(?:_name)))|(?:,(?=(?:name)))).)+)[,]?[}]?"// the name*/
     		;    
     public static final Pattern ALTERNATENAMES_EXTRACTION_PATTERN = Pattern.compile(ALTERNATENAMES_EXTRACTION_REGEXP);
+    
+    public static final String ISINADM_EXTRACTION_REGEXP = "((?:(?!___).)+)(?=(?:___|$))(?:___|$)"
+    		+ "((?:(?!___)\\d)*)(?=(?:___|$))(?:___|$)"
+    		+ "(\\d+)(?:___|$)?";    
+    public static final Pattern ISINADM_EXTRACTION_PATTERN = Pattern.compile(ISINADM_EXTRACTION_REGEXP);
     
     /**
      * The regexp that every zipped country file dump matches
@@ -708,6 +705,39 @@ public class ImporterHelper {
 			}
 		}
 		return street;
+		
+	}
+	
+	public final static List<AdmDTO> parseIsInAdm(String isInAdm){
+		List<AdmDTO> adms = new ArrayList<AdmDTO>();
+		if (isInAdm ==null ){
+			return adms;
+		}
+		Matcher matcher = ISINADM_EXTRACTION_PATTERN.matcher(isInAdm);
+		int i = 0;
+		while (matcher.find()){
+			if (matcher.groupCount() != 3) {
+				logger.warn("wrong number of fields for isInAdm no " + i + "for line " + isInAdm);
+				continue;
+			}
+			String alternateName = matcher.group(1);
+			int level;
+			try {
+				level = Integer.valueOf(matcher.group(2));
+			} catch (NumberFormatException e) {
+				logger.warn("wrong adm level for isInAdm no " + i + "for line " + isInAdm);
+				continue;
+			}
+			int openstreetmapId=0;
+			try {
+				openstreetmapId = Integer.valueOf(matcher.group(3));
+			} catch (NumberFormatException e) {
+				logger.warn("wrong openstreetmapId for isInAdm no " + i + "for line " + isInAdm);
+			}
+			adms.add(new AdmDTO(alternateName, level, openstreetmapId));
+		}
+		Collections.sort(adms);
+		return adms;
 		
 	}
 	

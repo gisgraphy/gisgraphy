@@ -1402,29 +1402,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		 
 	 }
 	
-	@Test
-	public void parseIsInAdm(){
-		String s = "Île-de-France___6___8649___Paris___4___71525___Paris___7___1641193";
-		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
-		List<AdmDTO> adms = importer.parseIsInAdm(s);
-		Assert.assertEquals(new AdmDTO("Paris", 4, 71525L), adms.get(0));
-		Assert.assertEquals(new AdmDTO("Île-de-France", 6, 8649L), adms.get(1));
-		Assert.assertEquals(new AdmDTO("Paris", 7, 1641193L), adms.get(2));
-		
-		adms = importer.parseIsInAdm("");
-		Assert.assertNotNull(adms);
-		Assert.assertEquals(0,adms.size());
-		
-		adms = importer.parseIsInAdm(null);
-		Assert.assertNotNull(adms);
-		Assert.assertEquals(0,adms.size());
-		
-		//wo adm level
-		s = "Île-de-France______8649___Paris___4___71525___Paris___7___1641193";
-		adms = importer.parseIsInAdm(s);
-		Assert.assertEquals(new AdmDTO("Paris", 4, 71525L), adms.get(0));
-		Assert.assertEquals(new AdmDTO("Paris", 7, 1641193L), adms.get(1));
-	}
+	
 	
 	
 }

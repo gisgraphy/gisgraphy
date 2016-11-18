@@ -87,14 +87,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
     public static final Output MINIMUM_OUTPUT_STYLE = Output.withDefaultFormat().withStyle(OutputStyle.SHORT);
     
-    public static final String ISINADM_EXTRACTION_REGEXP = "((?:(?!___).)+)(?=(?:___|$))(?:___|$)"
-    		+ "((?:(?!___)\\d)*)(?=(?:___|$))(?:___|$)"
-    		+ "(\\d+)(?:___|$)?";    
-    public static final Pattern ISINADM_EXTRACTION_PATTERN = Pattern.compile(ISINADM_EXTRACTION_REGEXP);
-    
-   
-
-	protected IIdGenerator idGenerator;
+    protected IIdGenerator idGenerator;
     
     protected ICityDao cityDao;
     
@@ -307,7 +300,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			osmId = Long.parseLong(osmIdAsString);
 			place.setOpenstreetmapId(osmId);
 		} catch (NumberFormatException e) {
-			logger.error("can not parse openstreetmap id "+ osmId);
+			logger.error("can not parse openstreetmap id "+ osmIdAsString);
 		}
 	}
 	//adm level, we need it to populate adms
@@ -330,7 +323,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 	//isinadm
 	if(!isEmptyField(fields, 14, false)){
-		List<AdmDTO> adms = parseIsInAdm(fields[14]);
+		List<AdmDTO> adms = ImporterHelper.parseIsInAdm(fields[14]);
 		populateAdmNames(place,adminLevel,adms);
 		if (place.getAdm()==null){
 			LinkAdm(place,adms);
@@ -527,38 +520,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		return null;
 	}
 	
-	protected List<AdmDTO> parseIsInAdm(String isInAdm){
-		List<AdmDTO> adms = new ArrayList<AdmDTO>();
-		if (isInAdm ==null ){
-			return adms;
-		}
-		Matcher matcher = ISINADM_EXTRACTION_PATTERN.matcher(isInAdm);
-		int i = 0;
-		while (matcher.find()){
-			if (matcher.groupCount() != 3) {
-				logger.warn("wrong number of fields for isInAdm no " + i + "for line " + isInAdm);
-				continue;
-			}
-			String alternateName = matcher.group(1);
-			int level;
-			try {
-				level = Integer.valueOf(matcher.group(2));
-			} catch (NumberFormatException e) {
-				logger.warn("wrong adm level for isInAdm no " + i + "for line " + isInAdm);
-				continue;
-			}
-			int openstreetmapId=0;
-			try {
-				openstreetmapId = Integer.valueOf(matcher.group(3));
-			} catch (NumberFormatException e) {
-				logger.warn("wrong openstreetmapId for isInAdm no " + i + "for line " + isInAdm);
-			}
-			adms.add(new AdmDTO(alternateName, level, openstreetmapId));
-		}
-		Collections.sort(adms);
-		return adms;
-		
-	}
+	
 	protected GisFeature populateAdmNames(GisFeature gisFeature, int currentLevel, List<AdmDTO> admdtos){
 		if (gisFeature ==null || admdtos ==null || admdtos.size() == 0){
 			return gisFeature;

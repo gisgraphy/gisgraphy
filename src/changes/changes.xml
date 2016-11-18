@@ -862,71 +862,75 @@
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				features has a location and an adminCentreLocation that reflect more the center than a geometric one. it is feed only when data is available
+				Features has a location and an adminCentreLocation that reflect more the center than a geometric one. it is feed only when data is available
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				city adm names are now based first on geometry and then osm field (is_in*)
+				City adm names are now based first on geometry and then osm field (is_in*)
 			</action>
 			
 			<action dev="David Masclet" type="update">
-				remove legacy code for fulltext search in postgresql
+				Remove legacy code for fulltext search in postgresql
 			</action>
 			
 			<action dev="David Masclet" type="update">
-				we now managed the languages of the alternatenames in OSM (we used to only managed the names and don't care about the lang)
+				We now managed the languages of the alternatenames in OSM (we used to only managed the names and don't care about the lang)
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				add an address formater and a label generator 
+				Add an address formater and a label generator 
 			</action>
 			
 			<action dev="David Masclet" type="update">
-				rename fullyqualifiedAddress field for street to fullyqualified name (common between feature and street)
+				Rename fullyqualifiedAddress field for street to fullyqualified name (common between feature and street)
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				add some new fields for street : maxSpeed, maxSpeedBackward, speedMode, lanes, toll, surface, azimuthStart, azimuthEnd
+				Add some new fields for street : maxSpeed, maxSpeedBackward, speedMode, lanes, toll, surface, azimuthStart, azimuthEnd
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				add some new label fields : label, labelPostal, fullyQualifiedName, alternateLabels
+				Add some new label fields : label, labelPostal, fullyQualifiedName, alternateLabels
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				add License attributions to feeds
+				Add License attributions to feeds
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				add a country detector
+				Add a country detector
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				don't import zip with cedex
+				Don't import zip with cedex
 			</action>
 			
 			<action dev="David Masclet" type="add">
-				reverse geocoding service and street service returns more informations on street (number of lanes, speed limit, surface, if the street is toll or not, the azimuth for the beginning of the street and for the end)
+				Reverse geocoding service and street service returns more informations on street (number of lanes, speed limit, surface, if the street is toll or not, the azimuth for the beginning of the street and for the end)
 			</action>
 			
 			<action dev="David Masclet" type="update">
-				we don't import wikipedia alternatenames since it is not relevant for geocoding (forward and reverse)
+				We don't import wikipedia alternatenames since it is not relevant for geocoding (forward and reverse)
 			</action>
 			
 			<action dev="David Masclet" type="update">
-				street webservice and reverse geocoding returns maxSpeed, maxSpeedBackward, speedMode, lanes, toll, surface, azimuthStart,azimuthEnd, length, streetType, oneWay
+				Street webservice and reverse geocoding returns maxSpeed, maxSpeedBackward, speedMode, lanes, toll, surface, azimuthStart,azimuthEnd, length, streetType, oneWay
 			</action>
 			
 			<action dev="David Masclet" type="update">
-				better zipcode management at a street level instead of city level
+				Better zipcode management at a street level instead of city level
 			</action>
 			
 			<action dev="David Masclet" type="update">
-				improve housenumber importer with the new CSV fields (city, zipcode, suburb,shape)
+				Improve housenumber importer with the new CSV fields (city, zipcode, suburb,shape)
 			</action>
 			
 			<action dev="David Masclet" type="update">
 				city tag as locality are considered as Poi if adm level is not 8
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				Add a state abbreviator
 			</action>
 			
 			</release>
