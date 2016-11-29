@@ -70,6 +70,17 @@ public class LabelGenerator {
 		}
 		return null;
 	}
+	
+	public String generateLabel(Adm feature) {
+		if (feature!=null & feature.getName()!=null){
+			if (feature.getLevel()>1  && feature.getAdm1Name()!=null){
+				return feature.getName()+", "+feature.getAdm1Name();
+			} else {
+				return feature.getName();
+			}
+		}
+		return null;
+	}
 
 	public Set<String> generateLabels(OpenStreetMap street) {
 		Set<String> labels = new HashSet<String>();

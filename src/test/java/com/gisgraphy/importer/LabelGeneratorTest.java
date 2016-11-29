@@ -37,6 +37,63 @@ public class LabelGeneratorTest {
 	
 	BasicAddressFormater formater =  BasicAddressFormater.getInstance();
 	
+@Test
+public void testGenerateLabel_GisFeature(){
+	GisFeature gisFeature = new City();
+	Assert.assertNull(generator.generateLabel(gisFeature));
+	
+	gisFeature.setName("name");
+	Assert.assertEquals("name", generator.generateLabel(gisFeature));
+	
+	gisFeature.setIsIn("isIn");
+	Assert.assertEquals("name, isIn", generator.generateLabel(gisFeature));
+	
+}
+
+
+@Test
+public void testGenerateLabel_osm(){
+	OpenStreetMap osm = new OpenStreetMap();
+	Assert.assertNull(generator.generateLabel(osm));
+	
+	osm.setName("name");
+	Assert.assertEquals("name", generator.generateLabel(osm));
+	
+	osm.setIsIn("isIn");
+	Assert.assertEquals("name, isIn", generator.generateLabel(osm));
+	
+}
+
+@Test
+public void testGenerateLabel_Adm(){
+	Adm osm = new Adm(1);
+	Assert.assertNull(generator.generateLabel(osm));
+
+	osm.setName("name");
+	Assert.assertEquals("name", generator.generateLabel(osm));
+
+	osm = new Adm(2);
+	Assert.assertNull(generator.generateLabel(osm));
+
+	osm.setName("name");
+	Assert.assertEquals("name", generator.generateLabel(osm));
+
+	osm.setAdm1Name("adm1name");
+	Assert.assertEquals("name, adm1name", generator.generateLabel(osm));
+
+
+	osm = new Adm(3);
+	Assert.assertNull(generator.generateLabel(osm));
+
+	osm.setName("name");
+	Assert.assertEquals("name", generator.generateLabel(osm));
+
+	osm.setAdm1Name("adm1name");
+	Assert.assertEquals("name, adm1name", generator.generateLabel(osm));
+
+}
+	
+	/*-------------------------------labels-----------------------------------------*/
 	
 	@Test
 	public void generatePostal_Address(){
