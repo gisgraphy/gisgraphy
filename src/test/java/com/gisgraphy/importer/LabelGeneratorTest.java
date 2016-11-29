@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.addressparser.Address;
+import com.gisgraphy.addressparser.commons.GeocodingLevels;
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.geoloc.entity.Adm;
@@ -19,17 +21,22 @@ import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.Restaurant;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
+import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.reversegeocoding.HouseNumberDistance;
 import com.gisgraphy.test.GisgraphyTestHelper;
+import com.vividsolutions.jts.geom.Point;
 
 public class LabelGeneratorTest {
 
 	LabelGenerator generator = LabelGenerator.getInstance();
 	
 	BasicAddressFormater formater =  BasicAddressFormater.getInstance();
+	
 	
 	@Test
 	public void generatePostal_Address(){
@@ -39,8 +46,33 @@ public class LabelGeneratorTest {
 	}
 	
 	@Test
+	public void generatePostal_Address_shouldContainsCountryCode(){
+		Address address= new Address();
+		address.setStreetName("foo bar street");
+		address.setHouseNumber("3");
+		address.setCity("paris");
+		address.setCitySubdivision("3e arrondissement");
+		address.setAdm1Name("alabama");
+		address.setAdm2Name("adm2");
+		address.setAdm3Name("ADM2");
+		address.setAdm4Name("adm4");
+		address.setAdm5Name("adm5");
+		address.setCountryCode("US");
+		String actual =  generator.generatePostal(address);
+		System.out.println(actual);
+		Assert.assertEquals(1, countNumberOfOccurence(actual,"\\(AL\\)"));
+		Assert.assertEquals(1, countNumberOfOccurence(actual,"alabama"));
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), actual);
+	}
+	
+	@Test
 	public void generatePostal_Openstreetmap(){
-		Assert.fail("not implemented TODO");
+		 OpenStreetMap streetOSM = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		OpenStreetMap streetOSM2 = GisgraphyTestHelper.createOpenStreetMapForPeterMartinStreet();
+		String postal  =generator.generatePostal(streetOSM);
+		Assert.assertEquals(formater.getEnvelopeAddress(generator.buildAddressFromOpenstreetMap(streetOSM), DisplayMode.COMMA), postal);
+		postal  =generator.generatePostal(streetOSM2);
+		Assert.assertEquals(formater.getEnvelopeAddress(generator.buildAddressFromOpenstreetMap(streetOSM2), DisplayMode.COMMA), postal);
 	}
 	
 	@Test
@@ -510,6 +542,26 @@ public class LabelGeneratorTest {
 	}
 	
 	@Test
+	public void testGetFullyQualifiedNameFeatureShouldhaveStateCode() {
+		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
+		city.setCountryCode("us");
+
+		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
+		zipcodes.add(new ZipCode("code"));
+		
+		city.setAdm1Name("alabama");
+		city.setAdm2Name("adm2Name");
+		city.setAdm3Name("adm2Name");
+		city.setAdm4Name("adm2Name");
+		city.setAdm5Name("adm4Name");
+		//Note that city has already a zipcode
+		String fullyQualifiedName = generator.getFullyQualifiedName(city,false);
+		System.out.println(fullyQualifiedName);
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"alabama"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"\\(AL\\)"));
+	}
+	
+	@Test
 	public void testGetFullyQualifiedNameFeatureShouldNotContainsAllThePreviousIsTheSame_CaseInsensitive() {
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
@@ -642,6 +694,7 @@ public class LabelGeneratorTest {
 		EasyMock.expect(gisFeature.getAdm3Name()).andReturn("adm3name").times(1);
 		EasyMock.expect(gisFeature.getAdm4Name()).andReturn("adm4name").times(1);
 		EasyMock.expect(gisFeature.getAdm5Name()).andReturn("adm5name").times(1);
+		EasyMock.expect(gisFeature.getCountryCode()).andReturn("US").times(2);
 		EasyMock.expect(gisFeature.getName()).andReturn("name").times(2);
 		
 		return gisFeature;
@@ -656,6 +709,7 @@ public class LabelGeneratorTest {
 			EasyMock.expect(osm.getAdm3Name()).andReturn("adm3name").times(1);
 			EasyMock.expect(osm.getAdm4Name()).andReturn("adm4name").times(1);
 			EasyMock.expect(osm.getAdm5Name()).andReturn("adm5name").times(1);
+			EasyMock.expect(osm.getCountryCode()).andReturn("us").times(2);
 			EasyMock.expect(osm.getName()).andReturn("name").times(2);
 			
 			return osm;
@@ -738,6 +792,35 @@ public class LabelGeneratorTest {
 		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"^name"));
 		
 	    }
+	    
+	    @Test
+	    public void testGetFullyQualifiedNameOsmShouldContainsStateCode() {
+		OpenStreetMap osm = EasyMock.createMock(OpenStreetMap.class);
+		EasyMock.expect(osm.getAdm1Name()).andReturn("alabama").times(1);
+		EasyMock.expect(osm.getIsInPlace()).andReturn("IsInPlace").times(1);
+		EasyMock.expect(osm.getIsIn()).andReturn("IsIn").times(1);
+		EasyMock.expect(osm.getAdm2Name()).andReturn("adm2name").times(1);
+		EasyMock.expect(osm.getAdm3Name()).andReturn("adm3name").times(1);
+		EasyMock.expect(osm.getAdm4Name()).andReturn("adm4name").times(1);
+		EasyMock.expect(osm.getAdm5Name()).andReturn("adm5name").times(1);
+		EasyMock.expect(osm.getName()).andReturn("name").times(2);
+		EasyMock.expect(osm.getCountryCode()).andStubReturn("us");
+		EasyMock.expect(osm.getZipCode()).andStubReturn(null);
+		EasyMock.expect(osm.getIsInZip()).andStubReturn(null);
+		EasyMock.replay(osm);
+		String fullyQualifiedName = generator.getFullyQualifiedName(osm, false);
+		System.out.println(fullyQualifiedName);
+		
+		EasyMock.verify(osm);
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm3Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm4Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm5Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm2Name"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"alabama"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"\\(AL\\)"));
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"^name"));
+		
+	    }
 
 	    @Test
 	    public void testGetCountry() {
@@ -764,6 +847,25 @@ public class LabelGeneratorTest {
 			String actual = generator.getFullyQualifiedName(address);
 			System.out.println(actual);
 			Assert.assertEquals(1, countNumberOfOccurence(actual,"adm2"));
+		}
+	    
+	    @Test
+		public void getFullyQualifiedNameAddressShouldContainsStateCode(){
+			Address address= new Address();
+			address.setStreetName("foo bar street");
+			address.setHouseNumber("3");
+			address.setCity("paris");
+			address.setCitySubdivision("3e arrondissement");
+			address.setAdm1Name("alabama");
+			address.setAdm2Name("adm2");
+			address.setAdm3Name("ADM2");
+			address.setAdm4Name("adm4");
+			address.setAdm5Name("adm5");
+			address.setCountryCode("US");
+			String actual = generator.getFullyQualifiedName(address);
+			System.out.println(actual);
+			Assert.assertEquals(1, countNumberOfOccurence(actual,"\\(AL\\)"));
+			Assert.assertEquals(1, countNumberOfOccurence(actual,"alabama"));
 		}
 		
 		@Test
@@ -862,6 +964,296 @@ public class LabelGeneratorTest {
 			Assert.assertEquals("3, foo bar street, dependentLocality, district, quarter, paris, adm2, France", actual);
 
 		}
+		
+		/*------------------------------------------addreshelper--------------------*/
+
+		
+	
+
+	@Test
+	public void getNearestHouse_WrongParameter() {
+		Assert.assertNull(generator.getNearestHouse(new TreeSet<HouseNumber>(), null));
+		Assert.assertNull(generator.getNearestHouse(null, GeolocHelper.createPoint(3D, 4D)));
+		Assert.assertNull(generator.getNearestHouse(new TreeSet<HouseNumber>(), GeolocHelper.createPoint(3D, 4D)));
+	}
+	
+	@Test
+	public void getNearestHouse_OneHouse() {
+		TreeSet<HouseNumber> houses = new TreeSet<HouseNumber>();
+		Point houseLocation = GeolocHelper.createPoint(3D, 4D);
+		HouseNumber house = new HouseNumber("1",houseLocation);
+		houses.add(house);
+		Point searchPoint = GeolocHelper.createPoint(6D, 7D);
+		HouseNumberDistance nearestHouse = generator.getNearestHouse(houses, searchPoint);
+		Assert.assertEquals(new HouseNumberDistance(house, GeolocHelper.distance(searchPoint, houseLocation)),nearestHouse);
+	}
+	
+	@Test
+	public void getNearestHouse_SeveralHouse() {
+		TreeSet<HouseNumber> houses = new TreeSet<HouseNumber>();
+		Point houseLocation = GeolocHelper.createPoint(4D, 5D);
+		HouseNumber house_far = new HouseNumber("far",houseLocation);
+		
+		Point houseLocation2 = GeolocHelper.createPoint(3.1D, 4.1D);
+		HouseNumber house2_near = new HouseNumber("near",houseLocation2);
+		
+		houses.add(house_far);
+		houses.add(house2_near);
+		
+		Point searchPoint = GeolocHelper.createPoint(3D, 4D);
+		HouseNumberDistance nearestHouse = generator.getNearestHouse(houses, searchPoint);
+		Assert.assertEquals(new HouseNumberDistance(house2_near, GeolocHelper.distance(searchPoint, houseLocation2)),nearestHouse);
+	}
+	
+	@Test
+	public void buildAddressFromOpenstreetMap_NullOpenstreetmap(){
+		Assert.assertNull(generator.buildAddressFromOpenstreetMap(null));
+	}
+	
+	
+	
+	@Test
+	public void buildAddressFromOpenstreetMap(){
+		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		osm.setAdm1Name("adm1Name");
+		osm.setAdm2Name("adm2Name");
+		osm.setAdm3Name("adm3Name");
+		osm.setAdm4Name("adm4Name");
+		osm.setAdm5Name("adm5Name");
+		osm.setZipCode("zipCodeSet");
+		osm.setCountryCode("US");
+		Address address = generator.buildAddressFromOpenstreetMap(osm);
+		Assert.assertEquals(osm.getName(), address.getStreetName());
+		Assert.assertEquals(osm.getIsIn(), address.getCity());
+		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
+		Assert.assertEquals(osm.getIsInAdm(), address.getState());
+		Assert.assertEquals(osm.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(osm.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals("When there is a zipcode, we take it","zipCodeSet", address.getZipCode());
+		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(osm.getLatitude(), address.getLat());
+		Assert.assertEquals(osm.getLongitude(), address.getLng());
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertNotNull(address.getFormatedPostal());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
+		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
+		Assert.assertEquals(osm.getStreetType().toString(), address.getStreetType());
+		Assert.assertEquals(osm.getLength(), address.getLength());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+	}
+	
+	@Test
+	public void buildAddressFromOpenstreetMap_severalZip(){
+		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		osm.setAdm1Name("adm1Name");
+		osm.setAdm2Name("adm2Name");
+		osm.setAdm3Name("adm3Name");
+		osm.setAdm4Name("adm4Name");
+		osm.setAdm5Name("adm5Name");
+		osm.setCountryCode("US");
+		osm.setZipCode(null);
+		Assert.assertTrue("the zipcodes should be filled for this set, please fix the dataset",osm.getIsInZip().size()>0);
+		Address address = generator.buildAddressFromOpenstreetMap(osm);
+		Assert.assertEquals(osm.getName(), address.getStreetName());
+		Assert.assertEquals(osm.getIsIn(), address.getCity());
+		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
+		Assert.assertEquals(osm.getIsInAdm(), address.getState());
+		Assert.assertEquals(osm.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(osm.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals("When there is more than one zipcode, and zip is null, we take the best one",generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
+		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(osm.getLatitude(), address.getLat());
+		Assert.assertEquals(osm.getLongitude(), address.getLng());
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertNotNull(address.getFormatedPostal());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
+		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
+		Assert.assertEquals(osm.getStreetType().toString(), address.getStreetType());
+		Assert.assertEquals(osm.getLength(), address.getLength());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+	}
+	
+	@Test
+	public void buildAddressFromOpenstreetMapAndPoint(){
+		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		Point point = GeolocHelper.createPoint(2D, 3D);
+		Address address = generator.buildAddressFromOpenstreetMapAndPoint(osm,point);
+		Assert.assertEquals(osm.getName(), address.getStreetName());
+		Assert.assertEquals(osm.getIsIn(), address.getCity());
+		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
+		Assert.assertEquals(osm.getIsInAdm(), address.getState());
+		Assert.assertEquals("when zipcode is set, we don't take bestzip of is_in",osm.getZipCode(), address.getZipCode());
+		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(osm.getLatitude(), address.getLat());
+		Assert.assertEquals(osm.getLongitude(), address.getLng());
+		Assert.assertEquals(GeocodingLevels.STREET, address.getGeocodingLevel());
+		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
+		
+		//
+		Assert.assertEquals(GeolocHelper.distance(point, osm.getLocation()), address.getDistance().doubleValue(),0.01);
+		
+		
+		
+	}
+	
+	@Test
+	public void buildAddressFromHousenumberDistance(){
+		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		String number = "2";
+		HouseNumber houseNumber = new HouseNumber(number,GeolocHelper.createPoint(3D, 4D));
+		String name = "houseName";
+		houseNumber.setName(name);
+		osm.addHouseNumber(houseNumber);
+		osm.setZipCode(null);
+		Double distance =55D;
+		HouseNumberDistance houseNumberDistance = new HouseNumberDistance(houseNumber, distance );
+		Address address = generator.buildAddressFromHouseNumberDistance(houseNumberDistance);
+		Assert.assertEquals(osm.getName(), address.getStreetName());
+		Assert.assertEquals(osm.getIsIn(), address.getCity());
+		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
+		Assert.assertEquals(osm.getIsInAdm(), address.getState());
+		Assert.assertEquals("when zip is null, we take the best one",generator.getBestZipString(osm.getIsInZip()), address.getZipCode());
+		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(houseNumber.getLatitude(),address.getLat());
+		Assert.assertEquals(houseNumber.getLongitude(), address.getLng());
+		Assert.assertEquals(GeocodingLevels.HOUSE_NUMBER, address.getGeocodingLevel());
+		Assert.assertTrue(address.getFormatedFull().contains("2,"));
+		
+		//
+		Assert.assertEquals(distance, address.getDistance().doubleValue(),0.01);
+		Assert.assertEquals(name, address.getName());
+		Assert.assertEquals(number, address.getHouseNumber());
+		
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
+		Assert.assertTrue(address.getFormatedFull().contains(number));
+		Assert.assertTrue(address.getFormatedPostal().contains(number));
+		
+		Assert.assertEquals(osm.isToll(), address.isToll());
+		Assert.assertEquals(osm.getSurface(), address.getSurface());
+		Assert.assertEquals(osm.getLanes(), address.getLanes());
+		Assert.assertEquals(osm.getSpeedMode()+"", address.getSpeedMode());
+		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
+		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
+		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+	}
+	
+	@Test
+	public void buildAddressFromcity(){
+		City city = new City();
+		city.setName("name");
+		city.setIsInAdm("isInAdm");
+		city.setAdm1Name("adm1Name");
+		city.setAdm2Name("adm2Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm5Name("adm5Name");
+		city.setIsInAdm("isInAdm");
+		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
+		zipcodes.add(new ZipCode("zip"));
+		city.setZipCodes(zipcodes);
+		city.setLocation(GeolocHelper.createPoint(2D, 3D));
+		city.setCountryCode("countryCode");
+		
+		
+		Address address = generator.buildAddressFromcity(city);
+		Assert.assertEquals(city.getName(), address.getCity());
+		Assert.assertEquals(city.getIsInAdm(), address.getState());
+		Assert.assertEquals(city.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(city.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(city.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(city.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(city.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals(city.getZipCodes().iterator().next().toString(), address.getZipCode());
+		Assert.assertEquals(city.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(GeocodingLevels.CITY, address.getGeocodingLevel());
+		Assert.assertEquals(city.getLatitude(), address.getLat());
+		Assert.assertEquals(city.getLongitude(), address.getLng());
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
+		
+	}
+	
+	@Test
+	public void buildAddressFromCityAndPoint(){
+		City city = new City();
+		city.setName("name");
+		city.setIsInAdm("isInAdm");
+		city.setAdm1Name("adm1Name");
+		city.setAdm2Name("adm2Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm5Name("adm5Name");
+		city.setIsInAdm("isInAdm");
+		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
+		zipcodes.add(new ZipCode("zip"));
+		city.setZipCodes(zipcodes);
+		city.setLocation(GeolocHelper.createPoint(2D, 3D));
+		city.setCountryCode("countryCode");
+		Point point = GeolocHelper.createPoint(5D, 4D);
+		
+		
+		Address address = generator.buildAddressFromCityAndPoint(city,point);
+		Assert.assertEquals(city.getName(), address.getCity());
+		Assert.assertEquals(city.getIsInAdm(), address.getState());
+		Assert.assertEquals(city.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(city.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(city.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(city.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(city.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals(city.getZipCodes().iterator().next().toString(), address.getZipCode());
+		Assert.assertEquals(city.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(GeocodingLevels.CITY, address.getGeocodingLevel());
+		Assert.assertEquals(city.getLatitude(), address.getLat());
+		Assert.assertEquals(city.getLongitude(), address.getLng());
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
+		Assert.assertEquals(GeolocHelper.distance(point, city.getLocation()), address.getDistance().doubleValue(),0.0001);
+	}
+	
 
 	  
 

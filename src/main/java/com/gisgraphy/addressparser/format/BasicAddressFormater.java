@@ -245,7 +245,12 @@ public class BasicAddressFormater {
 	String[] substrings = getFormatString(scriptType, regionCode, address).split("\\*");
 	for (String substr : substrings) {
 		StringBuilder currentLine = new StringBuilder();
+		int donTputNextComma = -1;
+		int current_item = 0;
 		for (char c : substr.toCharArray()) {
+			boolean lineIsNotEmpty = currentLine.toString().trim().length()!=0;
+			String sep= ", ";
+			current_item++;
 			String part = "";
 			if (c == '0'){
 				/*AddressFormatInfo formatInfo = formatMap.get(regionCode);
@@ -255,6 +260,10 @@ public class BasicAddressFormater {
 			}
 			else if (c == '1'){
 				part = joinAndSkipNulls(" ",address.getHouseNumber(), address.getHouseNumberInfo());
+				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty){
+					part=", "+part;
+				}
+				donTputNextComma =2;
 			}
 			else if (c == '2'){
 				StreetTypeOrder order = detectStreetTypeOrderFromAddress(address);
@@ -276,9 +285,15 @@ public class BasicAddressFormater {
 					nameAndType = joinAndSkipNulls(" ",address.getStreetName(),address.getStreetType());
 				}
 				part = joinAndSkipNulls(" ",address.getPreDirection(), nameAndType, address.getPostDirection());
+				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty && donTputNextComma<1){
+					part=", "+part;
+				}
 			}
 			else if (c == '3'){
-				part = joinAndSkipNulls(" ",address.getCitySubdivision(), address.getDependentLocality(), address.getQuarter(),address.getDistrict());
+				part = joinAndSkipNulls(", ",address.getCitySubdivision(), address.getDependentLocality(), address.getQuarter(),address.getDistrict());
+				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty  && donTputNextComma<1){
+					part=", "+part;
+				}
 			}
 			else if (c == '4'){
 				//not managed yet
@@ -289,12 +304,18 @@ public class BasicAddressFormater {
 				} else if (isNotNullOrEmpty(address.getCity())){
 					part = address.getCity();
 				}
+				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty  && donTputNextComma<1){
+					part=", "+part;
+				}
 			}
 			else if (c == '6'){
 				AddressFormatInfo info = formatMap.get(regionCode);
 				if (info!=null && !info.getOptionalState()){
 					String state = getState(address);
 					part = joinAndSkipNulls(" ",state);;
+				}
+				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty){
+					part=", "+part;
 				}
 			}
 			else if (c == '7'){
@@ -304,12 +325,17 @@ public class BasicAddressFormater {
 				//for future use
 			}
 			else if (c == '9'){
-				part = joinAndSkipNulls(" ",address.getPOBox(),address.getPOBoxInfo(),address.getPOBoxAgency(),address.getPostOfficeBox());
+				part = joinAndSkipNulls(", ",address.getPOBox(),address.getPOBoxInfo(),address.getPOBoxAgency(),address.getPostOfficeBox());
+				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty  && donTputNextComma<1){
+					part=", "+part;
+				}
 			}
 			else {
 				part=c+"";
 			}
-			currentLine.append(part).append(" ");
+			donTputNextComma--;
+			currentLine.append(part);
+				currentLine.append(" ");
 		}
 
 		String normalizedStr = removeAllRedundantSpaces(currentLine.toString());
@@ -430,6 +456,7 @@ public class BasicAddressFormater {
    private String removeAllRedundantSpaces(String str) {
 		str = str.trim();
 		str = str.replaceAll(" +", " ");
+		str = str.replaceAll(" ,", ",");
 		return str;
 	    }
    

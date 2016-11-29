@@ -75,14 +75,27 @@ public class AddressFormaterTest {
     }
 
    
-
+@Test
+public void testCitySubdivision(){
+	Address address =new Address();
+	address.setCitySubdivision("citySubdivision");
+	address.setCity("city");
+	address.setStreetName("street");
+	address.setStreetType("type");
+	
+	String real = formater.getEnvelopeAddress(address, ScriptType.LTR, DisplayMode.COMMA);
+	Assert.assertEquals("street type, citySubdivision, city", real);
+	
+	real = formater.getEnvelopeAddress(address, ScriptType.LTR, DisplayMode.SINGLE_LINE);
+	Assert.assertEquals("street type citySubdivision, city", real);
+}
    
 
     @Test
     public void testLines_US() {
 	List<String> expected = new ArrayList<String>();
 	expected.add("1098 Alta Ave");
-	expected.add("Mt View CA 94043");
+	expected.add("Mt View, CA 94043");
 
 	List<String> real = formater.getLines(US_CA_ADDRESS);
 	for (int i = 0; i < expected.size(); i++) {
@@ -94,7 +107,7 @@ public class AddressFormaterTest {
     public void testEnvelopeAddress_US_ALLMODE() {
 	List<String> expected = new ArrayList<String>();
 	expected.add("1098 Alta Ave");
-	expected.add("Mt View CA 94043");
+	expected.add("Mt View, CA 94043");
 
 	String real = formater.getEnvelopeAddress(US_CA_ADDRESS, DisplayMode.SINGLE_LINE);
 	Assert.assertEquals(expected.get(0) + " " + expected.get(1), real);
@@ -112,7 +125,7 @@ public class AddressFormaterTest {
 	List<String> expected = new ArrayList<String>();
 	expected.add("Mr. Liu");
 	expected.add("3 Hsin-yi Rd.");
-	expected.add("\u5927\u5B89\u5340 \u53F0\u5317\u5E02 106");
+	expected.add("\u5927\u5B89\u5340, \u53F0\u5317\u5E02 106");
 							      // Da-an district
 
 	String real = formater.getEnvelopeAddress(CN_ADDRESS, ScriptType.LTR, DisplayMode.SINGLE_LINE);
@@ -131,9 +144,9 @@ public class AddressFormaterTest {
     @Test
     public void testEnvelopeAddress_CN_RTL_ALLMODE() {
 	List<String> expected = new ArrayList<String>();
-	expected.add("106 \u53F0\u5317\u5E02");
+	expected.add("106, \u53F0\u5317\u5E02");
 	expected.add("\u5927\u5B89\u5340"); // Taipei city, Da-an district
-	expected.add("Rd. Hsin-yi 3");
+	expected.add("Rd. Hsin-yi, 3");
 	expected.add("Mr. Liu");
 
 	String real = formater.getEnvelopeAddress(CN_ADDRESS, ScriptType.RTL, DisplayMode.SINGLE_LINE);

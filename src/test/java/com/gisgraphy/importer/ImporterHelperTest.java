@@ -29,12 +29,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.helper.FileHelper;
 import com.gisgraphy.test.GisgraphyTestHelper;
 
@@ -344,5 +346,57 @@ public class ImporterHelperTest {
 		Assert.assertEquals(new AdmDTO("Paris", 4, 71525L), adms.get(0));
 		Assert.assertEquals(new AdmDTO("Paris", 7, 1641193L), adms.get(1));
 	}
+	
+	 @Test
+	 public void populateAdmNames(){
+		 List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+		 AdmDTO dto1 = new AdmDTO("admName1", 4, 123L);
+		 AdmDTO dto2 = new AdmDTO("admName2", 5, 123L);
+		 AdmDTO dto3 = new AdmDTO("admName2", 6, 123L);//should be ignre because same name as previous
+		 AdmDTO dto4 = new AdmDTO("admName4", 7, 123L);
+		 AdmDTO dto5 = new AdmDTO("admName5", 8, 123L);//should be ignore because 8 >= 8
+		 dtos.add(dto1);
+		 dtos.add(dto2);
+		 dtos.add(dto3);
+		 dtos.add(dto4);
+		 dtos.add(dto5);
+		 Collections.sort(dtos);
+		 
+		 City city = new City();
+		 ImporterHelper.populateAdmNames(city, 8, dtos);
+		 Assert.assertEquals("admName1", city.getAdm1Name());
+		 Assert.assertEquals("admName2", city.getAdm2Name());
+		 Assert.assertEquals("admName4", city.getAdm3Name());
+		 
+	 }
+	 
+	 @Test
+	 public void populateAdmNames_ManyLevels(){
+		 List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+		 AdmDTO dto1 = new AdmDTO("admName1", 3, 123L);
+		 AdmDTO dto2 = new AdmDTO("admName2", 4, 123L);
+		 AdmDTO dto3 = new AdmDTO("admName3", 5, 123L);//should be ignre because same name as previous
+		 AdmDTO dto4 = new AdmDTO("admName4", 6, 123L);
+		 AdmDTO dto5 = new AdmDTO("admName5", 7, 123L);
+		 AdmDTO dto6 = new AdmDTO("admName6", 8, 123L);
+		 
+		 dtos.add(dto1);
+		 dtos.add(dto2);
+		 dtos.add(dto3);
+		 dtos.add(dto4);
+		 dtos.add(dto5);
+		 dtos.add(dto6);
+		 Collections.sort(dtos);
+		 
+		 City city = new City();
+		 ImporterHelper.populateAdmNames(city, 9, dtos);
+		 System.out.println(city);
+		 Assert.assertEquals("admName1", city.getAdm1Name());
+		 Assert.assertEquals("admName2", city.getAdm2Name());
+		 Assert.assertEquals("admName3", city.getAdm3Name());
+		 Assert.assertEquals("admName4", city.getAdm4Name());
+		 Assert.assertEquals("admName5", city.getAdm5Name());
+		 
+	 }
 	
 }

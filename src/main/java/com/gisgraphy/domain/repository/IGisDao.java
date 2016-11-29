@@ -56,6 +56,18 @@ public interface IGisDao<T> extends IDao<T, java.lang.Long> {
      *                 if the FeatureId is null
      */
     public T getByFeatureId(final Long featureId);
+    
+    /**
+     * It is not the same as {@link IDao#get(java.io.Serializable)} which
+     * retrieve an object from his PK.
+     * 
+     * @param featureId
+     *                the featureid of the GIS object to retrieve
+     * @return the Gis Object with the specified openstreetmap id.
+     * @throws IllegalArgumentException
+     *                 if the FeatureId is null
+     */
+    public T getByOpenStreetMapId(final Long openstreetmapId);
 
     /**
      * Returns inconsistant object (in most case object With featureid < 0)

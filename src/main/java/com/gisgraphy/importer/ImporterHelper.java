@@ -632,14 +632,21 @@ public class ImporterHelper {
 						}
 						alternateNames = alternateNamesWODuplicates;
 					}
-										
+					List<AlternateName> toBeAdded = new ArrayList<AlternateName>();					
 					for (String name:alternateNames){
 						if (lang!=null &&  !"".equals(lang.trim())){
-							feature.addAlternateName(new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP));
+							AlternateName alternateName2 = new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+							alternateName2.setGisFeature(feature);
+							toBeAdded.add(alternateName2);
+							//feature.addAlternateName(alternateName2);
 						} else {
-							feature.addAlternateName(new AlternateName(name.trim(),AlternateNameSource.OPENSTREETMAP));
+							AlternateName alternateName2 = new AlternateName(name.trim(),AlternateNameSource.OPENSTREETMAP);
+							alternateName2.setGisFeature(feature);
+							toBeAdded.add(alternateName2);
+							//feature.addAlternateName(alternateName2);
 						}
 					}
+					feature.addAlternateNames(toBeAdded);
 			}
 		}
 		return feature;
@@ -741,7 +748,22 @@ public class ImporterHelper {
 		
 	}
 	
-	
+	public static  GisFeature populateAdmNames(GisFeature gisFeature, int currentOsmLevel, List<AdmDTO> admdtos){
+		if (gisFeature ==null || admdtos ==null || admdtos.size() == 0){
+			return gisFeature;
+		}
+		int level = 1;
+		String lastName="";
+		for (AdmDTO dto: admdtos){
+			if ((dto.getLevel() < currentOsmLevel || currentOsmLevel == 0) && !lastName.equalsIgnoreCase(dto.getAdmName()) ){
+				//only if adm level < or not set
+				gisFeature.setAdmName(level++,dto.getAdmName() );
+				lastName = dto.getAdmName();
+			}
+		}
+		return gisFeature;
+		
+	}
 	
 	public static boolean isUnwantedZipCode(String zipcode){
 		if (zipcode == null || "".equals(zipcode.trim()) || UNWANTED_ZIPCODE_PATTERN.matcher(zipcode).matches()){

@@ -49,6 +49,7 @@ import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.repository.ICityDao;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.valueobject.Constants;
+import com.gisgraphy.importer.LabelGenerator;
 import com.gisgraphy.serializer.common.UniversalSerializerConstant;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.service.ServiceException;
@@ -72,8 +73,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 	@Resource
 	protected IStatsUsageService statsUsageService;
 	
-	@Autowired
-	protected AddressHelper addressHelper;
+	protected LabelGenerator labelGenerator = LabelGenerator.getInstance();
 	
 	@Autowired
 	protected ICityDao cityDao;
@@ -131,9 +131,9 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 			if (openStreetMap.getHouseNumbers()!=null && openStreetMap.getHouseNumbers().size() >=1 ){
 				
 				logger.debug("the street has "+openStreetMap.getHouseNumbers().size()+" housenumbers");
-				HouseNumberDistance houseNumberDistance = addressHelper.getNearestHouse(openStreetMap.getHouseNumbers(), point);
+				HouseNumberDistance houseNumberDistance = labelGenerator.getNearestHouse(openStreetMap.getHouseNumbers(), point);
 				if (houseNumberDistance!=null){
-					Address address = addressHelper.buildAddressFromHouseNumberDistance(houseNumberDistance);
+					Address address = labelGenerator.buildAddressFromHouseNumberDistance(houseNumberDistance);
 					if (address!=null){
 						logger.info("found an address at a house number level");
 						List<Address> addresses = new ArrayList<Address>();
@@ -156,7 +156,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 			} else {
 				
 				logger.debug("the street has no housenumbers");
-				Address address = addressHelper.buildAddressFromOpenstreetMapAndPoint(openStreetMap,point);
+				Address address = labelGenerator.buildAddressFromOpenstreetMapAndPoint(openStreetMap,point);
 				if (address!=null){
 					List<Address> addresses = new ArrayList<Address>();
 					addresses.add(address);
@@ -180,11 +180,11 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 					logger.info("No city by vicinity found");
 				} else {
 					logger.info("find a city by vicinity "+city.getName()+" / "+city.getId());
-					address = addressHelper.buildAddressFromCityAndPoint(city,point);
+					address = labelGenerator.buildAddressFromCityAndPoint(city,point);
 				}
 			} else {
 				logger.info("find a city by shape "+city.getName()+" / "+city.getId());
-				address = addressHelper.buildAddressFromCityAndPoint(city,point);
+				address = labelGenerator.buildAddressFromCityAndPoint(city,point);
 			}
 			List<Address> addresses = new ArrayList<Address>();
 			if (address != null){

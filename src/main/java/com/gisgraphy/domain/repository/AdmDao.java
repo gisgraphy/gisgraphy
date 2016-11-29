@@ -89,10 +89,12 @@ public class AdmDao extends GenericGisDao<Adm> implements IAdmDao {
      */
     @Override
     public Adm save(Adm adm) {
-	if (!adm.isConsistentForLevel()) {
+	/*if (!adm.isConsistentForLevel()) {
 	    throw new RuntimeException(
 		    "Level and AdmXCode are inconsistant for " + adm.toString());
-	}
+	}*/
+    //	it is useless to check admCodes because the admCode were a Geonames notion and we will
+    //soon migrate to OSM.
 	return super.save(adm);
     }
 

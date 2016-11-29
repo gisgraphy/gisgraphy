@@ -449,6 +449,17 @@ public class StateAbbreviator {
 		return null;
 
 	}
+	public static String addStateCode(String countryCode, String name){
+		if (name!=null){
+			name=name.trim();
+		}
+		String abbreviation = getAbbreviation(countryCode, name);
+		if (abbreviation!=null){
+			return name+" ("+abbreviation+")";
+		} else {
+			return name;
+		}
+	}
 	
 	 public static int getNumberOfCountries(){
 	    	return states.size();

@@ -711,6 +711,24 @@ public class GisFeatureDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	assertEquals(retrievedGisFeature.getId(), savedGisFeature.getId());
 	assertEquals(retrievedGisFeature, savedGisFeature);
     }
+    
+    @Test
+    public void testGetByOpenstreetmapIdShouldRetrieveTheCorrectGisfeature() {
+	Long featureId = 1001L;
+	long openstreetmapId = 10002L;
+	GisFeature gisFeature = GisgraphyTestHelper.createCity("gisfeatureName",
+		null, null, featureId);
+	gisFeature.setOpenstreetmapId(openstreetmapId);
+	GisFeature savedGisFeature = this.gisFeatureDao.save(gisFeature);
+	GisFeature retrievedGisFeature = this.gisFeatureDao
+		.getByOpenStreetMapId(openstreetmapId);
+	assertNotNull(retrievedGisFeature);
+	assertEquals(retrievedGisFeature.getId(), savedGisFeature.getId());
+	assertEquals(retrievedGisFeature, savedGisFeature);
+	
+	Assert.assertNull(this.gisFeatureDao
+			.getByOpenStreetMapId(featureId));
+    }
 
     @Test
     public void testGetByFeatureIdShouldRetrieveACityIfTheGisfeatureIsAcity() {

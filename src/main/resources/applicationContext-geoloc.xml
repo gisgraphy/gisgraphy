@@ -150,6 +150,12 @@
 	<bean id="municipalityDetector"	class="com.gisgraphy.importer.MunicipalityDetector" ></bean>
 	
 	
+	<bean id="openStreetMapAdmSimpleImporter" class="com.gisgraphy.importer.OpenStreetMapAdmSimpleImporter"
+	parent="abstractSimpleImporterProcessor">
+		<property name="importerConfig" ref="importerConfig" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+	
 	<bean id="openStreetMapImporter" class="com.gisgraphy.importer.OpenStreetMap${classifier}Importer"
 	parent="abstract${classifier}ImporterProcessor">
 		<property name="openStreetMapDao" ref= "openStreetMapDao" />

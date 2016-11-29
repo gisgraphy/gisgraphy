@@ -352,6 +352,31 @@ public class GenericGisDao<T extends GisFeature> extends
 	    }
 	});
     }
+    
+    @SuppressWarnings("unchecked")
+	public T getByOpenStreetMapId(final Long openstreetmapId) {
+		Assert.notNull(openstreetmapId);
+		return (T) this.getHibernateTemplate().execute(
+			new HibernateCallback() {
+
+			    public Object doInHibernate(Session session)
+				    throws PersistenceException {
+				String queryString = "from "
+					+ persistentClass.getSimpleName()
+					+ " as c where c.openstreetmapId= ?";
+
+				Query qry = session.createQuery(queryString);
+				qry.setMaxResults(1);
+				//we need to limit to 1 because a street can be in two countries
+				qry.setCacheable(true);
+
+				qry.setParameter(0, openstreetmapId);
+
+				T result = (T) qry.uniqueResult();
+				return result;
+			    }
+			});
+	}
 
     /*
      * (non-Javadoc)

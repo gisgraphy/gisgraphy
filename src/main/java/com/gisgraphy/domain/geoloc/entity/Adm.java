@@ -97,7 +97,8 @@ public class Adm extends GisFeature {
 
     /**
      * Check that the country code is filled and the admXcode are correctly filled according
-     * to the level
+     * to the level. this method will be soon deprecated since the admCode were a Geonames notion and we will
+     * soon migrate to OSM.
      */
     @Transient
     public boolean isConsistentForLevel() {

@@ -121,7 +121,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
         super.setup();
         //temporary disable logging when importing
         FullTextSearchEngine.disableLogging=true;
-        logger.info("reseting Openstreetmap generatedId");
+        logger.info("sync idgenerator");
         idGenerator.sync();
     }
     
@@ -522,19 +522,8 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 	
 	protected GisFeature populateAdmNames(GisFeature gisFeature, int currentLevel, List<AdmDTO> admdtos){
-		if (gisFeature ==null || admdtos ==null || admdtos.size() == 0){
-			return gisFeature;
-		}
-		int level = 1;
-		String lastName="";
-		for (AdmDTO dto: admdtos){
-			if ((dto.getLevel() < currentLevel || currentLevel == 0) && !lastName.equalsIgnoreCase(dto.getAdmName()) ){
-				//only if adm level < or not set
-				gisFeature.setAdmName(level++,dto.getAdmName() );
-				lastName = dto.getAdmName();
-			}
-		}
-		return gisFeature;
+		
+		return ImporterHelper.populateAdmNames(gisFeature, currentLevel, admdtos);
 		
 	}
 	

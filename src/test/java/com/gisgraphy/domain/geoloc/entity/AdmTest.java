@@ -25,6 +25,8 @@ package com.gisgraphy.domain.geoloc.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.jstester.util.Assert;
+
 import org.junit.Test;
 
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
@@ -32,6 +34,24 @@ import com.gisgraphy.test.GisgraphyTestHelper;
 
 public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 
+	
+	@Test
+	public void testConstructorWithLevel(){
+		Adm adm= new Adm(2);
+		Assert.assertEquals(2, adm.getLevel().intValue());
+		try {
+			adm= new Adm(0);
+			fail("0 is not an accepted level for adm");
+		} catch (Exception e) {
+		}
+		
+		try {
+			adm= new Adm(6);
+			fail("6 is not an accepted level for adm");
+		} catch (Exception e) {
+		}
+	}
+	
     // test addchildren()
     @Test
     public void testAddChildrenShouldAddChildrenAndNotReplace() {
