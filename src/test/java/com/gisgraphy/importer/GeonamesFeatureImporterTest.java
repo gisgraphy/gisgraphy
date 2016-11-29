@@ -44,6 +44,33 @@ import com.gisgraphy.domain.repository.IGisFeatureDao;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 
 public class GeonamesFeatureImporterTest {
+	
+	@Test
+	public void testIsNameCorrect(){
+		GeonamesFeatureSimpleImporter importer = new GeonamesFeatureSimpleImporter();
+		Assert.assertTrue(importer.isNameCorrect("toto"));
+		Assert.assertTrue(importer.isNameCorrect("toto (foo)"));
+		Assert.assertFalse(importer.isNameCorrect("toto (historical)"));
+		Assert.assertFalse(importer.isNameCorrect("toto (under construction)"));
+		Assert.assertFalse(importer.isNameCorrect("toto (recovery)"));
+	}
+	
+	@Test
+	public void testFixName(){
+		GeonamesFeatureSimpleImporter importer = new GeonamesFeatureSimpleImporter();
+		//  // (\\d)..starts and ends with ()(commune* (CR) (arrondissement (agglomeration ar ac MU (district) (recovery)
+		Assert.assertEquals("toto",importer.fixName("toto"));
+		Assert.assertEquals("toto",importer.fixName("toto (3)"));
+		Assert.assertEquals("toto",importer.fixName("toto (commune)"));
+		Assert.assertEquals("toto",importer.fixName("toto (cr)"));
+		Assert.assertEquals("toto",importer.fixName("toto (arrondissement)"));
+		Assert.assertEquals("toto",importer.fixName("toto (agglomeration)"));
+		Assert.assertEquals("toto",importer.fixName("toto (ar)"));
+		Assert.assertEquals("toto",importer.fixName("toto (ac)"));
+		Assert.assertEquals("toto",importer.fixName("toto (mu)"));
+		Assert.assertEquals("toto",importer.fixName("toto (district)"));
+		Assert.assertEquals("toto",importer.fixName("toto (recovery)"));
+	}
 
     @SuppressWarnings("unchecked")
     @Test

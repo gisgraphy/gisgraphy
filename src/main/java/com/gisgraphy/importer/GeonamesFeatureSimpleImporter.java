@@ -95,6 +95,11 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     
     BasicAddressFormater addressFormater = new BasicAddressFormater();
     
+    private static Pattern UNWANTED_NAME_PATTERN = Pattern.compile("\\(historical|under construction|recovery\\)",Pattern.CASE_INSENSITIVE);
+    
+    private static Pattern FIX_NAME_PATTERN = Pattern.compile("(\\(.+\\))",Pattern.CASE_INSENSITIVE);
+    
+    
 
     /**
      * Default constructor
@@ -177,6 +182,14 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 		logger.warn(name + "is too long");
 		return;
 	}
+	if (!isNameCorrect(name)){
+		logger.warn(name + "is not correct, ignoring");
+		return;
+	}
+	
+	//correct name
+	name = fixName(name);
+	
 	if (featureCode_ != null ) {
 		gisFeature = (GisFeature) featureCode_.getObject();
 		gisFeature = correctPlaceType(gisFeature, name);
@@ -515,6 +528,24 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	    }
 
 	}
+    }
+    
+    protected String fixName(String name){
+    	if (name!=null){
+    		return FIX_NAME_PATTERN.matcher(name).replaceFirst("").trim();
+    	}
+    	return name;
+      	
+    }
+    
+ 
+    
+    protected boolean isNameCorrect(String name){
+    	if (name!=null && UNWANTED_NAME_PATTERN.matcher(name).find()){
+    		return false;
+    	}
+    	return true;
+    	
     }
 
     private void setAdmCodesToNull(GisFeature gisFeature) {
