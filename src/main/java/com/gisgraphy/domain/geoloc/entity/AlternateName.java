@@ -254,7 +254,7 @@ public class AlternateName {
      * @return The iso639 Alpha2 or alpha 3 LanguageCode of the
      *         {@link AlternateName}
      */
-    @Column(length = 7)
+    @Column(length = 30)
     public String getLanguage() {
 	return language;
     }

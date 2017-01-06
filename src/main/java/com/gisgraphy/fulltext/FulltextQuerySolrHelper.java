@@ -257,7 +257,6 @@ public class FulltextQuerySolrHelper {
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
 			String queryAsStr = querybuffer.toString();
-			logger.error("queryAsStr="+queryAsStr);
 			
 			parameters.set(Constants.QUERY_PARAMETER, queryAsStr);
 		}

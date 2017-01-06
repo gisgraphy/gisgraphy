@@ -102,8 +102,8 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	 */
 	@Override
 	protected void flushAndClear() {
-		openStreetMapDao.flushAndClear();
-		houseNumberDao.flushAndClear();
+		//openStreetMapDao.flushAndClear();
+		//houseNumberDao.flushAndClear();
 
 	}
 

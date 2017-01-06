@@ -66,46 +66,7 @@ public class MunicipalityDetector implements IMunicipalityDetector {
 		N_CITY_TOWN
 	}
 	
-	//https://github.com/openvenues/libpostal/tree/master/resources/boundaries/osm
-	private Map<String, int[]> countryToCityAdmLevel = new HashMap<String, int[]>(){
-		{
-			put("AR",new int[]{7,8});
-			put("BA",new int[]{6,7,8});
-			put("BD",new int[]{7,8,9});
-			put("BG",new int[]{7,8});
-			put("CN",new int[]{6,7,8,10});
-			put("CO",new int[]{6,7,8});
-			put("DZ",new int[]{7,8});
-			put("EC",new int[]{7,8});
-			put("EE",new int[]{8,9});
-			put("FI",new int[]{7,8,9});
-			put("HR",new int[]{7,8});
-			put("ID",new int[]{5,7});//todo node different than rel
-			put("IE",new int[]{7,8,9});//ireland (dublin is 7
-			put("IN",new int[]{7,8});
-			put("IS",new int[]{6});
-			put("JP",new int[]{7,8});
-			put("KR",new int[]{7,8,10});
-			put("LV",new int[]{7,8,9});
-			put("MD",new int[]{8,9});
-			put("MK",new int[]{6,7,8});
-			put("MY",new int[]{10});
-			put("NO",new int[]{7});//ok
-			put("NZ",new int[]{7});
-			put("PH",new int[]{6,7});
-			put("PL",new int[]{8,10});
-			put("PT",new int[]{7,8});
-			put("RO",new int[]{6,8});
-			put("SE",new int[]{7});//OK
-			put("SK",new int[]{7,8,9});
-			put("TH",new int[]{8,10});
-			put("TN",new int[]{4,5});
-			put("UA",new int[]{7,8});
-			put("US",new int[]{7,8});
-			put("",new int[]{7,8});
-		}
-		
-	};
+
 	
 	public final static Map<String, MunicipalityOSMDetectionStrategy> countrycodeToCityOSMDetectionStrategy = new HashMap<String, MunicipalityDetector.MunicipalityOSMDetectionStrategy>(){
 		{

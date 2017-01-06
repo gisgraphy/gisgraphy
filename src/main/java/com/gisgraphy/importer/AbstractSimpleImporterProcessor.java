@@ -538,7 +538,11 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
     protected static String dumpFields(String[] fields) {
 	String result = "[";
 	for (String element : fields) {
-	    result = result + element + ";";
+		if (element!=null && element.length()<=100){
+			result = result + element + ";";
+		} else {
+			result = result + "<...>";
+		}
 	}
 	return result + "]";
     }

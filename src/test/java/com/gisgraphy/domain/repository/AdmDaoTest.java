@@ -33,7 +33,10 @@ import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
+import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.test.GisgraphyTestHelper;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 
@@ -1250,6 +1253,28 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 
     public void setGisFeatureDao(IGisFeatureDao gisFeatureDao) {
 	this.gisFeatureDao = gisFeatureDao;
+    }
+    
+    @Test
+    public void testGetByShape(){
+    	Adm admLevel2 = GisgraphyTestHelper.createAdm("adm2name", "LU", "a1", "a2", null, null, null, null, 2);
+    	admLevel2.setFeatureId(222L);
+    	Geometry shape =  GeolocHelper.createPolygonBox(5.9875431D,49.645497D,50);
+    	admLevel2.setShape(shape);
+    	this.admDao.save(admLevel2);
+    	
+    	Adm admLevel1 = GisgraphyTestHelper.createAdm("adm1name", "LU", "a1", null, null, null, null, null, 2);
+    	    	 shape =  GeolocHelper.createPolygonBox(5.9875431D,49.645497D,100);
+    	    	admLevel1.setShape(shape);
+    	    	admLevel1.setFeatureId(111L);
+    	    	this.admDao.save(admLevel1);
+    	
+    	
+    	List<Adm> adms = admDao.ListByShape(GeolocHelper.createPoint(5.9875431D,49.645497D), null);
+    	Assert.assertEquals(2, adms.size());
+    	Assert.assertEquals(111L, adms.get(0).getFeatureId().longValue());
+    	Assert.assertEquals(222L, adms.get(1).getFeatureId().longValue());
+    	
     }
 
 }

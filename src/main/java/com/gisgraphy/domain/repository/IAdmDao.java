@@ -27,6 +27,7 @@ import java.util.List;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.importer.ImporterConfig;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Interface for {@link Adm} data access
@@ -304,5 +305,13 @@ public interface IAdmDao extends IGisDao<Adm> {
      * @return a list of all featureId
      */
     public List<Long> listFeatureIdByLevel(final int level);
+    
+    /**
+     * @param location
+     * @param countryCode The country code of the Adms to retrieve
+     * @param filterMunicipality
+     * @return the adms for that location order by area (from bigest to smallest)
+     */
+    public List<Adm> ListByShape(final Point location,final String countryCode);
 
 }

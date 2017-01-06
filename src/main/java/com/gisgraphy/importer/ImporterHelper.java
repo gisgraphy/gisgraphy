@@ -621,7 +621,7 @@ public class ImporterHelper {
 								for (String name:alternateNames){
 								currentNames :
 									for (AlternateName an :feature.getAlternateNames()){
-									if (an.getName().equals(name) && lang !=null && an.getLanguage().equals(lang)){
+									if (an != null && an.getName() != null && an.getName().equals(name) && lang !=null && an.getLanguage()!=null && an.getLanguage().equals(lang)){
 										continue currentNames;
 									} else {
 										alternateNamesWODuplicates[counter]=name;
@@ -634,16 +634,18 @@ public class ImporterHelper {
 					}
 					List<AlternateName> toBeAdded = new ArrayList<AlternateName>();					
 					for (String name:alternateNames){
-						if (lang!=null &&  !"".equals(lang.trim())){
-							AlternateName alternateName2 = new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
-							alternateName2.setGisFeature(feature);
-							toBeAdded.add(alternateName2);
-							//feature.addAlternateName(alternateName2);
-						} else {
-							AlternateName alternateName2 = new AlternateName(name.trim(),AlternateNameSource.OPENSTREETMAP);
-							alternateName2.setGisFeature(feature);
-							toBeAdded.add(alternateName2);
-							//feature.addAlternateName(alternateName2);
+						if (name!=null){
+							if (lang!=null &&  !"".equals(lang.trim())){
+								AlternateName alternateName2 = new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+								alternateName2.setGisFeature(feature);
+								toBeAdded.add(alternateName2);
+								//feature.addAlternateName(alternateName2);
+							} else {
+								AlternateName alternateName2 = new AlternateName(name.trim(),AlternateNameSource.OPENSTREETMAP);
+								alternateName2.setGisFeature(feature);
+								toBeAdded.add(alternateName2);
+								//feature.addAlternateName(alternateName2);
+							}
 						}
 					}
 					feature.addAlternateNames(toBeAdded);
@@ -686,7 +688,7 @@ public class ImporterHelper {
 								for (String name:alternateNames){
 								currentNames :
 									for (AlternateOsmName an :street.getAlternateNames()){
-									if (an.getName().equals(name) && lang !=null && an.getLanguage().equals(lang)){
+									if (an !=null && an.getName()!= null && an.getName().equals(name) && lang !=null && an.getLanguage()!= null && an.getLanguage().equals(lang)){
 										continue currentNames;
 									} else {
 										alternateNamesWODuplicates[counter]=name;

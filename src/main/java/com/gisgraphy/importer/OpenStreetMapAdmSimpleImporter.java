@@ -341,7 +341,7 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 	protected static String dumpFields(String[] fields) {
 		String result = "[";
 		for (int i=0;i<fields.length;i++) {
-			if (i==7){
+			if (i==2){
 				result= result+"THE_SHAPE;";
 			}else {
 				result = result + fields[i] + ";";
@@ -353,12 +353,6 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 	
 
 	void save(GisFeature feature) {
-		for (AlternateName al : feature.getAlternateNames()){
-			if (al.getGisFeature()==null){
-				System.out.println(al);
-			}
-		}
-		
 		if (feature!=null){
 			if (feature instanceof Adm){
 				admDao.save((Adm)feature);

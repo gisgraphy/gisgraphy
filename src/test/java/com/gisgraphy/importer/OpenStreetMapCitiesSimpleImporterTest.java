@@ -125,6 +125,19 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	}
 	
 	@Test
+	public void populatezip_duplicate(){
+		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
+		City city = new City();
+		city.addZipCode(new ZipCode("23456"));
+		importer.populateZip("23456,789", city);
+		Assert.assertEquals(2,city.getZipCodes().size());
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
+		
+		
+	}
+	
+	@Test
 	public void createNewCity() {
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		IIdGenerator idGenerator = EasyMock.createMock(IIdGenerator.class);
@@ -516,6 +529,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(2, city.getZipCodes().size());
 				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
 				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 			}
 		};
 		
@@ -606,6 +620,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(2, city.getZipCodes().size());
 				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
 				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
 				Assert.assertTrue("alternate labels are empty and shouldn't be", city.getAlternateLabels().size()!=0);
@@ -663,6 +678,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	@Test
 	public void processWithknownCityAndAdm_citySubdivision(){
 		final SolrResponseDto solrResponseDtoCity = EasyMock.createMock(SolrResponseDto.class);
+		EasyMock.expect(solrResponseDtoCity.getPlacetype()).andReturn(CitySubdivision.class.getSimpleName());
 		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L);
 
 		EasyMock.replay(solrResponseDtoCity);
@@ -675,7 +691,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
 			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
-				if (!name.equals("Pełczyce 02") || !countryCode.equals("PL") || placetype != Constants.ONLY_CITYSUBDIVISION_PLACETYPE){
+				if (!name.equals("Pełczyce 02") || !countryCode.equals("PL") || placetype != Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE){
 					throw new RuntimeException("the function getNearestCity() is not called with the correct parameter");
 				}
 				return solrResponseDtoCity;
@@ -706,6 +722,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(2, city.getZipCodes().size());
 				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
 				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				Assert.assertEquals("adm should be set",adm, city.getAdm());
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
@@ -746,6 +763,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	@Test
 	public void processWithknownCityAndAdm_citySubdivision_placetype(){
 		final SolrResponseDto solrResponseDtoCity = EasyMock.createMock(SolrResponseDto.class);
+		EasyMock.expect(solrResponseDtoCity.getPlacetype()).andReturn(CitySubdivision.class.getSimpleName());
 		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L);
 
 		EasyMock.replay(solrResponseDtoCity);
@@ -756,7 +774,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
 			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
-				if (!name.equals("Pełczyce") || !countryCode.equals("PL") || placetype != Constants.ONLY_CITYSUBDIVISION_PLACETYPE){
+				if (!name.equals("Pełczyce") || !countryCode.equals("PL") || placetype != Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE){
 					throw new RuntimeException("the getNearestCity() function is not called with the correct parameter");
 				}
 				return solrResponseDtoCity;
@@ -787,6 +805,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(2, city.getZipCodes().size());
 				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
 				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
 				
 				Assert.assertTrue("alternate labels are empty and shouldn't be", city.getAlternateLabels().size()!=0);
@@ -866,6 +885,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(2, city.getZipCodes().size());
 				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
 				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				Assert.assertTrue("city should still be a municipality because it was before, even if it is a node, a previous condition make this city a municipality",((City)city).isMunicipality());
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
@@ -948,6 +968,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(2, city.getZipCodes().size());
 				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
 				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
 				Assert.assertTrue("alternate labels are empty and shouldn't be", city.getAlternateLabels().size()!=0);
@@ -988,6 +1009,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	@Test
 	public void processData_subdivision(){
 		final SolrResponseDto solrResponseDtoCity = EasyMock.createMock(SolrResponseDto.class);
+		EasyMock.expect(solrResponseDtoCity.getPlacetype()).andReturn(CitySubdivision.class.getSimpleName());
 		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L);
 
 		EasyMock.replay(solrResponseDtoCity);

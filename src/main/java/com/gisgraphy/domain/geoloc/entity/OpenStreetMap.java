@@ -223,6 +223,7 @@ public class OpenStreetMap {
     /**
 	 * @return the label that represent the Postal address
 	 */
+	 @Column(length = 500)
 	public String getLabelPostal() {
 		return labelPostal;
 	}
@@ -240,6 +241,7 @@ public class OpenStreetMap {
     /**
 	 * @return the label that represent the street
 	 */
+	 @Column(length = 500)
 	public String getLabel() {
 		return label;
 	}
@@ -879,7 +881,7 @@ public class OpenStreetMap {
 	}
     }
 
-
+    @Column(length = 500)
 	public String getFullyQualifiedName() {
 		return fullyQualifiedName;
 	}

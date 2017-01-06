@@ -24,6 +24,7 @@ package com.gisgraphy.domain.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
@@ -35,7 +36,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
+import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.geoloc.entity.ZipCode;
+import com.gisgraphy.domain.valueobject.SRID;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * A data access object for {@link Adm}
@@ -748,6 +753,40 @@ public class AdmDao extends GenericGisDao<Adm> implements IAdmDao {
 		    }
 		}));
     }
+    
+    
+
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Adm> ListByShape(final Point location,final String countryCode) {
+		Assert.notNull(location);
+		return (List<Adm>) this.getHibernateTemplate().execute(new HibernateCallback() {
+
+		    public Object doInHibernate(Session session)
+			    throws PersistenceException {
+		    	//select name,municipality,source,openstreetmapid from city c 
+		    	//where st_contains(c.shape,ST_GeometryFromText('POINT(2.349 48.868)',4326))=true limit 1
+		    String pointAsString = "ST_GeometryFromText('POINT("+location.getX()+" "+location.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
+			String queryString = "from " + persistentClass.getSimpleName()
+				+ " as a where st_contains(a.shape,"+pointAsString+")=true ";
+					;
+			if (countryCode!=null ){
+				queryString+=" and a.countryCode='"+countryCode+"'";
+			}
+			queryString = queryString+ " order by st_area(a.shape) desc";
+			
+
+			Query qry = session.createQuery(queryString);
+
+			//qry.setParameter("point2", location);
+			List<Adm> result = (List<Adm>) qry.list();
+			if (result == null) {
+			    return new ArrayList<Adm>();
+			}
+			return result;
+		    }
+		});
+	}
     
 
 }

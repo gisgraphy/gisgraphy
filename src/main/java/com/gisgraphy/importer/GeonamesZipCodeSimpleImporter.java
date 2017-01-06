@@ -76,6 +76,8 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
     protected IZipCodeDao zipCodeDao;
     
     protected IIdGenerator IdGenerator;
+    
+    LabelGenerator labelGenerator = LabelGenerator.getInstance();
 
 
 
@@ -248,6 +250,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 
     protected GisFeature addNewEntityAndZip(String[] fields) {
 	City city = new City();
+	Point location = null;
 	long nextFeatureId = IdGenerator.getNextFeatureId();
 	city.setFeatureId(nextFeatureId);
 	String name = fields[2];
@@ -258,25 +261,43 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	city.setName(name);
 	// Location
 	if (!isEmptyField(fields, 9, true) && !isEmptyField(fields, 10, true)) {
-	    city.setLocation(GeolocHelper.createPoint(new Float(fields[10]), new Float(fields[9])));
+	    location = GeolocHelper.createPoint(new Float(fields[10]), new Float(fields[9]));
+		city.setLocation(location);
+		city.setAdminCentreLocation(location);
 	}
 	city.setFeatureClass("P");
 	city.setFeatureCode("PPL");
 	city.setSource(GISSource.GEONAMES_ZIP);
-	city.setCountryCode(fields[0]);
+	String countryCode=null;
+	if (!isEmptyField(fields, 0, false)){
+		countryCode = fields[0];
+	}
+	city.setCountryCode(countryCode);
 	setAdmCodesWithCSVOnes(fields, city);
-	Adm adm;
-	if (importerConfig.isTryToDetectAdmIfNotFound()) {
+	Adm adm = null;
+	/*if (importerConfig.isTryToDetectAdmIfNotFound()) {
 	    adm = this.admDao.suggestMostAccurateAdm(fields[0], fields[4], fields[6], fields[8], null, city);
 	    logger.info("suggestAdm=" + adm);
 	} else {
 	    adm = this.admDao.getAdm(fields[0], fields[4], fields[6], fields[8], null);
+	}*/
+	List<Adm > adms = admDao.ListByShape(location, countryCode);
+	if (adms.size()>0){
+		adm = adms.get(adms.size()-1);
 	}
+	/*setAdmCodesWithLinkedAdmOnes(adm, gisFeature, importerConfig
+		.isSyncAdmCodesWithLinkedAdmOnes());*/
+	setAdmNames(adms, city);
 
 	city.setAdm(adm);
 	setAdmCodesWithLinkedAdmOnes(adm, city, importerConfig.isSyncAdmCodesWithLinkedAdmOnes());
 	setAdmNames(adm, city);
 	city.addZipCode(new ZipCode(fields[1]));
+	
+	city.setAlternateLabels(labelGenerator.generateLabels(city));
+	city.setLabel(labelGenerator.generateLabel(city));
+	city.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(city));
+	
 	cityDao.save(city);
 	//we do not return the saved entity for test purpose
 	return city;
@@ -295,6 +316,19 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	  //  logger.warn("the zipcode " + code + " already exists for feature " + featureId);
 	    //return feature;
 	//}
+    }
+    
+    private void setAdmNames(List<Adm> adms, GisFeature gisFeature) {
+    	if (adms == null) {
+    	    return;
+    	}
+    	int level =1;
+    	for (Adm adm:adms){
+    		if(adm!=null && level <=5){
+    			gisFeature.setAdmName(level, adm.getName());
+    			level=level+1;
+    		}
+        }
     }
 
     protected FulltextResultsDto doAFulltextSearch(String query, String countryCode) {

@@ -848,6 +848,7 @@ public class GisFeature{
     /**
 	 * @return the label that represent the street
 	 */
+    @Column(length = 500)
     public String getLabel() {
     	return label;
     }
@@ -862,6 +863,7 @@ public class GisFeature{
     /**
      * @return the label that represent the Postal address
      */
+    @Column(length = 500)
     public String getLabelPostal() {
     	return labelPostal;
     }
@@ -1252,6 +1254,7 @@ public class GisFeature{
      * wrap {@link #getFullyQualifiedName(boolean)}
      * @see #getFullyQualifiedName(boolean)
      */
+    @Column(length = 500)
     public String getFullyQualifiedName() {
 	return fullyQualifiedName;
     }
@@ -1275,7 +1278,6 @@ public class GisFeature{
 		+ "]";
     }
 
-  //TODO tests zip
     /**
      * Do a double set : add the zip code to the current GisFeature and set
      * this GisFeature as the GisFeature of the zipcode

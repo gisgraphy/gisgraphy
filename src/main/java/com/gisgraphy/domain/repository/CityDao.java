@@ -24,6 +24,7 @@ package com.gisgraphy.domain.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
@@ -33,8 +34,10 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
+import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
+import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.valueobject.SRID;
 import com.vividsolutions.jts.geom.Point;
 
@@ -121,6 +124,17 @@ public class CityDao extends GenericGisDao<City> implements ICityDao {
 
 			//qry.setParameter("point2", location);
 			City result = (City) qry.uniqueResult();
+			//initialize
+			if (result!=null){
+				Set<ZipCode> zipCodes = result.getZipCodes();
+				if (zipCodes!=null){
+					zipCodes.size();
+				}
+				Adm adm = result.getAdm();
+				if (adm!=null){
+					adm.getName();
+				}
+			}
 
 			return result;
 		    }

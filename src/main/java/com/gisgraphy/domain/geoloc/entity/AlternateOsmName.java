@@ -212,7 +212,7 @@ public class AlternateOsmName {
      * @return The iso639 Alpha2 or alpha 3 LanguageCode of the
      *         {@link AlternateOsmName}
      */
-    @Column(length = 7)
+    @Column(length = 30)
     public String getLanguage() {
 	return language;
     }

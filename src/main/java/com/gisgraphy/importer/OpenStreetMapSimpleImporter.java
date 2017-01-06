@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
-import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
@@ -48,7 +47,6 @@ import com.gisgraphy.domain.repository.ICitySubdivisionDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
-import com.gisgraphy.domain.valueobject.AlternateNameSource;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
@@ -299,11 +297,12 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	}
 	
 	//labels
+	if (street.getName() !=null){
 	street.setAlternateLabels(labelGenerator.generateLabels(street));
 	street.setLabel(labelGenerator.generateLabel(street));
 	street.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(street, false));
 	street.setLabelPostal(labelGenerator.generatePostal(street));
-	
+	}
 	
 		
 	try {

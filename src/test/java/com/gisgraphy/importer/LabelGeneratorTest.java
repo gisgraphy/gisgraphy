@@ -50,6 +50,19 @@ public void testGenerateLabel_GisFeature(){
 	
 }
 
+@Test
+public void testGenerateLabel_GisFeature_nameAndIsInEquals(){
+	GisFeature gisFeature = new City();
+	Assert.assertNull(generator.generateLabel(gisFeature));
+	
+	gisFeature.setName("name");
+	Assert.assertEquals("name", generator.generateLabel(gisFeature));
+	
+	gisFeature.setIsIn("name");
+	Assert.assertEquals("name", generator.generateLabel(gisFeature));
+	
+}
+
 
 @Test
 public void testGenerateLabel_osm(){
@@ -507,6 +520,44 @@ public void testGenerateLabel_Adm(){
 	}
 	
 	@Test
+	public void testGetFullyQualifiedNameFeatureShouldNotContainsadm5LevelAndNameAreTheSame() {
+		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
+
+		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
+		zipcodes.add(new ZipCode("code"));
+		
+		city.setName("aname");
+		city.setAdm1Name("adm1Name");
+		city.setAdm2Name("adm1Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm5Name("aname");
+		//Note that city has already a zipcode
+		String fullyQualifiedName = generator.getFullyQualifiedName(city,false);
+		System.out.println(fullyQualifiedName);
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"aname"));
+	}
+	
+	@Test
+	public void testGetFullyQualifiedNameFeatureShouldNotContainIsInLevelAndNameAreTheSame() {
+		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
+
+		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
+		zipcodes.add(new ZipCode("code"));
+		
+		city.setName("aname");
+		city.setIsIn("aname");
+		city.setAdm2Name("adm1Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm5Name("aname");
+		//Note that city has already a zipcode
+		String fullyQualifiedName = generator.getFullyQualifiedName(city,false);
+		System.out.println(fullyQualifiedName);
+		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"aname"));
+	}
+	
+	@Test
 	public void testGetFullyQualifiedNameFeatureShouldNotContainsadm1LevelIfThePreviousIsTheSame() {
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
@@ -514,7 +565,7 @@ public void testGenerateLabel_Adm(){
 		zipcodes.add(new ZipCode("code"));
 		
 		city.setAdm1Name("adm1Name");
-		city.setAdm2Name("adm1Name");
+		city.setAdm2Name("adm2Name");
 		city.setAdm3Name("adm3Name");
 		city.setAdm4Name("adm4Name");
 		city.setAdm5Name("adm5Name");
@@ -741,40 +792,61 @@ public void testGenerateLabel_Adm(){
 		System.out.println(label);
 		Assert.assertNull(label);
 	    }
+	    
+	    @Test
+	    public void testGetFullyQualifiedNameGisFeatureBoolean_noName() {
+		GisFeature gisFeature = createGisFeatureMock(null);
+		EasyMock.replay(gisFeature);
+		String label = generator.getFullyQualifiedName(gisFeature, true);
+		System.out.println(label);
+		Assert.assertFalse(label.startsWith(","));
+	    }
+	    
+	    @Test
+	    public void testGetFullyQualifiedNameOsm_noName() {
+		OpenStreetMap osm = createOsmMock(null);
+		EasyMock.expect(osm.getZipCode()).andStubReturn("zip");
+		EasyMock.replay(osm);
+		String label = generator.getFullyQualifiedName(osm, true);
+		System.out.println(label);
+		Assert.assertNull(label);
+		}
 
-	    private GisFeature createGisFeatureMock() {
+	    private GisFeature createGisFeatureMock(String name) {
 		GisFeature gisFeature = EasyMock.createMock(GisFeature.class);
-		EasyMock.expect(gisFeature.getAdm1Name()).andReturn("adm1name").times(1);
-		EasyMock.expect(gisFeature.getIsInPlace()).andReturn("IsInPlace").times(1);
-		EasyMock.expect(gisFeature.getIsIn()).andReturn("IsIn").times(1);
-		EasyMock.expect(gisFeature.getAdm2Name()).andReturn("adm2name").times(1);
-		EasyMock.expect(gisFeature.getAdm3Name()).andReturn("adm3name").times(1);
-		EasyMock.expect(gisFeature.getAdm4Name()).andReturn("adm4name").times(1);
-		EasyMock.expect(gisFeature.getAdm5Name()).andReturn("adm5name").times(1);
-		EasyMock.expect(gisFeature.getCountryCode()).andReturn("US").times(2);
-		EasyMock.expect(gisFeature.getName()).andReturn("name").times(2);
+		EasyMock.expect(gisFeature.getAdm1Name()).andStubReturn("adm1name");
+		EasyMock.expect(gisFeature.getIsInPlace()).andStubReturn("IsInPlace");
+		EasyMock.expect(gisFeature.getIsIn()).andStubReturn("IsIn");
+		EasyMock.expect(gisFeature.getAdm2Name()).andStubReturn("adm2name");
+		EasyMock.expect(gisFeature.getAdm3Name()).andStubReturn("adm3name");
+		EasyMock.expect(gisFeature.getAdm4Name()).andStubReturn("adm4name");
+		EasyMock.expect(gisFeature.getAdm5Name()).andStubReturn("adm5name");
+		EasyMock.expect(gisFeature.getCountryCode()).andStubReturn("US");
+		EasyMock.expect(gisFeature.getName()).andStubReturn(name);
 		
 		return gisFeature;
 	    }
 	   
-	    private OpenStreetMap createOsmMock() {
+	    private OpenStreetMap createOsmMock(String name) {
 			OpenStreetMap osm = EasyMock.createMock(OpenStreetMap.class);
-			EasyMock.expect(osm.getAdm1Name()).andReturn("adm1name").times(1);
-			EasyMock.expect(osm.getIsInPlace()).andReturn("IsInPlace").times(1);
-			EasyMock.expect(osm.getIsIn()).andReturn("IsIn").times(1);
-			EasyMock.expect(osm.getAdm2Name()).andReturn("adm2name").times(1);
-			EasyMock.expect(osm.getAdm3Name()).andReturn("adm3name").times(1);
-			EasyMock.expect(osm.getAdm4Name()).andReturn("adm4name").times(1);
-			EasyMock.expect(osm.getAdm5Name()).andReturn("adm5name").times(1);
-			EasyMock.expect(osm.getCountryCode()).andReturn("us").times(2);
-			EasyMock.expect(osm.getName()).andReturn("name").times(2);
+			EasyMock.expect(osm.getAdm1Name()).andStubReturn("adm1name");
+			EasyMock.expect(osm.getIsInPlace()).andStubReturn("IsInPlace");
+			EasyMock.expect(osm.getIsIn()).andStubReturn("IsIn");
+			//EasyMock.expect(osm.getZipCode()).andStubReturn("zip");
+			EasyMock.expect(osm.getAdm2Name()).andStubReturn("adm2name");
+			EasyMock.expect(osm.getAdm3Name()).andStubReturn("adm3name");
+			EasyMock.expect(osm.getAdm4Name()).andStubReturn("adm4name");
+			EasyMock.expect(osm.getAdm5Name()).andStubReturn("adm5name");
+			EasyMock.expect(osm.getCountryCode()).andStubReturn("us");
+			EasyMock.expect(osm.getName()).andStubReturn(name);
 			
 			return osm;
 		    }
+	    
 
 	    @Test
 	    public void testGetFullyQualifiedNameGisFeature() {
-		GisFeature gisFeature = createGisFeatureMock();
+		GisFeature gisFeature = createGisFeatureMock("name");
 		EasyMock.replay(gisFeature);
 		String fullyQualifiedName = generator.getFullyQualifiedName(gisFeature);
 		System.out.println(fullyQualifiedName);
@@ -791,7 +863,7 @@ public void testGenerateLabel_Adm(){
 	    
 	    @Test
 	    public void testGetFullyQualifiedNameOsm_oneZip() {
-		OpenStreetMap osm = createOsmMock();
+		OpenStreetMap osm = createOsmMock("name");
 		EasyMock.expect(osm.getZipCode()).andStubReturn("zip");
 		EasyMock.replay(osm);
 		String fullyQualifiedName = generator.getFullyQualifiedName(osm, false);
@@ -810,7 +882,7 @@ public void testGenerateLabel_Adm(){
 	    
 	    @Test
 	    public void testGetFullyQualifiedNameOsm_severalZip() {
-		OpenStreetMap osm = createOsmMock();
+		OpenStreetMap osm = createOsmMock("name");
 		EasyMock.expect(osm.getZipCode()).andStubReturn(null);
 		Set<String> zips = new HashSet<String>();
 		zips.add("123");
@@ -833,7 +905,7 @@ public void testGenerateLabel_Adm(){
 	    
 	    @Test
 	    public void testGetFullyQualifiedNameOsm_noZip() {
-		OpenStreetMap osm = createOsmMock();
+		OpenStreetMap osm = createOsmMock("name");
 		EasyMock.expect(osm.getZipCode()).andStubReturn(null);
 		EasyMock.expect(osm.getIsInZip()).andStubReturn(null);
 		EasyMock.replay(osm);
@@ -853,14 +925,14 @@ public void testGenerateLabel_Adm(){
 	    @Test
 	    public void testGetFullyQualifiedNameOsmShouldContainsStateCode() {
 		OpenStreetMap osm = EasyMock.createMock(OpenStreetMap.class);
-		EasyMock.expect(osm.getAdm1Name()).andReturn("alabama").times(1);
-		EasyMock.expect(osm.getIsInPlace()).andReturn("IsInPlace").times(1);
-		EasyMock.expect(osm.getIsIn()).andReturn("IsIn").times(1);
-		EasyMock.expect(osm.getAdm2Name()).andReturn("adm2name").times(1);
-		EasyMock.expect(osm.getAdm3Name()).andReturn("adm3name").times(1);
-		EasyMock.expect(osm.getAdm4Name()).andReturn("adm4name").times(1);
-		EasyMock.expect(osm.getAdm5Name()).andReturn("adm5name").times(1);
-		EasyMock.expect(osm.getName()).andReturn("name").times(2);
+		EasyMock.expect(osm.getAdm1Name()).andStubReturn("alabama");
+		EasyMock.expect(osm.getIsInPlace()).andStubReturn("IsInPlace");
+		EasyMock.expect(osm.getIsIn()).andStubReturn("IsIn");
+		EasyMock.expect(osm.getAdm2Name()).andStubReturn("adm2name");
+		EasyMock.expect(osm.getAdm3Name()).andStubReturn("adm3name");
+		EasyMock.expect(osm.getAdm4Name()).andStubReturn("adm4name");
+		EasyMock.expect(osm.getAdm5Name()).andStubReturn("adm5name");
+		EasyMock.expect(osm.getName()).andStubReturn("name");
 		EasyMock.expect(osm.getCountryCode()).andStubReturn("us");
 		EasyMock.expect(osm.getZipCode()).andStubReturn(null);
 		EasyMock.expect(osm.getIsInZip()).andStubReturn(null);
@@ -905,6 +977,7 @@ public void testGenerateLabel_Adm(){
 			System.out.println(actual);
 			Assert.assertEquals(1, countNumberOfOccurence(actual,"adm2"));
 		}
+	  
 	    
 	    @Test
 		public void getFullyQualifiedNameAddressShouldContainsStateCode(){
@@ -1108,7 +1181,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
-		Assert.assertEquals(osm.getStreetType().toString(), address.getStreetType());
+		Assert.assertEquals("streettype in osm (service,...) is not the streettype in an address",null, address.getStreetType());
 		Assert.assertEquals(osm.getLength(), address.getLength());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
@@ -1154,7 +1227,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
-		Assert.assertEquals(osm.getStreetType().toString(), address.getStreetType());
+		Assert.assertEquals("streettype in osm (service,...) is not the streettype in an address",null, address.getStreetType());
 		Assert.assertEquals(osm.getLength(), address.getLength());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		

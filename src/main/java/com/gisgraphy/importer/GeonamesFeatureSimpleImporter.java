@@ -43,6 +43,7 @@ import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.geoloc.entity.Street;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.IAdmDao;
 import com.gisgraphy.domain.repository.IAlternateNameDao;
@@ -59,6 +60,7 @@ import com.gisgraphy.domain.valueobject.NameValueDTO;
 import com.gisgraphy.helper.FeatureClassCodeHelper;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.util.StringUtil;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Import the Features from a Geonames dump file.
@@ -76,13 +78,11 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     protected IAlternateNameDao alternateNameDao;
 
     protected IAdmDao admDao;
-
   
     protected ICountryDao countryDao;
 
     protected Pattern acceptedPatterns ;
     
-
     protected ISolRSynchroniser solRSynchroniser;
 
     @Autowired
@@ -93,7 +93,6 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     
     LabelGenerator labelGenerator = LabelGenerator.getInstance();
     
-    BasicAddressFormater addressFormater = new BasicAddressFormater();
     
     private static Pattern UNWANTED_NAME_PATTERN = Pattern.compile("\\(historical|under construction|recovery\\)",Pattern.CASE_INSENSITIVE);
     
@@ -141,6 +140,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	checkNumberOfColumn(fields);
 	String featureClass = null;
 	String featureCode = null;
+	String countryCode = null;
 
 	// featureClass
 	if (!isEmptyField(fields, 6, false)) {
@@ -200,6 +200,10 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 		gisFeature = new GisFeature();
 	}
 	
+	if (!shouldImportPlaceType(gisFeature)){
+		return;
+	}
+	
 
 	
 	// create GisFeature and set featureId
@@ -217,8 +221,10 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 
 	// Location
 	if (!isEmptyField(fields, 4, true) && !isEmptyField(fields, 5, true)) {
-	    gisFeature.setLocation(GeolocHelper.createPoint(
-		    new Float(fields[5]), new Float(fields[4])));
+	    Point point = GeolocHelper.createPoint(
+		    new Float(fields[5]), new Float(fields[4]));
+		gisFeature.setLocation(point);
+		gisFeature.setAdminCentreLocation(point);
 	}
 
 	// featureClass
@@ -230,7 +236,8 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 
 	// countrycode
 	if (!isEmptyField(fields, 8, true)) {
-	    gisFeature.setCountryCode(fields[8].toUpperCase());
+		countryCode = fields[8].toUpperCase();
+	    gisFeature.setCountryCode(countryCode);
 	}
 
 	// ignore cc2
@@ -328,7 +335,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 
 	// it is not an adm, not a country =>try to set Adm
 	Adm adm = null;
-	if (importerConfig.isTryToDetectAdmIfNotFound()) {
+	/*if (importerConfig.isTryToDetectAdmIfNotFound()) {
 	    adm = this.admDao.suggestMostAccurateAdm(fields[8], fields[10],
 		    fields[11], fields[12], fields[13], gisFeature);
 	    logger.debug("suggestAdm=" + adm);
@@ -353,11 +360,15 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 		// see http://forum.geonames.org/gforum/posts/list/699.page
 	    }
 
+	}*/
+	List<Adm > adms = admDao.ListByShape(gisFeature.getLocation(), countryCode);
+	if (adms.size()>0){
+		adm = adms.get(adms.size()-1);
 	}
 	gisFeature.setAdm(adm);
-	setAdmCodesWithLinkedAdmOnes(adm, gisFeature, importerConfig
-		.isSyncAdmCodesWithLinkedAdmOnes());
-	setAdmNames(adm, gisFeature);
+	/*setAdmCodesWithLinkedAdmOnes(adm, gisFeature, importerConfig
+		.isSyncAdmCodesWithLinkedAdmOnes());*/
+	setAdmNames(adms, gisFeature);
 	gisFeature.setAlternateLabels(labelGenerator.generateLabels(gisFeature));
 	gisFeature.setLabel(labelGenerator.generateLabel(gisFeature));
 	gisFeature.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(gisFeature));
@@ -498,10 +509,25 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 		gisFeature.setAdm3Name(admTemp.getName());
 	    } else if (admTemp.getLevel() == 4) {
 		gisFeature.setAdm4Name(admTemp.getName());
-	    }
+	    }else if (admTemp.getLevel() == 5) {
+			gisFeature.setAdm5Name(admTemp.getName());
+		    }
 	    admTemp = admTemp.getParent();
 	} while (admTemp != null);
 
+    }
+    
+    private void setAdmNames(List<Adm> adms, GisFeature gisFeature) {
+    	if (adms == null) {
+    	    return;
+    	}
+    	int level =1;
+    	for (Adm adm:adms){
+    		if(adm!=null && level <=5){
+    			gisFeature.setAdmName(level, adm.getName());
+    			level=level+1;
+    		}
+        }
     }
 
     private void setAdmCodesWithLinkedAdmOnes(Adm adm, GisFeature gisFeature,
@@ -840,6 +866,16 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	}
 	resetStatus();
 	return deletedObjectInfo;
+    }
+    
+    public boolean shouldImportPlaceType(GisFeature feature){
+    	//don't want adm because it will be done by osm
+    	//city and subdivision too
+    	//streets are not very useful compare to osm 
+    	if (feature == null || feature instanceof City || feature instanceof CitySubdivision || feature instanceof Adm || feature instanceof Street){
+    		return false;
+    	}
+    	return true;
     }
 
 

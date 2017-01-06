@@ -62,7 +62,7 @@ public class LabelGenerator {
 	
 	public String generateLabel(GisFeature feature) {
 		if (feature!=null & feature.getName()!=null){
-			if (feature.getIsIn()!=null){
+			if (feature.getIsIn()!=null && !feature.getIsIn().equals(feature.getName())){
 				return feature.getName()+", "+feature.getIsIn();
 			} else {
 				return feature.getName();
@@ -212,46 +212,57 @@ public class LabelGenerator {
 	public String getFullyQualifiedName(GisFeature gisFeature,
 			boolean withCountry) {
 		StringBuilder completeCityName = new StringBuilder();
+		String lastname = "";
+		String preAppend="";
 		if (gisFeature.getName()!=null){
 			completeCityName.append(gisFeature.getName());
+			lastname = gisFeature.getName();
+			preAppend=", ";
 		}
-		String lastname = "";
 		String isInPlace = gisFeature.getIsInPlace();
-		if (isInPlace != null && !isInPlace.trim().equals("")) {
-			completeCityName.append(", " + isInPlace);
+		if (isInPlace != null && !isInPlace.trim().equals("") && !isInPlace.equalsIgnoreCase(lastname)) {
+			completeCityName.append(preAppend + isInPlace);
 			lastname = isInPlace;
+			preAppend=", ";
 		}
 		String isIn = gisFeature.getIsIn();
-		if (isIn != null && !isIn.trim().equals("")) {
-			completeCityName.append(", " + isIn);
+		if (isIn != null && !isIn.trim().equals("") && !isIn.equalsIgnoreCase(lastname)) {
+			completeCityName.append(preAppend + isIn);
 			lastname = isIn;
+			preAppend=", ";
 		}
 		String adm5Name = gisFeature.getAdm5Name();
-		if (adm5Name != null && !adm5Name.trim().equals("")) {
-			completeCityName.append(", " + adm5Name);
+		if (adm5Name != null && !adm5Name.trim().equals("") && !adm5Name.equalsIgnoreCase(lastname)) {
+			completeCityName.append(preAppend + adm5Name);
 			lastname = adm5Name;
+			preAppend=", ";
 		}
 		String adm4Name = gisFeature.getAdm4Name();
 		if (adm4Name != null && !adm4Name.trim().equals("") && !adm4Name.equalsIgnoreCase(lastname)) {
-			completeCityName.append(", " + adm4Name);
+			completeCityName.append(preAppend + adm4Name);
 			lastname = adm4Name;
+			preAppend=", ";
 		}
 		String adm3Name = gisFeature.getAdm3Name();
 		if (adm3Name != null && !adm3Name.trim().equals("") && !adm3Name.equalsIgnoreCase(lastname)) {
-			completeCityName.append(", " + adm3Name);
+			completeCityName.append(preAppend + adm3Name);
 			lastname = adm3Name;
+			preAppend=", ";
 		}
 		String adm2Name = gisFeature.getAdm2Name();
 		if (adm2Name != null && !adm2Name.trim().equals("")&& !adm2Name.equalsIgnoreCase(lastname)) {
-			completeCityName.append(", " + adm2Name);
+			completeCityName.append(preAppend + adm2Name);
 			lastname = adm2Name;
+			preAppend=", ";
 		}
 		String adm1Name = gisFeature.getAdm1Name();
 		if (adm1Name != null && !adm1Name.trim().equals("") && !adm1Name.equalsIgnoreCase(lastname)) {
 			if (gisFeature.getCountryCode()!=null){
-				completeCityName.append(", " + StateAbbreviator.addStateCode(gisFeature.getCountryCode(),adm1Name));
+				completeCityName.append(preAppend + StateAbbreviator.addStateCode(gisFeature.getCountryCode(),adm1Name));
+				preAppend=", ";
 			} else {
-				completeCityName.append(", " + adm1Name);
+				completeCityName.append(preAppend + adm1Name);
+				preAppend=", ";
 			}
 		}
 		if (gisFeature instanceof City){
@@ -267,7 +278,7 @@ public class LabelGenerator {
 		if (withCountry && gisFeature.getCountryCode() != null) {
 			String country = getCountry(gisFeature.getCountryCode());
 			if (country != null) {
-				completeCityName.append(" , " + country);
+				completeCityName.append(preAppend + country);
 			}
 		}
 		if (completeCityName.length()==0){
@@ -280,47 +291,59 @@ public class LabelGenerator {
 	
 	public String getFullyQualifiedName(OpenStreetMap osm,
 			boolean withCountry) {
+		if (osm!=null && osm.getName()!=null){
 		StringBuilder completeCityName = new StringBuilder();
+		String lastname = "";
+		String preAppend="";
 		if (osm.getName()!=null){
 			completeCityName.append(osm.getName());
+			lastname = osm.getName();
+			preAppend=", ";
 		}
-		String lastname = "";
 		String isInPlace = osm.getIsInPlace();
-		if (isInPlace != null && !isInPlace.trim().equals("")) {
-			completeCityName.append(", " + isInPlace);
+		if (isInPlace != null && !isInPlace.trim().equals("") && !isInPlace.equalsIgnoreCase(lastname)) {
+			completeCityName.append(preAppend + isInPlace);
 			lastname = isInPlace;
+			preAppend=", ";
 		}
 		String isIn = osm.getIsIn();
-		if (isIn != null && !isIn.trim().equals("")) {
-			completeCityName.append(", " + isIn);
+		if (isIn != null && !isIn.trim().equals("") && !isIn.equalsIgnoreCase(lastname)) {
+			completeCityName.append(preAppend + isIn);
 			lastname = isIn;
+			preAppend=", ";
 		}
 		String adm5Name = osm.getAdm5Name();
-		if (adm5Name != null && !adm5Name.trim().equals("")) {
-			completeCityName.append(", " + adm5Name);
+		if (adm5Name != null && !adm5Name.trim().equals("") && !adm5Name.equalsIgnoreCase(lastname)) {
+			completeCityName.append(preAppend + adm5Name);
 			lastname = adm5Name;
+			preAppend=", ";
 		}
 		String adm4Name = osm.getAdm4Name();
 		if (adm4Name != null && !adm4Name.trim().equals("") && !adm4Name.equalsIgnoreCase(lastname)) {
-			completeCityName.append(", " + adm4Name);
+			completeCityName.append(preAppend + adm4Name);
 			lastname = adm4Name;
+			preAppend=", ";
 		}
 		String adm3Name = osm.getAdm3Name();
 		if (adm3Name != null && !adm3Name.trim().equals("") && !adm3Name.equalsIgnoreCase(lastname)) {
-			completeCityName.append(", " + adm3Name);
+			completeCityName.append(preAppend + adm3Name);
 			lastname = adm3Name;
+			preAppend=", ";
 		}
 		String adm2Name = osm.getAdm2Name();
 		if (adm2Name != null && !adm2Name.trim().equals("")&& !adm2Name.equalsIgnoreCase(lastname)) {
-			completeCityName.append(", " + adm2Name);
+			completeCityName.append(preAppend + adm2Name);
 			lastname = adm2Name;
+			preAppend=", ";
 		}
 		String adm1Name = osm.getAdm1Name();
 		if (adm1Name != null && !adm1Name.trim().equals("") && !adm1Name.equalsIgnoreCase(lastname)) {
 			if (osm.getCountryCode()!=null){
-				completeCityName.append(", " + StateAbbreviator.addStateCode(osm.getCountryCode(),adm1Name));
+				completeCityName.append(preAppend + StateAbbreviator.addStateCode(osm.getCountryCode(),adm1Name));
+				preAppend=", ";
 			} else {
-				completeCityName.append(", " + adm1Name);
+				completeCityName.append(preAppend + adm1Name);
+				preAppend=", ";
 			}
 		}
 		String bestZip = null;
@@ -331,7 +354,7 @@ public class LabelGenerator {
 			bestZip = getBestZipString(osm.getIsInZip());
 		}
 		if (bestZip != null){
-			completeCityName.append(", (");
+			completeCityName.append(preAppend+" (");
 			completeCityName.append(bestZip);
 			completeCityName.append(")");
 		}
@@ -339,7 +362,7 @@ public class LabelGenerator {
 		if (withCountry && osm.getCountryCode() != null) {
 			String country = getCountry(osm.getCountryCode());
 			if (country != null) {
-				completeCityName.append(" , " + country);
+				completeCityName.append(preAppend + country);
 			}
 		}
 		if (completeCityName.length()==0){
@@ -347,6 +370,8 @@ public class LabelGenerator {
 		} else {
 			return completeCityName.toString();
 		}
+		}
+		return null;
 	}
 
 	/**
@@ -431,7 +456,10 @@ public class LabelGenerator {
 	
 	
 	public String generatePostal(OpenStreetMap street){
-		return generatePostal(buildAddressFromOpenstreetMap(street));
+		if (street!=null && street.getName()!=null){
+			return generatePostal(buildAddressFromOpenstreetMap(street));
+		}
+		return null;
 	}
 	
 	
@@ -607,9 +635,9 @@ public class LabelGenerator {
 		if (openStreetMap.getAzimuthEnd()!=null){
 			address.setAzimuthEnd(openStreetMap.getAzimuthEnd());
 		}
-		if (openStreetMap.getStreetType()!=null){
+		/*if (openStreetMap.getStreetType()!=null){
 			address.setStreetType(openStreetMap.getStreetType().toString());
-		}
+		}*/
 		if (openStreetMap.getLength()!=null){
 			address.setLength(openStreetMap.getLength());
 		}

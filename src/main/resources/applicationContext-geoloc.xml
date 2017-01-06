@@ -35,6 +35,17 @@
 		<property name="solRSynchroniser" ref="solRSynchroniser"/>
 	</bean>
 	
+	<bean id="geonamesFeatureCitiesImporter"
+		class="com.gisgraphy.importer.GeonamesFeatureCitiesSimpleImporter"
+		parent="abstract${classifier}ImporterProcessor">
+		<property name="cityDao" ref="cityDao" />
+		<property name="gisFeatureDao" ref="gisFeatureDao" />
+		<property name="alternateNameDao" ref="alternateNameDao" />
+		<property name="admDao" ref="admDao" />
+		<property name="countryDao" ref="countryDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+	
 	<bean id="geonamesAdmExtracter"
 		class="com.gisgraphy.importer.GeonamesAdmExtracter"
 		parent="abstractSimpleImporterProcessor">
@@ -114,8 +125,8 @@
 	</bean>
 
 	<bean id="geonamesAlternateNamesImporter"
-		class="com.gisgraphy.importer.GeonamesAlternateNames${classifier}Importer"
-		parent="abstract${classifier}ImporterProcessor">
+	class="com.gisgraphy.importer.GeonamesAlternateNames${classifier}Importer"
+	parent="abstract${classifier}ImporterProcessor">
 		<property name="gisFeatureDao" ref="gisFeatureDao" />
 		<property name="alternateNameDao" ref="alternateNameDao" />
 		<property name="cityDao" ref="cityDao" />
@@ -208,17 +219,24 @@
 				<ref bean="openStreetMapPoisFileRetriever"/>
 				<ref bean="geonamesLanguageImporter" />
 				<ref bean="geonamesCountryImporter" />
-				<ref bean="geonamesAdmExtracter" />
+
+				<ref bean="openStreetMapAdmSimpleImporter" />
+				<!-- <ref bean="geonamesAdmExtracter" />
 				<ref bean="geonamesAdm1Importer" />
 				<ref bean="geonamesAdm2Importer" />
 				<ref bean="geonamesAdm3Importer" />
-				<ref bean="geonamesAdm4Importer" />
-				<ref bean="geonamesFeatureImporter" />
-				<ref bean="geonamesAlternateNamesExtracter" />
-				<ref bean="geonamesAlternateNamesAdmImporter"/>
-				<ref bean="geonamesAlternateNamesImporter" />
+				<ref bean="geonamesAdm4Importer" />-->
+				<ref bean="geonamesFeatureCitiesImporter" />
 				<ref bean="openStreetMapCitiesSimpleImporter"/>
+
+				<ref bean="geonamesFeatureImporter" />
+
+				<ref bean="geonamesAlternateNamesExtracter" />
+				<!--<ref bean="geonamesAlternateNamesAdmImporter" />-->
+				<ref bean="geonamesAlternateNamesImporter" />
+
 				<ref bean="quattroshapesSimpleImporter"/>
+
 				<ref bean="geonamesZipCodeImporter" />
 				<ref bean="geonamesDatabaseIndexer" />
 				<ref bean="openStreetMapImporter"/>
