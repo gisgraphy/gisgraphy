@@ -94,7 +94,7 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
     protected ICityDao cityDao;
     
     protected boolean shouldFillIsInField(){
-    	return importerConfig.isGeonamesImporterEnabled() && importerConfig.isOpenStreetMapFillIsIn(); 
+    	return importerConfig.isOpenStreetMapFillIsIn(); 
     }
     
 
@@ -215,10 +215,7 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 			populateAlternateNames(poi,alternateNamesAsString);
 		}
 		
-		if (shouldFillIsInField()) {
-			//we try to process is_in fields, because we want to fill adm and zip too
-			setIsInFields(poi);
-		}
+	
 		
 		//location
 		if (!isEmptyField(fields, 5, false)) {
@@ -232,6 +229,13 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
 		} else {
 			return null;
 		}
+		
+		
+		if (shouldFillIsInField()) {
+			//we try to process is_in fields, because we want to fill adm and zip too
+			setIsInFields(poi);
+		}
+		
 				
 		
 		//featureId

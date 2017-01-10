@@ -242,7 +242,9 @@ public class GeocodingService implements IGeocodingService {
 			}
 			Address address = addressResultDto.getResult().get(0);
 			AddressResultsDto addressesDto = geocode(address, countryCode);
-			addressesDto.setParsedAddress(address);
+			if (shouldSetParseAddress(query)){
+				addressesDto.setParsedAddress(address);
+			}
 			return addressesDto;
 		} else if (importerConfig.isOpenStreetMapFillIsIn()) {
 			logger.debug("is_in is active");
@@ -397,6 +399,14 @@ public class GeocodingService implements IGeocodingService {
 			return str.length() > 0 && (str.indexOf(" ") != -1 || str.indexOf(",") != -1 || str.indexOf(";") != -1);
 		}
 		return false;
+	}
+	
+	protected boolean shouldSetParseAddress(AddressQuery query){
+	if (query !=null && query.getParsedAddressUnlockKey()!=0 && importerConfig.getParsedAddressUnlockKey() !=0 
+			&& query.getParsedAddressUnlockKey()==importerConfig.getParsedAddressUnlockKey()){
+		return true;
+	}
+	return false;
 	}
 
 	protected boolean isGeocodable(Address address) {

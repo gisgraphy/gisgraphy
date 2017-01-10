@@ -145,6 +145,7 @@ ad___Kelvin Grove_________0102000020E6100000050000001F5A1AAE44206340662E15C03972
 ___W___house"} SHAPE"
 		 */
 		if (line == null || "".equals(line.trim())) {
+			logger.warn("associated : null line "+line);
 			return null;
 		}
 		String[] fields = line.split("\t");
@@ -174,7 +175,7 @@ ___W___house"} SHAPE"
 				try {
 					point = (Point) GeolocHelper.convertFromHEXEWKBToGeometry(matcher.group(2));
 				} catch (Exception e) {
-					logger.warn(e.getMessage());
+					logger.warn("associated : "+e.getMessage());
 					return null;
 				}
 				if (point == null) {
@@ -211,6 +212,7 @@ ___W___house"} SHAPE"
 			}
 
 		} else {
+			logger.warn("associated : null number : "+line);
 			return null;
 		}
 		return houseNumber;
@@ -228,6 +230,7 @@ ___W___house"} SHAPE"
 		 * 1796453794___3___0101000020E6100000F38F6390605350C028A6666A6D2F38C0___698___		even
 		 */
 		if (line == null || "".equals(line.trim())) {
+			logger.warn("interpolation : null number : "+line);
 			return null;
 		}
 		String[] fields = line.split("\t");
@@ -248,6 +251,7 @@ ___W___house"} SHAPE"
 			try {
 				houseNumber.setInterpolationType(InterpolationType.valueOf(fields[4].trim().toLowerCase()));
 			} catch (Exception e) {
+				logger.warn("interpolation : wrong interpolation type "+fields[4]+" : "+line);
 				//ignore
 			}
 		}
@@ -259,6 +263,7 @@ ___W___house"} SHAPE"
 			try {
 				houseNumber.setAddressInclusion(AddressInclusion.valueOf(fields[5].trim().toLowerCase()));
 			} catch (Exception e) {
+				logger.warn("interpolation : wrong address inclusion type "+fields[5]+" : "+line);
 				//ignore
 			}
 		}
@@ -304,6 +309,7 @@ ___W___house"} SHAPE"
 			}
 			Collections.sort(houseNumber.getMembers());
 		} else {
+			logger.warn("interpolation : wrong housenumber "+fields[2]+" : "+line);
 			return null;
 		}
 		
@@ -314,15 +320,16 @@ ___W___house"} SHAPE"
 		//N	598495945	0101000020E61000002D1DBD2BCC2462401E37FC6EBAF042C0	46		Dunscombe Avenue	Glen Waverley	3150	Glen Waverley
 		//N	1053493828	0101000020E610000060910486D17250C05D4B6D4ECA753CC0	75	Sandwichs La Estrellita	Estanislao Maldones 6:CITY 7:POSTCODE 8:SUBURB 9:SHAPE
 		if (line == null || "".equals(line.trim())) {
+			logger.warn("node : null line "+line);
 			return null;
 		}
 		String[] fields = line.split("\t");
 		if (fields.length < 7 ) {
-			logger.warn("wrong number of fields for line " + line + " expected 7 but was " + fields.length);
+			logger.warn("node : wrong number of fields for line " + line + " expected 7 but was " + fields.length);
 			return null;
 		}
 		if (!"N".equals(fields[0]) && !"W".equals(fields[0])) {
-			logger.warn("wrong house Number Type for line " + line + " expected 'N' or 'w' but was " + fields[0]);
+			logger.warn("node : wrong house Number Type for line " + line + " expected 'N' or 'w' but was " + fields[0]);
 			return null;
 		}
 		NodeHouseNumber node = new NodeHouseNumber();
@@ -334,11 +341,11 @@ ___W___house"} SHAPE"
 			try {
 				point = (Point) GeolocHelper.convertFromHEXEWKBToGeometry(fields[2].trim());
 			} catch (Exception e) {
-				logger.warn(e.getMessage());
+				logger.warn("node : "+ e.getMessage());
 				return null;
 			}
 			if (point == null) {
-				logger.warn("wrong location for NodeHouseNumber for point for line " + line);
+				logger.warn("node : wrong location for NodeHouseNumber for point for line " + line);
 				return null;
 			} else {
 				node.setLocation(point);
@@ -406,14 +413,14 @@ ___W___house"} SHAPE"
 			List<InterpolationMember> members = house.getMembers();
 			if (members.size() <= 1) {
 				//we can not interpolate if there is less than 2 points
-				logger.warn("can not interpolate if there is less than two points for " + line);
+				logger.warn("interpolation : can not interpolate if there is less than two points for " + line);
 				return;
 			}
 			OpenStreetMap osm = null;
 			if (house.getStreetName() != null && !"".equals(house.getStreetName().trim()) && !"\"\"".equals(house.getStreetName().trim())) {
 				osm = findNearestStreet(house.getStreetName(), members.get(0).getLocation());
 				if (osm == null) {
-					logger.warn("can not find street for name "+house.getStreetName()+", position :"+ members.get(0).getLocation());
+					logger.warn("interpolation : can not find street for name "+house.getStreetName()+", position :"+ members.get(0).getLocation());
 					return;// we don't know which street to add the numbers
 				}
 			} else {
@@ -432,13 +439,14 @@ ___W___house"} SHAPE"
 
 	protected void processAssociatedStreet(AssociatedStreetHouseNumber house) {
 		if (house==null){
+			logger.warn("associated : AssociatedStreetHouseNumber is null");
 			return;
 		}
 		List<AssociatedStreetMember> streetMembers = house.getStreetMembers();
 		List<AssociatedStreetMember> houseMembers = house.getHouseMembers();
 		if (houseMembers.size()==0 ){
 			//no streets or no house
-			logger.warn("there is no member for associated street "+house);
+			logger.warn("associated : there is no member for associated street "+house);
 			return;
 		} 
 		if (streetMembers.size()==0){
@@ -448,12 +456,12 @@ ___W___house"} SHAPE"
 				boolean allHouseHaveTheSameStreetName = true;
 				OpenStreetMap street=null;
 				for (AssociatedStreetMember houseMember : houseMembers){
-					if (streetname==null && houseMember.getStreetName()!=null){
+					if (streetname==null && houseMember!=null && houseMember.getStreetName()!=null){
 						streetname=houseMember.getStreetName();
 						street = findNearestStreet(houseMember.getStreetName(),houseMember.getLocation());
 						continue;
 					}else {
-						if (!houseMember.getStreetName().equals(streetname)){
+						if (houseMember != null && houseMember.getStreetName()!=null && !houseMember.getStreetName().equals(streetname)){
 							allHouseHaveTheSameStreetName=false;
 							street=null;
 							break;
@@ -484,19 +492,19 @@ ___W___house"} SHAPE"
 		else if (streetMembers.size()==1){
 			AssociatedStreetMember associatedStreetMember = streetMembers.get(0);
 			if (associatedStreetMember.getId()==null){
-				logger.warn("associated street "+associatedStreetMember+" has no id");
+				logger.warn("associated : associated street "+associatedStreetMember+" has no id");
 				return;
 			}
 			Long idAsLong = null;
 			try {
 				idAsLong = Long.valueOf(associatedStreetMember.getId());
 			} catch (NumberFormatException e) {
-				logger.warn(idAsLong+" is not a valid id for associated street");
+				logger.warn("associated  : "+idAsLong+" is not a valid id for associated street");
 				return;
 			}
 			OpenStreetMap associatedStreet = openStreetMapDao.getByOpenStreetMapId(idAsLong);
 			if (associatedStreet==null){
-				logger.warn("no street can be found for associated street for id "+idAsLong);
+				logger.warn("associated  : no street can be found for associated street for id "+idAsLong);
 				return;
 			}
 			for (AssociatedStreetMember houseMember : houseMembers){
@@ -517,7 +525,7 @@ ___W___house"} SHAPE"
 					id = Long.valueOf(street.getId());
 					streetIds.add(id);
 				} catch (NumberFormatException e) {
-					logger.warn(street+" has no id");
+					logger.warn("associated : "+street+" has no id");
 				}
 			}
 			for (AssociatedStreetMember houseMember : houseMembers){
@@ -549,6 +557,7 @@ ___W___house"} SHAPE"
 			Long id = Long.valueOf(house.getNodeId());
 			houseNumber.setOpenstreetmapId(id);
 		} catch (NumberFormatException e) {
+			logger.warn("node : can not parse openstreetmapid for house : "+house);
 			//ignore
 		}
 		Point location = house.getLocation();
@@ -569,7 +578,7 @@ ___W___house"} SHAPE"
 						}
 						saveOsm(osm);
 					} catch (Exception e) {
-						logger.error("error processing node housenumber, we ignore it but you should consider it : "+ e.getMessage(),e);
+						logger.error("node : error processing node housenumber, we ignore it but you should consider it : "+ e.getMessage(),e);
 					}
 					return houseNumber;
 		} else {
@@ -734,11 +743,16 @@ ___W___house"} SHAPE"
 
 	protected OpenStreetMap findNearestStreet(String streetName, Point location) {
 		//Openstreetmap has sometimes, for a  same street, several segment, so we do a fulltext search and then search for the nearest based on shape,not nearest point
+		logger.error("findNearestStreet :streetname="+streetName+" and location = "+location);
 		if (location == null){
+			logger.warn("findNearestStreet :location is null");
 			return null;
 		}
 		if (streetName==null || "".equals(streetName.trim()) || "\"\"".equals(streetName.trim()) || "-".equals(streetName.trim()) || "---".equals(streetName.trim()) || "--".equals(streetName.trim())){
-			return openStreetMapDao.getNearestFrom(location);
+			logger.warn("findNearestStreet : no streetname, we search by location "+location);
+				OpenStreetMap osm =	openStreetMapDao.getNearestFrom(location);
+				logger.error("findNearestStreet :getNearestFrom return "+osm);
+				return osm;
 		}
 		FulltextQuery query;
 		try {
@@ -759,11 +773,13 @@ ___W___house"} SHAPE"
 			return null;
 		}
 		int resultsSize = results.getResultsSize();
+	//	logger.warn(query + "returns "+resultsSize +" results");
 		List<SolrResponseDto> resultsList = results.getResults();
 		if (resultsSize == 1) {
 			SolrResponseDto street = resultsList.get(0);
 			if (street!=null){
 				Long openstreetmapId = street.getOpenstreetmap_id();
+				//logger.warn("findNearestStreet : find a street with osmId "+openstreetmapId);
 				if (openstreetmapId!=null){
 					OpenStreetMap osm = openStreetMapDao.getByOpenStreetMapId(openstreetmapId);
 					if (osm == null) {
@@ -773,13 +789,15 @@ ___W___house"} SHAPE"
 				}
 			}
 		} if (resultsSize > 1) {
-			return getNearestByIds(resultsList,location);
+					OpenStreetMap osm = getNearestByIds(resultsList,location,streetName);
+					//logger.warn("findNearestStreet : getNearestByIds returns "+osm+" for "+streetName);
+					return osm;
 		} else {
 			return null;
 		}
 	}
 
-	protected OpenStreetMap getNearestByIds(List<SolrResponseDto> results,Point point) {
+	protected OpenStreetMap getNearestByIds(List<SolrResponseDto> results,Point point,String streetname) {
 		List<Long> ids = new ArrayList<Long>();
 		OpenStreetMap result = null;
 		if (results!=null){
@@ -788,7 +806,15 @@ ___W___house"} SHAPE"
 					ids.add(dto.getOpenstreetmap_id());
 				}
 			}
+			String idsAsSTring="";
+			for (Long id:ids){
+				idsAsSTring = idsAsSTring+","+id;
+			}
+			//logger.warn("getNearestByIds : "+idsAsSTring);
 			result = openStreetMapDao.getNearestByosmIds(point, ids);
+			if (result==null){
+			logger.warn("getNearestByIds for"+streetname+" and  ids "+idsAsSTring+" and point" +point+" return  "+result);
+			}
 		}
 		return result;
 		/*SolrResponseDto candidate=null;
@@ -821,6 +847,7 @@ ___W___house"} SHAPE"
 		if (houseMember.getLocation()!=null){//it is a mandatory field
 			houseNumber.setLocation(houseMember.getLocation());
 		} else {
+			logger.warn("buildHouseNumberFromAssociatedHouseNumber : no location found for "+houseMember);
 			return null;
 		}
 		houseNumber.setNumber(normalizeNumber(houseMember.getHouseNumber()));//todo normalize 11 d
@@ -829,7 +856,7 @@ ___W___house"} SHAPE"
 			osmId = Long.valueOf(houseMember.getId());
 			houseNumber.setOpenstreetmapId(osmId);
 		} catch (NumberFormatException e) {
-			logger.warn(osmId+" is not a valid openstreetmapId");
+			logger.warn("buildHouseNumberFromAssociatedHouseNumber" +osmId+" is not a valid openstreetmapId");
 		}
 		houseNumber.setType(HouseNumberType.ASSOCIATED);
 		return houseNumber;

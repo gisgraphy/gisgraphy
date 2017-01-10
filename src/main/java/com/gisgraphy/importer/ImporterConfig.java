@@ -262,6 +262,8 @@ public class ImporterConfig {
     
     private boolean renameFilesAfterProcessing = false;
     
+    private int parsedAddressUnlockKey;
+    
     
     /*
      *  
@@ -273,7 +275,9 @@ public class ImporterConfig {
      * 
      */
     
-    /**
+  
+
+	/**
      * @return true if the importer should process the import of Geonames data
      */
     public boolean isGeonamesImporterEnabled() {
@@ -1185,6 +1189,20 @@ public class ImporterConfig {
     
     
     //_____________________________________________________end importer specific config______________________________
+    
+    /**
+  	 * @return the parsedAddressUnlockKey
+  	 */
+  	public int getParsedAddressUnlockKey() {
+  		return parsedAddressUnlockKey;
+  	}
+
+  	/**
+  	 * @param parsedAddressUnlockKey the parsedAddressUnlockKey to set
+  	 */
+  	public void setParsedAddressUnlockKey(int parsedAddressUnlockKey) {
+  		this.parsedAddressUnlockKey = parsedAddressUnlockKey;
+  	}
     
     private List<String> splitSemiColmunStringToList(String stringToSplit) {
 	List<String> list = new ArrayList<String>();

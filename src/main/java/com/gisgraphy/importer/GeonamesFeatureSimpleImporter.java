@@ -68,6 +68,8 @@ import com.vividsolutions.jts.geom.Point;
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
 public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcessor {
+	
+	public static final int DISTANCE = 40000;
 
 	protected static final Logger logger = LoggerFactory.getLogger(GeonamesFeatureSimpleImporter.class);
 	
@@ -97,6 +99,8 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     private static Pattern UNWANTED_NAME_PATTERN = Pattern.compile("\\(historical|under construction|recovery\\)",Pattern.CASE_INSENSITIVE);
     
     private static Pattern FIX_NAME_PATTERN = Pattern.compile("(\\(.+\\))",Pattern.CASE_INSENSITIVE);
+    
+    private static final Pattern pattern = Pattern.compile("(\\w+)\\s\\d+.*",Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     
     
 
@@ -366,6 +370,9 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 		adm = adms.get(adms.size()-1);
 	}
 	gisFeature.setAdm(adm);
+	
+	setIsInFields(gisFeature);
+	
 	/*setAdmCodesWithLinkedAdmOnes(adm, gisFeature, importerConfig
 		.isSyncAdmCodesWithLinkedAdmOnes());*/
 	setAdmNames(adms, gisFeature);
@@ -395,6 +402,132 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	// }
 
     }
+    
+    
+    
+	 protected void setIsInFields(GisFeature poi) {
+	    	if (poi != null && poi.getLocation() != null) {
+	    		//first searchByShape because it is the more reliable :
+	    		City cityByShape = cityDao.getByShape(poi.getLocation(),poi.getCountryCode(),true);
+	    		if (cityByShape != null){
+	    			poi.setIsIn(cityByShape.getName());
+	    			poi.setCityId(cityByShape.getId());
+	    			poi.setCityConfident(true);
+	    			poi.setPopulation(cityByShape.getPopulation());
+	    				for (ZipCode zip:cityByShape.getZipCodes()){
+	    					poi.addZip(zip.getCode());
+	    				}
+	    			if (cityByShape.getAlternateNames()!=null){
+	    				for (AlternateName name : cityByShape.getAlternateNames() ){
+	    					if (name!=null && name.getName()!=null){
+	    						poi.addIsInCitiesAlternateName(name.getName());
+	    					}
+	    				}
+	    			}
+	    			if (cityByShape.getAdm()!=null){
+	    				poi.setIsInAdm(cityByShape.getAdm().getName());
+	    			}
+	    			setBestZip(poi);
+	    			return;
+	    		}
+	    		City city = getNearestCity(poi.getLocation(),poi.getCountryCode(), true);
+	    		if (city != null) {
+	    			if (city.getZipCodes() != null) {
+	    				for (ZipCode zip:city.getZipCodes()){
+	    					if (zip != null && zip.getCode()!=null){
+	    						poi.addZip(zip.getCode());
+	    					}
+	    				}
+	    			}
+	    			if (city.getName() != null && poi.getIsIn()==null) {//only if it has not be set by the openstreetmap is_in field
+	    				//we can here have some concordance problem if the city found is not the one populate in the osm is_in fields.
+	    				poi.setIsIn(pplxToPPL(city.getName()));
+	    			}
+	    			if (city.getAlternateNames()!=null){
+	    				for (AlternateName name : city.getAlternateNames() ){
+	    					if (name!=null && name.getName()!=null){
+	    						poi.addIsInCitiesAlternateName(name.getName());
+	    					}
+	    				}
+	    			}
+	    		}
+	    		/*City city2 = getNearestCity(poi.getLocation(),poi.getCountryCode(), false);
+	    		if (city2 != null) {
+	    			if (city != null){
+	    					if (city.getFeatureId() == city2.getFeatureId()) {
+	    						setBestZip(poi);
+	    						return;
+	    					}
+	    					if (city2.getLocation()!=null && city.getLocation()!=null && GeolocHelper.distance(poi.getLocation(),city2.getLocation())>GeolocHelper.distance(poi.getLocation(),city.getLocation())){
+	    						setBestZip(poi);
+	    						return;
+	    					}
+	    			}
+	    				//we got a non municipality that is nearest, we set isinPlace tag and update is_in if needed
+	    				if (city2.getPopulation() != null && city2.getPopulation() != 0 && (poi.getPopulation() == null || poi.getPopulation() == 0)) {
+	    					poi.setPopulation(city2.getPopulation());
+	    				}
+
+	    				if (poi.getIsIn() == null) {
+	    					poi.setIsIn(pplxToPPL(city2.getName()));
+	    				} else {
+	    					poi.setIsInPlace(pplxToPPL(city2.getName()));
+	    				}
+	    				if (city2.getZipCodes() != null ) {//we merge the zipcodes for is_in and is_in_place, so we don't check
+	    					//if zipcodes are already filled
+	    					for (ZipCode zip:city2.getZipCodes()){
+	    						if (zip!=null && zip.getCode()!=null){
+	    							poi.addZip(zip.getCode());
+	    						}
+	        				}
+	    				}
+	    				if (city==null && city2!=null){//add AN only if there are not added yet
+		        			if (city2.getAlternateNames()!=null){
+		        				for (AlternateName name : city2.getAlternateNames() ){
+		        					if (name!=null && name.getName()!=null){
+		        						poi.addIsInCitiesAlternateName(name.getName());
+		        					}
+		        				}
+		        			}
+	    				}
+	    		}*/
+	    		setBestZip(poi);
+	    	}
+	 }
+	 
+	 /**
+	     *  tests if city is a paris district, if so it is
+			probably a pplx that is newly considered as ppl
+			http://forum.geonames.org/gforum/posts/list/2063.page
+	     */
+	    protected String pplxToPPL(String cityName){
+	    	if (cityName!=null){
+	    		Matcher matcher = pattern.matcher(cityName);
+	    		if (matcher.find()) {
+	    			return matcher.group(1);
+	    		} else {
+	    			return cityName;
+	    		}
+	    	} else {
+	    		return cityName;
+	    	}
+	    }
+
+	 
+	 protected City getNearestCity(Point location, String countryCode, boolean filterMunicipality) {
+			if (location ==null){
+				return null;
+			}
+			return cityDao.getNearest(location, countryCode, filterMunicipality, DISTANCE);
+		}
+	 
+	 private void setBestZip(GisFeature gisgeature) {
+			//we set the zipcode as the best one
+			if (gisgeature.getIsInZip()!=null && gisgeature.getIsInZip().size() >0 && gisgeature.getZipCode()==null){
+				gisgeature.setZipCode(labelGenerator.getBestZipString(gisgeature.getIsInZip()));
+			}
+			
+		}
 
 	protected GisFeature correctPlaceType(GisFeature featureObject, String name) {
 		if (StringUtil.containsDigit(name) && featureObject!=null && featureObject!=null && featureObject.getClass()==City.class){

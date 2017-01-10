@@ -221,26 +221,24 @@
 				<ref bean="geonamesCountryImporter" />
 
 				<ref bean="openStreetMapAdmSimpleImporter" />
-				<!-- <ref bean="geonamesAdmExtracter" />
-				<ref bean="geonamesAdm1Importer" />
-				<ref bean="geonamesAdm2Importer" />
-				<ref bean="geonamesAdm3Importer" />
-				<ref bean="geonamesAdm4Importer" />-->
+				
 				<ref bean="geonamesFeatureCitiesImporter" />
 				<ref bean="openStreetMapCitiesSimpleImporter"/>
 
-				<ref bean="geonamesFeatureImporter" />
 
 				<ref bean="geonamesAlternateNamesExtracter" />
-				<!--<ref bean="geonamesAlternateNamesAdmImporter" />-->
 				<ref bean="geonamesAlternateNamesImporter" />
 
 				<ref bean="quattroshapesSimpleImporter"/>
 
 				<ref bean="geonamesZipCodeImporter" />
 				<ref bean="geonamesDatabaseIndexer" />
+				
 				<ref bean="openStreetMapImporter"/>
+				
 				<ref bean="openStreetMapHouseNumberSimpleImporter"/>
+				
+				<ref bean="geonamesFeatureImporter" />
 				<ref bean="openStreetMapPoisSimpleImporter"/>
 			</list>
 		</constructor-arg>
@@ -356,6 +354,7 @@
 		<property name="alternateNameCountryFileName" value="${importerConfig.alternateNameCountryFileName}"/>
 		<property name="openStreetMapFillIsIn" value="${importerConfig.openstreetmap.fill.isin.field}"/>
 		<property name="renameFilesAfterProcessing" value="${importer.rename.files.after.processing}"/>
+		<property name="parsedAddressUnlockKey" value="${parsedAddress.unlock.key}" />
 		
 	</bean>
 	
