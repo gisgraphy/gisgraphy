@@ -933,6 +933,10 @@
 				Add a state abbreviator
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				the address in geocoding returns the Openstreetmap or Geonames id in the id field
+			</action>
+			
 			</release>
 			
 	</body>

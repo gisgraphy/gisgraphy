@@ -175,6 +175,28 @@ public class StringHelperTest {
 	Assert.assertTrue(StringHelper.isNotEmptyString("f"));
     }
     
+    @Test
+    public void isSameNameTest(){
+    	Assert.assertFalse("different",StringHelper.isSameName("Finkenhof","Bildhauerhof"));
+    	Assert.assertFalse("more words",StringHelper.isSameName("Le Breuil","Le Breuil-Mingot"));
+    	Assert.assertFalse("more words",StringHelper.isSameName("Morgon","Villié-Morgon"));
+    	Assert.assertTrue("accent",StringHelper.isSameName("Bélair","Belair"));
+    	Assert.assertTrue("case sensitive",StringHelper.isSameName("La Salce","la salce"));
+    	Assert.assertTrue("same",StringHelper.isSameName("La Salce","La Salce"));
+    	Assert.assertTrue("less long word but same",StringHelper.isSameName("Les Agnès","agnes"));
+    	
+    	Assert.assertTrue("with additionnal words size =3",StringHelper.isSameName("notre dame anges","notre dame des anges"));
+    	Assert.assertTrue("with additionnal words size =3",StringHelper.isSameName("notre dame des anges","notre dame anges"));
+    	
+    	Assert.assertTrue("with additionnal words size =2",StringHelper.isSameName("notre dame anges","notre dame de anges"));
+    	Assert.assertTrue("with additionnal words size =2",StringHelper.isSameName("notre dame de anges","notre dame anges"));
+    	Assert.assertFalse(StringHelper.isSameName("Berg","Sternenberg"));
+    	Assert.assertFalse(StringHelper.isSameName("Les Chézeaux","Les grand Chézeaux"));
+    	Assert.assertFalse("less long word but different",StringHelper.isSameName("route pepere","pepere"));
+    	
+    	
+    }
+    
 
 
 }

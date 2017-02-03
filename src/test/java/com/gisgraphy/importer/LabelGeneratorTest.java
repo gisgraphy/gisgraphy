@@ -112,6 +112,7 @@ public void testGenerateLabel_Adm(){
 	public void generatePostal_Address(){
 		Address address = new Address();
 		String actual =  generator.generatePostal(address);
+		System.out.println(actual);
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), actual);
 	}
 	
@@ -133,6 +134,25 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(1, countNumberOfOccurence(actual,"\\(AL\\)"));
 		Assert.assertEquals(1, countNumberOfOccurence(actual,"alabama"));
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), actual);
+	}
+	
+	@Test
+	public void generatePostal_Address_shouldNotContainsStreetType(){
+		Address address= new Address();
+		address.setStreetName("foo bar street");
+		address.setStreetType("SERVICE");
+		address.setHouseNumber("3");
+		address.setCity("paris");
+		address.setCitySubdivision("3e arrondissement");
+		address.setAdm1Name("alabama");
+		address.setAdm2Name("adm2");
+		address.setAdm3Name("ADM2");
+		address.setAdm4Name("adm4");
+		address.setAdm5Name("adm5");
+		address.setCountryCode("US");
+		String actual =  generator.generatePostal(address);
+		System.out.println(actual);
+		Assert.assertEquals(0, countNumberOfOccurence(actual,"SERVICE"));
 	}
 	
 	@Test

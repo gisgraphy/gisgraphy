@@ -467,6 +467,11 @@ public class LabelGenerator {
 		if (address!=null && address.getAdm1Name()!=null && address.getCountryCode()!=null){
 			address.setAdm1Name(StateAbbreviator.addStateCode(address.getCountryCode(),address.getAdm1Name()));
 		}
+		//we ovveride the streettype because it is used to store the type of
+		//street (service, RESIDENTIAL, ..) and it has nothing to see with the name of the street
+		if (address!=null){
+			address.setStreetType(null);
+		}
 		return formater.getEnvelopeAddress(address, DisplayMode.COMMA);
 	}
 	

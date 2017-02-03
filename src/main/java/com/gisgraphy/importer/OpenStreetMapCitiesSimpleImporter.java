@@ -59,6 +59,7 @@ import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.util.StringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -204,7 +205,22 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 	GisFeature place=null;
 	if (isPoi(fields[12], fields[7])) {
-		//todo
+		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE);
+		//find and delete the city or subdivision 
+		if (poiToremove!=null){
+			GisFeature cityToRemoveObj = null;
+			if (poiToremove.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
+				cityToRemoveObj = cityDao.getByFeatureId(poiToremove.getFeature_id());
+				
+			}else if (poiToremove.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){
+				 cityToRemoveObj = citySubdivisionDao.getByFeatureId(poiToremove.getFeature_id());
+			}
+			if (cityToRemoveObj!=null){
+				//logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove , "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId());
+				gisFeatureDao.remove(cityToRemoveObj);
+			}
+		}
+		//recreate the poi
 		place = createNewPoi(name, countrycode, location, adminCentreLocation);
 	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12])){
 		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE);
@@ -230,7 +246,10 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			} else if (nearestCity.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
 				//osm consider the place as a suburb, we delete the city and create a citysubdivision
 				City cityToRemove = cityDao.getByFeatureId(nearestCity.getFeature_id());
-				cityDao.remove(cityToRemove);
+				if (cityToRemove!=null && !cityToRemove.isMunicipality()){
+					logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove , "+nearestCity.getName()+","+nearestCity.getFeature_id());
+					cityDao.remove(cityToRemove);
+				}
 				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
 			}
 			
@@ -514,7 +533,12 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 		FulltextQuery query;
 		try {
-			query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
+			if (placetypes==null){
+				query = (FulltextQuery) new FulltextQuery(name).withExactName().around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
+			} else {
+				query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).withExactName().around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
+			}
+			
 		} catch (IllegalArgumentException e) {
 			logger.error("can not create a fulltext query for "+name);
 			return null;
@@ -527,9 +551,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			for (SolrResponseDto solrResponseDto : results.getResults()) {
 				if (solrResponseDto!=null && solrResponseDto.getScore() >= SCORE_LIMIT 
 						&& solrResponseDto.getOpenstreetmap_id()== null){
-					//if fopenstreetmapid is not null it is because the shape has already been set 
-					//(R are before nodes)
-					return solrResponseDto;
+					//if fopenstreetmapid is not null it is because the shape has already been set
+					//(R are before nodes), we ignore because we don't want the place if relation has been set
+					if (solrResponseDto.getName()!=null && StringHelper.isSameName(name, solrResponseDto.getName())){
+						return solrResponseDto;
+					}
 				} else {
 					return null;
 				}

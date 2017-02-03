@@ -64,6 +64,8 @@ import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.SmartStreetDetection;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.fulltext.SolrResponseDtoDistanceComparator;
+import com.gisgraphy.helper.CountryDetector;
+import com.gisgraphy.helper.CountryDetectorDto;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.importer.ImporterConfig;
@@ -93,6 +95,8 @@ public class GeocodingService implements IGeocodingService {
 	
 	private LabelGenerator labelGenerator = LabelGenerator.getInstance();
 	private BasicAddressFormater addressFormater = BasicAddressFormater.getInstance();
+	
+	CountryDetector countryDetector = new CountryDetector();
 	
 	SmartStreetDetection smartStreetDetection = new SmartStreetDetection();
 
@@ -218,6 +222,22 @@ public class GeocodingService implements IGeocodingService {
 		if (isEmptyString(rawAddress)) {
 			throw new GeocodingException("Can not geocode a null or empty address");
 		}
+		if (countryCode ==null){
+			CountryDetectorDto detectorDto = countryDetector.detectAndRemoveCountry(rawAddress);
+			if (detectorDto != null && detectorDto.getCountryCode()!=null){
+				if (detectorDto.getAddress()!= null && !detectorDto.getAddress().trim().equals("")){
+					rawAddress = detectorDto.getAddress();
+					countryCode = detectorDto.getCountryCode();
+				} else {
+					//it is a country. //todo
+					
+				}
+			}
+		}
+		if (countryCode !=null  && countryCode.trim().length() != 2) {
+			throw new GeocodingException("countrycode should have two letters : " + countryCode);
+		}
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Raw address to geocode : '" + rawAddress + "' for country code : " + countryCode);
 		}
@@ -264,6 +284,7 @@ public class GeocodingService implements IGeocodingService {
 				logger.info("splitstreettype ("+s+")"+newAddress);
 			}*/
 			if (GisgraphyConfig.searchForExactMatchWhenGeocoding) {
+				logger.debug("will search for exactmatch");
 				List<SolrResponseDto> exactMatches = findExactMatches(newAddress, countryCode);
 					/*List<SolrResponseDto> aproximativeMatches = findStreetInText(newAddress, countryCode, null); //we search for street because we think that it is not a city nor an adm that 
 					//have been probably found by exact matc, so we search for address and so a street*/
@@ -552,7 +573,11 @@ public class GeocodingService implements IGeocodingService {
 				Address address = new Address();
 				address.setLat(street.getLat());
 				address.setLng(street.getLng());
-				address.setId(street.getFeature_id());
+				if (street.getOpenstreetmap_id()!=null){
+					address.setId(street.getOpenstreetmap_id());
+				} else {
+					address.setId(street.getFeature_id());
+				}
 				address.setCountryCode(street.getCountry_code());
 
 				String streetName = street.getName();
@@ -848,7 +873,11 @@ public class GeocodingService implements IGeocodingService {
 				address.setName(solrResponseDto.getName());
 				address.setLat(solrResponseDto.getLat());
 				address.setLng(solrResponseDto.getLng());
-				address.setId(solrResponseDto.getFeature_id());
+				if (solrResponseDto.getOpenstreetmap_id()!=null){
+					address.setId(solrResponseDto.getOpenstreetmap_id());
+				} else {
+					address.setId(solrResponseDto.getFeature_id());
+				}
 				String countryCode = solrResponseDto.getCountry_code();
 				address.setCountryCode(countryCode);
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Adm.class.getSimpleName())) {
@@ -1001,7 +1030,11 @@ public class GeocodingService implements IGeocodingService {
 		address.setLat(city.getLat());
 		address.setLng(city.getLng());
 		populateAddressFromCity(city, address);
-		address.setId(city.getFeature_id());
+		if (city.getOpenstreetmap_id()!=null){
+			address.setId(city.getOpenstreetmap_id());
+		} else {
+			address.setId(city.getFeature_id());
+		}
 		return address;
 	}
 	

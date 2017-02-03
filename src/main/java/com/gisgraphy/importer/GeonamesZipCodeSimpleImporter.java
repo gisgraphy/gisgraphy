@@ -35,10 +35,12 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.IAdmDao;
 import com.gisgraphy.domain.repository.ICityDao;
+import com.gisgraphy.domain.repository.ICitySubdivisionDao;
 import com.gisgraphy.domain.repository.IGisFeatureDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
@@ -51,6 +53,7 @@ import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.service.ServiceException;
 import com.vividsolutions.jts.geom.Point;
 
@@ -72,6 +75,8 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
     protected ISolRSynchroniser solRSynchroniser;
 
     protected ICityDao cityDao;
+    
+    protected ICitySubdivisionDao citySubdivisionDao;
 
     protected IZipCodeDao zipCodeDao;
     
@@ -142,8 +147,9 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	if (!isEmptyField(fields, 10, true) && !isEmptyField(fields, 9, true)) {
 	    zipPoint = GeolocHelper.createPoint(new Float(fields[10]), new Float(fields[9]));
 	}
-	City city = getByShape(countryCode, code, zipPoint);
-	if (city!=null){
+	boolean found = getByShape(countryCode, code, zipPoint);
+	if (found){
+		//we find a city, we return
 		return;
 	}
 	
@@ -161,43 +167,75 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	}
     }
 
-	protected City getByShape(String countryCode, String code, Point zipPoint) {
-		City cityByShape = cityDao.getByShape(zipPoint,countryCode,false);
+	protected boolean getByShape(String countryCode, String code, Point zipPoint) {
+		boolean found = false;
+		GisFeature cityByShape = cityDao.getByShape(zipPoint,countryCode,true);
 		if (cityByShape!=null){
 			ZipCode zipCode = new ZipCode(code);
 			//if (feature.getZipCodes() == null || !feature.getZipCodes().contains(zipCode)) {
 			cityByShape.addZipCode(zipCode);
-			cityDao.save(cityByShape);
+			cityDao.save((City)cityByShape);
+			found=true;
+		} else {
+			 cityByShape = cityDao.getByShape(zipPoint,countryCode,false);
+			 if (cityByShape!=null){
+					ZipCode zipCode = new ZipCode(code);
+					//if (feature.getZipCodes() == null || !feature.getZipCodes().contains(zipCode)) {
+					cityByShape.addZipCode(zipCode);
+					cityDao.save((City)cityByShape);
+					found=true;
+				} 
 		}
-		return cityByShape;
+		
+		//try with subdivision too (in addition)
+		CitySubdivision citySubdivision = citySubdivisionDao.getByShape(zipPoint, countryCode);
+		if (citySubdivision!=null){
+			ZipCode zipCode = new ZipCode(code);
+			citySubdivision.addZipCode(zipCode);
+			citySubdivisionDao.save(citySubdivision);
+			found = true;
+		} 
+		return found;
 	}
 
     protected Long findFeature(String[] fields,  Point zipPoint,int maxDistance) {
     
 	String query;
 	boolean extendedsearch;
-	if (fields[3] != null) {//adm1Name
+	/*if (fields[3] != null) {//adm1Name
 	    query = fields[2] + " " + fields[3];
 	    extendedsearch = true;
-	} else {
+	} else {*/
 	    query = fields[2];//name
 	    extendedsearch = false;
-	}
-	FulltextResultsDto results = doAFulltextSearch(query,fields[0]);
+	//}
+	FulltextResultsDto results = doAFulltextSearch(query,fields[0],zipPoint);
 	if (results.getNumFound() == 0) {
 	    if (extendedsearch) {
 		// do a basic search
-		results = doAFulltextSearch(fields[2], fields[0]);
+		results = doAFulltextSearch(fields[2], fields[0],zipPoint);
 		if (results.getResultsSize() == 0) {
 		    // oops, no results
+			logger.error("find feature for "+query+" around "+zipPoint+" returns nothing");
 		    return null;
 		} else if (results.getNumFound() == 1) {
 		    // we found the one!
-		    return results.getResults().get(0).getFeature_id();
+			logger.error("find feature for "+query+" around "+zipPoint+" returns (1) "+results.getResults().get(0).getName());
+			if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())){
+				return results.getResults().get(0).getFeature_id();
+			} else {
+				return null;
+			}
 		} else {
 		    // more than one match iterate and calculate distance and
-		    // take the nearest
-		    return findNearest(zipPoint, maxDistance, results);
+		    // take the best one by score
+			logger.error("find feature for "+query+" around "+zipPoint+" returns (+)"+results.getResults().get(0).getName());
+			if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())){
+				return results.getResults().get(0).getFeature_id();
+			} else {
+				return null;
+			}
+			//return findNearest(zipPoint, maxDistance, results);
 		}
 	    } else {
 		// no features matches in basic search!
@@ -206,35 +244,44 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	    }
 	} else if (results.getResults().size() == 1) {
 	    // we found the one!
-	    return results.getResults().get(0).getFeature_id();
+		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())){
+			return results.getResults().get(0).getFeature_id();
+		} else {
+			return null;
+		}
 	} else {
-	    // more than one match, take the nearest
-	    return findNearest(zipPoint, maxDistance, results);
+		// more than one match iterate and calculate distance and
+	    // take the best one by score
+		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())){
+			return results.getResults().get(0).getFeature_id();
+		} else {
+			return null;
+		}
+	   // return findNearest(zipPoint, maxDistance, results);
 	}
 
     }
 
     protected Long findNearest(Point zipPoint, int maxDistance, FulltextResultsDto results) {
-	Long nearestFeatureId = null;
-	double nearestDistance = 0;
-	for (SolrResponseDto dto : results.getResults()) {
-	    Point dtoPoint = GeolocHelper.createPoint(new Float(dto.getLng()), new Float(dto.getLat()));
-	    if (nearestFeatureId == null) {
-		nearestFeatureId = dto.getFeature_id();
-		nearestDistance = GeolocHelper.distance(zipPoint, dtoPoint);
-	    } else {
-		double distance = GeolocHelper.distance(zipPoint, dtoPoint);
-		if (distance > maxDistance) {
-		    logger.info(dto.getFeature_id() + " is too far and is not candidate");
-		} else {
-		    if (distance < nearestDistance) {
-			logger.info(dto.getFeature_id() + "is nearest than " + nearestFeatureId);
-			nearestFeatureId = dto.getFeature_id();
-			nearestDistance = distance;
-		    }
-		}
-
-	    }
+    	Long nearestFeatureId = null;
+    	double nearestDistance = 0;
+    	for (SolrResponseDto dto : results.getResults()) {
+    		Point dtoPoint = GeolocHelper.createPoint(new Float(dto.getLng()), new Float(dto.getLat()));
+    		if (nearestFeatureId == null) {
+    			nearestFeatureId = dto.getFeature_id();
+    			nearestDistance = GeolocHelper.distance(zipPoint, dtoPoint);
+    		} else {
+    			double distance = GeolocHelper.distance(zipPoint, dtoPoint);
+    			if (distance > maxDistance) {
+    				logger.info(dto.getFeature_id() + " is too far and is not candidate");
+    			} else {
+    				if (distance < nearestDistance) {
+    					logger.info(dto.getFeature_id() + "is nearest than " + nearestFeatureId);
+    					nearestFeatureId = dto.getFeature_id();
+    					nearestDistance = distance;
+    				}
+    			}
+    		}
 	}
 	return nearestFeatureId;
     }
@@ -331,7 +378,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
         }
     }
 
-    protected FulltextResultsDto doAFulltextSearch(String query, String countryCode) {
+    protected FulltextResultsDto doAFulltextSearch(String query, String countryCode,Point location) {
 	FulltextQuery fulltextQuery;
 	try {
 		fulltextQuery = new FulltextQuery(query);
@@ -339,7 +386,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 		logger.error("can not create a fulltext query for "+query);
 		return new FulltextResultsDto();
 	}
-	fulltextQuery.limitToCountryCode(countryCode);
+	fulltextQuery.limitToCountryCode(countryCode).around(location);
 	fulltextQuery.withPlaceTypes(com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE);
 
 	FulltextResultsDto results;
@@ -500,8 +547,18 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }
+    
+    
 
     /**
+	 * @param citySubdivisionDao the citySubdivisionDao to set
+	 */
+    @Required
+	public void setCitySubdivisionDao(ICitySubdivisionDao citySubdivisionDao) {
+		this.citySubdivisionDao = citySubdivisionDao;
+	}
+
+	/**
      * @param gisFeatureDao
      *            The GisFeatureDao to set
      */

@@ -99,6 +99,8 @@ public class FulltextQuerySolrHelperTest {
 	}
 	
 	
+		
+	
 	@Test
 	public void testToQueryStringShouldreturnCorrectParamsForSuggestQuery_with_default_radius_should_filter_results() {
 		Country france = GisgraphyTestHelper.createCountryForFrance();
@@ -1167,6 +1169,43 @@ public class FulltextQuerySolrHelperTest {
 		assertNotNull("spellchecker query should be set when numeric query",
 				parameters.get(Constants.SPELLCHECKER_QUERY_PARAMETER));
 	}
+	
+	
+	
+	@Test
+	public void testToQueryString_exactname() {
+		Pagination pagination = paginate().from(3).to(10);
+		Output output = Output.withFormat(OutputFormat.JSON)
+				.withLanguageCode("FR").withStyle(OutputStyle.SHORT)
+				.withIndentation();
+		String searchTerm = "Saint-André";
+		FulltextQuery fulltextQuery = new FulltextQuery(searchTerm, pagination,
+				output, com.gisgraphy.fulltext.Constants.ONLY_ADM_PLACETYPE,
+				"fr").withExactName().withRadius(1000);
+		Float longitude = 20F;
+		Float latitude = 30F;
+		fulltextQuery.around(GeolocHelper.createPoint(longitude, latitude));
+		// split parameters
+		HashMap<String, List<String>> parameters = GisgraphyTestHelper
+				.splitURLParams(
+						FulltextQuerySolrHelper.toQueryString(fulltextQuery),
+						"&");
+		// check parameters
+		assertTrue(
+				"wrong query parameter found (no search term part) actual : "
+						+ parameters.get(Constants.QUERY_PARAMETER).get(0),
+				parameters
+						.get(Constants.QUERY_PARAMETER)
+						.get(0)
+						.contains(
+								String.format(FulltextQuerySolrHelper.EXACT_NAME_QUERY_TEMPLATE, "", "",BF_NEAREST,
+										searchTerm)));
+
+	}
+	
+	
+	
+	
 
 	@Test
 	public void testToQueryStringShouldboostNearestPlaceForAdvancedGeolocQuery_allwordNotRequired() {

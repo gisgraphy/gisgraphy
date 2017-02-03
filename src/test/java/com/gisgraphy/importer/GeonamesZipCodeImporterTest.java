@@ -32,10 +32,12 @@ import org.junit.Test;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.repository.IAdmDao;
 import com.gisgraphy.domain.repository.ICityDao;
+import com.gisgraphy.domain.repository.ICitySubdivisionDao;
 import com.gisgraphy.domain.repository.IGisFeatureDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.valueobject.GISSource;
@@ -100,14 +102,57 @@ public class GeonamesZipCodeImporterTest {
 		City city = new City();
 		city.setFeatureId(123L);
 		String countryCode = "FR";
+		EasyMock.expect(cityDao.getByShape(location, countryCode, true)).andReturn(city);
+		EasyMock.expect(cityDao.save(city)).andReturn(city);
+		EasyMock.replay(cityDao);
+		
+		ICitySubdivisionDao citySubdivisionDao = EasyMock.createMock(ICitySubdivisionDao.class);
+		CitySubdivision citySubdivision = new CitySubdivision();
+		citySubdivision.setFeatureId(456L);
+		countryCode = "FR";
+		EasyMock.expect(citySubdivisionDao.getByShape(location, countryCode)).andReturn(citySubdivision);
+		EasyMock.expect(citySubdivisionDao.save(citySubdivision)).andReturn(citySubdivision);
+		EasyMock.replay(citySubdivisionDao);
+		
+		
+		
+		
+		importer.setCityDao(cityDao);
+		importer.setCitySubdivisionDao(citySubdivisionDao);
+		
+		boolean actual = importer.getByShape(countryCode, "code", location);
+		Assert.assertEquals(true, actual);
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code")));
+		EasyMock.verify(cityDao);
+    }
+    @Test
+    public void getByShape_first_null(){
+    	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter();
+    	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
+    	Point location = GeolocHelper.createPoint(3D, 4D);
+		City city = new City();
+		city.setFeatureId(123L);
+		String countryCode = "FR";
+		EasyMock.expect(cityDao.getByShape(location, countryCode, true)).andReturn(null);
 		EasyMock.expect(cityDao.getByShape(location, countryCode, false)).andReturn(city);
 		EasyMock.expect(cityDao.save(city)).andReturn(city);
 		EasyMock.replay(cityDao);
 		
-		importer.setCityDao(cityDao);
+		ICitySubdivisionDao citySubdivisionDao = EasyMock.createMock(ICitySubdivisionDao.class);
+		CitySubdivision citySubdivision = new CitySubdivision();
+		citySubdivision.setFeatureId(456L);
+		countryCode = "FR";
+		EasyMock.expect(citySubdivisionDao.getByShape(location, countryCode)).andReturn(citySubdivision);
+		EasyMock.expect(citySubdivisionDao.save(citySubdivision)).andReturn(citySubdivision);
+		EasyMock.replay(citySubdivisionDao);
 		
-		City actual = importer.getByShape(countryCode, "code", location);
-		Assert.assertEquals(city, actual);
+		
+		importer.setCityDao(cityDao);
+		importer.setCitySubdivisionDao(citySubdivisionDao);
+		
+		
+		boolean actual = importer.getByShape(countryCode, "code", location);
+		Assert.assertEquals(true, actual);
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code")));
 		EasyMock.verify(cityDao);
     }
@@ -116,9 +161,9 @@ public class GeonamesZipCodeImporterTest {
     public void WhenACityIsFoundByShapeWeShouldNotFindByLocation(){
     	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
     		@Override
-    		protected City getByShape(String countryCode, String code,
+    		protected boolean getByShape(String countryCode, String code,
     				Point zipPoint) {
-    			return new City();
+    			return true;
     		}
     		@Override
     		protected Long findFeature(String[] fields, Point zipPoint,
@@ -136,9 +181,9 @@ public class GeonamesZipCodeImporterTest {
     	
     	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
     		@Override
-    		protected City getByShape(String countryCode, String code,
+    		protected boolean getByShape(String countryCode, String code,
     				Point zipPoint) {
-    			return null;
+    			return false;
     		}
     		@Override
     		protected Long findFeature(String[] fields, Point zipPoint,
@@ -569,7 +614,10 @@ public class GeonamesZipCodeImporterTest {
     	mockCity.setAdm3Code(adm3Code);
     	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
     	mockCity.setLocation(point);
-    	EasyMock.expect(admDaoMock.suggestMostAccurateAdm(countryCode, adm1Code, adm2Code, adm3Code, null, mockCity)).andReturn(new Adm(3));
+    	List<Adm> adms = new ArrayList<Adm>();
+    	adms.add(new Adm(3));
+    	//we set any abj because point doesn't implement equals 
+    	EasyMock.expect(admDaoMock.ListByShape(EasyMock.anyObject(Point.class), EasyMock.anyObject(String.class))).andReturn(adms);
     	EasyMock.replay(admDaoMock);
     	importer.setAdmDao(admDaoMock);
     	

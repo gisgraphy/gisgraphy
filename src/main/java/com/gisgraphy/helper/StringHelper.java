@@ -25,7 +25,9 @@ package com.gisgraphy.helper;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -45,6 +47,8 @@ public class StringHelper {
 	public static final char WHITESPACE_CHAR_DELIMITER = '-';
 
 	protected static final Logger logger = LoggerFactory.getLogger(StringHelper.class);
+	
+	protected static final int MISSING_WORD_TOLERANCE = 1;
 
 	/**
 	 * Process a string to apply filter as lucene and solr does :
@@ -180,6 +184,58 @@ public class StringHelper {
 	    aThrowable.printStackTrace(printWriter);
 	    return result.toString();
 	  }
+	
+	public static boolean isSameName(String expected, String actual){
+		if (actual!=null && expected!=null){
+			if (actual.equalsIgnoreCase(expected)){ //shortcut
+				return true;
+			}
+			//split the strings
+			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;]");
+			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一]");
+
+			//first we check if actual has more long words than expected
+			//saint jean is not saint jean de luz, but 'la petite maison' is ok for 'petite maison'
+			List<String> actualSplitedLong = new ArrayList<String>();
+			for (String word:actualSplited){
+				if (word.length()>3){
+					if (word!=null){
+						actualSplitedLong.add(normalize(word));
+					}
+				}
+			}
+			List<String> expectedSplitedLong = new ArrayList<String>();
+			for (String word:expectedSplited){
+				if (word.length()>3){
+					if (word!=null){
+						expectedSplitedLong.add(normalize(word));
+					}
+				}
+			}
+			if (actualSplitedLong.size() > expectedSplitedLong.size() ){
+				return false;
+			}
+			if (actualSplitedLong.size() < expectedSplitedLong.size() ){
+				return false;
+			}
+			//same number of word but are they the same ?
+			int countMissing = 0;
+			for (String word :actualSplitedLong){
+				if(!expectedSplitedLong.contains(word)){
+					countMissing++;
+				}
+				if (expectedSplitedLong.size() == actualSplitedLong.size() && (expectedSplitedLong.size()==1 || expectedSplitedLong.size()==2) && countMissing >0){
+					//if one or two words, every words should be present
+					return false;
+				} else if (countMissing > MISSING_WORD_TOLERANCE){
+					return false;
+				}
+			}
+
+			return true;
+		}
+		return false;
+	}
 
 
 }

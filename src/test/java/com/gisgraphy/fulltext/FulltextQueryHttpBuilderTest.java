@@ -554,6 +554,38 @@ public class FulltextQueryHttpBuilderTest {
 						+ " should be true for 'on' value (case insensitive and on value)  ",
 					query.isFuzzy());
 		
+				
+				
+				// test exact name
+				// with no value specified
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.removeParameter(FulltextQuery.EXACT_NAME_PARAMETER);
+				query = buildQuery(request);
+				assertEquals("When no " + FulltextQuery.EXACT_NAME_PARAMETER
+					+ " is specified, the  parameter should be set to default", false
+					,query.isExactName());
+				// with wrong value
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.setParameter(FulltextQuery.EXACT_NAME_PARAMETER, "UNK");
+				query = buildQuery(request);
+				assertEquals("When wrong " + FulltextQuery.EXACT_NAME_PARAMETER
+					+ " is specified, the  parameter should be set to default",false,
+					query.isExactName());
+				// test case sensitive
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.setParameter(FulltextQuery.EXACT_NAME_PARAMETER, "True");
+				query = buildQuery(request);
+				assertTrue(FulltextQuery.EXACT_NAME_PARAMETER
+					+ " should be case insensitive  ", query.isExactName());
+				// test with on value
+				request = GisgraphyTestHelper.createMockHttpServletRequestForFullText();
+				request.setParameter(FulltextQuery.EXACT_NAME_PARAMETER, "oN");
+				query = buildQuery(request);
+				assertTrue(
+						FulltextQuery.EXACT_NAME_PARAMETER
+						+ " should be true for 'on' value (case insensitive and on value)  ",
+					query.isExactName());
+		
 	
 	
 	// test allwordsRequired

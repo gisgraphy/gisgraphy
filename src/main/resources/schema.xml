@@ -258,6 +258,7 @@ decompound after lower because words of dictionary are in lower, unpunct
 <field name="label_alternate"  type="text"  indexed="false"  stored="true" multiValued="true"/>
 
 <copyField source="label*" dest="all_label"/>
+<copyField source="name" dest="rawname"/>
 <field name="all_label" type="text" indexed="true" stored="true" multiValued="true"></field>
   
    <field name="feature_id" type="long" indexed="true" stored="true"/>
@@ -266,8 +267,9 @@ decompound after lower because words of dictionary are in lower, unpunct
    
   <!--Short --><field name="name" type="text" indexed="true" stored="true"/>
   <!--not exported  --><field name="iso_name" type="textiso" indexed="true" stored="false"/><!-- iso for scoring : query 'andré' should place andré before 'andre' -->
-  <!--Short  --><field name="fully_qualified_name" type="string_casesensitive" indexed="false" stored="true"/>
+  <!--Short  --><field name="fully_qualified_name" type="text" indexed="true" stored="true"/>
 
+<field name="rawname" type="string" indexed="true" stored="false"/>
  <!-- Medium --><field name="country_flag_url" type="string" indexed="false" stored="true"/>
  <!-- Medium --><field name="google_map_url" type="string" indexed="false" stored="true"/>
  <!-- Medium --><field name="yahoo_map_url" type="string" indexed="false" stored="true"/>

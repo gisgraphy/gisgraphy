@@ -43,7 +43,7 @@ public class CountryDetector {
 	 */
 	public static final Logger logger = LoggerFactory.getLogger(CountryDetector.class);
 
-	 public CountryDetectorDto detectAndRemoveCountry(String cleanedAddress) {
+	 public CountryDetectorDto detectAndRemoveCountry(String address) {
 		 for (String countryCode: com.gisgraphy.helper.CountriesStaticData.countryCodeSortedByPopularity){
 	    	if (countryCode == null || "SG".equalsIgnoreCase(countryCode) || "PA".equalsIgnoreCase(countryCode)) {
 	    		// shortcut for specific country that got countryname and city is
@@ -52,7 +52,7 @@ public class CountryDetector {
 	    	}
 	    	List<String> alternateNames = CountriesStaticData.countryAlternateNames.get(countryCode.toUpperCase());
 	    	if (alternateNames != null) {
-	    		String sanitarizeAddress = cleanedAddress.replaceAll("[\\s\\-\\']+", " ").trim().toLowerCase();
+	    		String sanitarizeAddress = address.replaceAll("[\\s\\-\\']+", " ").trim().toLowerCase();
 	    		for (String alternateName : alternateNames) {
 	    			if (alternateName!=null && alternateName.toLowerCase().contains("mexico")){
 	    				 //special case for mexico =>we should not remove because it is also a city and a sate
@@ -63,11 +63,11 @@ public class CountryDetector {
 	    				Matcher matcher = Pattern.compile("(?i)" + alternateName + "\\s*$").matcher(sanitarizeAddress);
 	    				if (matcher.find()){
 	    					int index = matcher.start();
-	    					String result = cleanedAddress.substring(0, index).trim();
+	    					String result = address.substring(0, index).trim();
 	    					if (result != null && Pattern.matches(".*[,-]$", result) ){
 	    						result = result.substring(0, result.length()-1).trim();
 	    					}
-	    					logger.info("'"+alternateName +"' has been detected as a country name and removed from "+cleanedAddress +" : "+result);
+	    					logger.info("'"+alternateName +"' has been detected as a country name and removed from "+address +" : "+result);
 	    					return new CountryDetectorDto(result, countryCode);
 	    				}
 	    			}
@@ -75,6 +75,6 @@ public class CountryDetector {
 	    	}
 
 	    }
-		 return new CountryDetectorDto(cleanedAddress, null);
+		 return new CountryDetectorDto(address, null);
 	 }
 }
