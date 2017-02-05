@@ -177,6 +177,7 @@ public class StringHelperTest {
     
     @Test
     public void isSameNameTest(){
+    	
     	Assert.assertFalse("different",StringHelper.isSameName("Finkenhof","Bildhauerhof"));
     	Assert.assertFalse("more words",StringHelper.isSameName("Le Breuil","Le Breuil-Mingot"));
     	Assert.assertFalse("more words",StringHelper.isSameName("Morgon","Villié-Morgon"));
@@ -191,6 +192,14 @@ public class StringHelperTest {
     	Assert.assertTrue("with additionnal words size =2",StringHelper.isSameName("notre dame anges","notre dame de anges"));
     	Assert.assertTrue("with additionnal words size =2",StringHelper.isSameName("notre dame de anges","notre dame anges"));
     	Assert.assertFalse(StringHelper.isSameName("Berg","Sternenberg"));
+    	Assert.assertFalse(StringHelper.isSameName("normandie","avr"));
+    	
+    	Assert.assertTrue("synonyms in expected",StringHelper.isSameName("st omer","saint omer"));
+    	Assert.assertTrue("synonyms in actual",StringHelper.isSameName("saint omer","st omer"));
+    	
+    	Assert.assertTrue("synonyms in expected case sensitive",StringHelper.isSameName("st omer","Saint omer"));
+    	Assert.assertTrue("synonyms in actual case sensitive",StringHelper.isSameName("Saint omer","st omer"));
+    	
     	Assert.assertFalse(StringHelper.isSameName("Les Chézeaux","Les grand Chézeaux"));
     	Assert.assertFalse("less long word but different",StringHelper.isSameName("route pepere","pepere"));
     	

@@ -1170,8 +1170,7 @@ public class FulltextQuerySolrHelperTest {
 				parameters.get(Constants.SPELLCHECKER_QUERY_PARAMETER));
 	}
 	
-	
-	
+	/*
 	@Test
 	public void testToQueryString_exactname() {
 		Pagination pagination = paginate().from(3).to(10);
@@ -1204,7 +1203,7 @@ public class FulltextQuerySolrHelperTest {
 	}
 	
 	
-	
+	*/
 	
 
 	@Test

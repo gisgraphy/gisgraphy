@@ -24,6 +24,7 @@ package com.gisgraphy.fulltext;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
+import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.Street;
 
 public class Constants {
@@ -36,6 +37,11 @@ public class Constants {
 		 * convenence placetype for only adm
 		 */
 		public final static Class[] ONLY_ADM_PLACETYPE = new Class[]{Adm.class};
+		
+		/**
+		 * convenence placetype for only country
+		 */
+		public final static Class[] ONLY_COUNTRY_PLACETYPE = new Class[]{Country.class};
 		
 		/**
 		 * convenence placetype for city and citySubdivision

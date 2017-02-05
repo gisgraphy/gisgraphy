@@ -129,12 +129,12 @@ public class GeocodingServiceTest {
     public void geocodeRawAdressShouldNotThrowIfCountryCodeisEmpty() {
     	GeocodingService geocodingService = new GeocodingService(){
     	    @Override
-    	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+    	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
     	        return new ArrayList<SolrResponseDto>();
     	    }
     	   @Override
     	protected List<SolrResponseDto> findExactMatches(String text,
-    			String countryCode) {
+    			String countryCode,boolean fuzzy) {
     		   return new ArrayList<SolrResponseDto>();
     	}
     	};
@@ -157,12 +157,12 @@ public class GeocodingServiceTest {
     public void geocodeRawAdressShouldNotThrowIfCountryCodeisNull() {
     	GeocodingService geocodingService = new GeocodingService(){
     	    @Override
-    	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+    	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
     	        return new ArrayList<SolrResponseDto>();
     	    }
     	   @Override
     	protected List<SolrResponseDto> findExactMatches(String text,
-    			String countryCode) {
+    			String countryCode,boolean fuzzy) {
     		   return new ArrayList<SolrResponseDto>();
     	}
     	};
@@ -194,12 +194,12 @@ public class GeocodingServiceTest {
     public void geocodeRawAdressShouldNotThrowGeocodingExceptionWhenAddressParserExceptionOccurs() {
 	GeocodingService geocodingService = new GeocodingService(){
 	    @Override
-	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 	        return new ArrayList<SolrResponseDto>();
 	    }
 	   @Override
 	protected List<SolrResponseDto> findExactMatches(String text,
-			String countryCode) {
+			String countryCode,boolean fuzzy) {
 		   return new ArrayList<SolrResponseDto>();
 	}
 	};
@@ -280,7 +280,7 @@ public class GeocodingServiceTest {
     	    }
 
     	    @Override
-    	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+    	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
     		findStreetCalled = true;
     		return null;
     	    };
@@ -322,7 +322,7 @@ public class GeocodingServiceTest {
 	    }
 
 	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		findStreetCalled = true;
 		return null;
 	    };
@@ -378,7 +378,7 @@ public class GeocodingServiceTest {
 	    }
 
 	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		findStreetCalled = true;
 		return null;
 	    };
@@ -434,7 +434,7 @@ public class GeocodingServiceTest {
 	    }
 
 	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		findStreetCalled = true;
 		return null;
 	    };
@@ -491,14 +491,14 @@ public class GeocodingServiceTest {
 	    }
 
 	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		findStreetCalled = true;
 		return null;
 	    };
 	    
 	    @Override
 	    protected List<SolrResponseDto> findExactMatches(String text,
-	    		String countryCode) {
+	    		String countryCode,boolean fuzzy) {
 	    	return null;
 	    }
 	};
@@ -1196,7 +1196,7 @@ public class GeocodingServiceTest {
 	EasyMock.replay(mockfullFullTextSearchEngine);
 	geocodingService.setFullTextSearchEngine(mockfullFullTextSearchEngine);
 
-	List<SolrResponseDto> actual = geocodingService.findStreetInText(text, countryCode, null);
+	List<SolrResponseDto> actual = geocodingService.findStreetInText(text, countryCode, null, false);
 	Assert.assertEquals(results, actual);
 	EasyMock.verify(mockfullFullTextSearchEngine);
     }
@@ -1225,7 +1225,7 @@ public class GeocodingServiceTest {
 	EasyMock.replay(mockfullFullTextSearchEngine);
 	geocodingService.setFullTextSearchEngine(mockfullFullTextSearchEngine);
 
-	List<SolrResponseDto> actual = geocodingService.findExactMatches(text, countryCode);
+	List<SolrResponseDto> actual = geocodingService.findExactMatches(text, countryCode,false);
 	Assert.assertEquals(results, actual);
 	EasyMock.verify(mockfullFullTextSearchEngine);
     }
@@ -1235,9 +1235,9 @@ public class GeocodingServiceTest {
     public void findStreetInTextWithNullOrEmptyText() {
 	List<SolrResponseDto> expected = new ArrayList<SolrResponseDto>();
 	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> actual = geocodingService.findStreetInText("", "fr", null);
+	List<SolrResponseDto> actual = geocodingService.findStreetInText("", "fr", null, false);
 	Assert.assertEquals(expected, actual);
-	actual = geocodingService.findStreetInText(null, "fr", null);
+	actual = geocodingService.findStreetInText(null, "fr", null, false);
 	Assert.assertEquals(expected, actual);
     }
     
@@ -1666,7 +1666,7 @@ public class GeocodingServiceTest {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	    @Override
-	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	};
@@ -1703,7 +1703,7 @@ public class GeocodingServiceTest {
 	    }
 	    
 	    @Override
-	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	};
@@ -1740,7 +1740,7 @@ public class GeocodingServiceTest {
 	    }
 	    
 	    @Override
-	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	};
@@ -1774,7 +1774,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService() {
 
 	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		findStreetCalled = true;
 		return null;
 	    }
@@ -2013,7 +2013,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService() {
 
 	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 	    	Assert.assertEquals("foo", text);
 		findStreetCalled = true;
 		return null;
@@ -2037,7 +2037,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService() {
 
 	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 	    	Assert.assertEquals("foo Avenue", text);
 		findStreetCalled = true;
 		return null;
@@ -2070,7 +2070,7 @@ public class GeocodingServiceTest {
 	    }
 
 	    @Override
-	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		if (point != null) {
 		    Assert.fail("when no city is found we shoud search without location restriction");
 		}
@@ -2123,7 +2123,7 @@ public class GeocodingServiceTest {
 	    }
 
 	    @Override
-	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point) {
+	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
 		Point checkedPoint = GeolocHelper.createPoint(longitude.floatValue(), latitude.floatValue());
 		if (point.getX() != checkedPoint.getX() || point.getY() != checkedPoint.getY()) {
 		    Assert.fail("when city is found we shoud search with location restriction");
