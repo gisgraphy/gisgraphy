@@ -328,14 +328,18 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		    }
 	}
 	//osmId
-	if (!isEmptyField(fields, 1, true)) {
-		String osmIdAsString =fields[1].trim();
-		
-		try {
-			osmId = Long.parseLong(osmIdAsString);
-			place.setOpenstreetmapId(osmId);
-		} catch (NumberFormatException e) {
-			logger.error("can not parse openstreetmap id "+ osmIdAsString);
+	if (place.getOpenstreetmapId()!=null){
+		//we do not override the osm ID because if it is filled, we are probably with a node and it 
+		//has already been filled by a relation
+		if (!isEmptyField(fields, 1, true)) {
+			String osmIdAsString =fields[1].trim();
+
+			try {
+				osmId = Long.parseLong(osmIdAsString);
+				place.setOpenstreetmapId(osmId);
+			} catch (NumberFormatException e) {
+				logger.error("can not parse openstreetmap id "+ osmIdAsString);
+			}
 		}
 	}
 	//adm level, we need it to populate adms
@@ -534,9 +538,9 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		FulltextQuery query;
 		try {
 			if (placetypes==null){
-				query = (FulltextQuery) new FulltextQuery(name).withExactName().around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
+				query = (FulltextQuery) new FulltextQuery(name).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
 			} else {
-				query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).withExactName().around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
+				query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
 			}
 			
 		} catch (IllegalArgumentException e) {

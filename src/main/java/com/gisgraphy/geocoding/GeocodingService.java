@@ -221,7 +221,11 @@ public class GeocodingService implements IGeocodingService {
 			if (logger.isDebugEnabled()) {
 				logger.debug("structured address to geocode : '" + address + "' for country code : " + countryCode);
 			}
-			return geocode(address, countryCode);
+			AddressResultsDto addressResultsDto = geocode(address, countryCode);
+			if (shouldSetParseAddress(query)){
+				addressResultsDto.setParsedAddress(address);
+			}
+			return addressResultsDto;
 		}
 		String rawAddress = query.getAddress();
 		if (isEmptyString(rawAddress)) {
@@ -235,7 +239,7 @@ public class GeocodingService implements IGeocodingService {
 					countryCode = detectorDto.getCountryCode();
 				} else {
 					//it is a country we use the raw address without countrycode.
-					List<SolrResponseDto> countries = findInText(rawAddress,null,null,com.gisgraphy.fulltext.Constants.ONLY_COUNTRY_PLACETYPE, false);
+					List<SolrResponseDto> countries = findInText(rawAddress,null,null,com.gisgraphy.fulltext.Constants.ONLY_COUNTRY_PLACETYPE, false, null);
 					return buildAddressResultDtoFromSolrResponseDtoCountry(countries);
 					
 				}
@@ -290,113 +294,15 @@ public class GeocodingService implements IGeocodingService {
 				newAddress = newAddress.replace(s, " "+s+" ");
 				logger.info("splitstreettype ("+s+")"+newAddress);
 			}*/
-			if (GisgraphyConfig.searchForExactMatchWhenGeocoding) {
-				logger.debug("will search for exactmatch");
-				List<SolrResponseDto> exactMatches = findExactMatches(newAddress, countryCode, false);
-				//filter result where name is not the same
-				if (exactMatches!=null){
-					List<SolrResponseDto> filterResults = new ArrayList<SolrResponseDto>();
-					for (SolrResponseDto result: exactMatches){
-						boolean added= false;
-						if(result!=null && result.getName()!=null && StringHelper.isSameName(newAddress, result.getName(),0)){
-							filterResults.add(result);
-							added =true;
-							logger.error("filter same name, adding "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
-						} else if (!added){
-							for (String nameAlternate : result.getName_alternates()){
-								if (nameAlternate!=null && StringHelper.isSameName(newAddress, nameAlternate,0)){
-									logger.error("filter same name, adding alternate "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+" :  "+nameAlternate+" / "+result.getFully_qualified_name() );
-									filterResults.add(result);
-									added=true;
-									break;
-								}
-							}
-							
-						}
-						if (!added){
-							logger.error("filter same name, ignoring :"+result.getFully_qualified_name() );
-						}
-					}
-					if (!filterResults.isEmpty()){
-						exactMatches = filterResults;
-					}
-					
-				}
-				logger.error("-------------------exact--------------------------");
-				for (SolrResponseDto result: exactMatches){
-					logger.error((result.getOpenstreetmap_id()==null?result.getFeature_id():result.getOpenstreetmap_id())+"-"+result.getFully_qualified_name());
-				}
-					List<SolrResponseDto> fulltextResultsDto = findStreetInText(newAddress, countryCode, null, false); //we search for street because we think that it is not a city nor an adm that 
-					//have been probably found by exact match, so we search for address and so a street*/
-					if (!needParsing && exactMatches!=null && exactMatches.size() >=1){
-						//only one word and exact match ok
-						results = buildAddressResultDtoFromSolrResponseDto(exactMatches, houseNumber);
-					} else {
-						//List<SolrResponseDto> mergedResults = mergeSolrResponseDto(exactMatches, fulltextResultsDto);
-						exactMatches.addAll(fulltextResultsDto);
-						List<SolrResponseDto> mergedResults = exactMatches;
-						
-						logger.error("-------------------merged--------------------------");
-						for (SolrResponseDto result: mergedResults){
-							logger.error((result.getOpenstreetmap_id()==null?result.getFeature_id():result.getOpenstreetmap_id())+"-"+result.getFully_qualified_name());
-						}
-						results = buildAddressResultDtoFromSolrResponseDto(mergedResults, houseNumber);
-					}
+				results = doSearch(newAddress,countryCode, needParsing, 
+						houseNumber,false, query.getPoint(), query.getRadius());
+				
 					
 					
 					//try in fuzzy
-					if (results.getNumFound()==0){
-					logger.debug("will search for exactmatch");
-					 exactMatches = findExactMatches(newAddress, countryCode, true);
-					//filter result where name is not the same
-					 if (exactMatches!=null){
-							List<SolrResponseDto> filterResults = new ArrayList<SolrResponseDto>();
-							for (SolrResponseDto result: exactMatches){
-								boolean added= false;
-								if(result!=null && result.getName()!=null && StringHelper.isSameName(newAddress, result.getName(),0)){
-									filterResults.add(result);
-									added =true;
-									logger.error("filter same name, adding "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
-								} else if (!added){
-									for (String nameAlternate : result.getName_alternates()){
-										if (nameAlternate!=null && StringHelper.isSameName(newAddress, nameAlternate,0)){
-											logger.error("filter same name, adding alternate "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+nameAlternate+" / "+result.getFully_qualified_name() );
-											filterResults.add(result);
-											added=true;
-											break;
-										}
-									}
-									
-								}
-								if (!added){
-									logger.error("filter same name, ignoring :"+result.getFully_qualified_name() );
-								}
-							}
-							if (!filterResults.isEmpty()){
-								exactMatches = filterResults;
-							}
-							
-						}
-					logger.error("-------------------exact--------------------------");
-					for (SolrResponseDto result: exactMatches){
-						logger.error((result.getOpenstreetmap_id()==null?result.getFeature_id():result.getOpenstreetmap_id())+"-"+result.getFully_qualified_name());
-					}
-						fulltextResultsDto = findStreetInText(newAddress, countryCode, null, true); //we search for street because we think that it is not a city nor an adm that 
-						//have been probably found by exact match, so we search for address and so a street*/
-						if (!needParsing && exactMatches!=null && exactMatches.size() >=1){
-							//only one word and exact match ok
-							results = buildAddressResultDtoFromSolrResponseDto(exactMatches, houseNumber);
-						} else {
-							//List<SolrResponseDto> mergedResults = mergeSolrResponseDto(exactMatches, fulltextResultsDto);
-							exactMatches.addAll(fulltextResultsDto);
-							List<SolrResponseDto> mergedResults = exactMatches;
-							
-							logger.error("-------------------merged--------------------------");
-							for (SolrResponseDto result: mergedResults){
-								logger.error((result.getOpenstreetmap_id()==null?result.getFeature_id():result.getOpenstreetmap_id())+"-"+result.getFully_qualified_name());
-							}
-							results = buildAddressResultDtoFromSolrResponseDto(mergedResults, houseNumber);
-						}
+					if (results.getNumFound()==0 && query.isFuzzy()){
+						results = doSearch(newAddress,countryCode, needParsing,
+								houseNumber,true, query.getPoint(), query.getRadius());
 					}
 					
 				//------------------------------------------------------------------------------------
@@ -441,10 +347,6 @@ public class GeocodingService implements IGeocodingService {
 					results = buildAddressResultDtoFromSolrResponseDto(mergedResults, houseNumber);*/
 					//results = buildAddressResultDtoFromStreetsAndCities(mergedResults, cities, houseNumber);
 				//}
-			} else {
-				List<SolrResponseDto> aproximativeMatches = findStreetInText(newAddress, countryCode, null, false);
-				results = buildAddressResultDtoFromStreetsAndCities(aproximativeMatches, null, houseNumber);
-			}
 			Long endTime = System.currentTimeMillis();
 			long qTime = endTime - startTime;
 			results.setQTime(qTime);
@@ -476,7 +378,7 @@ public class GeocodingService implements IGeocodingService {
 					houseNumber = houseNumberAddressDto.getHouseNumber();
 					newAddress = houseNumberAddressDto.getAddressWithoutHouseNumber();
 				} 
-				List<SolrResponseDto> streets = findStreetInText(newAddress, countryCode, null, false);
+				List<SolrResponseDto> streets = findStreetInText(newAddress, countryCode, null, false, null);
 				AddressResultsDto results = buildAddressResultDtoFromStreetsAndCities(streets, cities, houseNumber);
 				Long endTime = System.currentTimeMillis();
 				long qTime = endTime - startTime;
@@ -499,7 +401,7 @@ public class GeocodingService implements IGeocodingService {
 				Point cityLocation = GeolocHelper.createPoint(city.getLng().floatValue(), city.getLat().floatValue());
 				List<SolrResponseDto> streets = null;
 				if (importerConfig.isOpenStreetMapFillIsIn()) {
-					streets = findStreetInText(newAddress, countryCode, cityLocation, false);
+					streets = findStreetInText(newAddress, countryCode, cityLocation, false, null);
 				} else {
 					String addressNormalized = StringHelper.normalize(newAddress);
 					String cityNormalized = StringHelper.normalize(city.getName());
@@ -508,7 +410,7 @@ public class GeocodingService implements IGeocodingService {
 						if (logger.isDebugEnabled()) {
 							logger.debug("normalized address without city : " + addressNormalizedWithoutCity);
 						}
-						streets = findStreetInText(addressNormalizedWithoutCity, countryCode, cityLocation, false);
+						streets = findStreetInText(addressNormalizedWithoutCity, countryCode, cityLocation, false, null);
 					}
 				}
 				AddressResultsDto results = buildAddressResultDtoFromStreetsAndCities(streets, cities, houseNumber);
@@ -522,6 +424,64 @@ public class GeocodingService implements IGeocodingService {
 			}
 		}
 
+	}
+
+	protected AddressResultsDto doSearch( String rawaddress,String countryCode,
+			boolean needParsing, String houseNumber,boolean fuzzy, Point point, Double radius) {
+		AddressResultsDto results;
+		logger.debug("will search for exact match "+(fuzzy?"in fuzzy mode":" in strict mode"));
+		List<SolrResponseDto> exactMatches = findExactMatches(rawaddress, countryCode, fuzzy, point, radius);
+		//filter result where name is not the same
+		if (exactMatches!=null){
+			List<SolrResponseDto> filterResults = new ArrayList<SolrResponseDto>();
+			for (SolrResponseDto result: exactMatches){
+				boolean added= false;
+				if(result!=null && result.getName()!=null && StringHelper.isSameName(rawaddress, result.getName(),1)){
+					filterResults.add(result);
+					added =true;
+					logger.error("filter same name, adding "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
+				} else if (!added){
+					for (String nameAlternate : result.getName_alternates()){
+						if (nameAlternate!=null && StringHelper.isSameName(rawaddress, nameAlternate,1)){
+							logger.error("filter same name, adding alternate "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+" :  "+nameAlternate+" / "+result.getFully_qualified_name() );
+							filterResults.add(result);
+							added=true;
+							break;
+						}
+					}
+					
+				}
+				if (!added){
+					logger.error("filter same name, ignoring :"+result.getFully_qualified_name() );
+				}
+			}
+			if (!filterResults.isEmpty()){
+				exactMatches = filterResults;
+			}
+			
+		}
+		logger.error("-------------------exact--------------------------");
+		for (SolrResponseDto result: exactMatches){
+			logger.error(result.getScore()+" : "+(result.getOpenstreetmap_id()==null?result.getFeature_id():result.getOpenstreetmap_id())+"-"+result.getFully_qualified_name());
+		}
+			//have been probably found by exact match, so we search for address and so a street*/
+			if (!needParsing && exactMatches!=null && exactMatches.size() >=1){
+				//only one word and exact match ok
+				results = buildAddressResultDtoFromSolrResponseDto(exactMatches, houseNumber);
+			} else {
+				logger.debug("will search for street"+(fuzzy?"in fuzzy mode":" in strict mode"));
+				List<SolrResponseDto> fulltextResultsDto = findStreetInText(rawaddress, countryCode, point, fuzzy, radius); //we search for street because we think that it is not a city nor an adm that 
+				//List<SolrResponseDto> mergedResults = mergeSolrResponseDto(exactMatches, fulltextResultsDto);
+				exactMatches.addAll(fulltextResultsDto);
+				List<SolrResponseDto> mergedResults = exactMatches;
+				
+				logger.error("-------------------merged--------------------------");
+				for (SolrResponseDto result: mergedResults){
+					logger.error(result.getScore()+" : "+(result.getOpenstreetmap_id()==null?result.getFeature_id():result.getOpenstreetmap_id())+"-"+result.getFully_qualified_name());
+				}
+				results = buildAddressResultDtoFromSolrResponseDto(mergedResults, houseNumber);
+			}
+		return results;
 	}
 
 	protected boolean needParsing(String query) {
@@ -577,7 +537,7 @@ public class GeocodingService implements IGeocodingService {
 			if (address.getStreetType()!=null){
 				streetToSearch = address.getStreetName()+ " "+address.getStreetType();
 			}
-			List<SolrResponseDto> streets = findStreetInText(streetToSearch, countryCode, null, false);
+			List<SolrResponseDto> streets = findStreetInText(streetToSearch, countryCode, null, false, null);
 			AddressResultsDto results = buildAddressResultDtoFromStreetsAndCities(streets, null, address.getHouseNumber());
 			//results.setParsedAddress(address);
 			Long endTime = System.currentTimeMillis();
@@ -616,11 +576,11 @@ public class GeocodingService implements IGeocodingService {
 					logger.info("splitstreettype ("+s+")"+streetSentenceToSearch);
 				}*/
 				
-				fulltextResultsDto = findStreetInText(streetSentenceToSearch, countryCode, cityLocation, false);
+				fulltextResultsDto = findStreetInText(streetSentenceToSearch, countryCode, cityLocation, false, null);
 			}
 			
 			AddressResultsDto results = buildAddressResultDtoFromStreetsAndCities(fulltextResultsDto, cities, address.getHouseNumber());
-			results.setParsedAddress(address);
+			//results.setParsedAddress(address);
 			Long endTime = System.currentTimeMillis();
 			long qTime = endTime - startTime;
 			results.setQTime(qTime);
@@ -907,7 +867,9 @@ public class GeocodingService implements IGeocodingService {
 		//for debug purpose, need to be removed
 		StringBuffer sb = new StringBuffer();
 		for (HouseNumberDto candidate :houseNumbersList){
-			sb.append(candidate.getNumber()).append(",");
+			if (candidate!=null){
+				sb.append(candidate.getNumber()).append(",");
+			}
 		}
 		logger.info("will analyze HN  : "+sb.toString());
 		
@@ -1200,9 +1162,9 @@ public class GeocodingService implements IGeocodingService {
 	}
 
 	protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
-		return findInText(text, countryCode, null, com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE,false);
+		return findInText(text, countryCode, null, com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE,false, null);
 	}
-	protected List<SolrResponseDto> processAddress(Address address, boolean fuzzy) {
+	/*protected List<SolrResponseDto> processAddress(Address address, boolean fuzzy) {
 		if (address==null) {
 			return new ArrayList<SolrResponseDto>();
 		}
@@ -1218,10 +1180,10 @@ public class GeocodingService implements IGeocodingService {
 		} else {
 			return new ArrayList<SolrResponseDto>();
 		}
-	}
+	}*/
 
-	protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy) {
-		List<SolrResponseDto> streets = findInText(text, countryCode, point, com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, fuzzy);
+	protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
+		List<SolrResponseDto> streets = findInText(text, countryCode, point, com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, fuzzy, radius);
 		//now that we use bounding box it is to necessary to sort by distance 
 		/*Point location;
 		if (point != null) {
@@ -1239,7 +1201,7 @@ public class GeocodingService implements IGeocodingService {
 		return streets;
 	}
 
-	protected List<SolrResponseDto> findInText(String text, String countryCode, Point point, Class<?>[] placetypes,boolean fuzzy) {
+	protected List<SolrResponseDto> findInText(String text, String countryCode, Point point, Class<?>[] placetypes,boolean fuzzy, Double radius) {
 		if (isEmptyString(text)) {
 			return new ArrayList<SolrResponseDto>();
 		}
@@ -1256,7 +1218,9 @@ public class GeocodingService implements IGeocodingService {
 		}
 		if (point != null) {
 			query.around(point);
-			query.withRadius(ACCEPT_DISTANCE_BETWEEN_CITY_AND_STREET);
+			if (radius!=null){
+				query.withRadius(radius);
+			}
 		}
 		FulltextResultsDto results = fullTextSearchEngine.executeQuery(query);
 		if (results.getResultsSize() >= 1) {
@@ -1302,12 +1266,16 @@ public class GeocodingService implements IGeocodingService {
 		}
 	}
 
-	protected List<SolrResponseDto> findExactMatches(String text, String countryCode,boolean fuzzy) {
+	protected List<SolrResponseDto> findExactMatches(String text, String countryCode,boolean fuzzy, Point point, Double radius) {
 		if (isEmptyString(text)) {
 			return new ArrayList<SolrResponseDto>();
 		}
 		FulltextQuery query = new FulltextQuery(text, TEN_RESULT_PAGINATION, FULL_OUTPUT, com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE, countryCode);
 		query.withAllWordsRequired(true).withoutSpellChecking().withFuzzy(fuzzy);
+		if (point!=null){
+			query.around(point);
+			query.withRadius(radius);
+		}
 		FulltextResultsDto results = fullTextSearchEngine.executeQuery(query);
 		if (results.getResultsSize() >= 1) {
 			return results.getResults();

@@ -244,7 +244,7 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
 	}
     }
     
-    public FulltextResultsDto executeAddressQuery(Address address, boolean fuzzy)
+    /*public FulltextResultsDto executeAddressQuery(Address address, boolean fuzzy)
     	    throws ServiceException {
     	statsUsageService.increaseUsage(StatsUsageType.FULLTEXT);
     	Assert.notNull(address, "Can not execute a null address query");
@@ -272,6 +272,8 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
     	    return new FulltextResultsDto();
     	}
         }
+        
+        */
     public FulltextResultsDto executeRawQuery(String q)
     	    throws ServiceException {
     	Assert.notNull(q, "Can not execute a null raw query");

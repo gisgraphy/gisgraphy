@@ -211,7 +211,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	//}
 	FulltextResultsDto results = doAFulltextSearch(query,fields[0],zipPoint);
 	if (results.getNumFound() == 0) {
-	    if (extendedsearch) {
+	   /* if (extendedsearch) {
 		// do a basic search
 		results = doAFulltextSearch(fields[2], fields[0],zipPoint);
 		if (results.getResultsSize() == 0) {
@@ -237,11 +237,11 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 			}
 			//return findNearest(zipPoint, maxDistance, results);
 		}
-	    } else {
+	    } else {*/
 		// no features matches in basic search!
 		return null;
 
-	    }
+	   // }
 	} else if (results.getResults().size() == 1) {
 	    // we found the one!
 		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())){

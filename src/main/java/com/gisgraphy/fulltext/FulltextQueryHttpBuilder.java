@@ -214,13 +214,6 @@ public class FulltextQueryHttpBuilder {
 			    query.withFuzzy(true);
 			}
 		
-		//exactName
-	if ("true".equalsIgnoreCase(req
-			.getParameter(FulltextQuery.EXACT_NAME_PARAMETER))
-			|| "on".equalsIgnoreCase(req
-				.getParameter(FulltextQuery.EXACT_NAME_PARAMETER))) {
-		    query.withFuzzy(true);
-		}
 	
 	//spellchecking
 	if ("true".equalsIgnoreCase(req

@@ -458,16 +458,6 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 	protected void tearDown() {
 		super.tearDown();
 		String savedMessage = this.statusMessage;
-		try {
-			this.statusMessage = internationalisationService.getString("import.updatecitysubdivision");
-			int nbModify = citySubdivisionDao.linkCitySubdivisionToTheirCity();
-			logger.warn(nbModify +" citySubdivision has been modify");
-		} catch (Exception e){
-			logger.error("error during link city subdivision to their city",e);
-		}finally {
-			// we restore message in case of error
-			this.statusMessage = savedMessage;
-		}
 		FullTextSearchEngine.disableLogging=false;
 		try {
 			this.statusMessage = internationalisationService.getString("import.fulltext.optimize");

@@ -574,47 +574,6 @@ public class FulltextSearchEngineTest extends
 
 	
     
-    @Test
-    public void testExecuteShouldIncludeIsInFieldWhenStreet() {
-    	Double length = 3.5D;
-    	boolean oneWay = true;
-    	StreetType streetType = StreetType.PATH;
-    	String countryCode= "FR";
-    	String name= "peter martin";
-    	long featureId =12345l;
-    	Float latitude = 4.5F;
-		Float longitude=3.9F;
-		Point location = GeolocHelper.createPoint(longitude, latitude);
-		LineString shape = GeolocHelper.createLineString("LINESTRING (30.001 30.001, 40 40)");
-		String isIn = "los angeles";
-    	
-		OpenStreetMap street = new OpenStreetMap();
-    	street.setName(name);
-    	street.setLength(length);
-    	street.setOneWay(oneWay);
-    	street.setStreetType(streetType);
-    	street.setCountryCode(countryCode);
-    	street.setGid(featureId);
-    	street.setOpenstreetmapId(1234L);
-    	street.setLocation(location);
-    	street.setShape(shape);
-    	street.setIsIn(isIn);
-   
-
-    	openStreetMapDao.save(street);
-
-        this.solRSynchroniser.commit();
-	    Pagination pagination = paginate().from(1).to(10);
-	    Output output = Output.withFormat(OutputFormat.XML)
-		    .withLanguageCode("FR").withStyle(OutputStyle.FULL)
-		    .withIndentation();
-	    FulltextQuery fulltextQuery = new FulltextQuery(isIn,
-		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
-	    FulltextResultsDto results = fullTextSearchEngine.executeQuery(fulltextQuery);;
-	    Assert.assertEquals(1, results.getResultsSize());
-
-    }
-
     
     @Test
     public void testExecuteAndSerializeWithAllWordRequiredFalse() {
@@ -624,7 +583,7 @@ public class FulltextSearchEngineTest extends
 		+ System.getProperty("file.separator") + "serialize.txt");
 
 	Long featureId = 1001L;
-	GisFeature gisFeature = GisgraphyTestHelper.createCity("Saint-André",
+	GisFeature gisFeature = GisgraphyTestHelper.createCity("Saint-André les lille",
 		1.5F, 2F, featureId);
 	AlternateName alternateName = new AlternateName();
 	alternateName.setName("alteré");
@@ -652,7 +611,7 @@ public class FulltextSearchEngineTest extends
 	    Output output = Output.withFormat(OutputFormat.XML)
 		    .withLanguageCode("FR").withStyle(OutputStyle.SHORT)
 		    .withIndentation();
-	    FulltextQuery fulltextQuery = new FulltextQuery("Saint André foo",
+	    FulltextQuery fulltextQuery = new FulltextQuery("Saint-André les lille foo",
 		    pagination, output, com.gisgraphy.fulltext.Constants.ONLY_CITY_PLACETYPE, "fr").withAllWordsRequired(false);
 	    fullTextSearchEngine.executeAndSerialize(fulltextQuery,
 		    outputStream);

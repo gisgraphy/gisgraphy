@@ -291,10 +291,12 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	public void getNearestCity(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		
+		String text = "toto";
 		List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
 		SolrResponseDto solrResponseDto = EasyMock.createMock(SolrResponseDto.class);
 		EasyMock.expect(solrResponseDto.getScore()).andReturn(OpenStreetMapCitiesSimpleImporter.SCORE_LIMIT+0.2F);
 		EasyMock.expect(solrResponseDto.getOpenstreetmap_id()).andReturn(null);
+		EasyMock.expect(solrResponseDto.getName()).andReturn(text).times(2);
 		EasyMock.replay(solrResponseDto);
 		results.add(solrResponseDto);
 		FulltextResultsDto mockResultDTO = EasyMock.createMock(FulltextResultsDto.class);
@@ -303,7 +305,6 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(mockResultDTO);
 		
 		
-		String text = "toto";
 		String countryCode = "FR";
 		Point location = GeolocHelper.createPoint(3F, 4F);
 		IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
@@ -1139,11 +1140,12 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	public void processData_poi(){
 		final SolrResponseDto solrResponseDtoCity = EasyMock.createMock(SolrResponseDto.class);
 		EasyMock.expect(solrResponseDtoCity.getFeature_id()).andReturn(123L);
-
+		EasyMock.expect(solrResponseDtoCity.getPlacetype()).andStubReturn("Restaurant");
 		EasyMock.replay(solrResponseDtoCity);
 		
 		final SolrResponseDto solrResponseDtoAdm = EasyMock.createMock(SolrResponseDto.class);
 		EasyMock.expect(solrResponseDtoAdm.getFeature_id()).andReturn(4356L).times(2);
+		EasyMock.expect(solrResponseDtoAdm.getPlacetype()).andStubReturn("Restaurant");
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override

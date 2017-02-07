@@ -24,6 +24,14 @@ public class SmartStreetDetectionTest {
 		Assert.assertEquals(1, ssd.getStreetTypes("rue saint denis").size());
 		Assert.assertEquals("rue", ssd.getStreetTypes("rue saint denis").get(0));
 		
+		//without accent
+		Assert.assertEquals(1, ssd.getStreetTypes("place saint denis").size());
+		Assert.assertEquals("place", ssd.getStreetTypes("place saint denis").get(0));
+		
+		//with accent
+		Assert.assertEquals(1, ssd.getStreetTypes("plâce saint denis").size());
+		Assert.assertEquals("plâce", ssd.getStreetTypes("plâce saint denis").get(0));
+		
 		//CASE
 		Assert.assertEquals(1, ssd.getStreetTypes("RUE saint denis").size());
 		Assert.assertEquals("RUE", ssd.getStreetTypes("RUE saint denis").get(0));
@@ -31,6 +39,15 @@ public class SmartStreetDetectionTest {
 		//DECOMPOUND
 		Assert.assertEquals(1, ssd.getStreetTypes("saint denis straße").size());
 		Assert.assertEquals("straße", ssd.getStreetTypes("saint denis straße").get(0));
+		
+		//one ß not at the end
+		Assert.assertEquals(1, ssd.getStreetTypes("saint straße denis ").size());
+		Assert.assertEquals("straße", ssd.getStreetTypes("saint straße denis").get(0));
+		
+		//several ß not at the end
+		Assert.assertEquals(2, ssd.getStreetTypes("saint straße denis straße").size());
+		Assert.assertEquals("straße", ssd.getStreetTypes("saint straße denis straße").get(0));
+		Assert.assertEquals("straße", ssd.getStreetTypes("saint straße denis straße").get(1));
 		
 		//NOT DECOMPOUND
 		Assert.assertEquals(1, ssd.getStreetTypes("saintdenisstraße").size());

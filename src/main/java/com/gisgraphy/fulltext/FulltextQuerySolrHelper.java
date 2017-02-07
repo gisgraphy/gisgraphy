@@ -62,7 +62,7 @@ public class FulltextQuerySolrHelper {
 	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 	
 	public static final int NUMBER_OF_STREET_TO_RETRIEVE = 40;
-	public static final String FUZZY_FACTOR = "0.5";
+	public static final String FUZZY_FACTOR = "0.7";
 	public static final String BOOST_EXACT_WORD_FACTOR = "";
 	
 	
@@ -70,24 +70,28 @@ public class FulltextQuerySolrHelper {
 	
 	public static final String OPENSTREETMAPID_PREFIX = FullTextFields.OPENSTREETMAP_ID.getValue()+":";
 	
-	static final int MAX_RADIUS = 37000;
+	public static final int MAX_RADIUS_IN_METER = 100000;
 
 	private static SmartStreetDetection smartStreetDetection = new SmartStreetDetection();
 
 	private static OutputStyleHelper outputStyleHelper = new OutputStyleHelper();
 
-	private  static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
-	protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^1.8 all_name^1.1 iso_all_name^1 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5  %s' pf=name^1.3 ps=0 bq='%s' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)  %s'}%s\"";
-	protected static final String EXACT_NAME_QUERY_TEMPLATE =                   "_query_:\"{!edismax pf='all_name^2' %s ps=0 bq='%s' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)  %s'}%s\"";
-	//below the all_adm1_name^0.5 all_adm2_name^0.5 has been kept
-	//protected static final String NESTED_QUERY_TEMPLATE = "_query_:\"{!dismax qf='all_name^1.1 iso_all_name^1 zipcode^1.1 all_adm1_name^0.5 all_adm2_name^0.5 %s' pf=name^1.1 bf=population^2.0}%s\"";
-	// protected static final String NESTED_QUERY_INTEXT_BASIC_TEMPLATE=
-	// "_query_:\"{!dismax qf='name^1.1 zipcode^1.1'  mm='1<-100%% 2<-50%% 3<-0%%' bq='_val_:\\\"pow(population,0.3)\\\"' }%s\"";
-	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = "_query_:\"{!edismax qf='name^1.8 all_name^1.1 iso_all_name^1.3 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5 %s' mm='1<1 2<1 3<2' tie='0.01'  pf='name^1.8' ps=0 bq='%s ' bf='pow(map(population,0,0,0.0001),0.45)  %s ' }%s\""; // pow(map(city_population,0,0,0.0000001),0.3)
+	
+	public static final String MM_NOT_ALL_WORD_REQUIRED ="3<-1 4<3";
+	public static final String MM_ALL_WORD_REQUIRED ="100%%";
+	
+	//protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^1.8 all_name^1.1 iso_all_name^1 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5  %s' pf=name^1.3 ps=0 bq='%s' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)  %s'}%s\"";
+	//protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = "_query_:\"{!edismax qf='name^1.8 all_name^1.1 iso_all_name^1.3 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5 %s' mm='1<1 2<1 3<2' tie='0.01'  pf='name^1.8' ps=0 bq='%s ' bf='pow(map(population,0,0,0.0001),0.45)  %s ' }%s\""; // pow(map(city_population,0,0,0.0000001),0.3)
+
+	//private  static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
+	
+	private  static String IS_IN_SENTENCE = " ";//+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
+	protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^9 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
+	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
 	
-	protected static final String CITY_BOOST_QUERY="placetype:city^16";
-	protected static final String STREET_BOOST_QUERY="placetype:street^150";
+	protected static String CITY_BOOST_QUERY="placetype:city^800 placetype:adm^600";
+	protected static String STREET_BOOST_QUERY="placetype:street^150";
 	// we need to consider adm1name for andora and brooklin
 	protected static final String NESTED_QUERY_NUMERIC_TEMPLATE =          "_query_:\"{!edismax qf='zipcode^1.2 pf=name^1.1'  bq='placetype:City^2 population^2' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)' }%s\"";
 	
@@ -100,7 +104,8 @@ public class FulltextQuerySolrHelper {
 	protected static final String FQ_LOCATION = "{!bbox "+Constants.SPATIAL_FIELD_PARAMETER+"="+GisFeature.LOCATION_COLUMN_NAME+"}";
 
 	//http://rechneronline.de/function-graphs/
-	protected static final String BF_NEAREST = "recip(geodist(),0.01,230,1)";//first number impact  the nearest (the more, the nearest got importance), two other the farest. 2/3 =>the highest score
+	protected static String BF_NEAREST = "recip(geodist(),0.01,3000,1)";//first number impact  the nearest (the more, the nearest got importance), two other the farest. 2/3 =>the highest score
+	protected static String BF_POPULATION="pow(map(population,0,0,0.009),0.7) pow(map(city_population,0,0,0.0001),0.20)";
 	//http://wiki.apache.org/solr/FunctionQuery#recip
 	
 	//{!geofilt sfield=store}&pt=45.15,-93.85&d=5
@@ -115,7 +120,7 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		getConfigInFile();
+		//getConfigInFile();
 		/*logger.error("all words : "+NESTED_QUERY_TEMPLATE);
 		logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
 		boolean spellchecker = true;
@@ -162,14 +167,14 @@ public class FulltextQuerySolrHelper {
 			parameters.set(Constants.FL_PARAMETER, outputStyleHelper.getFulltextFieldList(query.getOutput()));
 		}
 
-		//filter query
+		//radius / point filter query
 		if (query.getPoint() != null) {
 			    parameters.set(Constants.SPATIAL_FIELD_PARAMETER, GisFeature.LOCATION_COLUMN_NAME);
 				parameters.add(Constants.POINT_PARAMETER,query.getPoint().getY()+","+query.getPoint().getX());
 				if(query.getRadius() != 0){
 					double radius = query.getRadius();
-					if (query.getRadius()> MAX_RADIUS){
-						radius=MAX_RADIUS;
+					if (query.getRadius()> MAX_RADIUS_IN_METER){
+						radius=MAX_RADIUS_IN_METER;
 					} 
 					//we do a bounding box
 					parameters.add(Constants.FQ_PARAMETER, FQ_LOCATION);
@@ -225,7 +230,7 @@ public class FulltextQuerySolrHelper {
 			List<String> streetTypes = smartStreetDetection.getStreetTypes(query.getQuery());
 			if (!isStreetQuery(query) && streetTypes.size()==1){//only if there is no pacetype=street
 			//	parameters.set(Constants.BQ_PARAMETER, STREET_BOOST_QUERY);
-				parameters.add(Constants.FQ_PARAMETER, FullTextFields.PLACETYPE.getValue()+":"+Street.class.getSimpleName());
+				parameters.add(Constants.FQ_PARAMETER, FullTextFields.PLACETYPE.getValue()+":("+Street.class.getSimpleName()+")");
 			}
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.suggest
 					.toString());
@@ -243,17 +248,19 @@ public class FulltextQuerySolrHelper {
 			/*parameters.set(Constants.QT_PARAMETER,
 		    Constants.SolrQueryType.standard.toString());
 	    parameters.set(Constants.QUERY_PARAMETER, query.getQuery());*/
-			String boost="";
+			String bqField="";
 			List<String> streetTypes = smartStreetDetection.getStreetTypes(query.getQuery());
 			if ((!isStreetQuery(query) && streetTypes.size()==1)){
-				boost=STREET_BOOST_QUERY;
+				bqField=STREET_BOOST_QUERY;
 			} else if (query.getPlaceTypes()==null){
-				boost=CITY_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
+				bqField=CITY_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
 			}
-			String is_in = isStreetQuery(query)?IS_IN_SENTENCE:"";
-			String boostNearest = "";
-			if (query.getPoint() != null && query.getRadius()==0) {//don't 
-				boostNearest = BF_NEAREST;
+			
+			String bfField = "";
+			if (query.getPoint() != null ) {//promote nearest if  point is specified
+				bfField = BF_NEAREST;
+			} else {
+				bfField=BF_POPULATION;
 			}
 			String queryString;
 			if (query.isFuzzy()){
@@ -268,13 +275,19 @@ public class FulltextQuerySolrHelper {
 			/*if (query.isExactName()){
 				querybuffer = new StringBuffer(String.format(EXACT_NAME_QUERY_TEMPLATE,"",boost,boostNearest,queryString));
 			} else {*/
+			String mm ;
+			String is_in="";
 				if (!query.isAllwordsRequired()){
-					querybuffer = new StringBuffer(String.format(NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,is_in,boost,boostNearest,queryString));
+					mm= MM_NOT_ALL_WORD_REQUIRED;
+					//is_in = isStreetQuery(query)?IS_IN_SENTENCE:"";
+					//querybuffer = new StringBuffer(String.format(NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,is_in,boost,MM_NOT_ALL_WORD_REQUIRED,boostNearest,queryString));
 				} else {
 					//with all word required we don't search in is_in
-					querybuffer = new StringBuffer(String.format(NESTED_QUERY_TEMPLATE,"",boost,boostNearest,queryString));
+					//is_in= "";
+					mm=MM_ALL_WORD_REQUIRED;
 
 				}
+				querybuffer = new StringBuffer(String.format(NESTED_QUERY_TEMPLATE,is_in,bqField,mm,bfField,queryString));
 			//}
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
@@ -311,7 +324,7 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
-				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE=in.readLine();
+				BF_POPULATION=in.readLine();
 				
 
 	                in.close();
@@ -402,7 +415,7 @@ public class FulltextQuerySolrHelper {
 		return parameters;
 	}
 	
-	protected static String buildFuzzyQuery(FulltextQuery fulltextQuery){
+/*	protected static String buildFuzzyQuery(FulltextQuery fulltextQuery){
 		String query=fulltextQuery.getQuery();
 		StringBuffer sbq= new StringBuffer();
 		String fuzzyWords = buildFuzzyWords(query);
@@ -424,7 +437,7 @@ public class FulltextQuerySolrHelper {
 		} 
 		}
 		return sbq.toString();
-	}
+	}*/
 	
 	public static String clean(String s){
 		if (s!=null){
@@ -532,17 +545,17 @@ public class FulltextQuerySolrHelper {
 						
 			}	
 			
-			/*if (address.getZipCode()!=null){
-				String field =FullTextFields.ZIPCODE.getValue();
-				if (address.getStreetName()!=null){
-					field =FullTextFields.IS_IN_ZIP.getValue();
-				}
-				if (address.getCity()==null){
+			//if (address.getZipCode()!=null){
+			//	String field =FullTextFields.ZIPCODE.getValue();
+				//if (address.getStreetName()!=null){
+					//field =FullTextFields.IS_IN_ZIP.getValue();
+				//}
+				//if (address.getCity()==null){
 					//it has already been added by city step
-					parameters.add(Constants.FQ_PARAMETER, FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName());
-				}
-					sbq.append(" ").append(field).append(":").append(clean(address.getZipCode())).append(" ");//no fuzzy in zipcode
-			}*/
+				//	parameters.add(Constants.FQ_PARAMETER, FullTextFields.PLACETYPE.getValue()+":"+City.class.getSimpleName());
+				//}
+				//	sbq.append(" ").append(field).append(":").append(clean(address.getZipCode())).append(" ");//no fuzzy in zipcode
+			//}
 			
 			
 		parameters.set(Constants.QUERY_PARAMETER,  sbq.toString());
@@ -565,7 +578,11 @@ public class FulltextQuerySolrHelper {
 		for (int i = 0;i<words.length ;i++){
 			String word = words[i].trim();
 			if (words!=null && !"".equals(word) && !StringUtils.isNumericSpace(word)){
+				if (stopWord!=null && !word.equalsIgnoreCase(stopWord)){
 				sb.append(" ").append(words[i]).append("~"+FUZZY_FACTOR+" ").append(words[i]+BOOST_EXACT_WORD_FACTOR+" ");
+				} else {
+					sb.append(words[i]+BOOST_EXACT_WORD_FACTOR+" ");
+				}
 			}
 		}
 		sb.append("");

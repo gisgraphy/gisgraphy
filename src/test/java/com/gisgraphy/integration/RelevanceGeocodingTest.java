@@ -273,12 +273,13 @@ public class RelevanceGeocodingTest {
 		}
 	}
 	
-	/*
+	
 	@Test
-	public void cityWithTwoPossibleAroundAPoint() throws InterruptedException, IOException{
+	public void cityWithTwoPossibleAroundAPoint_boostNearest() throws InterruptedException, IOException{
 		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
 			String rawAddress = "saint omer";
-			AddressResultsDto addressResultsDto = doRequestOnCountryArroundAndRadius(rawAddress, "FR",GeolocHelper.createPoint(	48.9381357, -0.4380443),0);
+			//specify a point to promote 
+			AddressResultsDto addressResultsDto = doRequestOnCountryArroundAndRadius(rawAddress, "FR",GeolocHelper.createPoint( -0.4380443, 48.9381357),0);
 			Assert.assertNotNull(addressResultsDto);
 			//the two city named saint omer in france
 			//when radius 0 is specified the point impact the result (location bias).
@@ -290,20 +291,68 @@ public class RelevanceGeocodingTest {
 	}
 	
 	@Test
-	public void cityWithTwoPossibleAroundAFarPointWithRadiusShouldNotReturnResults() throws InterruptedException, IOException{
+	public void cityWithTwoPossibleAroundAPoint_NoRadiusSpecified() throws InterruptedException, IOException{
 		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
 			String rawAddress = "saint omer";
-			AddressResultsDto addressResultsDto = doRequestOnCountryArroundAndRadius(rawAddress, "FR",GeolocHelper.createPoint(	44.841225, -0.5800364),10000);
+			//specify a point to promote 
+			AddressResultsDto addressResultsDto = doRequestOnCountryArround(rawAddress, "FR",GeolocHelper.createPoint( -0.4380443, 48.9381357));
 			Assert.assertNotNull(addressResultsDto);
-			//when radius >0 is specified it is a bounding box.
-			//in this case the two cities saint omer is not in this box
-		//	isNoResult(addressResultsDto.getResult(), rawAddress);
-			//first result should be the nearest one
+			//the two city named saint omer in france
+			//when radius 0 is specified the point impact the result (location bias).
+			//in this case the two cities saint omer should be find
+		//	isCorrectByIds(new Long[]{94401L,STOMER_CAEN_ID},addressResultsDto.getResult(), rawAddress);
+			//...and first result should be the nearest one
 			isCorrectById(STOMER_CAEN_ID,addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
-	*/
+	@Test
+	public void cityWithTwoPossibleAroundAPoint_boundingbox() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "saint omer";
+			//specify a point to promote 
+			AddressResultsDto addressResultsDto = doRequestOnCountryArroundAndRadius(rawAddress, "FR",GeolocHelper.createPoint( -0.4380443, 48.9381357),2000);
+			Assert.assertNotNull(addressResultsDto);
+			//the two city named saint omer in france
+			//when radius 0 is specified the point impact the result (location bias).
+			//in this case the two cities saint omer should be find
+		//	isCorrectByIds(new Long[]{94401L,STOMER_CAEN_ID},addressResultsDto.getResult(), rawAddress);
+			//...and first result should be the nearest one
+			isCorrectById(STOMER_CAEN_ID,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	@Test
+	public void cityWithTwoPossibleAroundAPoint_boundingbox_smallradius() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "saint omer";
+			//specify a point to promote 
+			AddressResultsDto addressResultsDto = doRequestOnCountryArroundAndRadius(rawAddress, "FR",GeolocHelper.createPoint( -0.4380443, 48.9381357),2);
+			Assert.assertNotNull(addressResultsDto);
+			//the two city named saint omer in france
+			//when radius 0 is specified the point impact the result (location bias).
+			//in this case the two cities saint omer should be find
+		//	isCorrectByIds(new Long[]{94401L,STOMER_CAEN_ID},addressResultsDto.getResult(), rawAddress);
+			//...and first result should be the nearest one
+			isNoResult(addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	@Test
+	public void cityWithTwoPossibleAroundAFarPointWithRadiusShouldNotReturnResults() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "saint omer";
+			AddressResultsDto addressResultsDto = doRequestOnCountryArroundAndRadius(rawAddress, "FR",GeolocHelper.createPoint(	-0.5800364,20.841225),10000);
+			Assert.assertNotNull(addressResultsDto);
+			//when radius >0 is specified it is a bounding box.
+			//in this case the two cities saint omer is not in this box
+			isNoResult(addressResultsDto.getResult(), rawAddress);
+			//first result should be the nearest one
+			//isCorrectById(STOMER_CAEN_ID,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	
 	/*
 	 * 
 	 * 
@@ -324,7 +373,38 @@ public class RelevanceGeocodingTest {
 			String rawAddress = "Place Vendôme, Paname";
 			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isCorrectById(4234145,addressResultsDto.getResult(), rawAddress);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	
+	@Test
+	public void streetWithCitySynonymAccentInStreetTypeTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "Plâce Vendôme, Paname";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	@Test
+	public void streetZipTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "Place Vendôme, 75000";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	@Test
+	public void zipStreetTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "75000 Place Vendôme";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -334,7 +414,7 @@ public class RelevanceGeocodingTest {
 			String rawAddress = "Place Vendôme, Paris";
 			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectbyIds(new Long[]{4234145L,4234146L},addressResultsDto.getResult(), rawAddress);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -344,7 +424,7 @@ public class RelevanceGeocodingTest {
 			String rawAddress = "Paris Place Vendôme";
 			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectbyIds(new Long[]{4234145L,4234146L},addressResultsDto.getResult(), rawAddress);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -508,7 +588,35 @@ public class RelevanceGeocodingTest {
 		}
 	}
 	
+
+	@Test
+	public void addressWithoutStreetTypeCity() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "jean jaures bailleul";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(79424401L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
 	
+	@Test
+	public void addressWithoutStreetTypeZip() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "jean jaures 59270";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(79424401L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	@Test
+	public void addressStreetZip() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "jean jaures 59270";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(79424401L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
 	
 	
 	/*
@@ -543,7 +651,7 @@ public class RelevanceGeocodingTest {
 		}
 	}
 	*/
-	@Test
+/*	@Test
 	public void poiCity() throws InterruptedException, IOException{
 		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
 			String rawAddress = "Chez papa  paris";
@@ -562,20 +670,60 @@ public class RelevanceGeocodingTest {
 			isCorrectById(1830649549L,addressResultsDto.getResult(), rawAddress);
 		}
 	}
+	*/
 	
+	
+	
+	/*
+	 * 
+           _         _ _       _     _             
+ ___ _   _| |__   __| (_)_   _(_)___(_) ___  _ __  
+/ __| | | | '_ \ / _` | \ \ / / / __| |/ _ \| '_ \ 
+\__ \ |_| | |_) | (_| | |\ V /| \__ \ | (_) | | | |
+|___/\__,_|_.__/ \__,_|_| \_/ |_|___/_|\___/|_| |_|
+ 
+	 */
 	@Test
-	public void addressWithoutStreetTypeCity() throws InterruptedException, IOException{
+	public void subdivision() throws InterruptedException, IOException{
 		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
-			String rawAddress = "jean jaures bailleul";
+			String rawAddress = "la defense";
 			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isCorrectById(79424401L,addressResultsDto.getResult(), rawAddress);
+			isCorrectById(8504417L,addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
+	@Test
+	public void quaterCity() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "Vaugirard, Paris";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByIds(new Long[]{10665004L,2970479L,27728576L},addressResultsDto.getResult(), rawAddress);
+			isCorrectById(2970479L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
 	
+	@Test
+	public void quaterZip() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "Vaugirard, Paris";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByIds(new Long[]{10665004L,2970479L,27728576L},addressResultsDto.getResult(), rawAddress);
+			isCorrectById(2970479L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
 	
-	
+	@Test
+	public void arrondissement() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "Paris 15e";
+			AddressResultsDto addressResultsDto = doRequestOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(2970479L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
 	
 	
 	/*
@@ -673,7 +821,20 @@ public void coefFinder(){
 		
 	private AddressResultsDto doRequestOnCountryArroundAndRadius(String address,String countryCode, Point location,int radius){
 		@SuppressWarnings("deprecation")
-		String fullURLToCall = BASE_SERVER_URL+BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&countrycode="+countryCode+"&lat="+location.getY()+"&lng="+location.getX()+"&radius=";
+		String fullURLToCall = BASE_SERVER_URL+BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&countrycode="+countryCode+"&lat="+location.getY()+"&lng="+location.getX()+"&radius="+radius;
+		System.out.println(fullURLToCall);
+		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
+		if (result!=null && result.getNumFound()!=0){
+			System.out.println(address+ " : "+result.getResult().get(0));
+		} else {
+			System.out.println(address+ " : no results");
+		}
+		return result;
+	}
+	
+	private AddressResultsDto doRequestOnCountryArround(String address,String countryCode, Point location){
+		@SuppressWarnings("deprecation")
+		String fullURLToCall = BASE_SERVER_URL+BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&countrycode="+countryCode+"&lat="+location.getY()+"&lng="+location.getX();
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		if (result!=null && result.getNumFound()!=0){

@@ -63,6 +63,7 @@ public class GeonamesZipCodeImporterTest {
 	dtoOne = EasyMock.createMock(SolrResponseDto.class);
 	EasyMock.expect(dtoOne.getFeature_id()).andStubReturn(123L);
 	EasyMock.expect(dtoOne.getLat()).andStubReturn(20D);
+	EasyMock.expect(dtoOne.getName()).andStubReturn("name");
 	EasyMock.expect(dtoOne.getLng()).andStubReturn(2D);
 	EasyMock.replay(dtoOne);
 	
@@ -70,7 +71,7 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.expect(dtoTwo.getFeature_id()).andStubReturn(456L);
 	EasyMock.expect(dtoTwo.getLat()).andStubReturn(34D);
 	EasyMock.expect(dtoTwo.getLng()).andStubReturn(5D);
-	
+	EasyMock.expect(dtoTwo.getName()).andStubReturn("name");
 	EasyMock.replay(dtoTwo);
 	
 	List<SolrResponseDto> oneResult =new ArrayList<SolrResponseDto>();
@@ -283,7 +284,7 @@ public class GeonamesZipCodeImporterTest {
 	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
 	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
 	Assert.assertNull(importer.findFeature(fields,point,maxDistance));
-	Assert.assertEquals(2,count.toString().length());
+	Assert.assertEquals(1,count.toString().length());
 	
     }
     
@@ -315,12 +316,12 @@ public class GeonamesZipCodeImporterTest {
     }
     
     @Test
-    public void findFeatureBasicWithOneResult(){
+    public void findFeatureBasicWithOneResult_sameName(){
 	String lat = "3.5";
 	String lng = "44";
 	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
 	String accuracy = "5";
-	String placeName = "place name";
+	String placeName = dtoOne.getName();
 	String countryCode = "FR";
 	String adm1Name = "adm1name";
 	String adm1Code = "adm1code";
@@ -349,7 +350,41 @@ public class GeonamesZipCodeImporterTest {
     }
     
     @Test
-    public void findFeatureBasicWithSeveralResult(){
+    public void findFeatureBasicWithOneResult_NotSameName(){
+	String lat = "3.5";
+	String lng = "44";
+	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
+	String accuracy = "5";
+	String placeName = "place name";
+	String countryCode = "FR";
+	String adm1Name = "adm1name";
+	String adm1Code = "adm1code";
+	String adm2Name = "adm2name";
+	String adm2Code = "adm2code";
+	String adm3Name = "adm3name";
+	String adm3COde = "adm3code";
+	FulltextQuery fulltextQuery = new FulltextQuery(placeName +" "+adm1Name);
+	fulltextQuery.limitToCountryCode(countryCode);
+	fulltextQuery.withPlaceTypes(com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE).around(point);
+	
+	
+	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
+	    
+	    @Override
+	    protected FulltextResultsDto doAFulltextSearch(String query, String countryCode,Point point) {
+		return dtoWithOneResult;
+	    }
+	};
+	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
+
+	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
+	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
+	Assert.assertEquals(null,actualFeatureId);
+	
+    }
+    
+    @Test
+    public void findFeatureBasicWithSeveralResult_notSameName(){
 	String lat = "3.5";
 	String lng = "44";
 	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
@@ -383,18 +418,19 @@ public class GeonamesZipCodeImporterTest {
 	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
 	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
 	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
-	Assert.assertEquals(new Long(featureId),actualFeatureId);
+	Assert.assertNull(actualFeatureId);
 	
     }
     
+    
+    
     @Test
-    public void findFeatureExtendedThenBasicWithOneResult(){
-	
+    public void findFeatureBasicWithSeveralResult_SameName(){
 	String lat = "3.5";
 	String lng = "44";
 	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
 	String accuracy = "5";
-	String placeName = "place name";
+	String placeName = dtoOne.getName();
 	String countryCode = "FR";
 	String adm1Name = "adm1name";
 	String adm1Code = "adm1code";
@@ -407,79 +443,29 @@ public class GeonamesZipCodeImporterTest {
 	fulltextQuery.withPlaceTypes(com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE).around(point);
 	final long featureId = 456L;
 	
+	
 	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
-	    int count = 0;
 	    
 	    @Override
 	    protected FulltextResultsDto doAFulltextSearch(String query, String countryCode,Point point) {
-		count = count+1;
-		if (count == 1){
-		    return new FulltextResultsDto();
-		} else if (count==2){
-		    return dtoWithOneResult;
-		}
-		else return null;
+		return dtoWithTwoResults;
 	    }
 	    
 	    @Override
 	    protected Long findNearest(Point zipPoint, int maxDistance, FulltextResultsDto results) {
-	        
-		return featureId;
+	        return featureId;
 	    }
 	};
 	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
 	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
 	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
-	Assert.assertEquals(dtoWithOneResult.getResults().get(0).getFeature_id(),actualFeatureId);
+	Assert.assertEquals(dtoOne.getFeature_id(),actualFeatureId);
 	
     }
     
-    @Test
-    public void findFeatureNoResultThenTwoResults(){
-	
-	String lat = "3.5";
-	String lng = "44";
-	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
-	String accuracy = "5";
-	String placeName = "place name";
-	String countryCode = "FR";
-	String adm1Name = "adm1name";
-	String adm1Code = "adm1code";
-	String adm2Name = "adm2name";
-	String adm2Code = "adm2code";
-	String adm3Name = "adm3name";
-	String adm3COde = "adm3code";
-	FulltextQuery fulltextQuery = new FulltextQuery(placeName +" "+adm1Name);
-	fulltextQuery.limitToCountryCode(countryCode);
-	fulltextQuery.withPlaceTypes(com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE).around(point);
-	final long featureId = 456L;
-	
-	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
-	    int count = 0;
-	    
-	    @Override
-	    protected FulltextResultsDto doAFulltextSearch(String query, String countryCode,Point point) {
-		count = count+1;
-		if (count == 1){
-		    return new FulltextResultsDto();
-		} else if (count==2){
-		    return dtoWithTwoResults;
-		}
-		else return null;
-	    }
-	    
-	    @Override
-	    protected Long findNearest(Point zipPoint, int maxDistance, FulltextResultsDto results) {
-	        
-		return featureId;
-	    }
-	};
-	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
-	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
-	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
-	Assert.assertEquals(new Long(featureId),actualFeatureId);
-	
-    }
+    
+    
+    
     
     @Test
     public void findFeatureNoResultThenNoResults(){

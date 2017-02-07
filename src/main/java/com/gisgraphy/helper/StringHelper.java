@@ -256,6 +256,12 @@ public class StringHelper {
 	}
 
 	
+	/**
+	 * @param expected
+	 * @param actual
+	 * @param tolerance the number of word that can be missing if there is more than two words specified
+	 * @return
+	 */
 	public static boolean isSameName(String expected, String actual,int tolerance){
 		if (actual!=null && expected!=null){
 			if (actual.equalsIgnoreCase(expected)){ //shortcut

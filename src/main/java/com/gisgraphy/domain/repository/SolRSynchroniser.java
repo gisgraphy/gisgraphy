@@ -39,6 +39,7 @@ import org.springframework.util.Assert;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
@@ -408,8 +409,13 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			ex.setField(FullTextFields.TIMEZONE.getValue(), gisFeature
 				.getTimezone());
 			
-			ex.setField(FullTextFields.POPULATION.getValue(), gisFeature
-				.getPopulation());
+			 if (gisFeature instanceof City || gisFeature instanceof CitySubdivision || gisFeature instanceof Adm ) { 
+				 ex.setField(FullTextFields.POPULATION.getValue(), gisFeature
+						 .getPopulation());
+			 } else {
+				 //it is a poi
+				 ex.setField(FullTextFields.CITY_POPULATION.getValue(), gisFeature.getPopulation());
+			 }
 		
 			/*ex.setField(FullTextFields.GOOGLE_MAP_URL.getValue(), URLUtils
 				.createGoogleMapUrl(gisFeature.getLocation(), gisFeature
