@@ -120,7 +120,7 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		//getConfigInFile();
+		getConfigInFile();
 		/*logger.error("all words : "+NESTED_QUERY_TEMPLATE);
 		logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
 		boolean spellchecker = true;
@@ -267,7 +267,7 @@ public class FulltextQuerySolrHelper {
 				if (streetTypes!=null && streetTypes.size()==1){
 					queryString = buildFuzzyWords(query.getQuery(),streetTypes.get(0));
 				} else {
-					queryString = buildFuzzyWords(query.getQuery());
+					queryString = buildFuzzyWords(query.getQuery(),null);
 				}
 			} else {
 				queryString = query.getQuery();
@@ -324,7 +324,7 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
-				BF_POPULATION=in.readLine();
+				CITY_BOOST_QUERY=in.readLine();
 				
 
 	                in.close();
@@ -467,7 +467,7 @@ public class FulltextQuerySolrHelper {
 				streetSentenceToSearch = address.getStreetName()+ " "+address.getStreetType();
 			}
 			if (fuzzy){
-				sbq.append(FullTextFields.ALL_NAME.getValue()).append(":").append(buildFuzzyWords(streetSentenceToSearch)).append(" ");
+				sbq.append(FullTextFields.ALL_NAME.getValue()).append(":").append(buildFuzzyWords(streetSentenceToSearch,null)).append(" ");
 				sbq.append(FullTextFields.ALL_NAME.getValue()).append(":").append(buildExactWords(streetSentenceToSearch)).append(" ");
 			} else {
 				sbq.append(FullTextFields.ALL_NAME.getValue()).append(":(").append(clean(streetSentenceToSearch)).append(") ");
@@ -521,7 +521,7 @@ public class FulltextQuerySolrHelper {
 				if (address.getStreetName()!=null){
 					//it is an adm for a street
 					if (fuzzy){
-						sbq.append(" ").append(FullTextFields.IS_IN_ADM.getValue()).append(":").append(buildFuzzyWords(choiceState)).append(" ");
+						sbq.append(" ").append(FullTextFields.IS_IN_ADM.getValue()).append(":").append(buildFuzzyWords(choiceState,null)).append(" ");
 					} else {
 						sbq.append(" ").append(FullTextFields.IS_IN_ADM.getValue()).append(":(").append(choiceState).append(") ");
 					}
@@ -529,14 +529,14 @@ public class FulltextQuerySolrHelper {
 					if (address.getCity()!=null || address.getZipCode() !=null){
 						//adm for a city or zip
 						if (fuzzy){
-							sbq.append(" ").append(FullTextFields.ALL_ADM1_NAME.getValue()).append(":").append(buildFuzzyWords(choiceState)).append(" ");
+							sbq.append(" ").append(FullTextFields.ALL_ADM1_NAME.getValue()).append(":").append(buildFuzzyWords(choiceState,null)).append(" ");
 						} else {
 							sbq.append(" ").append(FullTextFields.ALL_ADM1_NAME.getValue()).append(":(").append(choiceState).append(") ");
 						}
 					} else {
 						//we got only a state
 						if (fuzzy){
-							sbq.append(" ").append(FullTextFields.ALL_NAME.getValue()).append(":").append(buildFuzzyWords(choiceState)).append(" ");
+							sbq.append(" ").append(FullTextFields.ALL_NAME.getValue()).append(":").append(buildFuzzyWords(choiceState,null)).append(" ");
 						} else {
 							sbq.append(" ").append(FullTextFields.ALL_NAME.getValue()).append(":").append(":(").append(choiceState).append(") ");
 						}
@@ -577,34 +577,24 @@ public class FulltextQuerySolrHelper {
 		StringBuffer sb = new StringBuffer("");
 		for (int i = 0;i<words.length ;i++){
 			String word = words[i].trim();
-			if (words!=null && !"".equals(word) && !StringUtils.isNumericSpace(word)){
-				if (stopWord!=null && !word.equalsIgnoreCase(stopWord)){
-				sb.append(" ").append(words[i]).append("~"+FUZZY_FACTOR+" ").append(words[i]+BOOST_EXACT_WORD_FACTOR+" ");
+			if (words!=null && !"".equals(word)){
+				if (stopWord!=null){
+					if(word.equalsIgnoreCase(stopWord) || word.length()<=3 || StringUtils.isNumeric(word)){
+						sb.append(words[i]+BOOST_EXACT_WORD_FACTOR+" ");
+					} else {
+						//if there is street type, we put search exact and fuzzy
+						sb.append(" ").append(words[i]).append("~"+FUZZY_FACTOR+" ").append(words[i]+BOOST_EXACT_WORD_FACTOR+" ");
+					}
 				} else {
-					sb.append(words[i]+BOOST_EXACT_WORD_FACTOR+" ");
+					//if there is no street type only search in fuzzy
+						sb.append(" ").append(words[i]).append("~"+FUZZY_FACTOR+" ");
 				}
 			}
 		}
 		sb.append("");
 		return sb.toString().trim();
 	}
-	protected static String buildFuzzyWords(String query){
-		if (query ==null){
-			return "";
-		}
-		String[] words = query.split("[,\\s\\-\\–\\一]");//not slash
-		StringBuffer sb = new StringBuffer("");
-		for (int i = 0;i<words.length ;i++){
-			String word = words[i].trim();
-			if (words!=null && !"".equals(word) && !StringUtils.isNumericSpace(word) ){
-				sb.append(" ").append(words[i]).append("~"+FUZZY_FACTOR+" ")
-				//.append(words[i]+" ")
-				;
-			}
-		}
-		sb.append("");
-		return sb.toString().trim();
-	}
+	
 	
 	protected static String buildExactWords(String query){
 		if (query ==null){

@@ -1752,23 +1752,7 @@ public class FulltextQuerySolrHelperTest {
 		
 		
 	}
-	@Test
-	public void buildFuzzyWords(){
-		FulltextQuerySolrHelper helper = new FulltextQuerySolrHelper();
-		
-		String result = helper.buildFuzzyWords("totostr.");
-			System.out.println(result);
-			Assert.assertTrue(result.contains("~"+FUZZY_FACTOR));
-			Assert.assertEquals("totostr.~"+FUZZY_FACTOR, result);
-			
-			
-		 result = helper.buildFuzzyWords("saint-jean de luz - 2");
-		System.out.println(result);
-		Assert.assertTrue(result.contains("~"+FulltextQuerySolrHelper.FUZZY_FACTOR));
-		Assert.assertEquals("saint~"+FUZZY_FACTOR+"  jean~"+FUZZY_FACTOR+"  de~"+FUZZY_FACTOR+"  luz~"+FUZZY_FACTOR, result);
-		
-		
-	}
+	
 	
 	@Test
 	public void clean(){

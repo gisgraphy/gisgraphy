@@ -3,20 +3,18 @@ package com.gisgraphy.integration;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.List;
 
 import net.sf.jstester.util.Assert;
 
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,11 +36,12 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-@Ignore
+//@Ignore
 public class URLFileGeocodingTest {
 
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";
-	public final static String BASE_SERVER_URL ="http://import.gisgraphy.com/";
+	public final static String BASE_SERVER_URL ="http://localhost:8080/";
+	public final static String OUTPUT_CLEAN_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_clean.csv";
 	public final static String OUTPUT_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output.csv";
 	public final static String OUTPUT_FAIL_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output_fail.csv";
 	
@@ -50,21 +49,23 @@ public class URLFileGeocodingTest {
 	
 	@Autowired
 	private IsolrClient solrClient;
+	
+	private boolean fake=true;
 
 	
 	@Test
-	public void geocodingPostalTest() throws InterruptedException, IOException{
+	public void geocodingPostalTest() throws InterruptedException, IOException, ParseException{
 		geocodingPostalTest_internal(true);
 		
 	}
 	
 	@Test
-	public void geocodingNotPostalTest() throws InterruptedException, IOException{
+	public void geocodingNotPostalTest() throws InterruptedException, IOException, ParseException{
 		geocodingPostalTest_internal(false);
 		
 	}
 
-	public void geocodingPostalTest_internal(boolean postal) throws InterruptedException, IOException{
+	public void geocodingPostalTest_internal(boolean postal) throws InterruptedException, IOException, ParseException{
 		URL url = Thread.currentThread().getContextClassLoader().getResource(FILEPATH);
 		File file = new File(url.getPath());
 		int nbTest = 0;
@@ -91,14 +92,18 @@ public class URLFileGeocodingTest {
 		FileOutputStream fos = new FileOutputStream(fout);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 		
+		
 		File foutFail = new File(OUTPUT_FAIL_FILE);
 		FileOutputStream fosFail = new FileOutputStream(foutFail);
 		BufferedWriter bwFail = new BufferedWriter(new OutputStreamWriter(fosFail));
 		
+	/*	File faddress = new File(OUTPUT_CLEAN_FILE);
+		FileOutputStream faddressOS = new FileOutputStream(faddress);
+		BufferedWriter faddressOSBW = new BufferedWriter(new OutputStreamWriter(faddressOS));*/
 		
 		String input;
 		long start = System.currentTimeMillis();
-		while (true){
+		while ((input = reader.readLine()) !=null){
 		
 		try {
 		    input = reader.readLine();
@@ -111,18 +116,36 @@ public class URLFileGeocodingTest {
 			}
 			System.out.println("test no "+(nbTest+1));
 			String[] fields = input.split("\\t");
-			if (fields.length !=3){
+			if (fields.length !=4){
 				throw new RuntimeException("lines of files should have 3 fields separated by tabulation");
 			}
-			String fields1 = fields[1];
-			String fields2= fields[2];
-			Double expectedLat = Double.parseDouble(fields1);
-			Double expectedLng = Double.parseDouble(fields2);
+			/*String addressstr = fields[1].replace("/geocoding/?country=DE&address=", "");
+			addressstr = fields[1].replace("/geocoding/?&country=DE&address=", "");
+			
+			faddressOSBW.write(URLDecoder.decode(addressstr)+"\t"+fields[1]+"\t"+fields[2]);
+			faddressOSBW.newLine();
+			faddressOSBW.flush();*/
+			
+			String countrycode = fields[0];
+			String fields1 = fields[2];
+			String fields2= fields[3];
+			Float expectedLat = GeolocHelper.parseInternationalDouble(fields1);
+			Float expectedLng =GeolocHelper.parseInternationalDouble(fields2);
 			System.out.println("expected : "+expectedLat+" "+expectedLng);
-			String URLToCall = fields[0];
-			String fullURLToCall = BASE_SERVER_URL+URLToCall+"&format=json";
+			String rawAddress = fields[1];
+			String fullURLToCall;
+			if (countrycode!=null && !countrycode.trim().equals("")){
+				 fullURLToCall = BASE_SERVER_URL+"/geocoding/?country="+countrycode+"&address="+URLEncoder.encode(rawAddress)+"&format=json";
+			} else {
+				 fullURLToCall = BASE_SERVER_URL+"/geocoding/?address="+URLEncoder.encode(rawAddress)+"&format=json";
+			}
+			
 			if (postal){
 				fullURLToCall+="&postal=true";
+			}
+			if (fake){
+				System.out.println(rawAddress+ ":" +fullURLToCall);
+				continue;
 			}
 			AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 			System.out.println(fullURLToCall);
@@ -140,7 +163,7 @@ public class URLFileGeocodingTest {
 				
 				if (distance > 500){
 					failedNumber++;
-					bwFail.write(URLToCall+"\t"+fields1+"\t"+fields2+"\t"+lat+"\t"+lng+"\t"+distance);
+					bwFail.write(rawAddress+"\t"+fields1+"\t"+fields2+"\t"+lat+"\t"+lng+"\t"+distance);
 					bwFail.newLine();
 					bwFail.flush();
 					
@@ -153,12 +176,12 @@ public class URLFileGeocodingTest {
 				}
 				nbTest++;
 				cumulativeDistance+=distance;
-				bw.write(URLToCall+"\t"+fields1+"\t"+fields2+"\t"+lat+"\t"+lng+"\t"+distance);
+				bw.write(rawAddress+"\t"+fields1+"\t"+fields2+"\t"+lat+"\t"+lng+"\t"+distance);
 				bw.newLine();
 				
 			} else {
 				nb_noresponse++;
-				bwFail.write(URLToCall+"\t"+fields1+"\t"+fields2+"\t\t\t");
+				bwFail.write(rawAddress+"\t"+fields1+"\t"+fields2+"\t\t\t");
 				bwFail.newLine();
 			}
 		} else {
