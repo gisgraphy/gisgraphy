@@ -257,10 +257,10 @@ public class GeocodingServiceTest {
 	EasyMock.expect(mockAddressParserService.execute((AddressQuery) EasyMock.anyObject())).andReturn(addressresults);
 	EasyMock.replay(mockAddressParserService);
 	geocodingService.setAddressParser(mockAddressParserService);
-	String rawAddress = "t";
+	String rawAddress = "truc foo";
 	AddressQuery query = new AddressQuery(rawAddress, "ac");
 	AddressResultsDto addressResultsDto = geocodingService.geocode(query);
-	Assert.assertEquals("Parsed address should be set when the address paresed is not null",addressList.get(0), addressResultsDto.getParsedAddress());
+//	Assert.assertEquals("Parsed address should be set when the address paresed is not null",addressList.get(0), addressResultsDto.getParsedAddress());
 	Assert.assertTrue(GeocodeAdressCalled);
     }
     
@@ -274,10 +274,11 @@ public class GeocodingServiceTest {
     	GeocodingService geocodingService = new GeocodingService() {
 
     	    @Override
-    	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
-    		findCitiesCalled = true;
-    		return null;
-    	    }
+    	    protected List<SolrResponseDto> findExactMatches(String text,
+    				String countryCode,boolean fuzzy, Point point, Double radius) {
+    	    	findCitiesCalled = true;
+    			   return new ArrayList<SolrResponseDto>();
+    		}
 
     	    @Override
     	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
@@ -300,8 +301,9 @@ public class GeocodingServiceTest {
 	EasyMock.expect(mockAddressParserService.execute((AddressQuery) EasyMock.anyObject())).andReturn(addressresults);
 	EasyMock.replay(mockAddressParserService);
 	geocodingService.setAddressParser(mockAddressParserService);
-	String rawAddress = "t";
+	String rawAddress = "truc foo";
 	AddressQuery query = new AddressQuery(rawAddress, "ac");
+	query.setPostal(true);
 	geocodingService.geocode(query);
 	Assert.assertTrue(findCitiesCalled);
 	Assert.assertTrue(findStreetCalled);
@@ -315,11 +317,12 @@ public class GeocodingServiceTest {
 	importerConfig.setOpenStreetMapFillIsIn(false);
 	GeocodingService geocodingService = new GeocodingService() {
 
-	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
-		findCitiesCalled = true;
-		return null;
-	    }
+		 @Override
+ 	    protected List<SolrResponseDto> findExactMatches(String text,
+ 				String countryCode,boolean fuzzy, Point point, Double radius) {
+ 	    	findCitiesCalled = true;
+ 			   return new ArrayList<SolrResponseDto>();
+ 		}
 
 	    @Override
 	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
@@ -358,9 +361,19 @@ public class GeocodingServiceTest {
 	EasyMock.expect(cityResult.getAdm3_name()).andStubReturn("adm3 name");
 	EasyMock.expect(cityResult.getAdm4_name()).andStubReturn("adm4 name");
 	EasyMock.expect(cityResult.getAdm5_name()).andStubReturn("adm5 name");
+	EasyMock.expect(cityResult.getFully_qualified_name()).andStubReturn("FQDN");
+	EasyMock.expect(cityResult.getScore()).andStubReturn(42.2F);
+	List<String> alternateNames= new ArrayList<String>();
+	alternateNames.add("paris alternate");
+	EasyMock.expect(cityResult.getName_alternates()).andStubReturn(alternateNames);
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
 	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
+	EasyMock.expect(cityResult.getIs_in_zip()).andStubReturn(null);
+	EasyMock.expect(cityResult.getIs_in()).andStubReturn("is_in");
 	EasyMock.expect(cityResult.getFeature_id()).andStubReturn(123L);
+	EasyMock.expect(cityResult.getStreet_type()).andStubReturn(null);
+	EasyMock.expect(cityResult.getPlacetype()).andStubReturn("City");
+	EasyMock.expect(cityResult.getOpenstreetmap_id()).andStubReturn(8888L);
 	Set<String> zips = new HashSet<String>();
 	zips.add("zip");
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(zips);
@@ -369,13 +382,15 @@ public class GeocodingServiceTest {
 	EasyMock.replay(cityResult);
 	GeocodingService geocodingService = new GeocodingService() {
 
-	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
-		findCitiesCalled = true;
-		List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
-		cities.add(cityResult);
-		return cities;
-	    }
+	    
+		 @Override
+ 	    protected List<SolrResponseDto> findExactMatches(String text,
+ 				String countryCode,boolean fuzzy, Point point, Double radius) {
+ 	    	findCitiesCalled = true;
+ 			List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
+ 			cities.add(cityResult);
+ 			return cities;
+ 		}
 
 	    @Override
 	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
@@ -408,15 +423,22 @@ public class GeocodingServiceTest {
 	EasyMock.expect(cityResult.getLat()).andStubReturn(latitude);
 	final Double longitude = 5.2d;
 	EasyMock.expect(cityResult.getLng()).andStubReturn(longitude);
+	EasyMock.expect(cityResult.getOpenstreetmap_id()).andStubReturn(888888L);
 	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
 	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
 	EasyMock.expect(cityResult.getAdm1_name()).andStubReturn("paris");
 	EasyMock.expect(cityResult.getAdm3_name()).andStubReturn("adm3 name");
 	EasyMock.expect(cityResult.getAdm4_name()).andStubReturn("adm4 name");
 	EasyMock.expect(cityResult.getAdm5_name()).andStubReturn("adm5 name");
+	EasyMock.expect(cityResult.getIs_in()).andStubReturn("is in");
+	EasyMock.expect(cityResult.getStreet_type()).andStubReturn(null);
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
+	EasyMock.expect(cityResult.getIs_in_zip()).andStubReturn(null);
 	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
+	EasyMock.expect(cityResult.getScore()).andStubReturn(45.3F);
+	EasyMock.expect(cityResult.getFully_qualified_name()).andStubReturn("FQDN");
 	EasyMock.expect(cityResult.getFeature_id()).andStubReturn(123L);
+	EasyMock.expect(cityResult.getPlacetype()).andStubReturn("City");
 	Set<String> zips = new HashSet<String>();
 	zips.add("zip");
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(zips);
@@ -426,12 +448,13 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService() {
 
 	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
-		findCitiesCalled = true;
-		List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
-		cities.add(cityResult);
-		return cities;
-	    }
+ 	    protected List<SolrResponseDto> findExactMatches(String text,
+ 				String countryCode,boolean fuzzy, Point point, Double radius) {
+	    	findCitiesCalled = true;
+			List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
+			cities.add(cityResult);
+			return cities;
+ 		}
 
 	    @Override
 	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
@@ -474,7 +497,7 @@ public class GeocodingServiceTest {
 	EasyMock.expect(cityResult.getAdm3_name()).andStubReturn("adm3 name");
 	EasyMock.expect(cityResult.getAdm4_name()).andStubReturn("adm4 name");
 	EasyMock.expect(cityResult.getAdm5_name()).andStubReturn("adm5 name");
-	
+	EasyMock.expect(cityResult.getFully_qualified_name()).andStubReturn("FQDN");
 	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
 	EasyMock.expect(cityResult.getIs_in_place()).andStubReturn("is_in_place");
 	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
@@ -482,13 +505,6 @@ public class GeocodingServiceTest {
 	EasyMock.replay(cityResult);
 	GeocodingService geocodingService = new GeocodingService() {
 
-	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
-		findCitiesCalled = true;
-		List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
-		cities.add(cityResult);
-		return cities;
-	    }
 
 	    @Override
 	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
@@ -511,6 +527,7 @@ public class GeocodingServiceTest {
 	geocodingService.setAddressParser(mockAddressParserService);
 	String rawAddress = "paris champs ellysees";
 	AddressQuery query = new AddressQuery(rawAddress, "ac");
+	query.setPostal(true);
 	geocodingService.geocode(query);
 	Assert.assertFalse(findCitiesCalled);
 	Assert.assertTrue(findStreetCalled);
@@ -527,7 +544,7 @@ public class GeocodingServiceTest {
      * 
      */
     
-    
+    /*
     
     @Test
     public void buildAddressResultDtoFromStreetsAndCitiesShouldFindHouseNumber() {
@@ -553,6 +570,7 @@ public class GeocodingServiceTest {
 	streets.add(street1WithName1);
 	SolrResponseDto street2WithName1AndNumberInSegment = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",houseNumbersThreeAndFour,2L);
 	streets.add(street2WithName1AndNumberInSegment);
+	
 	SolrResponseDto street3WithName1 = GisgraphyTestHelper.createSolrResponseDtoForStreet("city","streetname1",houseNumbersOneAndTwo,3L);
 	streets.add(street3WithName1);
 	//only one segment number found=>we keep it
@@ -608,7 +626,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("the 5th street should have name 4", "streetname4",address.getStreetName());
 	Assert.assertEquals("because housenumber is not found, level should be "+GeocodingLevels.STREET, GeocodingLevels.STREET,address.getGeocodingLevel());
 	
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
 	
@@ -741,7 +760,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals(GeocodingLevels.STREET,address.getGeocodingLevel());
 	Assert.assertEquals(5D,address.getLat(),0.001);
 	Assert.assertEquals(4D,address.getLng(),0.001);
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
 	
@@ -1036,10 +1056,187 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("the first street should have correct house", "3",address.getHouseNumber());
 	Assert.assertEquals("because housenumber is found, level should be "+GeocodingLevels.HOUSE_NUMBER, GeocodingLevels.HOUSE_NUMBER,address.getGeocodingLevel());
 	
+	 @Test
+    public void buildAddressResultDtoFromStreetsAndCities_isInIsNull() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(null);
+	streets.add(street);
+	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
+	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
+	cities.add(city);
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
+	Address address = addressResultsDto.getResult().get(0);
+	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
+	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
+	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
+	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
+	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
+	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
+	Assert.assertEquals("Adm Name should be the deeper one", city.getAdm2_name(), address.getState());
+	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
 	
-	
-	
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
+    
+
+    @Test
+    public void buildAddressResultDtoFromStreetsAndCitiesWithNullCity_isInIsNull() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(null);
+	streets.add(street);
+	List<SolrResponseDto> cities = null;
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
+	Address address = addressResultsDto.getResult().get(0);
+	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
+	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
+	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
+	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
+	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
+	Assert.assertNull("city name is not correct", address.getCity());
+	Assert.assertNull("Adm Name should be the deeper one", address.getState());
+	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
+	
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromStreetsAndCities_isInIsNotNull() {
+	// setup
+	String is_in = "paris";
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(is_in);
+	streets.add(street);
+	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
+	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
+	cities.add(city);
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
+	Address address = addressResultsDto.getResult().get(0);
+	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
+	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
+	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
+	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
+	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
+	Assert.assertEquals("city name is not correct", is_in, address.getCity());
+	
+	Assert.assertEquals("zipcode is not correct", street.getZipcodes().iterator().next(), address.getZipCode());
+	Assert.assertEquals("adm name is not correct", street.getIs_in_adm(), address.getState());
+	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
+	
+	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
+	
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+    }
+
+    @Test
+    public void buildAddressResultDtoFromStreetsAndCitiesWithNullCity_isInNotNull() {
+	// setup
+	String is_in = "paris";
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(is_in);
+	streets.add(street);
+	List<SolrResponseDto> cities = null;
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
+	Address address = addressResultsDto.getResult().get(0);
+	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
+	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
+	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
+	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
+	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
+	Assert.assertEquals("city name is not correct",is_in, address.getCity());
+	
+	Assert.assertEquals("zipcode is not correct", street.getZipcodes().iterator().next(), address.getZipCode());
+	Assert.assertEquals("adm name is not correct", street.getIs_in_adm(), address.getState());
+	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
+	
+	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
+	
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+    }
+
+    @Test
+    public void buildAddressResultDtoFromStreetsAndCitiesWithNullStreet() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = null;
+	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
+	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
+	cities.add(city);
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
+	Address address = addressResultsDto.getResult().get(0);
+	Assert.assertEquals("latitude is not correct", city.getLat(), address.getLat());
+	Assert.assertEquals("id is not correct", city.getFeature_id().longValue(), address.getId().longValue());
+	Assert.assertEquals("longitude is not correct", city.getLng(), address.getLng());
+	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY, address.getGeocodingLevel());
+	Assert.assertNull("street name is not correct", address.getStreetName());
+	Assert.assertNull("street type is not correct", address.getStreetType());
+	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
+	Assert.assertEquals("Adm Name should be the deeper one", city.getAdm2_name(), address.getState());
+	Assert.assertEquals("countryCode should be filled",city.getCountry_code(),address.getCountryCode());
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
+	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+    }
+
+    @Test
+    public void buildAddressResultDtoFromStreetsAndCitiesWithNullStreetAndCity() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = null;
+	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(0, addressResultsDto.getResult().size());
+    }
+	
+    }*/
     
     @Test
     public void searchHouseNumberTest(){
@@ -1148,7 +1345,7 @@ public class GeocodingServiceTest {
     	Assert.assertNull(service.searchHouseNumber(null, null,"FR"));
     }
     
-    @Test
+  /*  @Test
     public void findCitiesInText() {
 	List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
 	SolrResponseDto solrResponseDto = EasyMock.createNiceMock(SolrResponseDto.class);
@@ -1172,7 +1369,18 @@ public class GeocodingServiceTest {
 	Assert.assertEquals(solrResponseDto, actual.get(0));
 	EasyMock.verify(mockfullFullTextSearchEngine);
     }
-
+    
+     
+    @Test
+    public void findCitiesInTextWithNullOrEmptyText() {
+	List<SolrResponseDto> expected = new ArrayList<SolrResponseDto>();
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> actual = geocodingService.findCitiesInText("", "fr");
+	Assert.assertEquals(expected, actual);
+	actual = geocodingService.findCitiesInText(null, "fr");
+	Assert.assertEquals(expected, actual);
+    }
+*/
     @Test
     public void findStreetInText() {
 	List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
@@ -1219,7 +1427,7 @@ public class GeocodingServiceTest {
 	String text = "toto";
 	String countryCode = "FR";
 	FullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(FullTextSearchEngine.class);
-	FulltextQuery query = new FulltextQuery(text, GeocodingService.FIVE_RESULT_PAGINATION, GeocodingService.LONG_OUTPUT, ADDRESSES_PLACETYPE, countryCode);
+	FulltextQuery query = new FulltextQuery(text, GeocodingService.TEN_RESULT_PAGINATION, GeocodingService.LONG_OUTPUT, com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE, countryCode);
 	query.withAllWordsRequired(true).withoutSpellChecking();
 	EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
 	EasyMock.replay(mockfullFullTextSearchEngine);
@@ -1240,16 +1448,7 @@ public class GeocodingServiceTest {
 	actual = geocodingService.findStreetInText(null, "fr", null, false, null);
 	Assert.assertEquals(expected, actual);
     }
-    
-    @Test
-    public void findCitiesInTextWithNullOrEmptyText() {
-	List<SolrResponseDto> expected = new ArrayList<SolrResponseDto>();
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> actual = geocodingService.findCitiesInText("", "fr");
-	Assert.assertEquals(expected, actual);
-	actual = geocodingService.findCitiesInText(null, "fr");
-	Assert.assertEquals(expected, actual);
-    }
+   
     
     @Test
     public void buildAddressResultDtoFromSolrResponseDto_street() {
@@ -1268,17 +1467,17 @@ public class GeocodingServiceTest {
 	Address address = addressResultsDto.getResult().get(0);
 	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
 	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
-	Assert.assertEquals("id is not correct", street.getFeature_id(), address.getId());
+	Assert.assertEquals("id is not correct and should be osm one", street.getOpenstreetmap_id(), address.getId());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
 	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
-	Assert.assertEquals("name is not correct", street.getName(), address.getName());
 	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
 	Assert.assertEquals("city name is not correct", street.getIs_in(), address.getCity());
 	Assert.assertEquals("countrycode is not correct", street.getCountry_code(), address.getCountryCode());
 	
 	Assert.assertEquals("Adm Name should not be the deeper one but the is_inadm one", street.getIs_in_adm(), address.getState());
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
 	Assert.assertNotNull(address.getAdm1Name());
@@ -1312,10 +1511,9 @@ public class GeocodingServiceTest {
 	Address address = addressResultsDto.getResult().get(0);
 	Assert.assertEquals("latitude is not correct, it should be the house number one", 5D, address.getLat(),0.001);
 	Assert.assertEquals("longitude is not correct, it should be the house number one", 4D, address.getLng(),0.001);
-	Assert.assertEquals("id is not correct", street.getFeature_id(), address.getId());
+	Assert.assertEquals("id is not correct and should be osm one", street.getOpenstreetmap_id(), address.getId());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.HOUSE_NUMBER, address.getGeocodingLevel());
 	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
-	Assert.assertEquals("name is not correct", street.getName(), address.getName());
 	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
 	Assert.assertEquals("city name is not correct", street.getIs_in(), address.getCity());
 	Assert.assertEquals("countrycode is not correct", street.getCountry_code(), address.getCountryCode());
@@ -1323,7 +1521,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("zip is not correct", street.getZipcodes().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should not be the deeper one but the is_inadm one", street.getIs_in_adm(), address.getState());
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
 	
 	Assert.assertNotNull(address.getAdm1Name());
@@ -1357,8 +1556,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals(2, addressResultsDto.getResult().size());
 	Address address1 = addressResultsDto.getResult().get(0);
 	Address address2 = addressResultsDto.getResult().get(1);
-	Assert.assertEquals("id is not correct for address 1", street.getFeature_id(), address1.getId());
-	Assert.assertEquals("id is not correct for address 2", city.getFeature_id(), address2.getId());
+	Assert.assertEquals("id is not correct for address 1", street.getOpenstreetmap_id(), address1.getId());
+	Assert.assertEquals("id is not correct for address 2", city.getOpenstreetmap_id(), address2.getId());
 	
 	
     }
@@ -1378,18 +1577,17 @@ public class GeocodingServiceTest {
 	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("id is not correct", city.getFeature_id(), address.getId());
+	Assert.assertEquals("id is not correct", city.getOpenstreetmap_id(), address.getId());
 	Assert.assertEquals("latitude is not correct", city.getLat(), address.getLat());
 	Assert.assertEquals("longitude is not correct", city.getLng(), address.getLng());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY, address.getGeocodingLevel());
 	Assert.assertNull("street name is not correct", address.getStreetName());
 	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
-	Assert.assertEquals("name is not correct", city.getName(), address.getName());
 	Assert.assertNull("street type is not correct", address.getStreetType());
 	Assert.assertEquals("zipcode is not correct", city.getZipcodes().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should be the lower one", city.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
@@ -1408,19 +1606,18 @@ public class GeocodingServiceTest {
 	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("id is not correct", citySubdivision.getFeature_id(), address.getId());
+	Assert.assertEquals("id is not correct", citySubdivision.getOpenstreetmap_id(), address.getId());
 	Assert.assertEquals("latitude is not correct", citySubdivision.getLat(), address.getLat());
 	Assert.assertEquals("longitude is not correct", citySubdivision.getLng(), address.getLng());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY, address.getGeocodingLevel());
 	Assert.assertNull("street name is not correct", address.getStreetName());
 	Assert.assertEquals("quarter name is not correct", citySubdivision.getName(), address.getQuarter());
 	Assert.assertNull("city name is not correct", address.getCity());
-	Assert.assertEquals("name is not correct", citySubdivision.getName(), address.getName());
 	Assert.assertNull("street type is not correct", address.getStreetType());
 	Assert.assertEquals("zipcode is not correct", citySubdivision.getZipcodes().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should be the lower one", citySubdivision.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", citySubdivision.getCountry_code(), address.getCountryCode());
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
@@ -1438,19 +1635,18 @@ public class GeocodingServiceTest {
     	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
     	Assert.assertEquals(1, addressResultsDto.getResult().size());
     	Address address = addressResultsDto.getResult().get(0);
-    	Assert.assertEquals("id is not correct", adm.getFeature_id(), address.getId());
+    	Assert.assertEquals("id is not correct", adm.getOpenstreetmap_id(), address.getId());
     	Assert.assertEquals("latitude is not correct", adm.getLat(), address.getLat());
     	Assert.assertEquals("longitude is not correct", adm.getLng(), address.getLng());
     	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STATE, address.getGeocodingLevel());
     	Assert.assertNull("street name is not correct", address.getStreetName());
     	Assert.assertNull("city name is not correct", address.getCity());
-    	Assert.assertEquals("name is not correct", adm.getName(), address.getName());
     	Assert.assertNull("street type is not correct", address.getStreetType());
     	Assert.assertNull("zipcode is not correct", address.getZipCode());
     	Assert.assertEquals("Adm Name should be the deeper one", adm.getName(), address.getState());
     	Assert.assertEquals("countrycode is not correct", adm.getCountry_code(), address.getCountryCode());
     	
-    	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+    	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
     	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
     
@@ -1474,195 +1670,22 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STATE, address.getGeocodingLevel());
     	Assert.assertNull("street name is not correct", address.getStreetName());
     	Assert.assertNull("city name is not correct", address.getCity());
-    	Assert.assertEquals("name is not correct", feature.getName(), address.getName());
     	Assert.assertNull("street type is not correct", address.getStreetType());
     	Assert.assertNull("zipcode is not correct", address.getZipCode());
     	Assert.assertEquals("Adm Name should be the lower one", feature.getAdm1_name(), address.getState());
     	Assert.assertEquals("countrycode is not correct", feature.getCountry_code(), address.getCountryCode());
-    	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
+    	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
     	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
     }
 
-    @Test
-    public void buildAddressResultDtoFromStreetsAndCities_isInIsNull() {
-	// setup
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(null);
-	streets.add(street);
-	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
-	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
-	cities.add(city);
-	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
-
-	// verify
-	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
-	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	Assert.assertEquals(1, addressResultsDto.getResult().size());
-	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
-	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
-	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
-	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
-	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
-	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
-	Assert.assertEquals("Adm Name should be the deeper one", city.getAdm2_name(), address.getState());
-	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
-	
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
-    }
-    
-
-    @Test
-    public void buildAddressResultDtoFromStreetsAndCitiesWithNullCity_isInIsNull() {
-	// setup
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(null);
-	streets.add(street);
-	List<SolrResponseDto> cities = null;
-	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
-
-	// verify
-	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
-	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	Assert.assertEquals(1, addressResultsDto.getResult().size());
-	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
-	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
-	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
-	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
-	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
-	Assert.assertNull("city name is not correct", address.getCity());
-	Assert.assertNull("Adm Name should be the deeper one", address.getState());
-	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
-	
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
-    }
-    
-    @Test
-    public void buildAddressResultDtoFromStreetsAndCities_isInIsNotNull() {
-	// setup
-	String is_in = "paris";
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(is_in);
-	streets.add(street);
-	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
-	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
-	cities.add(city);
-	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
-
-	// verify
-	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
-	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	Assert.assertEquals(1, addressResultsDto.getResult().size());
-	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
-	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
-	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
-	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
-	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
-	Assert.assertEquals("city name is not correct", is_in, address.getCity());
-	
-	Assert.assertEquals("zipcode is not correct", street.getZipcodes().iterator().next(), address.getZipCode());
-	Assert.assertEquals("adm name is not correct", street.getIs_in_adm(), address.getState());
-	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
-	
-	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
-	
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
-    }
-
-    @Test
-    public void buildAddressResultDtoFromStreetsAndCitiesWithNullCity_isInNotNull() {
-	// setup
-	String is_in = "paris";
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(is_in);
-	streets.add(street);
-	List<SolrResponseDto> cities = null;
-	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
-
-	// verify
-	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
-	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	Assert.assertEquals(1, addressResultsDto.getResult().size());
-	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
-	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
-	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
-	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
-	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
-	Assert.assertEquals("city name is not correct",is_in, address.getCity());
-	
-	Assert.assertEquals("zipcode is not correct", street.getZipcodes().iterator().next(), address.getZipCode());
-	Assert.assertEquals("adm name is not correct", street.getIs_in_adm(), address.getState());
-	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
-	
-	Assert.assertEquals("countryCode should be filled",street.getCountry_code(),address.getCountryCode());
-	
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
-    }
-
-    @Test
-    public void buildAddressResultDtoFromStreetsAndCitiesWithNullStreet() {
-	// setup
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> streets = null;
-	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
-	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
-	cities.add(city);
-	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
-
-	// verify
-	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
-	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	Assert.assertEquals(1, addressResultsDto.getResult().size());
-	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("latitude is not correct", city.getLat(), address.getLat());
-	Assert.assertEquals("id is not correct", city.getFeature_id().longValue(), address.getId().longValue());
-	Assert.assertEquals("longitude is not correct", city.getLng(), address.getLng());
-	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY, address.getGeocodingLevel());
-	Assert.assertNull("street name is not correct", address.getStreetName());
-	Assert.assertNull("street type is not correct", address.getStreetType());
-	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
-	Assert.assertEquals("Adm Name should be the deeper one", city.getAdm2_name(), address.getState());
-	Assert.assertEquals("countryCode should be filled",city.getCountry_code(),address.getCountryCode());
-	Assert.assertEquals("formated Postal is not correct is not correct", addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA), address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
-    }
-
-    @Test
-    public void buildAddressResultDtoFromStreetsAndCitiesWithNullStreetAndCity() {
-	// setup
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> streets = null;
-	List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
-	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromStreetsAndCities(streets, cities, null);
-
-	// verify
-	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
-	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	Assert.assertEquals(0, addressResultsDto.getResult().size());
-    }
+   
     
     @Test
     public void testStatsShouldBeIncreaseForGeocode_addressQuery() {
 	GeocodingService geocodingService = new GeocodingService() {
-	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
+		 @Override
+		    protected List<SolrResponseDto> findExactMatches(String text,
+		    		String countryCode,boolean fuzzy, Point point, Double radius) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	    @Override
@@ -1697,8 +1720,9 @@ public class GeocodingServiceTest {
     @Test
     public void testStatsShouldBeIncreaseForGeocode_address() {
 	GeocodingService geocodingService = new GeocodingService() {
-	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
+		 @Override
+		    protected List<SolrResponseDto> findExactMatches(String text,
+		    		String countryCode,boolean fuzzy, Point point, Double radius) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	    
@@ -1734,8 +1758,9 @@ public class GeocodingServiceTest {
     @Test
     public void testParsedAddressShouldBeSetForGeocodeAddress_city() {
 	GeocodingService geocodingService = new GeocodingService() {
-	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
+		 @Override
+		    protected List<SolrResponseDto> findExactMatches(String text,
+		    		String countryCode,boolean fuzzy, Point point, Double radius) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	    
@@ -1764,11 +1789,11 @@ public class GeocodingServiceTest {
 	address.setCity("city");
 	geocodingService.setImporterConfig(new ImporterConfig());
 	AddressResultsDto addressResultsDto = geocodingService.geocode(address, "fr");
-	Assert.assertEquals("parsed address should be filled with the providedone ",address, addressResultsDto.getParsedAddress());
+	//Assert.assertEquals("parsed address should be filled with the providedone ",address, addressResultsDto.getParsedAddress());
 	EasyMock.verify(statsUsageService);
     }
     
-    @Test
+   /* @Test
     public void testParsedAddressShouldBeSetForGeocodeAddress_OnlyStreet() {
 	findStreetCalled = false;
 	GeocodingService geocodingService = new GeocodingService() {
@@ -1790,7 +1815,7 @@ public class GeocodingServiceTest {
 	AddressResultsDto addressResultsDto = geocodingService.geocode(address, "ac");
 	Assert.assertEquals("parsed address should be null when a structured address is provided",null, addressResultsDto.getParsedAddress());
 	Assert.assertTrue(findStreetCalled);
-    }
+    }*/
     
     @Test
     public void getBestCitySearchSentence(){
@@ -1866,7 +1891,7 @@ public class GeocodingServiceTest {
 	
     }
     
-    @Test
+   /* @Test
     public void mergeSolrResponseDto(){
     	GeocodingService geocodingService = new GeocodingService();
     	Assert.assertTrue(geocodingService.mergeSolrResponseDto(null, null).size()==0);
@@ -1901,7 +1926,7 @@ public class GeocodingServiceTest {
 		Assert.assertEquals(street,mergeSolrResponseDto.get(1));
 		Assert.assertEquals(city_other,mergeSolrResponseDto.get(2));
 		
-    }
+    }*/
 
     @Test
     public void isGeocodable(){
@@ -2008,10 +2033,11 @@ public class GeocodingServiceTest {
    */
 
     @Test
-    public void geocodeAdressShouldCallFindStreetInTextIfCityIsNull() {
+    public void geocodeAdressShouldCallFindStreetInTextIfStreetNameIsNotNull() {
 	findStreetCalled = false;
 	GeocodingService geocodingService = new GeocodingService() {
 
+		
 	    @Override
 	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
 	    	Assert.assertEquals("foo", text);
@@ -2032,53 +2058,24 @@ public class GeocodingServiceTest {
     }
     
     @Test
-    public void geocodeAdressShouldCallFindStreetWithStreetTYpeInTextIfCityIsNull() {
-	findStreetCalled = false;
-	GeocodingService geocodingService = new GeocodingService() {
-
-	    @Override
-	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
-	    	Assert.assertEquals("foo Avenue", text);
-		findStreetCalled = true;
-		return null;
-	    }
-	};
-	geocodingService.setStatsUsageService(statsUsageService);
-	IAddressParserService mockAddressParserService = EasyMock.createMock(IAddressParserService.class);
-	EasyMock.expect(mockAddressParserService.execute((AddressQuery) EasyMock.anyObject())).andStubReturn(null);
-	EasyMock.replay(mockAddressParserService);
-	geocodingService.setAddressParser(mockAddressParserService);
-	Address address = new Address();
-	address.setStreetName("foo");
-	address.setStreetType("Avenue");
-
-	geocodingService.geocode(address, "ac");
-	Assert.assertTrue(findStreetCalled);
-    }
-
-    @Test
-    public void geocodeAdressShouldCallFindCityInTextIfCityIsNotNull_cityNotFound() {
-	String city = "city";
+    public void geocodeAdressShouldNotCallFindStreetInTextIfStreetNameIsnull() {
 	findStreetCalled = false;
 	findCitiesCalled = false;
 	GeocodingService geocodingService = new GeocodingService() {
 
-	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
+		 @Override
+		    protected List<SolrResponseDto> findExactMatches(String text,
+		    		String countryCode,boolean fuzzy, Point point, Double radius) {
 		findCitiesCalled = true;
 		return null;
 	    }
-
 	    @Override
-	    protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
-		if (point != null) {
-		    Assert.fail("when no city is found we shoud search without location restriction");
-		}
+	    protected java.util.List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
+	    	Assert.assertEquals("foo", text);
 		findStreetCalled = true;
 		return null;
 	    }
 	};
-	geocodingService.setImporterConfig(new ImporterConfig());
 	geocodingService.setStatsUsageService(statsUsageService);
 	IAddressParserService mockAddressParserService = EasyMock.createMock(IAddressParserService.class);
 	EasyMock.expect(mockAddressParserService.execute((AddressQuery) EasyMock.anyObject())).andStubReturn(null);
@@ -2086,15 +2083,17 @@ public class GeocodingServiceTest {
 	geocodingService.setAddressParser(mockAddressParserService);
 	Address address = new Address();
 	address.setStreetName("foo");
-	address.setCity(city);
 
 	geocodingService.geocode(address, "ac");
+	Assert.assertFalse(findCitiesCalled);
 	Assert.assertTrue(findStreetCalled);
-	Assert.assertTrue(findCitiesCalled);
     }
+    
+  
 
+   
     @Test
-    public void geocodeAdressShouldCallFindCityInTextIfCityIsNotNull_cityFound() {
+    public void geocodeAdressShouldCallFindCityInTextIfStreetIsNull_cityFound() {
 	String city = "city";
 	findStreetCalled = false;
 	findCitiesCalled = false;
@@ -2104,18 +2103,37 @@ public class GeocodingServiceTest {
 	EasyMock.expect(cityResult.getLat()).andStubReturn(latitude);
 	final Double longitude = 5.2d;
 	EasyMock.expect(cityResult.getLng()).andStubReturn(longitude);
+	EasyMock.expect(cityResult.getOpenstreetmap_id()).andStubReturn(888888L);
+	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
+	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
+	EasyMock.expect(cityResult.getAdm1_name()).andStubReturn("paris");
+	EasyMock.expect(cityResult.getAdm3_name()).andStubReturn("adm3 name");
+	EasyMock.expect(cityResult.getAdm4_name()).andStubReturn("adm4 name");
+	EasyMock.expect(cityResult.getAdm5_name()).andStubReturn("adm5 name");
+	List<String> alternateNames= new ArrayList<String>();
+	alternateNames.add("paris alternate");
+	EasyMock.expect(cityResult.getName_alternates()).andStubReturn(alternateNames);
+	EasyMock.expect(cityResult.getIs_in()).andStubReturn("is in");
+	EasyMock.expect(cityResult.getStreet_type()).andStubReturn(null);
+	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(null);
+	EasyMock.expect(cityResult.getIs_in_zip()).andStubReturn(null);
+	EasyMock.expect(cityResult.getCountry_code()).andStubReturn("FR");
+	EasyMock.expect(cityResult.getScore()).andStubReturn(45.3F);
+	EasyMock.expect(cityResult.getFully_qualified_name()).andStubReturn("FQDN");
 	EasyMock.expect(cityResult.getFeature_id()).andStubReturn(123L);
-	EasyMock.expect(cityResult.getName()).andStubReturn("name");
+	EasyMock.expect(cityResult.getPlacetype()).andStubReturn("City");
+	Set<String> zips = new HashSet<String>();
+	zips.add("zip");
+	EasyMock.expect(cityResult.getZipcodes()).andStubReturn(zips);
+	EasyMock.expect(cityResult.getIs_in_adm()).andStubReturn("isinAdm");
+	EasyMock.expect(cityResult.getIs_in_place()).andStubReturn("isinPlace");
 	EasyMock.replay(cityResult);
 	GeocodingService geocodingService = new GeocodingService() {
 
-	    @Override
-	    protected void populateAddressFromCity(SolrResponseDto city, Address address) {
-		populatecalled = true;
-	    }
 
 	    @Override
-	    protected List<SolrResponseDto> findCitiesInText(String text, String countryCode) {
+	    protected List<SolrResponseDto> findExactMatches(String text,
+	    		String countryCode,boolean fuzzy, Point point, Double radius) {
 		findCitiesCalled = true;
 		List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
 		cities.add(cityResult);
@@ -2139,13 +2157,11 @@ public class GeocodingServiceTest {
 	EasyMock.replay(mockAddressParserService);
 	geocodingService.setAddressParser(mockAddressParserService);
 	Address address = new Address();
-	address.setStreetName("foo");
 	address.setCity(city);
 
 	geocodingService.geocode(address, "ac");
-	Assert.assertTrue(findStreetCalled);
+	Assert.assertFalse(findStreetCalled);
 	Assert.assertTrue(findCitiesCalled);
-	Assert.assertTrue(populatecalled);
     }
 
     @Test(expected = GeocodingException.class)
@@ -2293,6 +2309,12 @@ public class GeocodingServiceTest {
     @Test
     public void findHouseNumber(){
     	GeocodingService geocodingService = new GeocodingService();
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("95190","FR"));
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("95190","FR"));
+    	
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("95190 paris","FR"));
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("95190 paris","FR"));
+    	
     	Assert.assertEquals("4", geocodingService.findHouseNumber("4-6 rue de la gare 59000 lille",null).getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("4-6 rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
     	

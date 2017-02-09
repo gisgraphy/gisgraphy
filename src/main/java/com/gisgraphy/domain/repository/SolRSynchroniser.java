@@ -409,7 +409,7 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			ex.setField(FullTextFields.TIMEZONE.getValue(), gisFeature
 				.getTimezone());
 			
-			 if (gisFeature instanceof City || gisFeature instanceof CitySubdivision || gisFeature instanceof Adm ) { 
+			 if (gisFeature instanceof City || gisFeature instanceof CitySubdivision || gisFeature instanceof Adm || gisFeature instanceof Country ) { 
 				 ex.setField(FullTextFields.POPULATION.getValue(), gisFeature
 						 .getPopulation());
 			 } else {

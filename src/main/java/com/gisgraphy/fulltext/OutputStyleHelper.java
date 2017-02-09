@@ -117,16 +117,17 @@ public class OutputStyleHelper {
 			FullTextFields.ADM1CODE.getValue()).append(",").append(
 			FullTextFields.ADM2CODE.getValue()).append(",").append(
 			FullTextFields.ADM3CODE.getValue()).append(",").append(
-			FullTextFields.ADM4CODE.getValue()).append(
-					FullTextFields.ADM5CODE.getValue());
+			FullTextFields.ADM4CODE.getValue()).append(",").append(
+			FullTextFields.ADM5CODE.getValue()).append(",").append(
+		    FullTextFields.ALTERNATE_LABELS.getValue()).append(",").append(
+		    FullTextFields.NAME.getValue()).append(FullTextFields.ALTERNATE_NAME_SUFFIX.getValue())
+				    ;
 		return sb.toString();
 	}else if (outputStyle == Output.OutputStyle.FULL){
 	    if (languageCode != null) {
 		    StringBuffer sb = new StringBuffer(getFulltextFieldList(OutputStyle.LONG,languageCode)).append(",").append(
 			    FullTextFields.COUNTRYNAME.getValue()).append(
 			    FullTextFields.ALTERNATE_NAME_SUFFIX.getValue())
-			      .append(",").append(
-				    FullTextFields.ALTERNATE_LABELS.getValue())
 			    .append(",").append(
 				    FullTextFields.ADM1NAME.getValue()).append(
 				    FullTextFields.ALTERNATE_NAME_SUFFIX

@@ -36,6 +36,7 @@ public class RelevanceGeocodingTest {
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";
 	public final static String BASE_SERVER_URL ="http://127.0.0.1:8080/";
 	public final static String GEOCODING_BASE_SERVER_URI ="geocoding/geocoding?address=";
+	public final static String GEOCODING_BASE_STRUCTURED_SERVER_URI ="geocoding/geocoding?";
 	public final static String FULLTEXT_BASE_SERVER_URI ="fulltext/search?q=";
 	public final static String OUTPUT_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output.csv";
 	public final static String OUTPUT_FAIL_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output_fail.csv";
@@ -373,6 +374,8 @@ public class RelevanceGeocodingTest {
 	 * 
 	 */
 	
+
+	
 	@Test
 	public void streetWithCitySynonymTest() throws InterruptedException, IOException{
 		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
@@ -623,6 +626,370 @@ public class RelevanceGeocodingTest {
 			isCorrectById(79424401L,addressResultsDto.getResult(), rawAddress);
 		}
 	}
+	
+	/*
+     _                   _                      _ 
+ ___| |_ _ __ _   _  ___| |_ _   _ _ __ ___  __| |
+/ __| __| '__| | | |/ __| __| | | | '__/ _ \/ _` |
+\__ \ |_| |  | |_| | (__| |_| |_| | | |  __/ (_| |
+|___/\__|_|   \__,_|\___|\__|\__,_|_|  \___|\__,_|
+  
+	 */
+	
+	@Test
+	public void structuredStreetWithCitySynonymTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Vendôme");
+			address.setStreetType("Place");
+			address.setZipCode("");
+			address.setCity("Paname");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+
+	
+	@Test
+	public void structuredStreetWithCitySynonymAccentInStreetTypeTest() throws InterruptedException, IOException{
+		//accent for street detection
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Vendôme");
+			address.setStreetType("Plâce");
+			address.setZipCode("");
+			address.setCity("Paname");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredStreetZipTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Vendôme");
+			address.setStreetType("Place");
+			address.setZipCode("75000");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredStreetCityAsZipTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Vendôme");
+			address.setStreetType("Place");
+			address.setCity("75000");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+
+	
+	
+	@Test
+	public void structuredStreetWithCityTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Vendôme");
+			address.setStreetType("Place");
+			address.setZipCode("");
+			address.setCity("Paris");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	
+	
+	@Test
+	public void structuredCityStreetWithoutPlaceTypeTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = " ";
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Paris");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCity("Vendôme");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			
+			//should find route de paris at vendome first
+			isFirstCorrectbyIds(new Long[]{142104835L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+
+	
+	@Test
+	public void structuredCityStreet_1UnnecessaryWordTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Vendôme toto");
+			address.setStreetType("Place");
+			address.setZipCode("");
+			address.setCity("Paris");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+		}
+	}
+
+	@Test
+	public void structuredCityStreet_2UnnecessaryWordTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+		address.setHouseNumber("");
+		address.setStreetName("Vendôme toto tutu");
+		address.setStreetType("Place");
+		address.setZipCode("");
+		address.setCity("Paris");
+		address.setState("");
+		AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+		Assert.assertNotNull(addressResultsDto);
+		isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+	}
+	}
+	
+	@Test
+	public void structuredCityStreet_LotUnnecessaryWordTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+		address.setHouseNumber("");
+		address.setStreetName("Vendôme toto tutu tata");
+		address.setStreetType("Place");
+		address.setZipCode("");
+		address.setCity("Paris");
+		address.setState("");
+		AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+		Assert.assertNotNull(addressResultsDto);
+		isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+	}
+	}
+	
+	@Test
+	public void structuredStreetWithCity_1UncessecerayWordTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("Vendôme");
+			address.setStreetType("Place");
+			address.setZipCode("");
+			address.setCity("Paris toto");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredStreetWithCity_2UncessecerayWordTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+		address.setHouseNumber("");
+		address.setStreetName("Vendôme");
+		address.setStreetType("Place");
+		address.setZipCode("");
+		address.setCity("Paris toto tata");
+		address.setState("");
+		AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+		Assert.assertNotNull(addressResultsDto);
+		isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+	}
+	}
+	
+	@Test
+	public void structuredStreetWithCity_lotUncessecerayWordTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+		address.setHouseNumber("");
+		address.setStreetName("Vendôme");
+		address.setStreetType("Place");
+		address.setZipCode("");
+		address.setCity("Paris toto tata tutu tete");
+		address.setState("");
+		AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+		Assert.assertNotNull(addressResultsDto);
+		isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+	}
+	}
+
+	@Test
+	public void structuredSynonymStreetTest() throws InterruptedException, IOException{
+		http://www.openstreetmap.org/way/4234145#map=19/48.86747/2.32943
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("des Conquêtes");
+			address.setStreetType("Place");
+			address.setZipCode("");
+			address.setCity("Paris");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+		}
+	}
+
+	@Test
+	public void structuredStreetSynonymWithCitySynonymTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+		address.setHouseNumber("");
+		address.setStreetName("des Conquêtes");
+		address.setStreetType("Place");
+		address.setZipCode("");
+		address.setCity("paname");
+		address.setState("");
+		AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+		Assert.assertNotNull(addressResultsDto);
+		isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
+	}
+	}
+
+
+	
+	@Test
+	public void structuredAddressStreetNameFuzzy() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("docteur schweizer");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCity("grenoble");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			//the osm one , the geonames one
+			isCorrectByAtLeastOneIds(new Long[]{488881135L,204138290L,204138293L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredAddressCityFuzzy() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("docteur schweitzer");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCity("grenobe");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			//the osm one , the geonames one
+			isCorrectByAtLeastOneIds(new Long[]{488881135L,204138290L,204138293L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredAddressCityAndStreetNameFuzzy() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = " ";
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("docteur schweitzer");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCity("grenobe");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds(new Long[]{488881135L,204138290L,204138293L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredAddressStreetNameIsACity() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("de dunkerque");
+			address.setStreetType("rue");
+			address.setZipCode("");
+			address.setCity("paris");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			//the osm one , the geonames one
+			isCorrectByAtLeastOneIds(new Long[]{24666331L,362231942L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredAddressStreetNameIsABigCity() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("de paris");
+			address.setStreetType("rue ");
+			address.setZipCode("");
+			address.setCity("dunkerque");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectByAtLeastOneIds( new Long[]{ 2428047946L,2428047947L,20944097L,72518994L,181223657L,181224204L,234781172L,235661698L,235661699L,355469642L},addressResultsDto.getResult(), address.toString());
+		}
+	}
+
+
+	@Test
+	public void structuredAddressWithoutStreetTypeCity() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("jean jaures");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCity("bailleul");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(79424401L,addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredAddressWithoutStreetTypeZip() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("jean jaures");
+			address.setStreetType("");
+			address.setZipCode("59270");
+			address.setCity("");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(79424401L,addressResultsDto.getResult(), address.toString());
+		}
+	}
+
+	
 	
 	
 	/*
@@ -893,7 +1260,43 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		
 	private AddressResultsDto doGeocodingOnCountry(String address,String countryCode){
 		@SuppressWarnings("deprecation")
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&countrycode="+countryCode;
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&country="+countryCode;
+		System.out.println(fullURLToCall);
+		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
+		if (result!=null && result.getNumFound()!=0){
+			System.out.println(address+ " : "+result.getResult().get(0));
+		} else {
+			System.out.println(address+ " : no results");
+		}
+		return result;
+	}
+	
+	private AddressResultsDto doGeocodingOnCountry(Address address,String countryCode){
+		@SuppressWarnings("deprecation")
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_STRUCTURED_SERVER_URI+"apikey=111";//just add apikey to not to have to managed ? vs &
+		if (address.getStreetType()!=null){
+			fullURLToCall=fullURLToCall+"&streetType="+URLEncoder.encode(address.getStreetType());
+		}
+		if (address.getStreetName()!=null){
+			fullURLToCall=fullURLToCall+"&streetName="+URLEncoder.encode(address.getStreetName());
+		}
+		if (address.getCity()!=null){
+			fullURLToCall=fullURLToCall+"&city="+URLEncoder.encode(address.getCity());
+		}
+		if (address.getState()!=null){
+			fullURLToCall=fullURLToCall+"&state="+URLEncoder.encode(address.getState());
+		}
+		if (address.getZipCode()!=null){
+			fullURLToCall=fullURLToCall+"&zipCode="+URLEncoder.encode(address.getZipCode());
+		}
+		if (address.getHouseNumber()!=null){
+			fullURLToCall=fullURLToCall+"&houseNumber="+URLEncoder.encode(address.getHouseNumber());
+		}
+		if (countryCode!=null){
+			fullURLToCall=fullURLToCall+"&country="+countryCode;
+		}
+		
+		fullURLToCall=fullURLToCall+"&format=json";
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		if (result!=null && result.getNumFound()!=0){
@@ -907,7 +1310,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		
 	private AddressResultsDto doGeocodingOnCountryArroundAndRadius(String address,String countryCode, Point location,int radius){
 		@SuppressWarnings("deprecation")
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&countrycode="+countryCode+"&lat="+location.getY()+"&lng="+location.getX()+"&radius="+radius;
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&country="+countryCode+"&lat="+location.getY()+"&lng="+location.getX()+"&radius="+radius;
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		if (result!=null && result.getNumFound()!=0){
@@ -920,7 +1323,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 	
 	private AddressResultsDto doGeocodingOnCountryArround(String address,String countryCode, Point location){
 		@SuppressWarnings("deprecation")
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&countrycode="+countryCode+"&lat="+location.getY()+"&lng="+location.getX();
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&country="+countryCode+"&lat="+location.getY()+"&lng="+location.getX();
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		if (result!=null && result.getNumFound()!=0){

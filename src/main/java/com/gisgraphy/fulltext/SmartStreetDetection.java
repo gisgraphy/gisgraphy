@@ -35,6 +35,7 @@ public class SmartStreetDetection {
 			add("place");
 			add("sentier");
 			add("voie");
+			add("via");
 			add("allee");
 			add("alley");
 			add("avenue");

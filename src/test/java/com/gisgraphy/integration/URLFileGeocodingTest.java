@@ -15,6 +15,7 @@ import java.util.List;
 import net.sf.jstester.util.Assert;
 
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +37,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-//@Ignore
+@Ignore
 public class URLFileGeocodingTest {
 
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";

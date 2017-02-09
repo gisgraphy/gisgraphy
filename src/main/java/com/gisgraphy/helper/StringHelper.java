@@ -51,6 +51,8 @@ public class StringHelper {
 	protected static final Logger logger = LoggerFactory.getLogger(StringHelper.class);
 	
 	protected static final int MISSING_WORD_TOLERANCE = 1;
+	
+	protected static Pattern p = Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Process a string to apply filter as lucene and solr does :
@@ -280,7 +282,6 @@ public class StringHelper {
 						actualSplitedLong.add(normalize(word));
 					}
 				}  else if (word.equals("st")){
-					Pattern p = Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
 					Matcher m =p.matcher(expected);
 					if (m.find()&&m.groupCount()>=1){
 						actualSplitedLong.add(m.group(1).toLowerCase());
@@ -294,7 +295,6 @@ public class StringHelper {
 						expectedSplitedLong.add(normalize(word));
 					}
 				} else if (word.equals("st")){
-					Pattern p = Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
 					Matcher m =p.matcher(actual);
 					if (m.find()&&m.groupCount()>=1){
 						expectedSplitedLong.add(m.group(1).toLowerCase());

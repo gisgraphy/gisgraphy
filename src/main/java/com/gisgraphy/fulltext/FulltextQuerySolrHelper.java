@@ -86,7 +86,7 @@ public class FulltextQuerySolrHelper {
 	//private  static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
 	
 	private  static String IS_IN_SENTENCE = " ";//+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
-	protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^9 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
+	protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^11 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
 	
@@ -120,7 +120,7 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		getConfigInFile();
+		//getConfigInFile();
 		/*logger.error("all words : "+NESTED_QUERY_TEMPLATE);
 		logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
 		boolean spellchecker = true;
