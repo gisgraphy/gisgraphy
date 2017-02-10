@@ -19,6 +19,25 @@ public class SmartStreetDetectionTest {
 		SmartStreetDetection ssd =new SmartStreetDetection();
 		//NOTHING
 		Assert.assertEquals(0, ssd.getStreetTypes("saint denis").size());
+		
+		//Straße, case sensitive
+		Assert.assertEquals(1, ssd.getStreetTypes("Steinau an der Straße").size());
+		Assert.assertEquals("Straße", ssd.getStreetTypes("Steinau an der Straße").get(0));
+		
+		Assert.assertEquals(1, ssd.getStreetTypes("Der Queckborn unterm Schießplatze").size());
+		Assert.assertEquals("platze", ssd.getStreetTypes("Der Queckborn unterm Schießplatze").get(0));
+		
+		//two ß
+		Assert.assertEquals(1, ssd.getStreetTypes("Der Queckboßrn unterm Schießplatze").size());
+		Assert.assertEquals("platze", ssd.getStreetTypes("Der Quecßkborn unterm Schießplatze").get(0));
+		
+		//two ß
+		Assert.assertEquals(2, ssd.getStreetTypes("Der Straße unterm Schießplatze").size());
+		Assert.assertEquals("platze", ssd.getStreetTypes("Der Straße unterm Schießplatze").get(1));
+		Assert.assertEquals("Straße", ssd.getStreetTypes("Der Straße unterm Schießplatze").get(0));
+		
+		
+		
 
 		//FRENCH
 		Assert.assertEquals(1, ssd.getStreetTypes("rue saint denis").size());

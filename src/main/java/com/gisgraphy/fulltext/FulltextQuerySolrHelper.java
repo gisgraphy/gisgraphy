@@ -80,11 +80,6 @@ public class FulltextQuerySolrHelper {
 	public static final String MM_NOT_ALL_WORD_REQUIRED ="3<-1 4<3";
 	public static final String MM_ALL_WORD_REQUIRED ="100%%";
 	
-	//protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^1.8 all_name^1.1 iso_all_name^1 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5  %s' pf=name^1.3 ps=0 bq='%s' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)  %s'}%s\"";
-	//protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = "_query_:\"{!edismax qf='name^1.8 all_name^1.1 iso_all_name^1.3 zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5 %s' mm='1<1 2<1 3<2' tie='0.01'  pf='name^1.8' ps=0 bq='%s ' bf='pow(map(population,0,0,0.0001),0.45)  %s ' }%s\""; // pow(map(city_population,0,0,0.0000001),0.3)
-
-	//private  static String IS_IN_SENTENCE = " "+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
-	
 	private  static String IS_IN_SENTENCE = " ";//+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
 	protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^11 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
@@ -120,7 +115,7 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		//getConfigInFile();
+		getConfigInFile();
 		/*logger.error("all words : "+NESTED_QUERY_TEMPLATE);
 		logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
 		boolean spellchecker = true;
@@ -316,6 +311,8 @@ public class FulltextQuerySolrHelper {
 	private static void getConfigInFile() {
 		try {
 			File fileDir = new File("/home/gisgraphy/workspace/gisgraphy/etc/solrtemplates.txt");
+			
+			//File fileDir = new File("/usr/local/gisgraphy/solrtemplates.txt");
 
 			BufferedReader in = new BufferedReader(
 			   new InputStreamReader(

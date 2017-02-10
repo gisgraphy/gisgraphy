@@ -8,14 +8,14 @@ import java.util.regex.Pattern;
 import com.gisgraphy.helper.StringHelper;
 
 /**
-* A class to detect if a text conatins a street type
+* A class to detect if a text contains a street type
 * 
 * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
 * 
 */
 public class SmartStreetDetection {
 	
-	private static final Pattern p = Pattern.compile("straße");
+	private static final Pattern STRABE_PATTERN = Pattern.compile("straße",Pattern.CASE_INSENSITIVE);
 	
 	private final static List<String> STREET_TYPES = new ArrayList<String>(){
 		private static final long serialVersionUID = -3194005170253765829L;
@@ -91,14 +91,24 @@ public class SmartStreetDetection {
 		int counter =0;
     	while (matcher.find()) {
     	    for (int j = 1; j <= matcher.groupCount(); j++) {
+    	    	System.out.println(matcher.group(j));
     	    	int shift=0;
     	    	if (nbSpecialchar > 0 && matcher.group(j).indexOf("strasse")>=0){
     	    		nbSpecialchar--;
     	    		counter++;
     	    		shift = 1;
     	    	}
-    	    	//textToTest.length()
-    		String realTextNotNormalized =  textToTest.substring(matcher.start(j)-(shift*(counter-1)),(matcher.end(j)-(shift*counter)));
+    	    	int max =(matcher.end(j)-(shift*counter));
+    	    	int min=matcher.start(j)-(shift*(counter-1));
+    	    	if (max>textToTest.length()){//avoid out of range
+    	    		int decal=(matcher.end(j)-(shift*counter))-textToTest.length();
+    	    		max=textToTest.length();
+    	    		min=min-decal;
+    	    		if (min<0){
+    	    			min=0;
+    	    		}
+    	    	}
+			String realTextNotNormalized =  textToTest.substring(min,max);
     		    if (realTextNotNormalized!= null && !"".equals(realTextNotNormalized.trim())){
     		    	splitedString.add(realTextNotNormalized);
     		    }
@@ -111,7 +121,7 @@ public class SmartStreetDetection {
 	private int countNumberOfstrasse(String text){
 		int i = 0;
 		
-		Matcher m = p.matcher(text);
+		Matcher m = STRABE_PATTERN.matcher(text);
 		while (m.find()) {
 		    i++;
 		}
