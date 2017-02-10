@@ -993,6 +993,7 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(city.getAdm3_name()).andStubReturn("adm3 Name");
     	EasyMock.expect(city.getAdm4_name()).andStubReturn("adm4 Name");
     	EasyMock.expect(city.getAdm5_name()).andStubReturn("adm5 Name");
+    	EasyMock.expect(city.getScore()).andStubReturn(42.5F);
     	EasyMock.expect(city.getStreet_type()).andStubReturn(null);
     	EasyMock.expect(city.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(city.getLng()).andStubReturn(2.36D);
@@ -1021,6 +1022,7 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(citySubdivision.getAdm3_name()).andStubReturn("adm3 Name");
     	EasyMock.expect(citySubdivision.getAdm4_name()).andStubReturn("adm4 Name");
     	EasyMock.expect(citySubdivision.getAdm5_name()).andStubReturn("adm5 Name");
+    	EasyMock.expect(citySubdivision.getScore()).andStubReturn(42.5F);
     	EasyMock.expect(citySubdivision.getIs_in_place()).andStubReturn("is in place");
     	EasyMock.expect(citySubdivision.getStreet_type()).andStubReturn(null);
     	EasyMock.expect(citySubdivision.getLat()).andStubReturn(1.55D);
@@ -1044,6 +1046,7 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(adm.getAdm3_name()).andStubReturn("adm3 Name");
     	EasyMock.expect(adm.getAdm4_name()).andStubReturn("adm4 Name");
     	EasyMock.expect(adm.getAdm5_name()).andStubReturn("adm5 Name");
+    	EasyMock.expect(adm.getScore()).andStubReturn(42.5F);
     	EasyMock.expect(adm.getStreet_type()).andStubReturn(null);
     	EasyMock.expect(adm.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(adm.getLng()).andStubReturn(2.36D);
@@ -1065,6 +1068,7 @@ public class GisgraphyTestHelper {
       	EasyMock.expect(feature.getAdm3_name()).andStubReturn("adm3 Name");
     	EasyMock.expect(feature.getAdm4_name()).andStubReturn("adm4 Name");
       	EasyMock.expect(feature.getAdm5_name()).andStubReturn("adm5 Name");
+      	EasyMock.expect(feature.getScore()).andStubReturn(42.5F);
     	EasyMock.expect(feature.getStreet_type()).andStubReturn(null);
     	EasyMock.expect(feature.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(feature.getLng()).andStubReturn(2.36D);
@@ -1122,6 +1126,9 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(street.getAdm4_name()).andStubReturn("adm4 name");
     	EasyMock.expect(street.getAdm5_name()).andStubReturn("adm5 name");
       	EasyMock.expect(street.getOpenstreetmap_id()).andStubReturn(888888L);
+      	EasyMock.expect(street.getAzimuth_start()).andStubReturn(120);
+    	EasyMock.expect(street.getAzimuth_end()).andStubReturn(300);
+    	EasyMock.expect(street.getScore()).andStubReturn(42.5F);
     	
     	
     	EasyMock.expect(street.getLat()).andStubReturn(1.53D);

@@ -395,7 +395,54 @@ public class RelevanceGeocodingTest {
 	 * 
 	 */
 	
-
+	@Test
+	public void address1SynonymTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "9 avenue de l'opera paname";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(192903838L,addressResultsDto.getResult(), rawAddress);
+			Assert.assertEquals("9", addressResultsDto.getResult().get(0).getHouseNumber());
+			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+		}
+	}
+	
+	@Test
+	public void address1Test() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			String rawAddress = "9 avenue de l'opera paris";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(192903838L,addressResultsDto.getResult(), rawAddress);
+			Assert.assertEquals("9", addressResultsDto.getResult().get(0).getHouseNumber());
+			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+		}
+	}
+	
+	@Test
+	public void address1InterpolationTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			//40 is not a number known in the database, we interpolate it at runtime
+			String rawAddress = "40 avenue de l'opera paris";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(4018042L,addressResultsDto.getResult(), rawAddress);
+			Assert.assertEquals("40", addressResultsDto.getResult().get(0).getHouseNumber());
+			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+		}
+	}
+	
+	@Test
+	public void unknownPostcodeShouldNotdisturbtheGeocodingTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			//13000 is not the correct zip but the city one, correct is 13003
+			String rawAddress = "rue de crimée 13000 marseille";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(28117508L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
 	
 	@Test
 	public void streetWithCitySynonymTest() throws InterruptedException, IOException{
@@ -406,7 +453,6 @@ public class RelevanceGeocodingTest {
 			isCorrectByAtLeastOneIds(new long[]{4234145L,4234144L,4234146L},addressResultsDto.getResult(), rawAddress);
 		}
 	}
-	
 	
 	
 	
@@ -659,6 +705,40 @@ public class RelevanceGeocodingTest {
   
 	 */
 	
+	
+	
+	@Test
+	public void structuredAddress1Test() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+			address.setHouseNumber("9");
+			address.setStreetName("de l'opéra");
+			address.setStreetType("avenue");
+			address.setZipCode("");
+			address.setCity("paris");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(192903838L,addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredAddress1SynonymTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+			address.setHouseNumber("9");
+			address.setStreetName("de l'opéra");
+			address.setStreetType("avenue");
+			address.setZipCode("");
+			address.setCity("paname");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(192903838L,addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
 	@Test
 	public void structuredStreetWithCitySynonymTest() throws InterruptedException, IOException{
 		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
@@ -891,6 +971,54 @@ public class RelevanceGeocodingTest {
 		isCorrectById(4234145,addressResultsDto.getResult(), address.toString());
 	}
 	}
+	
+	@Test
+	public void structuredsubdivision() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCitySubdivision("la defense");
+			address.setState("");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(8504417L,addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+	@Test
+	public void structuredquaterCity() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+				Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCitySubdivision("Vaugirard");
+			address.setCity("Paris");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(2970479L,addressResultsDto.getResult(), address.toString());
+		}
+	}
+	
+		
+	@Test
+	public void structuredarrondissement() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			Address address = new Address();
+			address.setHouseNumber("");
+			address.setStreetName("");
+			address.setStreetType("");
+			address.setZipCode("");
+			address.setCitySubdivision("paris 15e");
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isCorrectById(2970479L,addressResultsDto.getResult(), address.toString());
+		}
+	}
 
 
 	
@@ -1100,16 +1228,16 @@ public class RelevanceGeocodingTest {
 		}
 	}
 	
-	@Test
+	/*@Test
 	public void quaterZip() throws InterruptedException, IOException{
 		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
-			String rawAddress = "Vaugirard, Paris";
+			String rawAddress = "Vaugirard, 75015";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
 			isCorrectByIds(new Long[]{10665004L,2970479L,27728576L},addressResultsDto.getResult(), rawAddress);
 			isCorrectById(2970479L,addressResultsDto.getResult(), rawAddress);
 		}
-	}
+	}*/
 	
 	@Test
 	public void arrondissement() throws InterruptedException, IOException{
@@ -1820,6 +1948,9 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		}
 		if (address.getCity()!=null){
 			fullURLToCall=fullURLToCall+"&city="+URLEncoder.encode(address.getCity());
+		}
+		if (address.getCitySubdivision()!=null){
+			fullURLToCall=fullURLToCall+"&citySubdivision="+URLEncoder.encode(address.getCitySubdivision());
 		}
 		if (address.getState()!=null){
 			fullURLToCall=fullURLToCall+"&state="+URLEncoder.encode(address.getState());

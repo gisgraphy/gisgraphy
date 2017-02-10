@@ -321,7 +321,7 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
-				CITY_BOOST_QUERY=in.readLine();
+				//BF_POPULATION=in.readLine();
 				
 
 	                in.close();

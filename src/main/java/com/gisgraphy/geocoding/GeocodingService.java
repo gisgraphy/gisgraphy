@@ -88,6 +88,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 @Service
 public class GeocodingService implements IGeocodingService {
+	private static final int INTERPOLATION_CURVE_TOLERANCE = 45;
 	private IStatsUsageService statsUsageService;
 	private ImporterConfig importerConfig;
 	private IAddressParserService addressParser;
@@ -439,7 +440,7 @@ public class GeocodingService implements IGeocodingService {
 		List<SolrResponseDto> exactMatches  ;
 		if (!smartStreetDetection){
 			 exactMatches = doSearchExact(rawaddress,
-					countryCode, fuzzy, point, radius);
+					countryCode, fuzzy, point, radius, null);
 		} else {
 			//bypass exact search
 			 exactMatches  =new ArrayList<SolrResponseDto>();
@@ -476,9 +477,9 @@ public class GeocodingService implements IGeocodingService {
 	}
 
 	protected List<SolrResponseDto> doSearchExact(String rawaddress,
-			String countryCode, boolean fuzzy, Point point, Double radius) {
+			String countryCode, boolean fuzzy, Point point, Double radius, Class[] placetype) {
 		logger.debug("will search for exact match "+(fuzzy?"in fuzzy mode":" in strict mode"));
-		List<SolrResponseDto> exactMatches = findExactMatches(rawaddress, countryCode, fuzzy, point, radius);
+		List<SolrResponseDto> exactMatches = findExactMatches(rawaddress, countryCode, fuzzy, point, radius, placetype);
 		//filter result where name is not the same
 		if (exactMatches!=null){
 			List<SolrResponseDto> filterResults = new ArrayList<SolrResponseDto>();
@@ -534,7 +535,7 @@ public class GeocodingService implements IGeocodingService {
 	}
 
 	protected boolean isGeocodable(Address address) {
-		if (isEmptyString(address.getStreetName()) && isEmptyString(address.getState()) && isEmptyString(address.getCity()) && isEmptyString(address.getZipCode()) && isEmptyString(address.getPostTown())) {
+		if (isEmptyString(address.getStreetName()) && isEmptyString(address.getState()) && isEmptyString(address.getCity()) && isEmptyString(address.getZipCode()) && isEmptyString(address.getPostTown()) && isEmptyString(address.getCitySubdivision())) {
 			logger.info(address+" is no geocodable");
 			return false;
 		}
@@ -583,9 +584,18 @@ public class GeocodingService implements IGeocodingService {
 			
 		} else {
 			//not a street, search for city, Adm, subdivision
-			streets =  doSearchExact(rawAddress, countryCode, false, null, null);
+			Class[] placetype = com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE;
+			if(address!=null){
+				if (address.getCity()!=null || address.getZipCode()!=null ||address.getCitySubdivision()!=null){
+					placetype= com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE;
+				}
+				if (address.getState()!=null && (address.getCity()!=null && address.getZipCode()!=null && address.getCitySubdivision()!=null)){
+					placetype=com.gisgraphy.fulltext.Constants.ONLY_ADM_PLACETYPE;
+				}
+			}
+			streets =  doSearchExact(rawAddress, countryCode, false, null, null, placetype);
 			if (streets==null || streets.size()==0){
-				streets =  doSearchExact(rawAddress, countryCode, true, null, null);
+				streets =  doSearchExact(rawAddress, countryCode, true, null, null, placetype);
 			}
 		}
 		}
@@ -722,7 +732,7 @@ public class GeocodingService implements IGeocodingService {
 		return result;
 	}
 
-	protected HouseNumberDtoInterpolation searchHouseNumber(Integer houseNumberToFindAsInt, List<HouseNumberDto> houseNumbersList,String countryCode) { //TODO pass the house as int directly
+	protected HouseNumberDtoInterpolation searchHouseNumber(Integer houseNumberToFindAsInt, List<HouseNumberDto> houseNumbersList,String countryCode, boolean doInterpolation) { //TODO pass the house as int directly
 		if(houseNumberToFindAsInt==null || houseNumbersList==null || houseNumbersList.size()==0){
 			logger.info("no house number to search : ");
 			return null;
@@ -782,14 +792,16 @@ public class GeocodingService implements IGeocodingService {
 			result.setLowerNumber(nearestLower);
 		}
 			//this do interpolation, but if the street is not a line or is curve the point will be out
-			/*if (nearestHouseLower !=null && nearestHouseUpper != null){
-			Point location = GeolocHelper.interpolatedPoint(nearestHouseLower.getLocation(), nearestHouseUpper.getLocation(), nearestUpper, nearestLower, HouseNumberToFindAsInt);
-			if (location !=null){
-				return new HouseNumberDtoInterpolation(location,houseNumberToFind, true);
-			} else {
-				return null;
+			if (doInterpolation){
+				if (nearestHouseLower !=null && nearestHouseUpper != null){
+					Point location = GeolocHelper.interpolatedPoint(nearestHouseLower.getLocation(), nearestHouseUpper.getLocation(), nearestUpper, nearestLower, houseNumberToFindAsInt);
+					if (location !=null){
+						return new HouseNumberDtoInterpolation(location,houseNumberToFindAsInt);
+					} else {
+						return null;
+					}
+				}
 			}
-			}*/
 		return result;
 	}
 	protected AddressResultsDto buildAddressResultDtoFromSolrResponseDtoCountry(List<SolrResponseDto> solResponseDtos){
@@ -883,7 +895,11 @@ public class GeocodingService implements IGeocodingService {
 							List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
 							//if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
 							//count them as street that has same streetname
-							HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
+							boolean doInterpolation = false;
+							if (allowInterpolation(solrResponseDto) ){
+								doInterpolation=true;
+							}
+							HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
 								if (houseNumber !=null){
 									if (houseNumber.isApproximative()){
 										
@@ -920,7 +936,11 @@ public class GeocodingService implements IGeocodingService {
 							//search for housenumber
 							List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
 							if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
-								HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
+								boolean doInterpolation = false;
+								if (allowInterpolation(solrResponseDto) ){
+									doInterpolation=true;
+								}
+								HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
 							if (houseNumber !=null){
 								if (houseNumber.isApproximative()){
 									
@@ -944,7 +964,11 @@ public class GeocodingService implements IGeocodingService {
 					address.setDependentLocality(solrResponseDto.getIs_in_place());
 				  List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
 					if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
-						HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode);
+						boolean doInterpolation = false;
+						if (allowInterpolation(solrResponseDto) ){
+							doInterpolation=true;
+						}
+						HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
 					if (houseNumber !=null){
 						if (houseNumber.isApproximative()){
 							
@@ -982,6 +1006,13 @@ public class GeocodingService implements IGeocodingService {
 			}
 		}
 		return new AddressResultsDto(addresses, 0L);
+	}
+
+	protected boolean allowInterpolation(SolrResponseDto solrResponseDto) {
+		return 
+				solrResponseDto.getAzimuth_start()!=null && 
+				solrResponseDto.getAzimuth_end()!=null &&
+				Math.abs(solrResponseDto.getAzimuth_start()-solrResponseDto.getAzimuth_end()) < INTERPOLATION_CURVE_TOLERANCE;
 	}
 	
 
@@ -1327,11 +1358,14 @@ public class GeocodingService implements IGeocodingService {
 		}
 	}*/
 
-	protected List<SolrResponseDto> findExactMatches(String text, String countryCode,boolean fuzzy, Point point, Double radius) {
+	protected List<SolrResponseDto> findExactMatches(String text, String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 		if (isEmptyString(text)) {
 			return new ArrayList<SolrResponseDto>();
 		}
-		FulltextQuery query = new FulltextQuery(text, TEN_RESULT_PAGINATION, LONG_OUTPUT, com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE, countryCode);
+		if (placetypes==null){
+			placetypes = com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE;
+		}
+		FulltextQuery query = new FulltextQuery(text, TEN_RESULT_PAGINATION, LONG_OUTPUT,placetypes , countryCode);
 		query.withAllWordsRequired(true).withoutSpellChecking().withFuzzy(fuzzy);
 		if (point!=null){
 			query.around(point);

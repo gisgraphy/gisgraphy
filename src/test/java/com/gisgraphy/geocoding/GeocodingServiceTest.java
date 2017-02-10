@@ -134,7 +134,7 @@ public class GeocodingServiceTest {
     	    }
     	   @Override
     	protected List<SolrResponseDto> findExactMatches(String text,
-    			String countryCode,boolean fuzzy, Point point, Double radius) {
+    			String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
     		   return new ArrayList<SolrResponseDto>();
     	}
     	};
@@ -162,7 +162,7 @@ public class GeocodingServiceTest {
     	    }
     	   @Override
     	protected List<SolrResponseDto> findExactMatches(String text,
-    			String countryCode,boolean fuzzy, Point point, Double radius) {
+    			String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
     		   return new ArrayList<SolrResponseDto>();
     	}
     	};
@@ -199,7 +199,7 @@ public class GeocodingServiceTest {
 	    }
 	   @Override
 	protected List<SolrResponseDto> findExactMatches(String text,
-			String countryCode,boolean fuzzy, Point point, Double radius) {
+			String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 		   return new ArrayList<SolrResponseDto>();
 	}
 	};
@@ -275,7 +275,7 @@ public class GeocodingServiceTest {
 
     	    @Override
     	    protected List<SolrResponseDto> findExactMatches(String text,
-    				String countryCode,boolean fuzzy, Point point, Double radius) {
+    				String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
     	    	findCitiesCalled = true;
     			   return new ArrayList<SolrResponseDto>();
     		}
@@ -319,7 +319,7 @@ public class GeocodingServiceTest {
 
 		 @Override
  	    protected List<SolrResponseDto> findExactMatches(String text,
- 				String countryCode,boolean fuzzy, Point point, Double radius) {
+ 				String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
  	    	findCitiesCalled = true;
  			   return new ArrayList<SolrResponseDto>();
  		}
@@ -385,7 +385,7 @@ public class GeocodingServiceTest {
 	    
 		 @Override
  	    protected List<SolrResponseDto> findExactMatches(String text,
- 				String countryCode,boolean fuzzy, Point point, Double radius) {
+ 				String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
  	    	findCitiesCalled = true;
  			List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
  			cities.add(cityResult);
@@ -449,7 +449,7 @@ public class GeocodingServiceTest {
 
 	    @Override
  	    protected List<SolrResponseDto> findExactMatches(String text,
- 				String countryCode,boolean fuzzy, Point point, Double radius) {
+ 				String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 	    	findCitiesCalled = true;
 			List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
 			cities.add(cityResult);
@@ -514,7 +514,7 @@ public class GeocodingServiceTest {
 	    
 	    @Override
 	    protected List<SolrResponseDto> findExactMatches(String text,
-	    		String countryCode,boolean fuzzy, Point point, Double radius) {
+	    		String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 	    	return null;
 	    }
 	};
@@ -1247,7 +1247,7 @@ public class GeocodingServiceTest {
     	houseNumbers.add(number1);
     	houseNumbers.add(number2);
     	
-    	HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,"FR");
+    	HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,"FR", true);
     	Assert.assertEquals(4D, result.getExactLocation().getX(),0.0001);
     	Assert.assertEquals(5D, result.getExactLocation().getY(),0.0001);
     	
@@ -1266,7 +1266,7 @@ public class GeocodingServiceTest {
     	houseNumbers.add(number3);
     	houseNumbers.add(number4);
     	
-    	HouseNumberDtoInterpolation result = service.searchHouseNumber(4, houseNumbers,"FR");
+    	HouseNumberDtoInterpolation result = service.searchHouseNumber(4, houseNumbers,"FR", false);
     	System.out.println(result);
     	Assert.assertNull(result.getExactLocation());
     	Assert.assertNull(result.getExactNumber());
@@ -1277,7 +1277,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals(7D, result.getHigherLocation().getY(),0.001);
     	Assert.assertEquals(5, result.getHigherNumber().intValue());
     	
-    	result = service.searchHouseNumber(1, houseNumbers,"FR");
+    	result = service.searchHouseNumber(1, houseNumbers,"FR", true);
     	Assert.assertNull(result.getExactLocation());
     	Assert.assertNull(result.getExactNumber());
     	Assert.assertNull( result.getLowerLocation());
@@ -1286,7 +1286,52 @@ public class GeocodingServiceTest {
     	Assert.assertEquals(3D, result.getHigherLocation().getY(),0.001);
     	Assert.assertEquals(2, result.getHigherNumber().intValue());
     	
-    	result = service.searchHouseNumber(7, houseNumbers,"FR");
+    	result = service.searchHouseNumber(7, houseNumbers,"FR", true);
+    	Assert.assertNull(result.getExactLocation());
+    	Assert.assertNull(result.getExactNumber());
+    	Assert.assertEquals(8D, result.getLowerLocation().getX(),0.001);
+    	Assert.assertEquals(9D, result.getLowerLocation().getY(),0.001);
+    	Assert.assertEquals(6, result.getLowerNumber().intValue());
+    	Assert.assertNull(null, result.getHigherLocation());
+    	Assert.assertNull(null, result.getHigherLocation());
+    	Assert.assertNull(result.getHigherNumber());
+    }
+    
+    @Test
+    public void searchHouseNumberTest_doInterpolation(){
+    	GeocodingService service = new GeocodingService();
+    	List<HouseNumberDto> houseNumbers = new ArrayList<HouseNumberDto>();
+    	HouseNumberDto number1 = new HouseNumberDto(GeolocHelper.createPoint(2D, 3D), "2");
+    	HouseNumberDto number2 = new HouseNumberDto(GeolocHelper.createPoint(4D, 5D), "3");
+    	HouseNumberDto number3 = new HouseNumberDto(GeolocHelper.createPoint(6D, 7D), "5");
+    	HouseNumberDto number4 = new HouseNumberDto(GeolocHelper.createPoint(8D, 9D), "6");
+    	houseNumbers.add(number1);
+    	houseNumbers.add(number2);
+    	houseNumbers.add(number3);
+    	houseNumbers.add(number4);
+    	
+    	HouseNumberDtoInterpolation result = service.searchHouseNumber(4, houseNumbers,"FR", true);
+    	System.out.println(result);
+    	Assert.assertEquals(5,result.getExactLocation().getX(),0.001);
+    	Assert.assertEquals(6,result.getExactLocation().getY(),0.001);
+    	Assert.assertEquals(4,result.getExactNumber().intValue());
+    	Assert.assertNull(result.getLowerLocation());
+    	Assert.assertNull(result.getLowerLocation());
+    	Assert.assertNull( result.getLowerNumber());
+    	Assert.assertNull(result.getHigherLocation());
+    	Assert.assertNull( result.getHigherLocation());
+    	Assert.assertNull(result.getHigherNumber());
+    	
+    	result = service.searchHouseNumber(1, houseNumbers,"FR", true);
+    	Assert.assertNull(result.getExactLocation());
+    	Assert.assertNull(result.getExactNumber());
+    	Assert.assertNull( result.getLowerLocation());
+    	Assert.assertNull( result.getLowerNumber());
+    	Assert.assertEquals(2D, result.getHigherLocation().getX(),0.001);
+    	Assert.assertEquals(3D, result.getHigherLocation().getY(),0.001);
+    	Assert.assertEquals(2, result.getHigherNumber().intValue());
+    	
+    	result = service.searchHouseNumber(7, houseNumbers,"FR", true);
     	Assert.assertNull(result.getExactLocation());
     	Assert.assertNull(result.getExactNumber());
     	Assert.assertEquals(8D, result.getLowerLocation().getX(),0.001);
@@ -1307,11 +1352,11 @@ public class GeocodingServiceTest {
     	houseNumbers.add(number2);
     	
     	
-    	HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,null);
+    	HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,null, true);
     	Assert.assertEquals(4D, result.getExactLocation().getX(),0.0001);
     	Assert.assertEquals(5D, result.getExactLocation().getY(),0.0001);
     	
-    	result = service.searchHouseNumber(2, houseNumbers,null);
+    	result = service.searchHouseNumber(2, houseNumbers,null, true);
     	Assert.assertEquals(4D, result.getExactLocation().getX(),0.0001);
     	Assert.assertEquals(5D, result.getExactLocation().getY(),0.0001);
     }
@@ -1326,11 +1371,11 @@ public class GeocodingServiceTest {
     	houseNumbers.add(number2);
     	
     	
-    	HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,"CZ");
+    	HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,"CZ", true);
     	Assert.assertEquals(4D, result.getExactLocation().getX(),0.0001);
     	Assert.assertEquals(5D, result.getExactLocation().getY(),0.0001);
     	
-    	result = service.searchHouseNumber(1, houseNumbers,"CZ");
+    	result = service.searchHouseNumber(1, houseNumbers,"CZ", true);
     	Assert.assertEquals(2D, result.getExactLocation().getX(),0.0001);
     	Assert.assertEquals(3D, result.getExactLocation().getY(),0.0001);
     	
@@ -1340,9 +1385,9 @@ public class GeocodingServiceTest {
     public void searchHouseNumber_WithNullValues(){
     	GeocodingService service = new GeocodingService();
     	List<HouseNumberDto> houseNumbers = new ArrayList<HouseNumberDto>();
-    	Assert.assertNull(service.searchHouseNumber(3, null,"FR"));
-    	Assert.assertNull(service.searchHouseNumber(null, houseNumbers,"FR"));
-    	Assert.assertNull(service.searchHouseNumber(null, null,"FR"));
+    	Assert.assertNull(service.searchHouseNumber(3, null,"FR", true));
+    	Assert.assertNull(service.searchHouseNumber(null, houseNumbers,"FR", true));
+    	Assert.assertNull(service.searchHouseNumber(null, null,"FR", true));
     }
     
   /*  @Test
@@ -1433,7 +1478,7 @@ public class GeocodingServiceTest {
 	EasyMock.replay(mockfullFullTextSearchEngine);
 	geocodingService.setFullTextSearchEngine(mockfullFullTextSearchEngine);
 
-	List<SolrResponseDto> actual = geocodingService.findExactMatches(text, countryCode,false, null, null);
+	List<SolrResponseDto> actual = geocodingService.findExactMatches(text, countryCode,false, null, null, null);
 	Assert.assertEquals(results, actual);
 	EasyMock.verify(mockfullFullTextSearchEngine);
     }
@@ -1584,6 +1629,7 @@ public class GeocodingServiceTest {
 	Assert.assertNull("street name is not correct", address.getStreetName());
 	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
 	Assert.assertNull("street type is not correct", address.getStreetType());
+	Assert.assertEquals("score is not correct", city.getScore(), address.getScore());
 	Assert.assertEquals("zipcode is not correct", city.getZipcodes().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should be the lower one", city.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
@@ -1614,6 +1660,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("quarter name is not correct", citySubdivision.getName(), address.getQuarter());
 	Assert.assertNull("city name is not correct", address.getCity());
 	Assert.assertNull("street type is not correct", address.getStreetType());
+	Assert.assertEquals("score is not correct", citySubdivision.getScore(), address.getScore());
 	Assert.assertEquals("zipcode is not correct", citySubdivision.getZipcodes().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should be the lower one", citySubdivision.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", citySubdivision.getCountry_code(), address.getCountryCode());
@@ -1643,6 +1690,7 @@ public class GeocodingServiceTest {
     	Assert.assertNull("city name is not correct", address.getCity());
     	Assert.assertNull("street type is not correct", address.getStreetType());
     	Assert.assertNull("zipcode is not correct", address.getZipCode());
+    	Assert.assertEquals("score is not correct", adm.getScore(), address.getScore());
     	Assert.assertEquals("Adm Name should be the deeper one", adm.getName(), address.getState());
     	Assert.assertEquals("countrycode is not correct", adm.getCountry_code(), address.getCountryCode());
     	
@@ -1672,6 +1720,7 @@ public class GeocodingServiceTest {
     	Assert.assertNull("city name is not correct", address.getCity());
     	Assert.assertNull("street type is not correct", address.getStreetType());
     	Assert.assertNull("zipcode is not correct", address.getZipCode());
+    	Assert.assertEquals("score is not correct", feature.getScore(), address.getScore());
     	Assert.assertEquals("Adm Name should be the lower one", feature.getAdm1_name(), address.getState());
     	Assert.assertEquals("countrycode is not correct", feature.getCountry_code(), address.getCountryCode());
     	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
@@ -1685,7 +1734,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService() {
 		 @Override
 		    protected List<SolrResponseDto> findExactMatches(String text,
-		    		String countryCode,boolean fuzzy, Point point, Double radius) {
+		    		String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	    @Override
@@ -1722,7 +1771,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService() {
 		 @Override
 		    protected List<SolrResponseDto> findExactMatches(String text,
-		    		String countryCode,boolean fuzzy, Point point, Double radius) {
+		    		String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	    
@@ -1760,7 +1809,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService() {
 		 @Override
 		    protected List<SolrResponseDto> findExactMatches(String text,
-		    		String countryCode,boolean fuzzy, Point point, Double radius) {
+		    		String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 		return new ArrayList<SolrResponseDto>();
 	    }
 	    
@@ -1948,6 +1997,10 @@ public class GeocodingServiceTest {
     	Assert.assertTrue(service.isGeocodable(address));
     	
     	address = new Address();
+    	address.setCitySubdivision("citySubdivision");
+    	Assert.assertTrue(service.isGeocodable(address));
+    	
+    	address = new Address();
     	Assert.assertFalse(service.isGeocodable(address));
     	
     }
@@ -2065,7 +2118,7 @@ public class GeocodingServiceTest {
 
 		 @Override
 		    protected List<SolrResponseDto> findExactMatches(String text,
-		    		String countryCode,boolean fuzzy, Point point, Double radius) {
+		    		String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 		findCitiesCalled = true;
 		return null;
 	    }
@@ -2133,7 +2186,7 @@ public class GeocodingServiceTest {
 
 	    @Override
 	    protected List<SolrResponseDto> findExactMatches(String text,
-	    		String countryCode,boolean fuzzy, Point point, Double radius) {
+	    		String countryCode,boolean fuzzy, Point point, Double radius, Class[] placetypes) {
 		findCitiesCalled = true;
 		List<SolrResponseDto> cities = new ArrayList<SolrResponseDto>();
 		cities.add(cityResult);

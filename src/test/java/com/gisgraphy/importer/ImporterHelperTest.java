@@ -56,6 +56,7 @@ public class ImporterHelperTest {
 		Assert.assertTrue(ImporterHelper.isUnwantedZipCode("75004 cedex"));
 		Assert.assertTrue(ImporterHelper.isUnwantedZipCode(" "));
 		Assert.assertTrue(ImporterHelper.isUnwantedZipCode(null));
+		Assert.assertTrue(ImporterHelper.isUnwantedZipCode("75358 SP 07"));
 		
 		Assert.assertFalse(ImporterHelper.isUnwantedZipCode("75009"));
 		

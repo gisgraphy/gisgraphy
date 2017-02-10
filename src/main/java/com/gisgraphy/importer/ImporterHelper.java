@@ -98,7 +98,7 @@ public class ImporterHelper {
     
     public static final String SPLITED_ALLCOUNTRIES_FILE_ACCEPT_REGEX_STRING = "(allCountries)(.)[0-9]+(.txt)";
     
-    public static final String UNWANTED_ZIPCODE_REGEXP = ".*(CEDEX).*";
+    public static final String UNWANTED_ZIPCODE_REGEXP = "(.*(?:CEDEX).*|(?:\\d{5}\\sSP\\s\\d+))";
     public static final Pattern UNWANTED_ZIPCODE_PATTERN = Pattern.compile(UNWANTED_ZIPCODE_REGEXP,Pattern.CASE_INSENSITIVE);
     
     public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string

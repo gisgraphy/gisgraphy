@@ -384,7 +384,7 @@ public class LabelGenerator {
 	public  String getFullyQualifiedName(Address address){
 		StringBuffer sb = new StringBuffer();
 		if (address.getHouseNumber()!=null){
-			sb.append(address.getHouseNumber()).append(", ");
+			sb.append(address.getHouseNumber()).append(" ");
 		}
 		if (address.getStreetName()!=null){
 			sb.append(address.getStreetName()).append(", ");
