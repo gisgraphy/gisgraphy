@@ -58,7 +58,7 @@ public class ReverseGeocodingServiceTest {
 		Assert.assertNotNull(addressResultsDto.getResult());
 		Assert.assertEquals(1,addressResultsDto.getResult().size());
 		//Assert.assertEquals(new AddressHelper().buildAddressFromHouseNumberDistance(houseNumberDistance), addressResultsDto.getResult().get(0));
-		Assert.assertTrue(addressResultsDto.getResult().get(0).getFormatedFull().contains("2,"));
+		Assert.assertTrue(addressResultsDto.getResult().get(0).getFormatedFull().contains("2"));
 		
 		EasyMock.verify(statsService);
 		EasyMock.verify(openStreetMapDao);

@@ -1239,6 +1239,41 @@ public class GeocodingServiceTest {
     }*/
     
     @Test
+    public void testReplaceGermanSynonyms(){
+    	GeocodingService service = new GeocodingService();
+    	
+    	//no str
+    	Assert.assertEquals("foo",service.replaceGermanSynonyms("foo"));
+    	
+    	//one without point
+    	Assert.assertEquals("trucstraße",service.replaceGermanSynonyms("trucStr"));
+    	Assert.assertEquals("trucStrasse",service.replaceGermanSynonyms("trucStrasse"));
+    	Assert.assertEquals("truc Strasse",service.replaceGermanSynonyms("truc Strasse"));
+    	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str"));
+    	
+    	//one with point
+    	Assert.assertEquals("trucstraße",service.replaceGermanSynonyms("trucStr."));
+    	Assert.assertEquals("trucStrasse.",service.replaceGermanSynonyms("trucStrasse."));
+    	Assert.assertEquals("truc Strasse.",service.replaceGermanSynonyms("truc Strasse."));
+    	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str."));
+    	
+    	//one without point + other word
+    	Assert.assertEquals("foo trucstraße",service.replaceGermanSynonyms("foo trucStr"));
+    	Assert.assertEquals("foo trucStrasse",service.replaceGermanSynonyms("foo trucStrasse"));
+    	Assert.assertEquals("foo truc Strasse",service.replaceGermanSynonyms("foo truc Strasse"));
+    	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str"));
+    	
+    	//one with point + other word
+    	Assert.assertEquals("foo trucstraße",service.replaceGermanSynonyms("foo trucStr."));
+    	Assert.assertEquals("foo trucStrasse.",service.replaceGermanSynonyms("foo trucStrasse."));
+    	Assert.assertEquals("foo truc Strasse.",service.replaceGermanSynonyms("foo truc Strasse."));
+    	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str."));
+    	
+    	//two 
+    	Assert.assertEquals("foo trucstraße foo trucstraße",service.replaceGermanSynonyms("foo trucStr. foo trucStr."));
+    }
+    
+    @Test
     public void searchHouseNumberTest(){
     	GeocodingService service = new GeocodingService();
     	List<HouseNumberDto> houseNumbers = new ArrayList<HouseNumberDto>();
@@ -1655,7 +1690,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("id is not correct", citySubdivision.getOpenstreetmap_id(), address.getId());
 	Assert.assertEquals("latitude is not correct", citySubdivision.getLat(), address.getLat());
 	Assert.assertEquals("longitude is not correct", citySubdivision.getLng(), address.getLng());
-	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY, address.getGeocodingLevel());
+	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY_SUBDIVISION, address.getGeocodingLevel());
 	Assert.assertNull("street name is not correct", address.getStreetName());
 	Assert.assertEquals("quarter name is not correct", citySubdivision.getName(), address.getQuarter());
 	Assert.assertNull("city name is not correct", address.getCity());
@@ -2368,15 +2403,29 @@ public class GeocodingServiceTest {
     	Assert.assertEquals(null, geocodingService.findHouseNumber("95190 paris","FR"));
     	Assert.assertEquals(null, geocodingService.findHouseNumber("95190 paris","FR"));
     	
+    	Assert.assertEquals("25", geocodingService.findHouseNumber("Bleibtreustraße 25",null).getHouseNumber());
+    	Assert.assertEquals("Bleibtreustraße", geocodingService.findHouseNumber("Bleibtreustraße 25a",null).getAddressWithoutHouseNumber());
+    	Assert.assertEquals("Bleibtreustraße", geocodingService.findHouseNumber("Bleibtreustraße 25a","DE").getAddressWithoutHouseNumber());
+    	
     	Assert.assertEquals("4", geocodingService.findHouseNumber("4-6 rue de la gare 59000 lille",null).getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("4-6 rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
     	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 rue de la gare 59000 lille",null).getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
     	
-    	//for country that housenumber is 3 digit we don't remove the housenumber from the address
+    	Assert.assertEquals("165", geocodingService.findHouseNumber("165 ter rue de la gare 59000 lille",null).getHouseNumber());
+    	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 ter rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
+    	
+    	Assert.assertEquals("165", geocodingService.findHouseNumber("165 bis rue de la gare 59000 lille",null).getHouseNumber());
+    	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 bis rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
+    	
+    	Assert.assertEquals("165", geocodingService.findHouseNumber("165a rue de la gare 59000 lille",null).getHouseNumber());
+    	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165a rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
+    	
+    	//for country that zip is 3 digit we don't remove the housenumber from the address
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 rue de la gare 59000 lille","IS").getHouseNumber());
     	Assert.assertEquals("165 rue de la gare 59000 lille", geocodingService.findHouseNumber("165 rue de la gare 59000 lille","IS").getAddressWithoutHouseNumber());
+    	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 rue de la gare 59000 lille","XX").getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 rue de la gare 59000 lille","XX").getAddressWithoutHouseNumber());
     	
@@ -2396,6 +2445,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("Bleibtreustraße", geocodingService.findHouseNumber("Bleibtreustraße 25",null).getAddressWithoutHouseNumber());
     	Assert.assertEquals("Bleibtreustraße", geocodingService.findHouseNumber("Bleibtreustraße 25","DE").getAddressWithoutHouseNumber());
     	
+       	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 rue de la gare 59000 lille","XX").getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 rue de la gare 59000 lille","XX").getAddressWithoutHouseNumber());
     	

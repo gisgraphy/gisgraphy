@@ -1276,6 +1276,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	public void isPoi(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		Assert.assertFalse(importer.isPoi("locality","8"));
+		Assert.assertFalse(importer.isPoi("foo",null));
 		Assert.assertFalse(importer.isPoi("",""));
 		Assert.assertTrue(importer.isPoi("locality","10"));
 		Assert.assertTrue(importer.isPoi("locality",""));

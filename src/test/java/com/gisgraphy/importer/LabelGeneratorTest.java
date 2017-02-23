@@ -755,6 +755,11 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals("75002", generator.getBestZip(zips));
 		
 		zips = new HashSet<ZipCode>();
+		zips.add(new ZipCode("10002"));
+		zips.add(new ZipCode("10"));
+		Assert.assertEquals("zip less than two should be ignores","10002", generator.getBestZip(zips));
+		
+		zips = new HashSet<ZipCode>();
 		zips.add(new ZipCode("75002"));
 		zips.add(new ZipCode("75000"));
 		zips.add(new ZipCode("75001"));
@@ -763,10 +768,10 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals("75000", generator.getBestZip(zips));
 		
 		zips = new HashSet<ZipCode>();
-		zips.add(new ZipCode("AA"));
-		zips.add(new ZipCode("B"));
+		zips.add(new ZipCode("AAAA"));
+		zips.add(new ZipCode("BBB"));
+		Assert.assertEquals("AAAA", generator.getBestZip(zips));
 		
-		Assert.assertEquals("AA", generator.getBestZip(zips));
 		zips = new HashSet<ZipCode>();
 		zips.add(new ZipCode("AD500"));
 		zips.add(new ZipCode("AD501"));

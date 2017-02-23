@@ -277,7 +277,7 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 	}
 	
 	protected boolean shouldBeImported(String countryCode,int osmLevel) {
-		return AdmStateLevelInfo.shouldBeImported(countryCode, osmLevel);
+		return AdmStateLevelInfo.shouldBeImportedAsAdm(countryCode, osmLevel);
 	}
 
 	@Override

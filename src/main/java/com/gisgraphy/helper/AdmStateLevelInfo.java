@@ -139,7 +139,7 @@ public class AdmStateLevelInfo {
 		return DEFAULT_HIGH_LEVEL;
 	}
 	
-	public static boolean shouldBeImported(String countryCode,int osmLevel){
+	public static boolean shouldBeImportedAsAdm(String countryCode,int osmLevel){
 		if (countryCode!=null && osmLevel >0 && osmLevel >= getLowLevel(countryCode) && osmLevel <= getHighLevel(countryCode)){
 			return true;
 		}

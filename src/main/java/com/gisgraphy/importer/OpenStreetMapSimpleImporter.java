@@ -271,9 +271,9 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	}
 	
 	//5 is_in	
-	if (!isEmptyField(fields, 5, false)) {
+	/*if (!isEmptyField(fields, 5, false)) {
 		street.setIsIn(fields[5].trim());
-	}
+	}*/
 	if (shouldFillIsInField()) {
 		//we try to process is_in fields, because we want to fill adm and zip too
 		setIsInFields(street);

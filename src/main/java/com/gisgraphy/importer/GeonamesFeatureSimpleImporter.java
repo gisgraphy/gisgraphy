@@ -1003,7 +1003,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     
     public boolean shouldImportPlaceType(GisFeature feature){
     	//don't want adm because it will be done by osm
-    	//city and subdivision too
+    	//city and subdivision will be done by GeonamesFeatureCities
     	//streets are not very useful compare to osm 
     	if (feature == null || feature instanceof City || feature instanceof CitySubdivision || feature instanceof Adm || feature instanceof Street){
     		return false;

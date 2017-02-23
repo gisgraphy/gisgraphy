@@ -48,6 +48,8 @@ import com.gisgraphy.addressparser.commons.GeocodingLevels;
 import com.gisgraphy.addressparser.exception.AddressParserException;
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.addressparser.format.DisplayMode;
+import com.gisgraphy.compound.Decompounder;
+import com.gisgraphy.compound.Decompounder.state;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
@@ -88,6 +90,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 @Service
 public class GeocodingService implements IGeocodingService {
+	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 	private static final int INTERPOLATION_CURVE_TOLERANCE = 45;
 	private IStatsUsageService statsUsageService;
 	private ImporterConfig importerConfig;
@@ -113,7 +116,11 @@ public class GeocodingService implements IGeocodingService {
 	public final static Pagination TEN_RESULT_PAGINATION = Pagination.paginate().from(0).to(10);
 	public final static SolrResponseDtoDistanceComparator comparator = new SolrResponseDtoDistanceComparator();
 	//public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((((?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?))");
-	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((((?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)|(?:^\\b\\d{1,4}\\b)(?!(?:st\\b|th\\b|rd\\b|nd\\b))|(((?:\\b\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)|\\s?(?:\\b\\d{1,4}\\b$))");
+	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((("
+			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)|"
+			+ "(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:\\s?(?:bis|ter)?)(?!(?:st\\b|th\\b|rd\\b|nd\\b))|"
+			+ "(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)|"
+			+ "\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$))",Pattern.CASE_INSENSITIVE);
 	public final static Pattern FIRST_NUMBER_EXTRACTION_PATTERN = Pattern.compile("^([0-9]+)");
 	public final static List<String> countryWithZipIs4Number= new ArrayList<String>(){
 		{
@@ -155,6 +162,20 @@ public class GeocodingService implements IGeocodingService {
 			add("PG");
 			}
 	};
+	
+	List<String> words = new ArrayList<String>(){
+		{
+			add("weg.");
+			add("str.");
+			add("straße.");
+			add("strasse.");
+			add("plätze.");
+			add("platze.");
+			add("wald.");
+			add("str.");
+		}
+	};
+	Decompounder decompounder = new Decompounder(words);
 
 	/**
 	 * The logger
@@ -232,6 +253,7 @@ public class GeocodingService implements IGeocodingService {
 		if (isEmptyString(rawAddress)) {
 			throw new GeocodingException("Can not geocode a null or empty address");
 		}
+	//	rawAddress = prepareQuery(rawAddress);
 		//always search for country to remove it
 			CountryDetectorDto detectorDto = countryDetector.detectAndRemoveCountry(rawAddress);
 			if (detectorDto != null && detectorDto.getCountryCode()!=null){
@@ -299,18 +321,31 @@ public class GeocodingService implements IGeocodingService {
 				logger.info("found street type : "+streettype);
 			}
 				boolean smartstreetdetection = false;
+			String alternativeGermanAddress =null;
 			if (streettypes!=null && streettypes.size()==1){
 				smartstreetdetection = true;
+				if ((countryCode!=null && countryCode.equalsIgnoreCase("DE")) || decompounder.getSate(newAddress)!=state.NOT_APPLICABLE){
+					logger.error("find specific german address");
+					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
+					logger.error("alternativeGermanAddress= "+alternativeGermanAddress);
+					alternativeGermanAddress = replaceGermanSynonyms(alternativeGermanAddress);
+					newAddress = replaceGermanSynonyms(newAddress);
+					logger.error("new rawAddress with synonyms ="+newAddress);
+					logger.error("new alternative with synonyms ="+alternativeGermanAddress);
+					
+				} else {
+					logger.error("don't specific german address");
+				}
 			}
-				results = doSearch(newAddress,countryCode, needParsing, 
-						houseNumber,false, query.getPoint(), query.getRadius(), smartstreetdetection);
+				results = doSearch(newAddress,alternativeGermanAddress, countryCode, 
+						needParsing,houseNumber, false, query.getPoint(), query.getRadius(), smartstreetdetection);
 				
 					
 					
 					//try in fuzzy
 					if (results.getNumFound()==0 && query.isFuzzy()){
-						results = doSearch(newAddress,countryCode, needParsing,
-								houseNumber,true, query.getPoint(), query.getRadius(), smartstreetdetection);
+						results = doSearch(newAddress,alternativeGermanAddress, countryCode,
+								needParsing,houseNumber, true, query.getPoint(), query.getRadius(), smartstreetdetection);
 					}
 					
 				//------------------------------------------------------------------------------------
@@ -434,8 +469,61 @@ public class GeocodingService implements IGeocodingService {
 
 	}
 
-	protected AddressResultsDto doSearch( String rawaddress,String countryCode,
-			boolean needParsing, String houseNumber,boolean fuzzy, Point point, Double radius, boolean smartStreetDetection) {
+	private String prepareQueryCompound(String rawAddress) {
+		if (rawAddress == null){
+			return rawAddress;
+		}
+		/*Pattern p = Pattern.compile(" (?:straße|str|strasse)\\b", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(rawAddress);
+		if (m.find()){
+			logger.error("will concatenate address"+rawAddress);
+			return prepareQueryConcatenate(rawAddress);
+		}*/
+		
+		
+		
+		String newAddress = "";
+		List<String> words = new ArrayList<String>(){
+			{
+				add("weg.");
+				add("clic");
+				add("str.");
+				add("straße.");
+				add("strasse.");
+				add("plätze.");
+				add("platze.");
+				add("wald.");
+				add("str.");
+			}
+		};
+		Decompounder decompounder = new Decompounder(words);
+		String[] addressWords = rawAddress.split(",|;|-|\\s");
+		for (String addressWord:addressWords){
+			String[] decompoundWords = decompounder.decompound(addressWord);
+			for (String word:decompoundWords){
+				newAddress= newAddress+", "+word;
+			}
+			//if (decompoundWords.length>1){
+		//		newAddress = newAddress+ " "+addressWord+" ";
+			//}
+		}
+		newAddress = newAddress.toLowerCase();
+		newAddress.replaceAll("str", "straße").replaceAll("[\\s]+", " ");
+		logger.error("newAddress compound="+newAddress);
+		return newAddress;
+	}
+	
+	
+	/*private String prepareQueryConcatenate(String rawAddress) {
+		String newAddress = rawAddress;
+		newAddress = newAddress.toLowerCase();
+		newAddress = newAddress.replaceAll(" (?:straße|str|strasse)\\b", "straße").replaceAll("[\\s]+", " ");
+		logger.error("newAddress concatenate ="+newAddress);
+		return newAddress;
+	}*/
+
+	protected AddressResultsDto doSearch( String rawaddress,String alternativeStreetAddress,
+			String countryCode, boolean needParsing,String houseNumber, boolean fuzzy, Point point, Double radius, boolean smartStreetDetection) {
 		AddressResultsDto results;
 		List<SolrResponseDto> exactMatches  ;
 		if (!smartStreetDetection){
@@ -451,8 +539,25 @@ public class GeocodingService implements IGeocodingService {
 				//only one word and exact match ok
 				results = buildAddressResultDtoFromSolrResponseDto(exactMatches, houseNumber);
 			} else {
+				
 				List<SolrResponseDto> fulltextResultsDto = doSearchStreet(
 						rawaddress, countryCode, fuzzy, point, radius);
+				if(alternativeStreetAddress!=null){
+					logger.error("will search for altenative german Address : "+alternativeStreetAddress);
+					List<SolrResponseDto> alternativeResults = doSearchStreet(
+							alternativeStreetAddress, countryCode, fuzzy, point, radius);
+					if (fulltextResultsDto.size()==0 ||(alternativeResults!=null && alternativeResults.size()>0 && fulltextResultsDto!=null && fulltextResultsDto.size() > 0 
+							&& alternativeResults.get(0)!=null && fulltextResultsDto.get(0)!=null
+							&& alternativeResults.get(0).getScore()>fulltextResultsDto.get(0).getScore())){
+						logger.error("alternative results score is higher");
+						fulltextResultsDto = alternativeResults;
+					}
+					
+					
+					
+				} 
+				
+				
 				if (fulltextResultsDto!=null){
 					exactMatches.addAll(fulltextResultsDto);
 				}
@@ -466,6 +571,17 @@ public class GeocodingService implements IGeocodingService {
 				results = buildAddressResultDtoFromSolrResponseDto(exactMatches, houseNumber);
 			}
 		return results;
+	}
+
+	protected String replaceGermanSynonyms(String alternativeGermanAddress) {
+		StringBuffer sb = new StringBuffer();
+		Matcher m = GERMAN_SYNONYM_PATTEN.matcher(alternativeGermanAddress);
+		  while (m.find()) {
+			m.appendReplacement(sb, "straße");
+		}
+		m.appendTail(sb);
+		String s = sb.toString();
+		return s;
 	}
 
 	protected List<SolrResponseDto> doSearchStreet(String rawaddress,

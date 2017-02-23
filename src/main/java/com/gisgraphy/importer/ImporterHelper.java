@@ -101,7 +101,17 @@ public class ImporterHelper {
     public static final String UNWANTED_ZIPCODE_REGEXP = "(.*(?:CEDEX).*|(?:\\d{5}\\sSP\\s\\d+))";
     public static final Pattern UNWANTED_ZIPCODE_PATTERN = Pattern.compile(UNWANTED_ZIPCODE_REGEXP,Pattern.CASE_INSENSITIVE);
     
-    public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
+    public final static List<String> UNWANTED_ALTERNATE_NAMES = new ArrayList<String>(){
+		{
+		add("note:name");
+		add("source:name");
+		add("mane:prefix");
+		add("name:suffix");
+		add("name:postfix");
+		}
+	};
+    
+   /* public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
     		+ "(?:[_]{0,3})"//not the underscore (optionaly)
     		+ "[,]?(?:(?!(?:(?:name|(?:___)))).)*" //something not name or ___ =>alt for instance
     		+ "(?:(?:(?:[a-z_]{0,12})?name)[:]?)"//name:
@@ -109,8 +119,17 @@ public class ImporterHelper {
     		+ ")"
     		+ "(?:===)"// don't take the 3 equals sign ===
     		+ "((?:(?!___|\"|}|(?:,\\w+(?=(?:_name)))|(?:,(?=(?:name)))).)+)[,]?[}]?"// the name
+    		*/
+    		 public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
+    		+ "(?:[_]{0,3})"//not the underscore (optionaly)
+    		+ "([,]?(?:(?!(?:(?:name|(?:___)))).)*" //something not name or ___ =>alt for instance
+    		+ "(?:(?:(?:[a-z_]{0,12})?name)[:]?)"//name:
+    		+ "((?:(?:(?!===).)*)"//lang: something not ===
+    		+ "))"
+    		+ "(?:===)"// don't take the 3 equals sign ===
+    		+ "((?:(?!___|\"\"|}|(?:,\\w+(?=(?:_name)))|(?:,(?=(?:name)))).)+)[,]?[}]?"// the name
     		;    
-    public static final Pattern ALTERNATENAMES_EXTRACTION_PATTERN = Pattern.compile(ALTERNATENAMES_EXTRACTION_REGEXP);
+    public static final Pattern ALTERNATENAMES_EXTRACTION_PATTERN = Pattern.compile(ALTERNATENAMES_EXTRACTION_REGEXP,Pattern.CASE_INSENSITIVE);
     
     public static final String ISINADM_EXTRACTION_REGEXP = "((?:(?!___).)+)(?=(?:___|$))(?:___|$)"
     		+ "((?:(?!___)\\d)*)(?=(?:___|$))(?:___|$)"
@@ -599,18 +618,32 @@ public class ImporterHelper {
 		if (feature ==null || alternateNamesAsString ==null){
 			return feature;
 		}
+		if (alternateNamesAsString.startsWith("\"") && alternateNamesAsString.endsWith("\"")){
+			alternateNamesAsString = alternateNamesAsString.replace("(?<!{)\"\"", "\'");
+		}
 		Matcher matcher = ALTERNATENAMES_EXTRACTION_PATTERN.matcher(alternateNamesAsString);
 		int i = 0;
 		while (matcher.find()){
+/*for (int j=1;j<matcher.groupCount()+1;j++){
+				
+				System.out.println(matcher.group(j));
+				
+			}
+			System.out.println("");*/
 					
-			if (matcher.groupCount() != 2) {
-				logger.warn("wrong number of fields for alternatename no " + i + "for line " + alternateNamesAsString);
+			if (matcher.groupCount() != 3) {
+				logger.warn("wrong number of fields for alternatename no " + i + " for line " + alternateNamesAsString);
 				continue;
 			}
-			String lang = matcher.group(1);
-			String alternateName = matcher.group(2);
+			if (matcher.group(1)!=null && UNWANTED_ALTERNATE_NAMES.contains(matcher.group(1))){
+				logger.warn(matcher.group(1)+" is not an alternate name we want for line " + alternateNamesAsString);
+				continue;
+				
+			}
+			String lang = matcher.group(2);
+			String alternateName = matcher.group(3);
 			if (alternateName!= null && !"".equals(alternateName.trim())){
-					String[] alternateNames = alternateName.split(";|\\||,");
+					String[] alternateNames = alternateName.split(";|\\||,|:");
 					
 					
 					//check for duplicates 
@@ -634,8 +667,8 @@ public class ImporterHelper {
 					}
 					List<AlternateName> toBeAdded = new ArrayList<AlternateName>();					
 					for (String name:alternateNames){
-						if (name!=null){
-							if (lang!=null &&  !"".equals(lang.trim())){
+						if (name!=null && name.length()<GisFeature.MAX_ALTERNATENAME_SIZE){
+							if (lang!=null &&  !"".equals(lang.trim()) && lang.length()<29){
 								AlternateName alternateName2 = new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
 								alternateName2.setGisFeature(feature);
 								toBeAdded.add(alternateName2);
@@ -655,10 +688,14 @@ public class ImporterHelper {
 		
 	}
 	
+	
 	public final static OpenStreetMap populateAlternateNames(OpenStreetMap street,
 			String alternateNamesAsString) {
 		if (street ==null || alternateNamesAsString ==null){
 			return street;
+		}
+		if (alternateNamesAsString.startsWith("\"") && alternateNamesAsString.endsWith("\"")){
+			alternateNamesAsString = alternateNamesAsString.replace("\"\"", "\"");
 		}
 		Matcher matcher = ALTERNATENAMES_EXTRACTION_PATTERN.matcher(alternateNamesAsString);
 		int i = 0;
@@ -670,14 +707,20 @@ public class ImporterHelper {
 			}
 			System.out.println("");*/
 			
-			if (matcher.groupCount() != 2) {
-				logger.warn("wrong number of fields for alternatename no " + i + "for line " + alternateNamesAsString);
+			if (matcher.groupCount() != 3) {
+				logger.warn("wrong number of fields for alternatename no " + i + " for line " + alternateNamesAsString);
 				continue;
 			}
-			String lang = matcher.group(1);
-			String alternateName = matcher.group(2);
+			if (matcher.group(1)!=null && UNWANTED_ALTERNATE_NAMES.contains(matcher.group(1))){
+				logger.warn(matcher.group(1)+" is not an alternate name we want for line " + alternateNamesAsString);
+				continue;
+				
+			}
+			
+			String lang = matcher.group(2);
+			String alternateName = matcher.group(3);
 			if (alternateName!= null && !"".equals(alternateName.trim())){
-					String[] alternateNames = alternateName.split(";|\\||,");
+					String[] alternateNames = alternateName.split(";|\\||,|:");
 					
 					
 					//check for duplicates 
@@ -701,14 +744,16 @@ public class ImporterHelper {
 					}
 										
 					for (String name:alternateNames){
-						if (street.getName()==null){
-							street.setName(name);
-							continue;
-						} 
-						if (lang!=null &&  !"".equals(lang.trim())){
-							street.addAlternateName(new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP));
-						} else {
-							street.addAlternateName(new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP));
+						if (name!=null  && !"".equals(name) && name.length()<OpenStreetMap.MAX_ALTERNATENAME_SIZE){
+							if (street.getName()==null){
+								street.setName(name);
+								continue;
+							} 
+							if (lang!=null &&  !"".equals(lang.trim()) && lang.length()<29){
+								street.addAlternateName(new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP));
+							} else {
+								street.addAlternateName(new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP));
+							}
 						}
 					}
 			}

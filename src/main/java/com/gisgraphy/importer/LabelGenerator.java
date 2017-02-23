@@ -493,6 +493,9 @@ public class LabelGenerator {
 				} else {
 					continue;
 				}
+				if (zip.length()<=2){
+					continue;
+				}
 				if (bestZip==null ||(zip != null && zip.compareTo(bestZip)<0)){
 					bestZip = zip;
 				}
@@ -514,6 +517,9 @@ public class LabelGenerator {
 				if (zipCode !=null){
 					zip = zipCode;
 				} else {
+					continue;
+				}
+				if (zip.length()<=2){
 					continue;
 				}
 				if (bestZip==null ||(zip != null && zip.compareTo(bestZip)<0)){

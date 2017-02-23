@@ -77,8 +77,8 @@ public class FulltextQuerySolrHelper {
 	private static OutputStyleHelper outputStyleHelper = new OutputStyleHelper();
 
 	
-	public static final String MM_NOT_ALL_WORD_REQUIRED ="3<-1 4<3";
-	public static final String MM_ALL_WORD_REQUIRED ="100%%";
+	public static String MM_NOT_ALL_WORD_REQUIRED ="3<-1 4<3";
+	public static String MM_ALL_WORD_REQUIRED ="100%%";
 	
 	private  static String IS_IN_SENTENCE = " ";//+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
 	protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^11 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
@@ -321,7 +321,7 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
-				//BF_POPULATION=in.readLine();
+				MM_NOT_ALL_WORD_REQUIRED=in.readLine();
 				
 
 	                in.close();

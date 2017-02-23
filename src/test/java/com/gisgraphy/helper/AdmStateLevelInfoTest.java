@@ -37,28 +37,28 @@ public class AdmStateLevelInfoTest {
 	}
 	
 	@Test
-	public void shouldBeImported(){
-		Assert.assertFalse(AdmStateLevelInfo.shouldBeImported(null,0));
-		Assert.assertFalse(AdmStateLevelInfo.shouldBeImported(null,3));
-		Assert.assertFalse(AdmStateLevelInfo.shouldBeImported("FR",-1));
+	public void shouldBeImportedAsAdm(){
+		Assert.assertFalse(AdmStateLevelInfo.shouldBeImportedAsAdm(null,0));
+		Assert.assertFalse(AdmStateLevelInfo.shouldBeImportedAsAdm(null,3));
+		Assert.assertFalse(AdmStateLevelInfo.shouldBeImportedAsAdm("FR",-1));
 		
-		Assert.assertFalse(AdmStateLevelInfo.shouldBeImported("FR",3));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("FR",4));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("FR",5));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("FR",6));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("FR",7));
-		Assert.assertFalse(AdmStateLevelInfo.shouldBeImported("FR",8));
+		Assert.assertFalse(AdmStateLevelInfo.shouldBeImportedAsAdm("FR",3));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("FR",4));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("FR",5));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("FR",6));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("FR",7));
+		Assert.assertFalse(AdmStateLevelInfo.shouldBeImportedAsAdm("FR",8));
 		
 		//specfic country
-		Assert.assertFalse(AdmStateLevelInfo.shouldBeImported("NO",3));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("NO",4));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("NO",5));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("NO",6));
-		Assert.assertFalse(AdmStateLevelInfo.shouldBeImported("NO",7));
+		Assert.assertFalse(AdmStateLevelInfo.shouldBeImportedAsAdm("NO",3));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("NO",4));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("NO",5));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("NO",6));
+		Assert.assertFalse(AdmStateLevelInfo.shouldBeImportedAsAdm("NO",7));
 		
 		//TN, LY has only one level
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("TN",4));
-		Assert.assertTrue(AdmStateLevelInfo.shouldBeImported("LY",4));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("TN",4));
+		Assert.assertTrue(AdmStateLevelInfo.shouldBeImportedAsAdm("LY",4));
 		
 		
 		

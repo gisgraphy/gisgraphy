@@ -866,7 +866,10 @@ public class OpenStreetMap {
 	if (currentZips == null) {
 		currentZips = new HashSet<String>();
 	}
-	currentZips.add(zip);
+	if (zip != null && zip.length()>=3){
+		//there is some error in zip code and we avoid sip if it is less than 2 character
+		currentZips.add(zip);
+	}
 	this.setIsInZip(currentZips);
     }
 

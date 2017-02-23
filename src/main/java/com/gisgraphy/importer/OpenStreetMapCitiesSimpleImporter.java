@@ -216,7 +216,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				 cityToRemoveObj = citySubdivisionDao.getByFeatureId(poiToremove.getFeature_id());
 			}
 			if (cityToRemoveObj!=null){
-				//logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove , "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId());
+				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove , "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId());
 				gisFeatureDao.remove(cityToRemoveObj);
 			}
 		}
@@ -300,7 +300,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			int population = parsePopulation(populationStr);
 			place.setPopulation(population);
 		} catch (NumberFormatException e) {
-			logger.error("can not parse population :"+fields[8]);
+			logger.error("can not parse population :"+fields[8]+" for "+fields[1]);
 		}
 	}
 	//zip code
@@ -676,7 +676,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     protected void tearDown() {
     	super.tearDown();
     	String savedMessage = this.statusMessage;
-    	try {
+    	/*try {
     		this.statusMessage = internationalisationService.getString("import.updatecitysubdivision");
 			int nbModify = citySubdivisionDao.linkCitySubdivisionToTheirCity();
 			logger.warn(nbModify +" citySubdivision has been modify");
@@ -685,7 +685,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}finally {
 			 // we restore message in case of error
     	    this.statusMessage = savedMessage;
-		}
+		}*/
     	try {
     		this.statusMessage = internationalisationService.getString("import.fixpolygon");
 			logger.info("fixing polygons for city");

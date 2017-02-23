@@ -1,0 +1,39 @@
+_query_:"{!edismax qf='name^11 all_name  fully_qualified_name %s ' pf='all_label' ps=1 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s"
+2<-1 4<3 
+
+_query_:"{!edismax qf='name^11 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s"
+is_in^0.8 is_in_place^0.8  is_in_adm^0.4 is_in_zip^0.2 is_in_cities^0.7 
+recip(geodist(),0.01,3000,1)
+
+
+
+is_in | boost | boost nearest | query
+
+
+{!edismax qf='name^5 all_label fully_qualified_name^1.5 ' %s pf='all_label^5' mm='100%' tie='0.01' bq='%s' bf='pow(map(population,0,0,0.0001),0.45) %s' }%s 
+
+_query_:"{!edismax qf='name^1.8 all_name  %s' pf='all_label'  ps=0 tie='0.1' bq='(placetype:city)^500 %s  '  mm=100%%  bf='pow(map(population,0,0,0.009),0.7)  %s'}%s"
+_query_:"{!edismax qf='name^1.8 all_name fully_qualified_name^0.4  %s' pf='all_label'  ps=0 tie='0.01' bq=' placetype:city^500 %s'   mm='-25%%'  bf='pow(map(population,0,0,0.009),0.7)      %s'}%s"
+
+que normandie pas bon :
+_query_:"{!edismax qf='name^8 all_name  %s' pf='all_label'  ps=0 tie='0.1' bq=' %s  '  mm=100%%  bf='pow(map(population,0,0,0.009),0.7)  %s'}%s"
+_query_:"{!edismax qf='name^1.8 all_name fully_qualified_name^0.4  %s' pf='all_label'  ps=0 tie='0.01' bq='  %s'   mm='-25%%'  bf='pow(map(population,0,0,0.009),0.7)      %s'}%s"
+
+all_ok
+_query_:"{!edismax qf='name^6 all_name %s fully_qualified_name'                           pf='all_label'  ps=0 tie='0.1' bq=' %s  '  mm=100%%  bf='pow(map(population,0,0,0.009),0.7)  %s'}%s"
+_query_:"{!edismax qf='name^6 all_name  all_label %s' pf='fully_qualified_name^1'  ps=0 tie='0.1' bq='  %s'   mm='100%%'  bf='pow(map(population,0,0,0.009),0.7)      %s'}%s"
+
+all_ok mais mieux
+_query_:"{!edismax qf='name^9 all_name %s fully_qualified_name '                           pf='all_label'  ps=0 tie='0.1' bq=' %s  '  mm=100%%  bf='pow(map(population,0,0,0.009),0.7)  %s'}%s"
+_query_:"{!edismax qf='name^6 all_name  all_label %s' pf='fully_qualified_name^1'  ps=0 tie='0.1' bq='  %s'   mm='100%%'  bf='pow(map(population,0,0,0.009),0.7)      %s'}%s"
+
+
+
+mm='1<1 2<2 3<3'
+
+_query_:"{!edismax qf='name^9 all_name %s fully_qualified_name '                           pf='all_label'  ps=0 tie='0.1' bq=' %s  '  mm=100%%  bf='pow(map(population,0,0,0.009),0.7)  %s'}%s"
+_query_:"{!edismax qf='name^6 all_name  fully_qualified_name %s' pf=' all_label'  ps=0 tie='0.1' bq='  %s'   mm='100%%'  bf='pow(map(population,0,0,0.009),0.7)      %s'}%s"
+
+mettre name alternates en long comme les label
+
+
