@@ -31,7 +31,6 @@ hof
 hofe
 kamp
 pfad
-platz
 quelle
 markt
 park

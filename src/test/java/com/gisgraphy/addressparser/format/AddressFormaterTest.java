@@ -304,6 +304,17 @@ public void testCitySubdivision(){
     }
     
     @Test
+    public void noStreetName(){
+    	Address address =new Address();
+    	address.setCity("Goussainville");
+    	address.setZipCode("95190");
+    	address.setCountryCode("FR");
+    	String str = formater.getEnvelopeAddress(address, DisplayMode.COMMA);
+    	System.out.println(str);
+    	Assert.assertEquals("Goussainville, 95190", str);
+    }
+    
+    @Test
     public void countryShouldBeCamelCase(){
     	Assert.assertEquals("France", formater.getCountryInfo("Fr").getCountryName());
     }

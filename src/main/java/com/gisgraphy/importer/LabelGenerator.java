@@ -39,6 +39,26 @@ public class LabelGenerator {
 
 	private static LabelGenerator instance = new LabelGenerator();
 	
+	List<String> HOUSE_NUMBER_AFTER_NAME = new ArrayList<String>() {
+		
+		{
+			add("DE");
+			add("BE");
+			add("HR");
+			add("IS");
+			add("LV");
+			add("NL");
+			add("NO");
+			add("NZ");
+			add("PL");
+			add("RU");
+			add("SI");
+			add("SK");
+			add("SW");
+			add("TR");
+		}
+	};
+	
 	
 	
 
@@ -376,6 +396,7 @@ public class LabelGenerator {
 
 	/**
 	 * @return a name with the Administrative division (but without Country)
+	 * By default we don't put country because it should not appears in search term (it is already filtered at query time
 	 */
 	public String getFullyQualifiedName(GisFeature gisFeature) {
 		return getFullyQualifiedName(gisFeature, false);
@@ -383,11 +404,24 @@ public class LabelGenerator {
 	
 	public  String getFullyQualifiedName(Address address){
 		StringBuffer sb = new StringBuffer();
-		if (address.getHouseNumber()!=null){
-			sb.append(address.getHouseNumber()).append(" ");
+		if (address.getCountryCode()==null || (address.getCountryCode()!=null && !HOUSE_NUMBER_AFTER_NAME.contains(address.getCountryCode().toUpperCase()))){
+			if (address.getHouseNumber()!=null){
+				sb.append(address.getHouseNumber()).append(" ");
+			}
 		}
 		if (address.getStreetName()!=null){
-			sb.append(address.getStreetName()).append(", ");
+			sb.append(address.getStreetName());
+			if (address.getHouseNumber()!=null && address.getCountryCode()!=null && HOUSE_NUMBER_AFTER_NAME.contains(address.getCountryCode().toUpperCase())){
+				//don t add the comma because we will add the house number
+				sb.append(" ");
+			} else {
+				sb.append(", ");
+			}
+		}
+		if (address.getCountryCode()!=null && HOUSE_NUMBER_AFTER_NAME.contains(address.getCountryCode().toUpperCase())){
+			if (address.getHouseNumber()!=null){
+				sb.append(address.getHouseNumber()).append(", ");
+			}
 		}
 		if (address.getDependentLocality()!=null){
 			sb.append(address.getDependentLocality()).append(", ");
@@ -447,6 +481,9 @@ public class LabelGenerator {
 			//sb.append(address.getCountryCode().toUpperCase());
 		}
 		String str =  sb.toString();
+		if (str.trim().endsWith(",")){
+			return str.substring(0, sb.length()-2);
+		}
 		//System.out.println(str);
 		return str;
 	}

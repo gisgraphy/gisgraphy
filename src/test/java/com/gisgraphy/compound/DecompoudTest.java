@@ -110,11 +110,15 @@ public class DecompoudTest {
 	public void testGetOtherFormatForText(){
 		 List<String> words = new ArrayList<String>(){ 
 				{
-				add("weg");
-				add("straße."); 
-				add("strasse."); 
-				add("wald");
-				add("str.");
+					add("weg.");
+					add("str.");
+					add("straße.");
+					add("strasse.");
+					add("plätze.");
+					add("plätz.");
+					add("platze.");
+					add("platz.");
+					add("wald.");
 				}
 			};
 		Decompounder d = new Decompounder(words);
@@ -129,10 +133,14 @@ public class DecompoudTest {
 		Assert.assertEquals("truc foo strasse", d.getOtherFormatForText("truc foostrasse"));
 		*/
 		//both 
+		Assert.assertEquals("Park platz Eau-Le", d.getOtherFormatForText("Parkplatz Eau-Le"));
 		Assert.assertEquals("foostrasse truc straße", d.getOtherFormatForText("foo strasse trucstraße"));
+		Assert.assertEquals("foostrasse truc straße", d.getOtherFormatForText("foo-strasse trucstraße"));
 		Assert.assertEquals("foo str truc straße", d.getOtherFormatForText("foostr trucstraße"));
 
 		Assert.assertEquals("foo str. truc straße", d.getOtherFormatForText("foostr. trucstraße"));
+		
+		
 	}
 	
 	
@@ -190,6 +198,13 @@ public class DecompoudTest {
 		
 		Assert.assertEquals(state.SEPARATE,d.getSate("truc Strasse"));
 		Assert.assertEquals(state.SEPARATE,d.getSate("truc Strasse foo"));
+	}
+	
+	@Test
+	public void isDecompoudCountryCode(){
+		Assert.assertFalse(Decompounder.isDecompoudCountryCode(null));
+		Assert.assertTrue(Decompounder.isDecompoudCountryCode("de"));
+		Assert.assertTrue(Decompounder.isDecompoudCountryCode("DE"));
 	}
 
 }

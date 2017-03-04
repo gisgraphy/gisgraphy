@@ -242,14 +242,18 @@ public class BasicAddressFormater {
 		lines.add(joinAndSkipNulls(" ",address.getName(),address.getRecipientName()).trim());
 	}
 	
-	String[] substrings = getFormatString(scriptType, regionCode, address).split("\\*");
+	String formatString = getFormatString(scriptType, regionCode, address);
+	if (address.getStreetName()==null && formatString.indexOf("2")>=0){
+		formatString = formatString.replace("*75*", "*5*7*");
+	}
+	String[] substrings = formatString.split("\\*");
 	for (String substr : substrings) {
 		StringBuilder currentLine = new StringBuilder();
 		int donTputNextComma = -1;
 		int current_item = 0;
 		for (char c : substr.toCharArray()) {
 			boolean lineIsNotEmpty = currentLine.toString().trim().length()!=0;
-			String sep= ", ";
+			String sep= ",";
 			current_item++;
 			String part = "";
 			if (c == '0'){
@@ -261,7 +265,7 @@ public class BasicAddressFormater {
 			else if (c == '1'){
 				part = joinAndSkipNulls(" ",address.getHouseNumber(), address.getHouseNumberInfo());
 				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty){
-					part=", "+part;
+					part=sep+" "+part;
 				}
 				donTputNextComma =2;
 			}
@@ -292,7 +296,7 @@ public class BasicAddressFormater {
 			else if (c == '3'){
 				part = joinAndSkipNulls(", ",address.getCitySubdivision(), address.getDependentLocality(), address.getQuarter(),address.getDistrict());
 				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty  && donTputNextComma<1){
-					part=", "+part;
+					part=sep+" "+part;
 				}
 			}
 			else if (c == '4'){
@@ -305,7 +309,7 @@ public class BasicAddressFormater {
 					part = address.getCity();
 				}
 				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty  && donTputNextComma<1){
-					part=", "+part;
+					part=sep+" "+part;
 				}
 			}
 			else if (c == '6'){
@@ -315,7 +319,7 @@ public class BasicAddressFormater {
 					part = joinAndSkipNulls(" ",state);;
 				}
 				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty){
-					part=", "+part;
+					part=sep+" "+part;
 				}
 			}
 			else if (c == '7'){
@@ -327,7 +331,7 @@ public class BasicAddressFormater {
 			else if (c == '9'){
 				part = joinAndSkipNulls(", ",address.getPOBox(),address.getPOBoxInfo(),address.getPOBoxAgency(),address.getPostOfficeBox());
 				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty  && donTputNextComma<1){
-					part=", "+part;
+					part=sep+" "+part;
 				}
 			}
 			else {

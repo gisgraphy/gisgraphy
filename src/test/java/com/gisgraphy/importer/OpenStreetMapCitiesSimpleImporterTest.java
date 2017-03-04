@@ -34,6 +34,7 @@ import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.GeolocHelper;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class OpenStreetMapCitiesSimpleImporterTest {
@@ -316,7 +317,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		importer.setFullTextSearchEngine(mockfullFullTextSearchEngine);
 		
-		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE);
+		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE, null);
 		Assert.assertEquals(solrResponseDto, actual);
 		EasyMock.verify(mockfullFullTextSearchEngine);
 	}
@@ -349,7 +350,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		importer.setFullTextSearchEngine(mockfullFullTextSearchEngine);
 		
-		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE);
+		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE, null);
 		Assert.assertEquals(null, actual);
 		EasyMock.verify(mockfullFullTextSearchEngine);
 	}
@@ -382,7 +383,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		importer.setFullTextSearchEngine(mockfullFullTextSearchEngine);
 		
-		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE);
+		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE, null);
 		Assert.assertEquals(null, actual);
 		EasyMock.verify(mockfullFullTextSearchEngine);
 	}
@@ -391,15 +392,15 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	public void getNearestCityWithNullName(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		Point location = GeolocHelper.createPoint(3F, 4F);
-		Assert.assertNull(importer.getNearestByPlaceType(location, "", "FR",ONLY_CITY_PLACETYPE));
-		Assert.assertNull(importer.getNearestByPlaceType(location, " ", "FR",ONLY_CITY_PLACETYPE));
-		Assert.assertNull(importer.getNearestByPlaceType(location, null, "FR",ONLY_CITY_PLACETYPE));
+		Assert.assertNull(importer.getNearestByPlaceType(location, "", "FR",ONLY_CITY_PLACETYPE, null));
+		Assert.assertNull(importer.getNearestByPlaceType(location, " ", "FR",ONLY_CITY_PLACETYPE, null));
+		Assert.assertNull(importer.getNearestByPlaceType(location, null, "FR",ONLY_CITY_PLACETYPE, null));
 	}
 	
 	@Test
 	public void getNearestCityWithNullLocation(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
-		Assert.assertNull(importer.getNearestByPlaceType(null, "paris", "FR",ONLY_CITY_PLACETYPE));
+		Assert.assertNull(importer.getNearestByPlaceType(null, "paris", "FR",ONLY_CITY_PLACETYPE, null));
 		
 	}
 	
@@ -499,7 +500,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce") || !countryCode.equals("PL")){
 					throw new RuntimeException("the getNearestCity() function is not called with the correct parameter");
 				}
@@ -589,7 +590,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		final Adm adm = new Adm(2);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce") || !countryCode.equals("PL")){
 					throw new RuntimeException("the getNearestCity() function is not called with the correct parameter");
 				}
@@ -691,7 +692,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce 02") || !countryCode.equals("PL") || placetype != Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE){
 					throw new RuntimeException("the function getNearestCity() is not called with the correct parameter");
 				}
@@ -774,7 +775,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce") || !countryCode.equals("PL") || placetype != Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE){
 					throw new RuntimeException("the getNearestCity() function is not called with the correct parameter");
 				}
@@ -855,7 +856,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce") || !countryCode.equals("PL")|| placetype != Constants.ONLY_CITY_PLACETYPE){
 					throw new RuntimeException("the function is not called with the correct parameter");
 				}
@@ -937,7 +938,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce") || !countryCode.equals("PL")|| placetype != Constants.ONLY_CITY_PLACETYPE){
 					throw new RuntimeException("the function is not called with the correct parameter");
 				}
@@ -1020,7 +1021,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				return solrResponseDtoCity;
 			};
 			
@@ -1080,7 +1081,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				return solrResponseDtoCity;
 			};
 			
@@ -1149,7 +1150,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.replay(solrResponseDtoAdm);
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				return solrResponseDtoCity;
 			};
 			
@@ -1213,7 +1214,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce") || !countryCode.equals("PL")){
 					throw new RuntimeException("the function is not called with the correct parameter");
 				}
@@ -1294,7 +1295,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter(){
 			@Override
-			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype) {
+			protected SolrResponseDto getNearestByPlaceType(Point location, String name, String countryCode,Class[]placetype, Geometry shape) {
 				if (!name.equals("Pełczyce") || !countryCode.equals("PL")){
 					throw new RuntimeException("the function is not called with the correct parameter");
 				}

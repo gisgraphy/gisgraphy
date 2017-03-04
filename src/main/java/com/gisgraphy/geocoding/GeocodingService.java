@@ -163,19 +163,8 @@ public class GeocodingService implements IGeocodingService {
 			}
 	};
 	
-	List<String> words = new ArrayList<String>(){
-		{
-			add("weg.");
-			add("str.");
-			add("straße.");
-			add("strasse.");
-			add("plätze.");
-			add("platze.");
-			add("wald.");
-			add("str.");
-		}
-	};
-	Decompounder decompounder = new Decompounder(words);
+	
+	Decompounder decompounder = new Decompounder();
 
 	/**
 	 * The logger
@@ -324,7 +313,7 @@ public class GeocodingService implements IGeocodingService {
 			String alternativeGermanAddress =null;
 			if (streettypes!=null && streettypes.size()==1){
 				smartstreetdetection = true;
-				if ((countryCode!=null && countryCode.equalsIgnoreCase("DE")) || decompounder.getSate(newAddress)!=state.NOT_APPLICABLE){
+				if (decompounder.isDecompoudCountryCode(countryCode) && decompounder.getSate(newAddress)!=state.NOT_APPLICABLE){
 					logger.error("find specific german address");
 					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
 					logger.error("alternativeGermanAddress= "+alternativeGermanAddress);
@@ -334,7 +323,7 @@ public class GeocodingService implements IGeocodingService {
 					logger.error("new alternative with synonyms ="+alternativeGermanAddress);
 					
 				} else {
-					logger.error("don't specific german address");
+					logger.error("don't proces specific german address");
 				}
 			}
 				results = doSearch(newAddress,alternativeGermanAddress, countryCode, 
@@ -993,7 +982,7 @@ public class GeocodingService implements IGeocodingService {
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
 					String streetName = solrResponseDto.getName();
 					String isIn = solrResponseDto.getIs_in();
-					if (!isEmptyString(solrResponseDto.getName())){ 
+					if (!isEmptyString(streetName)){ 
 						if(streetName.equals(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin)){//probably the same street
 							if (housenumberFound){
 								continue;
@@ -1109,7 +1098,7 @@ public class GeocodingService implements IGeocodingService {
 				}
 				 
 				if (logger.isDebugEnabled() && solrResponseDto != null) {
-					logger.debug("=>place (" + solrResponseDto.getFeature_id()+") : "+solrResponseDto.getName() +" in "+solrResponseDto.getIs_in());
+					logger.debug("=>place (" + (solrResponseDto.getOpenstreetmap_id()==null?solrResponseDto.getFeature_id():solrResponseDto.getOpenstreetmap_id())+") : "+solrResponseDto.getName() +" in "+solrResponseDto.getIs_in());
 				}
 				address.getGeocodingLevel();//force calculation of geocodingLevel
 				address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
@@ -1181,13 +1170,7 @@ public class GeocodingService implements IGeocodingService {
 		if (isEmptyString(text)) {
 			return new ArrayList<SolrResponseDto>();
 		}
-		Output output;
-		if (placetypes != null && placetypes.length == 1 && placetypes[0] == Street.class) {
-			output = MEDIUM_OUTPUT;
-		} else {
-			output = LONG_OUTPUT;
-		}
-		FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(FulltextQuerySolrHelper.NUMBER_OF_STREET_TO_RETRIEVE), output, placetypes, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(FulltextQuerySolrHelper.NUMBER_OF_STREET_TO_RETRIEVE), LONG_OUTPUT, placetypes, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking().withFuzzy(fuzzy);
 		if (fuzzy){
 			query.withFuzzy(fuzzy);

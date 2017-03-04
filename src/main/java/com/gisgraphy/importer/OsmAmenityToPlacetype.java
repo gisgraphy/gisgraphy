@@ -61,6 +61,7 @@ import com.gisgraphy.domain.geoloc.entity.Hotel;
 import com.gisgraphy.domain.geoloc.entity.House;
 import com.gisgraphy.domain.geoloc.entity.Ice;
 import com.gisgraphy.domain.geoloc.entity.Library;
+import com.gisgraphy.domain.geoloc.entity.Mall;
 import com.gisgraphy.domain.geoloc.entity.Mill;
 import com.gisgraphy.domain.geoloc.entity.Museum;
 import com.gisgraphy.domain.geoloc.entity.NightClub;
@@ -594,6 +595,8 @@ public class OsmAmenityToPlacetype {
 		}
 		if ("cemetery".equals(a)){
 			gisfeature = new Cemetery();
+		} else if ("retail".equals(a) || "commercial".equals(a)){
+			gisfeature = new Mall();
 		} else {
 			return null;
 		}

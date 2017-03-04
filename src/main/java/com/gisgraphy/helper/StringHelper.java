@@ -191,69 +191,6 @@ public class StringHelper {
 	
 	
 	public static boolean isSameName(String expected, String actual){
-		/*if (actual!=null && expected!=null){
-			if (actual.equalsIgnoreCase(expected)){ //shortcut
-				return true;
-			}
-			//split the strings
-			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;]");
-			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一]");
-
-			//first we check if actual has more long words than expected
-			//saint jean is not saint jean de luz, but 'la petite maison' is ok for 'petite maison'
-			List<String> actualSplitedLong = new ArrayList<String>();
-			for (String word:actualSplited){
-				if (word.length()>3){
-					if (word!=null){
-						actualSplitedLong.add(normalize(word));
-					}
-				} else if (word.equals("st")){
-					Pattern p = Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
-					Matcher m =p.matcher(expected);
-					if (m.find()&&m.groupCount()>=1){
-						actualSplitedLong.add(m.group(1));
-					}
-				}
-			}
-			List<String> expectedSplitedLong = new ArrayList<String>();
-			for (String word:expectedSplited){
-				if (word.length()>3){
-					if (word!=null){
-						expectedSplitedLong.add(normalize(word));
-					}
-				}else if (word.equals("st")){
-					Pattern p = Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
-					Matcher m =p.matcher(actual);
-					if (m.find()&&m.groupCount()>=1){
-						expectedSplitedLong.add(m.group(1));
-					}
-				}
-			}
-			if (actualSplitedLong.size() > expectedSplitedLong.size() ){
-				//there is too much word
-				return false;
-			}
-			if (actualSplitedLong.size() < expectedSplitedLong.size() ){
-				//not all word are there
-				return false;
-			}
-			//same number of word but are they the same ?
-			int countMissing = 0;
-			for (String word :actualSplitedLong){
-				if(!expectedSplitedLong.contains(word)){
-					countMissing++;
-				}
-				if (expectedSplitedLong.size() == actualSplitedLong.size() && (expectedSplitedLong.size()==1 || expectedSplitedLong.size()==2) && countMissing >0){
-					//if one or two words, every words should be present
-					return false;
-				} else if (countMissing > MISSING_WORD_TOLERANCE){
-					return false;
-				}
-			}
-
-			return true;
-		}
-		return false;*/
 		return isSameName(expected, actual, MISSING_WORD_TOLERANCE);
 	}
 
@@ -283,7 +220,7 @@ public class StringHelper {
 					}
 				}  else if (word.equals("st")){
 					Matcher m =p.matcher(expected);
-					if (m.find()&&m.groupCount()>=1){
+					if (m.find() && m.groupCount()>=1){
 						actualSplitedLong.add(m.group(1).toLowerCase());
 					}
 				}

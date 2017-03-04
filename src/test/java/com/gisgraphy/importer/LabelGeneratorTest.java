@@ -797,10 +797,10 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals("75000", generator.getBestZipString(zips));
 		
 		zips = new HashSet<String>();
-		zips.add("AA");
-		zips.add("B");
+		zips.add("AAAA");
+		zips.add("BBB");
+		Assert.assertEquals("AAAA", generator.getBestZipString(zips));
 		
-		Assert.assertEquals("AA", generator.getBestZipString(zips));
 		zips = new HashSet<String>();
 		zips.add("AD500");
 		zips.add("AD501");
@@ -1117,6 +1117,36 @@ public void testGenerateLabel_Adm(){
 			address.setState("state");
 			actual = generator.getFullyQualifiedName(address);
 			Assert.assertEquals("3 foo bar street, dependentLocality, district, quarter, paris, adm2, France", actual);
+			
+			//countrycode=null=>housenumber before street 
+			address= new Address();
+				address.setStreetName("foo bar street");
+				address.setHouseNumber("3");
+				address.setCity("paris");
+				address.setCitySubdivision("3e arrondissement");
+				address.setAdm1Name("adm1");
+				address.setAdm2Name("adm2");
+				address.setAdm3Name("adm3");
+				address.setAdm4Name("adm4");
+				address.setAdm5Name("adm5");
+				address.setCountryCode(null);
+				actual = generator.getFullyQualifiedName(address);
+				Assert.assertEquals("3 foo bar street, 3e arrondissement, paris, adm5, adm4, adm3, adm2, adm1", actual);
+				
+				//countrycode=DE=>housenumber after street 
+				address= new Address();
+				address.setStreetName("foo bar street");
+				address.setHouseNumber("3");
+				address.setCity("paris");
+				address.setCitySubdivision("3e arrondissement");
+				address.setAdm1Name("adm1");
+				address.setAdm2Name("adm2");
+				address.setAdm3Name("adm3");
+				address.setAdm4Name("adm4");
+				address.setAdm5Name("adm5");
+				address.setCountryCode("DE");
+				actual = generator.getFullyQualifiedName(address);
+				Assert.assertEquals("foo bar street 3, 3e arrondissement, paris, adm5, adm4, adm3, adm2, adm1, Germany", actual);
 
 		}
 		

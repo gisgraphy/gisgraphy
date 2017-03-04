@@ -310,9 +310,9 @@ public class FulltextQuerySolrHelper {
 
 	private static void getConfigInFile() {
 		try {
-			File fileDir = new File("/home/gisgraphy/workspace/gisgraphy/etc/solrtemplates.txt");
+			//File fileDir = new File("/home/gisgraphy/workspace/gisgraphy/etc/solrtemplates.txt");
 			
-			//File fileDir = new File("/usr/local/gisgraphy/solrtemplates.txt");
+			File fileDir = new File("/usr/local/gisgraphy/solrtemplates.txt");
 
 			BufferedReader in = new BufferedReader(
 			   new InputStreamReader(
@@ -321,7 +321,7 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
-				MM_NOT_ALL_WORD_REQUIRED=in.readLine();
+				CITY_BOOST_QUERY=in.readLine();
 				
 
 	                in.close();

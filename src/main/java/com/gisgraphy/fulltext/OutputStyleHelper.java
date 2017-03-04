@@ -34,7 +34,9 @@ public class OutputStyleHelper {
 			.append(FullTextFields.FULLY_QUALIFIED_NAME.getValue())
 			.append(",").append(FullTextFields.ZIPCODE.getValue())
 			.append(",")
-			.append(FullTextFields.PLACETYPE.getValue())
+			.append(",").append(FullTextFields.LAT.getValue())
+			.append(",").append(FullTextFields.LONG.getValue())
+			.append(",").append(FullTextFields.PLACETYPE.getValue())
 			.append(",").append(
 				FullTextFields.COUNTRYCODE.getValue())
 			.append(",").append(
@@ -47,8 +49,6 @@ public class OutputStyleHelper {
 		.append(",").append(FullTextFields.LENGTH.getValue())
 		.append(",").append(FullTextFields.STREET_TYPE.getValue())
 		.append(",").append(FullTextFields.OPENSTREETMAP_ID.getValue())
-		.append(",").append(FullTextFields.LAT.getValue())
-		.append(",").append(FullTextFields.LONG.getValue())
 		.append(",").append(
 			FullTextFields.FEATURECLASS.getValue()).append(
 			",").append(

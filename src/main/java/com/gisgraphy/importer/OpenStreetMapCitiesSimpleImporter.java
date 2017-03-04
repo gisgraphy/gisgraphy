@@ -146,6 +146,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	String countrycode=null;
 	String name=null;
 	Point location=null;
+	Geometry shape=null;;
 	Point adminCentreLocation=null;
 	int  adminLevel =0;
 	Long osmId = 0L;
@@ -193,6 +194,14 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	    	return;
 	    }
 	}
+	//shape
+		if(!isEmptyField(fields, 11, false)){
+			try {
+				shape = (Geometry) GeolocHelper.convertFromHEXEWKBToGeometry(fields[11]);
+			    } catch (RuntimeException e) {
+			    	logger.warn("can not parse shape for id "+fields[1]+" : "+e);
+			    }
+		}
 	
 	//admin_centre_location
 		if (!isEmptyField(fields, 10, false)) {
@@ -205,7 +214,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 	GisFeature place=null;
 	if (isPoi(fields[12], fields[7])) {
-		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE);
+		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		//find and delete the city or subdivision 
 		if (poiToremove!=null){
 			GisFeature cityToRemoveObj = null;
@@ -223,7 +232,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		//recreate the poi
 		place = createNewPoi(name, countrycode, location, adminCentreLocation);
 	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12])){
-		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE);
+		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		if (nearestCity != null ){
 			if (nearestCity.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){
 				place = citySubdivisionDao.getByFeatureId(nearestCity.getFeature_id());
@@ -233,10 +242,16 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				} else{ 
 					place.setSource(GISSource.GEONAMES_OSM);
 					//generally osm data is better than geonames, we overide geonames values
-					place.setName(name);
+					if (name!=null){
+						if (place.getOpenstreetmapId()==null ){
+							//if osmid is not null, the name has already been set by previous line,
+							//and because relation are before node the relation one is probably better
+							place.setName(name);
+						}
+					}
 					place.setCountryCode(countrycode);
 					if (adminCentreLocation!=null){
-					place.setAdminCentreLocation(adminCentreLocation);
+						place.setAdminCentreLocation(adminCentreLocation);
 					}
 					if (location!=null){
 						place.setLocation(location);
@@ -262,7 +277,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 		
 	}  else {
-		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE);
+		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE, shape);
 		if (nearestCity != null ){
 			place = cityDao.getByFeatureId(nearestCity.getFeature_id());
 			if (place==null){
@@ -271,12 +286,16 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			} else{ 
 				place.setSource(GISSource.GEONAMES_OSM);
 				//generally osm data is better than geonames, we overide geonames values
-				place.setName(name);
+				if (name!=null && place.getOpenstreetmapId()==null){
+					//if osmid is not null, the name has already been set by previous line,
+					//and because relation are before node the relation one is probably better
+					place.setName(name);
+				}
 				place.setCountryCode(countrycode);
 				if (adminCentreLocation!=null){
 					place.setAdminCentreLocation(adminCentreLocation);
 				}
-				if (location!=null){
+				if (location!=null && place.getOpenstreetmapId()==null){
 						place.setLocation(location);
 				}
 			}
@@ -294,7 +313,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	}
 	//populate new fields
 	//population
-	if(place.getPopulation()==null && !isEmptyField(fields, 8, false)){
+	if(!isEmptyField(fields, 8, false)){
 		try {
 			String populationStr = fields[8];
 			int population = parsePopulation(populationStr);
@@ -317,18 +336,14 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	//place tag/amenity
 	if(!isEmptyField(fields, 12, false)){
 		place.setAmenity(fields[12]);
-}
-	//shape
-	if(!isEmptyField(fields, 11, false)){
-		try {
-			Geometry shape = (Geometry) GeolocHelper.convertFromHEXEWKBToGeometry(fields[11]);
-			place.setShape(shape);
-		    } catch (RuntimeException e) {
-		    	logger.warn("can not parse shape for id "+fields[1]+" : "+e);
-		    }
+		
 	}
+	
+	//set shape
+	place.setShape(shape);
+	
 	//osmId
-	if (place.getOpenstreetmapId()!=null){
+	if (place.getOpenstreetmapId()==null){
 		//we do not override the osm ID because if it is filled, we are probably with a node and it 
 		//has already been filled by a relation
 		if (!isEmptyField(fields, 1, true)) {
@@ -531,7 +546,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 
 
-	protected SolrResponseDto getNearestByPlaceType(Point location, String name,String countryCode,Class[] placetypes) {
+	protected SolrResponseDto getNearestByPlaceType(Point location, String name,String countryCode,Class[] placetypes, Geometry shape) {
 		if (location ==null || name==null || "".equals(name.trim())){
 			return null;
 		}
@@ -553,12 +568,24 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		FulltextResultsDto results = fullTextSearchEngine.executeQuery(query);
 		if (results != null){
 			for (SolrResponseDto solrResponseDto : results.getResults()) {
-				if (solrResponseDto!=null && solrResponseDto.getScore() >= SCORE_LIMIT 
+				if (solrResponseDto!=null 
 						&& solrResponseDto.getOpenstreetmap_id()== null){
 					//if fopenstreetmapid is not null it is because the shape has already been set
 					//(R are before nodes), we ignore because we don't want the place if relation has been set
 					if (solrResponseDto.getName()!=null && StringHelper.isSameName(name, solrResponseDto.getName())){
-						return solrResponseDto;
+						if (shape!=null){
+							//we should verify
+							if (solrResponseDto.getLng()!=null && solrResponseDto.getLat()!=null){
+								if (shape.contains(GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat()))){
+									return solrResponseDto;
+								}
+							} else {
+								logger.error("no GPS coordinate for "+solrResponseDto);
+							} 
+						} else {
+							//if the name is the same, no need to verify shape
+							return solrResponseDto;
+						}
 					}
 				} else {
 					return null;
