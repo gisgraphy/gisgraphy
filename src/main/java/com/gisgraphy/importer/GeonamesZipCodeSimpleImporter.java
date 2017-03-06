@@ -244,7 +244,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	   // }
 	} else if (results.getResults().size() == 1) {
 	    // we found the one!
-		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())){
+		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())  ||  results.getResults().get(0).getScore()> 15){
 			return results.getResults().get(0).getFeature_id();
 		} else {
 			return null;
@@ -252,11 +252,19 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	} else {
 		// more than one match iterate and calculate distance and
 	    // take the best one by score
-		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())){
-			return results.getResults().get(0).getFeature_id();
-		} else {
-			return null;
+		for (SolrResponseDto result : results.getResults()){
+			//score is important for case when we search Munchen and city name is Munich
+			if (StringHelper.isSameName(fields[2], result.getName()) ||  result.getScore()> 15){
+				return result.getFeature_id();
+			} 
+			//shortcut : if score is less than this, the next one will be automatically less, 
+			if (result.getScore()<15){
+				return null;
+			}
 		}
+		//else {
+			return null;
+		//}
 	   // return findNearest(zipPoint, maxDistance, results);
 	}
 

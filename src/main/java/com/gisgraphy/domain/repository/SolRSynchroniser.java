@@ -369,7 +369,7 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 		    	ex.setField(FullTextFields.MAX_SPEED_BACKWARD.getValue(), ((Street) gisFeature).getMaxSpeedBackward());
 		    	ex.setField(FullTextFields.AZIMUTH_START.getValue(), ((Street) gisFeature).getAzimuthStart());
 		    	ex.setField(FullTextFields.AZIMUTH_END.getValue(), ((Street) gisFeature).getAzimuthEnd());
-		    	
+		    	//only for street,  streets are Common Name but city are Proper name 
 		    	if (gisFeature.getName()!=null && Decompounder.isDecompoudCountryCode(countryCode) && decompounder.getSate(gisFeature.getName())!=state.NOT_APPLICABLE){
 		    		ex.setField(FullTextFields.COMPOUND.getValue(), decompounder.getOtherFormatForText(gisFeature.getName()));
 		    	}

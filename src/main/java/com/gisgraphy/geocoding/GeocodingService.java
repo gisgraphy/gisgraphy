@@ -313,7 +313,7 @@ public class GeocodingService implements IGeocodingService {
 			String alternativeGermanAddress =null;
 			if (streettypes!=null && streettypes.size()==1){
 				smartstreetdetection = true;
-				if (decompounder.isDecompoudCountryCode(countryCode) && decompounder.getSate(newAddress)!=state.NOT_APPLICABLE){
+				if (Decompounder.isDecompoudCountryCode(countryCode) && decompounder.getSate(newAddress)!=state.NOT_APPLICABLE){
 					logger.error("find specific german address");
 					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
 					logger.error("alternativeGermanAddress= "+alternativeGermanAddress);

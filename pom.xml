@@ -533,10 +533,10 @@
 				<updatePolicy>daily</updatePolicy>
 			</releases>
 		</repository>
-		<repository>
+		<!--<repository>
 			<id>codehaus</id>
 			<url>http://repository.codehaus.org</url>
-		</repository>
+		</repository>-->
 		<repository>
 			<id>javanet</id>
 			<url>https://maven-repository.dev.java.net/repository/</url>
@@ -610,7 +610,7 @@
 		<dependency>
 			<groupId>com.vividsolutions</groupId>
 			<artifactId>jts</artifactId>
-			<version>1.8</version>
+			<version>1.13</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -1067,6 +1067,11 @@
   <version>${spring.version}</version>
   <optional>true</optional>
   <scope>test</scope>
+</dependency>
+<dependency> 
+     <groupId>org.springframework</groupId> 
+     <artifactId>spring-aspects</artifactId> 
+     <version>${spring.version}</version> 
 </dependency>
 		<!-- <dependency>
 			<groupId>org.springframework</groupId>

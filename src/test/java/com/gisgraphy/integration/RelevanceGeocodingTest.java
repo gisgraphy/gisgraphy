@@ -448,6 +448,24 @@ public class RelevanceGeocodingTest {
 		}
 	}
 	
+	@Test
+	public void germanHouseNumber_Not_well_placedTest() throws InterruptedException, IOException{
+		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+			String rawAddress = "4 lottumstrasse berlin";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstCorrectById(180331460L,addressResultsDto.getResult(), rawAddress);
+			Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
+			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			//withoutcountrycode
+			 addressResultsDto = doGeocoding(rawAddress);
+			Assert.assertNotNull(addressResultsDto);
+			isFirstCorrectById(180331460L,addressResultsDto.getResult(), rawAddress);
+			Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
+			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+		}
+	}
+	
 	
 	
 	@Test
@@ -737,7 +755,23 @@ public class RelevanceGeocodingTest {
 //  
 //	 
 //	
-	
+	@Test
+	public void structuredAddressGermanHouseNumberTest() throws InterruptedException, IOException{
+		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+	Address address = new Address();
+	address.setHouseNumber("4");
+	address.setStreetName("lottumstrasse");
+	address.setStreetType("");
+	address.setZipCode("");
+	address.setCity("berlin");
+	address.setState("");
+	AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
+	Assert.assertNotNull(addressResultsDto);
+	isFirstCorrectById(180331460L,addressResultsDto.getResult(), address.toString());
+	Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
+	IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+		}
+		}
 	
 	@Test
 	public void structuredAddress1Test() throws InterruptedException, IOException{

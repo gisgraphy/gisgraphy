@@ -75,13 +75,15 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterProcessor {
 	
+	private static final int MIN_SCORE = 15;
+
 	public static final int SCORE_LIMIT = 1;
 	
 	public final static int BATCH_UPDATE_SIZE = 100;
 
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapCitiesSimpleImporter.class);
 	
-    public static final Output MINIMUM_OUTPUT_STYLE = Output.withDefaultFormat().withStyle(OutputStyle.SHORT);
+    public static final Output MEDIUM_OUTPUT_STYLE = Output.withDefaultFormat().withStyle(OutputStyle.MEDIUM);
     
     protected IIdGenerator idGenerator;
     
@@ -151,6 +153,10 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	int  adminLevel =0;
 	Long osmId = 0L;
 	
+	if (true){
+		return;
+	}
+	
 	//
 	// old Line table has the following fields :
 	// --------------------------------------------------- 
@@ -176,7 +182,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			name= name.substring(0, NAME_MAX_LENGTH-1);
 		}
 	}
-
+	
 	if (name==null){
 		return;
 	}
@@ -211,6 +217,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		    	logger.warn("can not parse admin centre location for "+fields[10]+" : "+e);
 		    }
 		}
+		
 	
 	GisFeature place=null;
 	if (isPoi(fields[12], fields[7])) {
@@ -545,7 +552,6 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 	
 
-
 	protected SolrResponseDto getNearestByPlaceType(Point location, String name,String countryCode,Class[] placetypes, Geometry shape) {
 		if (location ==null || name==null || "".equals(name.trim())){
 			return null;
@@ -553,9 +559,9 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		FulltextQuery query;
 		try {
 			if (placetypes==null){
-				query = (FulltextQuery) new FulltextQuery(name).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
+				query = (FulltextQuery) new FulltextQuery(name).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MEDIUM_OUTPUT_STYLE);
 			} else {
-				query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MINIMUM_OUTPUT_STYLE);
+				query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MEDIUM_OUTPUT_STYLE);
 			}
 			
 		} catch (IllegalArgumentException e) {
@@ -572,11 +578,21 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 						&& solrResponseDto.getOpenstreetmap_id()== null){
 					//if fopenstreetmapid is not null it is because the shape has already been set
 					//(R are before nodes), we ignore because we don't want the place if relation has been set
-					if (solrResponseDto.getName()!=null && StringHelper.isSameName(name, solrResponseDto.getName())){
-						if (shape!=null){
+					if (solrResponseDto.getScore()< 15 && (solrResponseDto.getName()!=null && StringHelper.isSameName(name, solrResponseDto.getName()))){
+						System.out.println("");
+					}//score is important for case when we search Munchen and city name is Munich
+					if (solrResponseDto.getName()!=null && StringHelper.isSameName(name, solrResponseDto.getName()) || solrResponseDto.getScore() > MIN_SCORE){
+						if (shape!=null && shape.isValid()){
 							//we should verify
 							if (solrResponseDto.getLng()!=null && solrResponseDto.getLat()!=null){
-								if (shape.contains(GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat()))){
+								boolean isInShape = false;
+								try {
+									Point point = GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat());
+									isInShape = shape.contains(point);
+								} catch (Exception e) {
+									logger.error("can not determine if city is in shape for "+name+" in "+countryCode+" :  "+e.getMessage());
+								}
+								if (isInShape){
 									return solrResponseDto;
 								}
 							} else {
@@ -632,7 +648,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		FulltextQuery query;
 		try {
 			query = (FulltextQuery)new FulltextQuery(name).withAllWordsRequired(false).withoutSpellChecking().
-					withPlaceTypes(ONLY_ADM_PLACETYPE).withOutput(MINIMUM_OUTPUT_STYLE).withPagination(Pagination.ONE_RESULT);
+					withPlaceTypes(ONLY_ADM_PLACETYPE).withOutput(MEDIUM_OUTPUT_STYLE).withPagination(Pagination.ONE_RESULT);
 		} catch (IllegalArgumentException e) {
 			logger.error("can not create a fulltext query for "+name);
 			return null;

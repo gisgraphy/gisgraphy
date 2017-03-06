@@ -149,6 +149,7 @@ public class Decompounder {
 				return s.toString().replaceAll("\\s+", " ").trim();
 	}
 	
+
 	/*public String separate(String str) {
 		//Simple but probably not optimized
 		Matcher m = p.matcher(str);

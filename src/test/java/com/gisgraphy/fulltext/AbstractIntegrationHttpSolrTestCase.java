@@ -106,9 +106,12 @@ public abstract class AbstractIntegrationHttpSolrTestCase extends
 	    String jetty_home = System.getProperty("jetty.home",jetty_default);
 
 	    Server server = new Server();
-	    int port = generateRandomPort();
+	    //int port = generateRandomPort();
+	    //force port
+	    int port=54611;
 	    Connector connector=new SelectChannelConnector();
 	    connector.setPort(Integer.getInteger("jetty.port",port).intValue());
+	    System.out.println("starting solr on port "+port);
 	    server.setConnectors(new Connector[]{connector});
 	    
 	    WebAppContext webapp = new WebAppContext();

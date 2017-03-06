@@ -342,7 +342,7 @@ public class FulltextSearchEngineTest extends
     	Double length = 3.5D;
     	boolean oneWay = true;
     	StreetType streetType = StreetType.PATH;
-    	String countryCode= "FR";
+    	String countryCode= "DE";
     	String name= "foostr";
     	long featureId =12345l;
     	Float latitude = 4.5F;
@@ -386,7 +386,7 @@ public class FulltextSearchEngineTest extends
 
 	    Pagination pagination = paginate().from(1).to(10);
 	    Output output = Output.withFormat(OutputFormat.XML)
-		    .withLanguageCode("FR").withStyle(OutputStyle.FULL)
+		.withStyle(OutputStyle.FULL)
 		    .withIndentation();
 	    
 	    //exact
@@ -395,11 +395,7 @@ public class FulltextSearchEngineTest extends
 	    FulltextResultsDto results = fullTextSearchEngine.executeQuery(fulltextQuery);
         Assert.assertEquals(1, results.getNumFound());
 	   
-	    //synonym collapse
-	     fulltextQuery = new FulltextQuery("foostrasse",
-		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
-	     results = fullTextSearchEngine.executeQuery(fulltextQuery);
-        Assert.assertEquals(1, results.getNumFound());
+	    
         
         //separeted
          fulltextQuery = new FulltextQuery("foo strasse",
@@ -412,6 +408,12 @@ public class FulltextSearchEngineTest extends
        		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
        	     results = fullTextSearchEngine.executeQuery(fulltextQuery);
                Assert.assertEquals(1, results.getNumFound());
+               
+             //synonym collapse
+       	     fulltextQuery = new FulltextQuery("foostrasse",
+       		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
+       	     results = fullTextSearchEngine.executeQuery(fulltextQuery);
+               Assert.assertEquals(1, results.getNumFound());
     
     }
     
@@ -420,7 +422,7 @@ public class FulltextSearchEngineTest extends
     	Double length = 3.5D;
     	boolean oneWay = true;
     	StreetType streetType = StreetType.PATH;
-    	String countryCode= "FR";
+    	String countryCode= "DE";
     	String name= "foo str";
     	long featureId =12345l;
     	Float latitude = 4.5F;

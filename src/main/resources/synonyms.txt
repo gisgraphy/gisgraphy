@@ -356,7 +356,10 @@ platz=>pl,platz
 quelle=>qu,quelle
 rhein=>rh,rhein
 sankt=>st,sankt
-strasse=>str,strasse
+str,straße,strasse
+#str=>strasse
+#strasse=>str,straße
+#straße=>strasse,str
 unterer=>u,unterer
 untere=>u,untere
 unteres=>u,unteres
@@ -365,7 +368,7 @@ vor der=>vd,vor der
 zum=>z,zum
 
 #danish
-lille is also a city, we remove
+#lille is also a city, we remove
 #lille,ll
 nordre=>ndr,nordre
 sondre=>sdr,sondre
