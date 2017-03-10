@@ -1,5 +1,7 @@
 package com.gisgraphy.helper;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -62,6 +64,43 @@ public class AdmStateLevelInfoTest {
 		
 		
 		
+	}
+	@Test
+	public void testIsCityLevelString(){
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("", "8"));
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel(null, "8"));
+		Assert.assertFalse(AdmStateLevelInfo.isCityLevel(null, ""));
+		Assert.assertFalse(AdmStateLevelInfo.isCityLevel(null, null));
+	
+	}
+	
+	@Test
+	public void testIsCityLevel(){
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("", 8));
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("ZZ", 8));
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel(null, 8));
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("FR", 8));
+		
+		Assert.assertFalse(AdmStateLevelInfo.isCityLevel("LV", 6));
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("LV", 7));
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("LV", 8));
+		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("LV", 9));
+		Assert.assertFalse(AdmStateLevelInfo.isCityLevel("LV", 10));
+	}
+	
+
+	@Test
+	public void testIsCityLevelDoesnTOverlapADM(){
+		for (String country: countryInfo.countryLookupMap.keySet()){
+			int[] levels = new int[]{1,2,3,4,5,6,7,8,9,11};
+			for (int level: levels){
+				if (AdmStateLevelInfo.isCityLevel(country, level) && AdmStateLevelInfo.shouldBeImportedAsAdm(country, level)){
+					Assert.fail(level+" for country "+country+ " is acity and an adm level");
+				}
+				
+			}
+			
+		}
 	}
 
 }

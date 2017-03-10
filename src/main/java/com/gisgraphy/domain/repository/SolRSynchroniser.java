@@ -71,7 +71,6 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 	
 	HouseNumberSerializer houseNumberListSerializer = new HouseNumberSerializer();
 	//HouseNumberComparator houseNumberComparator = new HouseNumberComparator();
-	Decompounder decompounder = new Decompounder();
     
     private static int numberOfRetryOnFailure = 3;
 
@@ -370,9 +369,6 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 		    	ex.setField(FullTextFields.AZIMUTH_START.getValue(), ((Street) gisFeature).getAzimuthStart());
 		    	ex.setField(FullTextFields.AZIMUTH_END.getValue(), ((Street) gisFeature).getAzimuthEnd());
 		    	//only for street,  streets are Common Name but city are Proper name 
-		    	if (gisFeature.getName()!=null && Decompounder.isDecompoudCountryCode(countryCode) && decompounder.getSate(gisFeature.getName())!=state.NOT_APPLICABLE){
-		    		ex.setField(FullTextFields.COMPOUND.getValue(), decompounder.getOtherFormatForText(gisFeature.getName()));
-		    	}
 		    	
 		    	
 		    	/*if (((Street) gisFeature).getFullyQualifiedAddress()!=null && !((Street) gisFeature).getFullyQualifiedAddress().trim().equals("")){

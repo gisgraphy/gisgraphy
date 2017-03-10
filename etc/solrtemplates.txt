@@ -1,5 +1,8 @@
-_query_:"{!edismax qf='name^11 all_name  fully_qualified_name %s ' pf='all_label' ps=1 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s"
-2<-1 4<3 
+_query_:"{!edismax qf='name^25 all_name fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s"
+all_adm1_name^0.2 all_adm2_name^0.2
+
+
+placetype:city^800 placetype:adm^600 
 
 _query_:"{!edismax qf='name^11 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s"
 is_in^0.8 is_in_place^0.8  is_in_adm^0.4 is_in_zip^0.2 is_in_cities^0.7 

@@ -46,6 +46,7 @@ import org.junit.Test;
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.Street;
 import com.gisgraphy.domain.valueobject.Constants;
@@ -1753,6 +1754,20 @@ public class FulltextQuerySolrHelperTest {
 						.contains(FullTextFields.IS_IN_ADM.getValue()));
 		
 		
+	}
+	
+	@Test
+	public void isAdministrative(){
+		FulltextQuerySolrHelper helper = new FulltextQuerySolrHelper();
+		Assert.assertFalse(helper.isAdministrative(new Class[]{Street.class}));//0 match
+		Assert.assertFalse(helper.isAdministrative(new Class[]{}));//0
+		Assert.assertFalse(helper.isAdministrative(null));//0
+		Assert.assertTrue(helper.isAdministrative(new Class[]{City.class}));//1
+		Assert.assertTrue(helper.isAdministrative(new Class[]{Adm.class}));//1
+		Assert.assertTrue(helper.isAdministrative(new Class[]{CitySubdivision.class}));//1
+		Assert.assertTrue(helper.isAdministrative(new Class[]{CitySubdivision.class,Adm.class}));//2
+		Assert.assertTrue(helper.isAdministrative(new Class[]{CitySubdivision.class,Adm.class,City.class}));//all
+		Assert.assertFalse(helper.isAdministrative(new Class[]{CitySubdivision.class,Adm.class,City.class,Street.class}));//all but something else
 	}
 	
 	

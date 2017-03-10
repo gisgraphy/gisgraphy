@@ -113,7 +113,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 	OpenStreetMap openStreetMap = openStreetMapDao.getByGid(firstIdAssigned);
 	assertTrue("The oneWay attribute is not correct",openStreetMap.isOneWay());
 	assertEquals("The countryCode is not correct ","FR",openStreetMap.getCountryCode());
-	assertEquals("The is_in is not correct ","a city",openStreetMap.getIsIn());
+	assertEquals("The is_in is not correct, we don't use osm anymore ",null,openStreetMap.getIsIn());
 	assertEquals("The openstreetmapId is not correct ",new Long(11),openStreetMap.getOpenstreetmapId());
 	assertEquals("The streetType is not correct",StreetType.RESIDENTIAL, openStreetMap.getStreetType());
 	assertEquals("The name is not correct","Bachlettenstrasse", openStreetMap.getName());
@@ -344,13 +344,6 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		importerConfig.setOpenStreetMapFillIsIn(false);
 		Assert.assertFalse(openStreetMapImporter.shouldFillIsInField());
 
-		importerConfig.setGeonamesImporterEnabled(false);
-		importerConfig.setOpenStreetMapFillIsIn(true);
-		Assert.assertFalse(openStreetMapImporter.shouldFillIsInField());
-
-		importerConfig.setGeonamesImporterEnabled(false);
-		importerConfig.setOpenStreetMapFillIsIn(false);
-		Assert.assertFalse(openStreetMapImporter.shouldFillIsInField());
 
 	}
 	

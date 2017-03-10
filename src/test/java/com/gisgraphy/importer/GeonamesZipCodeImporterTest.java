@@ -42,6 +42,7 @@ import com.gisgraphy.domain.repository.IGisFeatureDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.fulltext.FulltextQuery;
+import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
@@ -53,8 +54,12 @@ public class GeonamesZipCodeImporterTest {
   
     FulltextResultsDto dtoWithTwoResults;
     FulltextResultsDto dtoWithOneResult;
+    FulltextResultsDto dtoWithTwoResultsLowScore;
+    FulltextResultsDto dtoWithOneResultLowScore;
     SolrResponseDto dtoTwo ;
     SolrResponseDto dtoOne ;
+    SolrResponseDto dtoThreeLowScore ;
+    SolrResponseDto dtoFoorLowScore ;
     boolean called = false;
     
     @Before
@@ -65,6 +70,7 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.expect(dtoOne.getLat()).andStubReturn(20D);
 	EasyMock.expect(dtoOne.getName()).andStubReturn("name");
 	EasyMock.expect(dtoOne.getLng()).andStubReturn(2D);
+	EasyMock.expect(dtoOne.getScore()).andStubReturn(FulltextQuerySolrHelper.MIN_SCORE+5);
 	EasyMock.replay(dtoOne);
 	
 	dtoTwo = EasyMock.createMock(SolrResponseDto.class);
@@ -72,14 +78,43 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.expect(dtoTwo.getLat()).andStubReturn(34D);
 	EasyMock.expect(dtoTwo.getLng()).andStubReturn(5D);
 	EasyMock.expect(dtoTwo.getName()).andStubReturn("name");
+	EasyMock.expect(dtoTwo.getScore()).andStubReturn(FulltextQuerySolrHelper.MIN_SCORE+5);
 	EasyMock.replay(dtoTwo);
+	
+	dtoThreeLowScore = EasyMock.createMock(SolrResponseDto.class);
+	EasyMock.expect(dtoThreeLowScore.getFeature_id()).andStubReturn(456L);
+	EasyMock.expect(dtoThreeLowScore.getLat()).andStubReturn(34D);
+	EasyMock.expect(dtoThreeLowScore.getLng()).andStubReturn(5D);
+	EasyMock.expect(dtoThreeLowScore.getName()).andStubReturn("name");
+	EasyMock.expect(dtoThreeLowScore.getScore()).andStubReturn(FulltextQuerySolrHelper.MIN_SCORE-5);
+	EasyMock.replay(dtoThreeLowScore);
+	
+	dtoFoorLowScore = EasyMock.createMock(SolrResponseDto.class);
+	EasyMock.expect(dtoFoorLowScore.getFeature_id()).andStubReturn(456L);
+	EasyMock.expect(dtoFoorLowScore.getLat()).andStubReturn(34D);
+	EasyMock.expect(dtoFoorLowScore.getLng()).andStubReturn(5D);
+	EasyMock.expect(dtoFoorLowScore.getName()).andStubReturn("name");
+	EasyMock.expect(dtoFoorLowScore.getScore()).andStubReturn(FulltextQuerySolrHelper.MIN_SCORE-5);
+	EasyMock.replay(dtoFoorLowScore);
+	
+	
+	
 	
 	List<SolrResponseDto> oneResult =new ArrayList<SolrResponseDto>();
 	oneResult.add(dtoOne);
 	
+	List<SolrResponseDto> oneResultLowScore =new ArrayList<SolrResponseDto>();
+	oneResultLowScore.add(dtoThreeLowScore);
+	
 	List<SolrResponseDto> twoResult =new ArrayList<SolrResponseDto>();
 	twoResult.add(dtoOne);
 	twoResult.add(dtoTwo);
+	
+	List<SolrResponseDto> twoResultLowScore =new ArrayList<SolrResponseDto>();
+	twoResultLowScore.add(dtoThreeLowScore);
+	twoResultLowScore.add(dtoFoorLowScore);
+	
+	
 	
 	dtoWithOneResult = EasyMock.createMock(FulltextResultsDto.class);
 	EasyMock.expect(dtoWithOneResult.getNumFound()).andStubReturn(1L);
@@ -92,6 +127,18 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.expect(dtoWithTwoResults.getResultsSize()).andStubReturn(2);
 	EasyMock.expect(dtoWithTwoResults.getResults()).andStubReturn(twoResult);
 	EasyMock.replay(dtoWithTwoResults);
+	
+	dtoWithOneResultLowScore = EasyMock.createMock(FulltextResultsDto.class);
+	EasyMock.expect(dtoWithOneResultLowScore.getNumFound()).andStubReturn(1L);
+	EasyMock.expect(dtoWithOneResultLowScore.getResultsSize()).andStubReturn(1);
+	EasyMock.expect(dtoWithOneResultLowScore.getResults()).andStubReturn(oneResultLowScore);
+	EasyMock.replay(dtoWithOneResultLowScore);
+	
+	dtoWithTwoResultsLowScore = EasyMock.createMock(FulltextResultsDto.class);
+	EasyMock.expect(dtoWithTwoResultsLowScore.getNumFound()).andStubReturn(2L);
+	EasyMock.expect(dtoWithTwoResultsLowScore.getResultsSize()).andStubReturn(2);
+	EasyMock.expect(dtoWithTwoResultsLowScore.getResults()).andStubReturn(twoResultLowScore);
+	EasyMock.replay(dtoWithTwoResultsLowScore);
 	
     }
     
@@ -350,7 +397,7 @@ public class GeonamesZipCodeImporterTest {
     }
     
     @Test
-    public void findFeatureBasicWithOneResult_NotSameName(){
+    public void findFeatureBasicWithOneResult_NotSameName_butScoreOK(){
 	String lat = "3.5";
 	String lng = "44";
 	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
@@ -379,12 +426,46 @@ public class GeonamesZipCodeImporterTest {
 
 	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
 	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
+	Assert.assertEquals(123L,actualFeatureId.longValue());
+	
+    }
+    
+    @Test
+    public void findFeatureBasicWithOneResult_NotSameName_butScoreKO(){
+	String lat = "3.5";
+	String lng = "44";
+	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
+	String accuracy = "5";
+	String placeName = "place name";
+	String countryCode = "FR";
+	String adm1Name = "adm1name";
+	String adm1Code = "adm1code";
+	String adm2Name = "adm2name";
+	String adm2Code = "adm2code";
+	String adm3Name = "adm3name";
+	String adm3COde = "adm3code";
+	FulltextQuery fulltextQuery = new FulltextQuery(placeName +" "+adm1Name);
+	fulltextQuery.limitToCountryCode(countryCode);
+	fulltextQuery.withPlaceTypes(com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE).around(point);
+	
+	
+	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
+	    
+	    @Override
+	    protected FulltextResultsDto doAFulltextSearch(String query, String countryCode,Point point) {
+		return dtoWithOneResultLowScore;
+	    }
+	};
+	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
+
+	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
+	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
 	Assert.assertEquals(null,actualFeatureId);
 	
     }
     
     @Test
-    public void findFeatureBasicWithSeveralResult_notSameName(){
+    public void findFeatureBasicWithSeveralResult_notSameName_butscoreOK(){
 	String lat = "3.5";
 	String lng = "44";
 	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
@@ -418,7 +499,46 @@ public class GeonamesZipCodeImporterTest {
 	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
 	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
 	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
-	Assert.assertNull(actualFeatureId);
+	Assert.assertEquals(123L,actualFeatureId.longValue());
+	
+    }
+    
+    @Test
+    public void findFeatureBasicWithSeveralResult_notSameName_butscoreKO(){
+	String lat = "3.5";
+	String lng = "44";
+	Point point = GeolocHelper.createPoint(new Float(lng), new Float(lat));
+	String accuracy = "5";
+	String placeName = "place name";
+	String countryCode = "FR";
+	String adm1Name = "adm1name";
+	String adm1Code = "adm1code";
+	String adm2Name = "adm2name";
+	String adm2Code = "adm2code";
+	String adm3Name = "adm3name";
+	String adm3COde = "adm3code";
+	FulltextQuery fulltextQuery = new FulltextQuery(placeName +" "+adm1Name);
+	fulltextQuery.limitToCountryCode(countryCode);
+	fulltextQuery.withPlaceTypes(com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE).around(point);
+	final long featureId = 456L;
+	
+	
+	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
+	    
+	    @Override
+	    protected FulltextResultsDto doAFulltextSearch(String query, String countryCode,Point point) {
+		return dtoWithTwoResultsLowScore;
+	    }
+	    
+	    @Override
+	    protected Long findNearest(Point zipPoint, int maxDistance, FulltextResultsDto results) {
+	        return featureId;
+	    }
+	};
+	String[] fields = {countryCode,"post",placeName,adm1Name,adm1Code,adm2Name,adm2Code,adm3Name,adm3COde,lat,lng,accuracy};
+	int maxDistance = importer.getAccurateDistance(new Integer(accuracy));
+	Long actualFeatureId = importer.findFeature(fields,point,maxDistance);
+	Assert.assertEquals(null,actualFeatureId);
 	
     }
     

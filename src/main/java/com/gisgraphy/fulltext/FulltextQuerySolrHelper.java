@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.Street;
 import com.gisgraphy.domain.valueobject.Constants;
@@ -58,6 +59,10 @@ import com.gisgraphy.serializer.common.OutputFormat;
  * 
  */
 public class FulltextQuerySolrHelper {
+	
+	private static String ALL_ADM1_NAME_ALL_ADM2_NAME = " all_adm1_name^0.2 all_adm2_name^0.2 ";
+
+	public static final Float MIN_SCORE = 15F;
 	
 	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 	
@@ -80,8 +85,7 @@ public class FulltextQuerySolrHelper {
 	public static String MM_NOT_ALL_WORD_REQUIRED ="3<-1 4<3";
 	public static String MM_ALL_WORD_REQUIRED ="100%%";
 	
-	private  static String IS_IN_SENTENCE = " ";//+FullTextFields.IS_IN.getValue()+"^0.8 "+FullTextFields.IS_IN_PLACE.getValue()+"^0.8  "+FullTextFields.IS_IN_ADM.getValue()+"^0.4 "+FullTextFields.IS_IN_ZIP.getValue()+"^0.2 "+FullTextFields.IS_IN_CITIES.getValue()+"^0.7 ";
-	protected static  String NESTED_QUERY_TEMPLATE =                   "_query_:\"{!edismax qf='name^11 all_name  fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
+	protected static  String NESTED_QUERY_TEMPLATE = "_query_: \"{!edismax qf='name^25 all_name fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
 	
@@ -115,7 +119,7 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		//getConfigInFile();
+		getConfigInFile();
 		/*logger.error("all words : "+NESTED_QUERY_TEMPLATE);
 		logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
 		boolean spellchecker = true;
@@ -271,7 +275,6 @@ public class FulltextQuerySolrHelper {
 				querybuffer = new StringBuffer(String.format(EXACT_NAME_QUERY_TEMPLATE,"",boost,boostNearest,queryString));
 			} else {*/
 			String mm ;
-			String is_in="";
 				if (!query.isAllwordsRequired()){
 					mm= MM_NOT_ALL_WORD_REQUIRED;
 					//is_in = isStreetQuery(query)?IS_IN_SENTENCE:"";
@@ -281,6 +284,10 @@ public class FulltextQuerySolrHelper {
 					//is_in= "";
 					mm=MM_ALL_WORD_REQUIRED;
 
+				}
+				String is_in="";
+				if (isAdministrative(query.getPlaceTypes())){
+					is_in=ALL_ADM1_NAME_ALL_ADM2_NAME;
 				}
 				querybuffer = new StringBuffer(String.format(NESTED_QUERY_TEMPLATE,is_in,bqField,mm,bfField,queryString));
 			//}
@@ -306,13 +313,29 @@ public class FulltextQuerySolrHelper {
 
 		return parameters;
 	}
+	
+	protected static boolean isAdministrative(Class[] array){
+		boolean containsAdministrative = false;
+		if (array != null) {
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] == Adm.class || array[i] == CitySubdivision.class || array[i] == City.class) {
+					containsAdministrative = true;
+				} else {
+					//there is other class that are not Administrative
+					return false;
+				}
+			}
+			
+		}
+		return containsAdministrative;
+	}
 
 
 	private static void getConfigInFile() {
 		try {
-			//File fileDir = new File("/home/gisgraphy/workspace/gisgraphy/etc/solrtemplates.txt");
+			File fileDir = new File("/home/gisgraphy/workspace/gisgraphy/etc/solrtemplates.txt");
 			
-			File fileDir = new File("/usr/local/gisgraphy/solrtemplates.txt");
+			//File fileDir = new File("/usr/local/gisgraphy/solrtemplates.txt");
 
 			BufferedReader in = new BufferedReader(
 			   new InputStreamReader(
@@ -321,7 +344,8 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
-				CITY_BOOST_QUERY=in.readLine();
+				//CITY_BOOST_QUERY=in.readLine();
+				ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
 				
 
 	                in.close();

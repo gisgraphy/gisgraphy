@@ -23,6 +23,7 @@
 package com.gisgraphy.importer;
 
 import static com.gisgraphy.domain.geoloc.entity.GisFeature.NAME_MAX_LENGTH;
+import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.MIN_SCORE;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.fulltext.FulltextQuery;
+import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
@@ -244,7 +246,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	   // }
 	} else if (results.getResults().size() == 1) {
 	    // we found the one!
-		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())  ||  results.getResults().get(0).getScore()> 15){
+		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())  ||  results.getResults().get(0).getScore()> MIN_SCORE){
 			return results.getResults().get(0).getFeature_id();
 		} else {
 			return null;
@@ -254,7 +256,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	    // take the best one by score
 		for (SolrResponseDto result : results.getResults()){
 			//score is important for case when we search Munchen and city name is Munich
-			if (StringHelper.isSameName(fields[2], result.getName()) ||  result.getScore()> 15){
+			if (StringHelper.isSameName(fields[2], result.getName()) ||  result.getScore()> MIN_SCORE){
 				return result.getFeature_id();
 			} 
 			//shortcut : if score is less than this, the next one will be automatically less, 

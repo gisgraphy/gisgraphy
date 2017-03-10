@@ -24,6 +24,7 @@ package com.gisgraphy.importer;
 
 import static com.gisgraphy.domain.geoloc.entity.GisFeature.NAME_MAX_LENGTH;
 import static com.gisgraphy.fulltext.Constants.ONLY_ADM_PLACETYPE;
+import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.MIN_SCORE;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ import java.util.List;
 
 import org.hibernate.FlushMode;
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -55,9 +58,11 @@ import com.gisgraphy.domain.valueobject.Pagination;
 import com.gisgraphy.fulltext.Constants;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.fulltext.FulltextQuery;
+import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
+import com.gisgraphy.helper.AdmStateLevelInfo;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.util.StringUtil;
@@ -75,7 +80,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterProcessor {
 	
-	private static final int MIN_SCORE = 15;
+	
 
 	public static final int SCORE_LIMIT = 1;
 	
@@ -153,9 +158,6 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	int  adminLevel =0;
 	Long osmId = 0L;
 	
-	if (true){
-		return;
-	}
 	
 	//
 	// old Line table has the following fields :
@@ -220,7 +222,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		
 	
 	GisFeature place=null;
-	if (isPoi(fields[12], fields[7])) {
+	if (isPoi(fields[12],countrycode, fields[7])) {
 		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		//find and delete the city or subdivision 
 		if (poiToremove!=null){
@@ -238,7 +240,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 		//recreate the poi
 		place = createNewPoi(name, countrycode, location, adminCentreLocation);
-	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12])){
+	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12],countrycode,fields[7])){
 		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		if (nearestCity != null ){
 			if (nearestCity.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){
@@ -425,8 +427,8 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     
 	
 
-	protected boolean isPoi(String placeType,String admlevel) {
-		if ("locality".equalsIgnoreCase(placeType) && admlevel!=null && !"8".equals(admlevel)) {
+	protected boolean isPoi(String placeType,String countryCode,String admLevel) {
+		if ("locality".equalsIgnoreCase(placeType) && !AdmStateLevelInfo.isCityLevel(countryCode, admLevel)) {
 			return true;
 		}
 		return false;
@@ -454,13 +456,15 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		
 	}
 
-	protected boolean isACitySubdivision(String placeType) {
+	protected boolean isACitySubdivision(String placeType,String countryCode ,String admLevel) {
 		if ("neighbourhood".equalsIgnoreCase(placeType)
 				|| "quarter".equalsIgnoreCase(placeType)
 				|| "isolated_dwelling".equalsIgnoreCase(placeType)
 				|| "suburb".equalsIgnoreCase(placeType)
 				|| "city_block".equalsIgnoreCase(placeType)
-				|| "borough".equalsIgnoreCase(placeType)) {
+				|| "borough".equalsIgnoreCase(placeType)||
+				!AdmStateLevelInfo.isCityLevel(countryCode, admLevel)
+				) {
 			return true;
 		}
 		return false;
@@ -488,10 +492,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	protected void populateZip(String zipAsString, GisFeature city) {
 			String[] zips = zipAsString.split(";|\\||,");
 			for (int i = 0;i<zips.length;i++){
-				if (!ImporterHelper.isUnwantedZipCode(zips[i]) 
+				String zipcode = zips[i];
+				if (!ImporterHelper.isUnwantedZipCode(zipcode) 
 						)
 						{
-					city.addZipCode(new ZipCode(zips[i]));
+					city.addZipCode(new ZipCode(zipcode));
 				}
 			}
 		
@@ -578,10 +583,9 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 						&& solrResponseDto.getOpenstreetmap_id()== null){
 					//if fopenstreetmapid is not null it is because the shape has already been set
 					//(R are before nodes), we ignore because we don't want the place if relation has been set
-					if (solrResponseDto.getScore()< 15 && (solrResponseDto.getName()!=null && StringHelper.isSameName(name, solrResponseDto.getName()))){
-						System.out.println("");
-					}//score is important for case when we search Munchen and city name is Munich
-					if (solrResponseDto.getName()!=null && StringHelper.isSameName(name, solrResponseDto.getName()) || solrResponseDto.getScore() > MIN_SCORE){
+					String name2 = solrResponseDto.getName();
+					//score is important for case when we search Munchen and city name is Munich
+					if (name2!=null && StringHelper.isSameName(name, name2) || solrResponseDto.getScore() > MIN_SCORE){
 						if (shape!=null && shape.isValid()){
 							//we should verify
 							if (solrResponseDto.getLng()!=null && solrResponseDto.getLat()!=null){
@@ -752,6 +756,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     	    this.statusMessage = savedMessage;
     	}
     }
+   
     
     
    

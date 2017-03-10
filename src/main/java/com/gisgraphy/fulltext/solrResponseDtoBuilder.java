@@ -179,7 +179,9 @@ public class solrResponseDtoBuilder {
 				} else if (fieldValue instanceof String) {
 					HouseNumberDto dto = houseNumberDeserializer
 							.deserialize((String) fieldValue);
-					housenumbers.add(dto);
+					if (dto!=null){
+						housenumbers.add(dto);
+					}
 				} else {
 					throw new RepositoryException(fieldname
 							+ " is not a String but a "

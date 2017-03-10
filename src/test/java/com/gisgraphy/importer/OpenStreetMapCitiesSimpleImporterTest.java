@@ -29,6 +29,7 @@ import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.Pagination;
 import com.gisgraphy.fulltext.Constants;
 import com.gisgraphy.fulltext.FulltextQuery;
+import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
@@ -113,15 +114,15 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
 		
-		//test cumulative and deduplcate
+		//test cumulative and deduplicate
 		city = new City();
 		importer.populateZip("23456;789;", city);
 		importer.populateZip("1011;12;789;75009 cedex", city);
-		Assert.assertEquals(4,city.getZipCodes().size());
+		//12 is too short and cedex is not a code we wish to import
+		Assert.assertEquals(3,city.getZipCodes().size());
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("1011")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("12")));
 	}
 	
 	@Test
@@ -355,18 +356,20 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	}
 	
 	@Test
-	public void getNearestCity_lowScore(){
+	public void getNearestCity_sameName_lowScore(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		
 		List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
 		SolrResponseDto solrResponseDto = EasyMock.createMock(SolrResponseDto.class);
-		EasyMock.expect(solrResponseDto.getScore()).andReturn(OpenStreetMapCitiesSimpleImporter.SCORE_LIMIT-0.2F);
+		EasyMock.expect(solrResponseDto.getScore()).andReturn(FulltextQuerySolrHelper.MIN_SCORE-0.2F);
+		EasyMock.expect(solrResponseDto.getName()).andReturn("toto");
 		EasyMock.expect(solrResponseDto.getOpenstreetmap_id()).andReturn(null);
 		EasyMock.replay(solrResponseDto);
 		results.add(solrResponseDto);
 		FulltextResultsDto mockResultDTO = EasyMock.createMock(FulltextResultsDto.class);
 		EasyMock.expect(mockResultDTO.getResultsSize()).andReturn(1);
 		EasyMock.expect(mockResultDTO.getResults()).andReturn(results);
+		
 		EasyMock.replay(mockResultDTO);
 		
 		
@@ -383,9 +386,46 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		importer.setFullTextSearchEngine(mockfullFullTextSearchEngine);
 		
 		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE, null);
-		Assert.assertEquals(null, actual);
+		Assert.assertNotNull(actual);
 		EasyMock.verify(mockfullFullTextSearchEngine);
 	}
+	
+	@Test
+	public void getNearestCity_NotsameName_lowScore(){
+		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
+		
+		List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
+		SolrResponseDto solrResponseDto = EasyMock.createMock(SolrResponseDto.class);
+		EasyMock.expect(solrResponseDto.getScore()).andReturn(FulltextQuerySolrHelper.MIN_SCORE-0.2F);
+		EasyMock.expect(solrResponseDto.getName()).andReturn("tata");
+		EasyMock.expect(solrResponseDto.getOpenstreetmap_id()).andReturn(null);
+		EasyMock.replay(solrResponseDto);
+		results.add(solrResponseDto);
+		FulltextResultsDto mockResultDTO = EasyMock.createMock(FulltextResultsDto.class);
+		EasyMock.expect(mockResultDTO.getResultsSize()).andReturn(1);
+		EasyMock.expect(mockResultDTO.getResults()).andReturn(results);
+		
+		EasyMock.replay(mockResultDTO);
+		
+		
+		String text = "toto";
+		String countryCode = "FR";
+		Point location = GeolocHelper.createPoint(3F, 4F);
+		IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
+		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.MEDIUM_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
+		query.withAllWordsRequired(false).withoutSpellChecking();
+		
+		EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
+		EasyMock.replay(mockfullFullTextSearchEngine);
+		
+		importer.setFullTextSearchEngine(mockfullFullTextSearchEngine);
+		
+		SolrResponseDto actual = importer.getNearestByPlaceType(location, text, countryCode,ONLY_CITY_PLACETYPE, null);
+		Assert.assertNull(actual);
+		EasyMock.verify(mockfullFullTextSearchEngine);
+	}
+	
+	
 	
 	@Test
 	public void getNearestCityWithNullName(){
@@ -1262,27 +1302,19 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	@Test
 	public void isACitySubdivision(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
-		Assert.assertTrue(importer.isACitySubdivision("neighbourhood"));
-		Assert.assertTrue("the placetypeshould be case insensitive",importer.isACitySubdivision("NEIghbourhood"));
-		Assert.assertTrue(importer.isACitySubdivision("quarter"));
-		Assert.assertTrue(importer.isACitySubdivision("isolated_dwelling"));
-		Assert.assertTrue(importer.isACitySubdivision("suburb"));
-		Assert.assertTrue(importer.isACitySubdivision("city_block"));
-		Assert.assertTrue(importer.isACitySubdivision("borough"));
-		Assert.assertFalse(importer.isACitySubdivision("city"));
+		Assert.assertTrue(importer.isACitySubdivision("neighbourhood","FR","8"));
+		Assert.assertTrue("the placetype should be case insensitive",importer.isACitySubdivision("NEIghbourhood","FR","8"));
+		Assert.assertTrue(importer.isACitySubdivision("quarter","FR","8"));
+		Assert.assertTrue(importer.isACitySubdivision("isolated_dwelling","FR","8"));
+		Assert.assertTrue(importer.isACitySubdivision("suburb","FR","8"));
+		Assert.assertTrue(importer.isACitySubdivision("city_block","FR","8"));
+		Assert.assertTrue(importer.isACitySubdivision("borough","FR","8"));
+		Assert.assertFalse(importer.isACitySubdivision("city","FR","8"));
+		
+		Assert.assertTrue(importer.isACitySubdivision("foo","FR","9"));
+		Assert.assertFalse(importer.isACitySubdivision("foo","FR","8"));
 	}
 	
-	@Test
-	public void isPoi(){
-		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
-		Assert.assertFalse(importer.isPoi("locality","8"));
-		Assert.assertFalse(importer.isPoi("foo",null));
-		Assert.assertFalse(importer.isPoi("",""));
-		Assert.assertTrue(importer.isPoi("locality","10"));
-		Assert.assertTrue(importer.isPoi("locality",""));
-		Assert.assertFalse(importer.isPoi("citylocality","8"));
-		Assert.assertFalse(importer.isPoi("citylocality","10"));
-	}
 	
 	
 	
@@ -1354,6 +1386,24 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		EasyMock.verify(admDao);
 	}
 	
+	
+	 
+    @Test
+    public void testIsPoi(){
+    	OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
+    	Assert.assertTrue(importer.isPoi("locality", "FR", "9"));
+    	Assert.assertFalse(importer.isPoi("locality", "FR", "8"));
+    	Assert.assertFalse(importer.isPoi("foo", "FR", "8"));
+    	Assert.assertFalse(importer.isPoi("foo", "FR", "9"));// it is a subdivision, not a poi
+    	
+    	Assert.assertFalse(importer.isPoi("locality","FR","8"));
+		Assert.assertFalse(importer.isPoi("foo","FR",null));
+		Assert.assertFalse(importer.isPoi("","",""));
+		Assert.assertTrue(importer.isPoi("locality","FR","10"));
+		Assert.assertTrue(importer.isPoi("locality","FR",""));
+		Assert.assertFalse(importer.isPoi("citylocality","FR","8"));
+		Assert.assertFalse(importer.isPoi("citylocality","FR","10"));
+    }
 	
 	 
 	 @Test

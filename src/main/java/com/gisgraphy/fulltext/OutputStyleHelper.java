@@ -33,7 +33,6 @@ public class OutputStyleHelper {
 			.append(FullTextFields.NAME.getValue()).append(",")
 			.append(FullTextFields.FULLY_QUALIFIED_NAME.getValue())
 			.append(",").append(FullTextFields.ZIPCODE.getValue())
-			.append(",")
 			.append(",").append(FullTextFields.LAT.getValue())
 			.append(",").append(FullTextFields.LONG.getValue())
 			.append(",").append(FullTextFields.PLACETYPE.getValue())

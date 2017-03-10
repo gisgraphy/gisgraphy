@@ -22,7 +22,9 @@
  *******************************************************************************/
 package com.gisgraphy.helper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  * 
  */
+@SuppressWarnings("serial")
 public class AdmStateLevelInfo {
 
 	/**
@@ -44,9 +47,12 @@ public class AdmStateLevelInfo {
 
 	private static Map<String, Integer> lowLevel = new HashMap<String, Integer>();
 	private static Map<String, Integer> HighLevel = new HashMap<String, Integer>();
+	private static Map<String, List<Integer>> cityLevels = new HashMap<String, List<Integer>>();
 	
 	public static final int DEFAULT_HIGH_LEVEL =7 ; 
-	public static final int LOW_HIGH_LEVEL =4 ; 
+	public static final int LOW_HIGH_LEVEL =4 ;
+
+	private static final int DEFAULT_CITY_LEVEL = 8; 
 	
 
 	static {
@@ -97,6 +103,7 @@ public class AdmStateLevelInfo {
 		HighLevel.put("MK", 5);
 		HighLevel.put("MY", 9);
 		HighLevel.put("NO", 6);
+		HighLevel.put("NZ", 6);
 		HighLevel.put("PH", 5);
 		HighLevel.put("PT", 6);
 		HighLevel.put("RO", 5);
@@ -106,11 +113,54 @@ public class AdmStateLevelInfo {
 		HighLevel.put("SL", 5);
 		HighLevel.put("TN", 4);
 		HighLevel.put("TR", 5);
-		
 		HighLevel.put("TZ", 8);
 		HighLevel.put("UA", 6);
 		HighLevel.put("UG", 5);
 		HighLevel.put("US", 6);
+		
+		cityLevels.put("BA", new ArrayList<Integer>(){{add(6);;add(7);add(8);}});
+		cityLevels.put("BD", new ArrayList<Integer>(){{add(7);add(8);add(9);}});
+		cityLevels.put("BH", new ArrayList<Integer>(){{add(6);add(8);}});
+		cityLevels.put("CF", new ArrayList<Integer>(){{add(6);add(8);}});
+		cityLevels.put("CN", new ArrayList<Integer>(){{add(6);add(7);add(8);add(10);}});
+		cityLevels.put("CO", new ArrayList<Integer>(){{add(6);add(7);add(8);}});
+		cityLevels.put("DK", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("DZ", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("EE", new ArrayList<Integer>(){{add(8);add(9);}});
+		cityLevels.put("FI", new ArrayList<Integer>(){{add(8);add(9);}});
+		cityLevels.put("GE", new ArrayList<Integer>(){{add(6);add(7);add(8);add(9);}});
+		cityLevels.put("HN", new ArrayList<Integer>(){{add(9);}});
+		cityLevels.put("HR", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("ID", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("IE", new ArrayList<Integer>(){{add(8);add(9);}});
+		cityLevels.put("IN", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("IQ", new ArrayList<Integer>(){{add(6);}});
+		cityLevels.put("IR", new ArrayList<Integer>(){{add(6);}});
+		cityLevels.put("IS", new ArrayList<Integer>(){{add(6);}});
+		cityLevels.put("JP", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("KR", new ArrayList<Integer>(){{add(7);add(8);add(10);}});
+		cityLevels.put("LV", new ArrayList<Integer>(){{add(7);add(8);add(9);}});
+		cityLevels.put("LY", new ArrayList<Integer>(){{add(6);}});
+		cityLevels.put("MD", new ArrayList<Integer>(){{add(8);add(9);}});
+		cityLevels.put("MK", new ArrayList<Integer>(){{add(6);add(7);add(8);}});
+		cityLevels.put("MY", new ArrayList<Integer>(){{add(10);}});
+		cityLevels.put("NO", new ArrayList<Integer>(){{add(7);}});
+		cityLevels.put("NZ", new ArrayList<Integer>(){{add(7);}});
+		cityLevels.put("PH", new ArrayList<Integer>(){{add(6);add(7);}});
+		cityLevels.put("PL", new ArrayList<Integer>(){{add(8);add(10);}});
+		cityLevels.put("PT", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("RO", new ArrayList<Integer>(){{add(6);add(8);}});
+		cityLevels.put("RS", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("SE", new ArrayList<Integer>(){{add(8);}});
+		cityLevels.put("SK", new ArrayList<Integer>(){{add(7);add(8);add(9);}});
+		cityLevels.put("SL", new ArrayList<Integer>(){{add(6);}});
+		cityLevels.put("TH", new ArrayList<Integer>(){{add(8);add(10);}});
+		cityLevels.put("TN", new ArrayList<Integer>(){{add(5);}});
+		cityLevels.put("TR", new ArrayList<Integer>(){{add(6);add(8);}});
+		cityLevels.put("TZ", new ArrayList<Integer>(){{add(9);}});
+		cityLevels.put("UA", new ArrayList<Integer>(){{add(7);add(8);}});
+		cityLevels.put("UG", new ArrayList<Integer>(){{add(6);add(8);add(9);}});
+		cityLevels.put("US", new ArrayList<Integer>(){{add(7);add(8);}});
 		
 		
 	}
@@ -137,6 +187,32 @@ public class AdmStateLevelInfo {
 			}
 		}
 		return DEFAULT_HIGH_LEVEL;
+	}
+	
+	public static boolean isCityLevel(String countryCode, String level){
+		try {
+			return isCityLevel(countryCode, Integer.parseInt(level));
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	
+	}
+	
+	public static boolean isCityLevel(String countryCode, int level){
+		if (countryCode != null){
+				List<Integer> levels = cityLevels.get(countryCode.toUpperCase());
+				if (levels!=null){
+						if (levels.contains(level)){
+							return true;
+						} else {
+							return false;
+						}
+				} else {
+					return level == DEFAULT_CITY_LEVEL;
+				}
+		}
+		return level == DEFAULT_CITY_LEVEL;
+		
 	}
 	
 	public static boolean shouldBeImportedAsAdm(String countryCode,int osmLevel){

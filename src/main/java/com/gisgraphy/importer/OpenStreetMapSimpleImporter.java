@@ -732,7 +732,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     }
     
     protected boolean shouldFillIsInField(){
-    	return importerConfig.isGeonamesImporterEnabled() && importerConfig.isOpenStreetMapFillIsIn(); 
+    	return  importerConfig.isOpenStreetMapFillIsIn(); 
     }
     
     @Required

@@ -50,7 +50,7 @@ public class OutputStyleHelperTest {
     @Test
     public void outputStyleGetFieldListForShortShouldBeCorrect() {
 	String list = outputStyleHelper.getFulltextFieldList(OutputStyle.SHORT,null);
-	assertEquals("The field list has a wrong size for SHORT :" + list, 8,
+	assertEquals("The field list has a wrong size for SHORT :" + list, 10,
 		list.split(",").length);
 	assertFalse(
 		"The field list for SHORT must not contains ',,' : " + list,
@@ -61,7 +61,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.SHORT,"fr");
 	assertEquals(
 		"The field list for SHORT should not be different for a specified country:"
-			+ list, 8, list.split(",").length);
+			+ list, 10, list.split(",").length);
 	assertFalse(
 		"The field list for SHORT must not ends with ',' : " + list,
 		list.endsWith(","));

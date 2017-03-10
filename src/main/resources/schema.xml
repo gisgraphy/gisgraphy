@@ -71,22 +71,7 @@
       </analyzer>
     </fieldType>
     
-     <fieldType name="raw" class="solr.TextField" positionIncrementGap="100" omitNorms="true">
-     <analyzer type="index">
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-		<filter class="solr.LowerCaseFilterFactory"/>
-		<filter class="solr.ASCIIFoldingFilterFactory"/>
-		<filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="0" catenateWords="0" catenateNumbers="0" catenateAll="0"/>
-		<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-      </analyzer>
-      <analyzer type="query">
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-		<filter class="solr.LowerCaseFilterFactory"/>
-		<filter class="solr.ASCIIFoldingFilterFactory"/>
-		<filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="0" catenateWords="0" catenateNumbers="0" catenateAll="0"/>
-		<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-      </analyzer>
-    </fieldType>
+    
 	
     
        <fieldType name="textiso" class="solr.TextField" positionIncrementGap="100" omitNorms="true">
@@ -287,7 +272,6 @@ decompound after lower because words of dictionary are in lower, unpunct
   <!--not exported  --><field name="iso_name" type="textiso" indexed="true" stored="false"/><!-- iso for scoring : query 'andré' should place andré before 'andre' -->
   <!--Short  --><field name="fully_qualified_name" type="text" indexed="true" stored="true"/>
 
-	<field name="compound" type="raw" indexed="true" stored="true"/>
  <!-- Medium --><field name="country_flag_url" type="string" indexed="false" stored="true"/>
  <!-- Medium --><field name="google_map_url" type="string" indexed="false" stored="true"/>
  <!-- Medium --><field name="yahoo_map_url" type="string" indexed="false" stored="true"/>
