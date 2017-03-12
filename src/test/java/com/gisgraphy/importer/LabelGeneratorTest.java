@@ -1403,6 +1403,43 @@ public void testGenerateLabel_Adm(){
 	}
 	
 	@Test
+	public void buildAddressFromcity_WithAdminCentreLocation(){
+		City city = new City();
+		city.setName("name");
+		city.setIsInAdm("isInAdm");
+		city.setAdm1Name("adm1Name");
+		city.setAdm2Name("adm2Name");
+		city.setAdm3Name("adm3Name");
+		city.setAdm4Name("adm4Name");
+		city.setAdm5Name("adm5Name");
+		city.setIsInAdm("isInAdm");
+		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
+		zipcodes.add(new ZipCode("zip"));
+		city.setZipCodes(zipcodes);
+		city.setLocation(GeolocHelper.createPoint(2D, 3D));
+		city.setAdminCentreLocation(GeolocHelper.createPoint(4D,5D));
+		city.setCountryCode("countryCode");
+		
+		
+		Address address = generator.buildAddressFromcity(city);
+		Assert.assertEquals(city.getName(), address.getCity());
+		Assert.assertEquals(city.getIsInAdm(), address.getState());
+		Assert.assertEquals(city.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(city.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(city.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(city.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(city.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals(city.getZipCodes().iterator().next().toString(), address.getZipCode());
+		Assert.assertEquals(city.getCountryCode(), address.getCountryCode());
+		Assert.assertEquals(GeocodingLevels.CITY, address.getGeocodingLevel());
+		Assert.assertEquals("admincentreLocation should be prefered",city.getAdminCentreLatitude(), address.getLat());
+		Assert.assertEquals("admincentreLocation should be prefered",city.getAdminCentreLongitude(), address.getLng());
+		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
+		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
+		
+	}
+	
+	@Test
 	public void buildAddressFromCityAndPoint(){
 		City city = new City();
 		city.setName("name");

@@ -234,11 +234,11 @@ decompound after lower because words of dictionary are in lower, unpunct
  <fields>
    
   <!-- Medium --><field name="street_type" type="string" indexed="false" stored="true"/>
-  <!-- Medium --><field name="is_in" type="text" indexed="true" stored="true"/>
-  <!-- Medium --><field name="is_in_cities" type="text" indexed="true" stored="false" multiValued="true"/>
-  <!-- Medium --><field name="is_in_place" type="text" indexed="true" stored="true"/>
-  <!-- Medium --><field name="is_in_adm" type="text" indexed="true" stored="true"/>
-  <!-- Medium --><field name="is_in_zip" type="exact_string_ci" indexed="true" stored="true" multiValued="true"/>
+  <!-- Medium --><field name="is_in" type="text" indexed="false" stored="true"/>
+  <!-- Medium --><field name="is_in_cities" type="text" indexed="false" stored="false" multiValued="true"/>
+  <!-- Medium --><field name="is_in_place" type="text" indexed="false" stored="true"/>
+  <!-- Medium --><field name="is_in_adm" type="text" indexed="false" stored="true"/>
+  <!-- Medium --><field name="is_in_zip" type="exact_string_ci" indexed="false" stored="true" multiValued="true"/>
   <!-- Medium --><field name="one_way" type="boolean" indexed="false" stored="true"/>
   <!-- Medium --><field name="length" type="double" indexed="false" stored="true"/>
   <!-- Medium --><field name="openstreetmap_id" type="long" indexed="true" stored="true"/>
@@ -258,18 +258,18 @@ decompound after lower because words of dictionary are in lower, unpunct
 
 
 <field name="label" type="text" indexed="true" stored="true"/><!-- best string that represent the feature-->
-<field name="label_postal" type="text" indexed="true" stored="true"/><!-- string that represent the postal address of the feature-->
-<field name="label_alternate"  type="text"  indexed="false"  stored="true" multiValued="true"/>
+<field name="label_postal" type="text" indexed="false" stored="true"/><!-- string that represent the postal address of the feature-->
+<field name="label_alternate"  type="text"  indexed="false"  stored="false" multiValued="true"/>
 
 <copyField source="label*" dest="all_label"/>
-<field name="all_label" type="text" indexed="true" stored="true" multiValued="true"></field>
+<field name="all_label" type="text" indexed="true" stored="false" multiValued="true"></field>
   
    <field name="feature_id" type="long" indexed="true" stored="true"/>
    <field name="location" type="location" indexed="true" stored="false"/>
    <dynamicField name="*_coordinate"  type="tdouble" indexed="true"  stored="false"/>
    
   <!--Short --><field name="name" type="text" indexed="true" stored="true"/>
-  <!--not exported  --><field name="iso_name" type="textiso" indexed="true" stored="false"/><!-- iso for scoring : query 'andré' should place andré before 'andre' -->
+  <!--not exported  --><!-- <field name="iso_name" type="textiso" indexed="false" stored="false"/>--><!-- iso for scoring : query 'andré' should place andré before 'andre' -->
   <!--Short  --><field name="fully_qualified_name" type="text" indexed="true" stored="true"/>
 
  <!-- Medium --><field name="country_flag_url" type="string" indexed="false" stored="true"/>
@@ -296,13 +296,13 @@ decompound after lower because words of dictionary are in lower, unpunct
   <!--Medium --><field name="level" type="integer" indexed="false" stored="true"/>
  
   <!--Short  --><field name="zipcode" type="exact_string_ci" indexed="true" stored="true"  multiValued="true"/>
-  <!-- Medium --><field name="municipality" type="boolean" indexed="true" stored="true"/>
-  <!--Short  --><field name="amenity" type="exact_string_ci" indexed="true" stored="true"  multiValued="false"/>
+  <!-- Medium --><field name="municipality" type="boolean" indexed="false" stored="true"/>
+  <!--Short  --><field name="amenity" type="exact_string_ci" indexed="false" stored="true"  multiValued="false"/>
   <!--Medium --><field name="name_ascii" type="text" indexed="false" stored="true"/>
   <!--Long  --><field name="name_alternate" type="text" indexed="false" stored="true" multiValued="true"/><!-- alternatename without lang to be retrieved independently from those with languages -->
   <!--Long  --><dynamicField name="name_alternate_*"  type="text"  indexed="false"  stored="true" multiValued="true"/><!--alternatenames with lang -->
   <!--Long  --><field name="all_name" type="text" indexed="true" stored="false" multiValued="true"></field><!-- the alternatename search field -->
-  <!--Not exported  --><field name="iso_all_name" type="textiso" indexed="true" stored="false" multiValued="true"></field><!-- the not iso alternatename search field -->
+  <!--Not exported  --><!--<field name="iso_all_name" type="textiso" indexed="false" stored="false" multiValued="true"></field>--><!-- the not iso alternatename search field -->--------
 
   <!--Medium --><field name="elevation" type="integer" indexed="false" stored="true"/>
   <!--Medium --><field name="gtopo30" type="integer" indexed="false" stored="true"/>
@@ -310,8 +310,8 @@ decompound after lower because words of dictionary are in lower, unpunct
   <!--Medium  --><field name="lat" type="double" indexed="false" stored="true"/>
   <!--Medium  --><field name="lng" type="double" indexed="false" stored="true"/>
    
-  <!--Medium  --><field name="feature_class" type="string" indexed="true" stored="true"/>
-  <!--Medium  --><field name="feature_code" type="string" indexed="true" stored="true"/>
+  <!--Medium  --><field name="feature_class" type="string" indexed="false" stored="true"/>
+  <!--Medium  --><field name="feature_code" type="string" indexed="false" stored="true"/>
   <!--Short  --><field name="placetype" type="string" indexed="true" stored="true"/><!-- this field is used for extended search, extended search is useful when we want to search across multiple boost fields with a typed -->
 
    
@@ -321,8 +321,8 @@ decompound after lower because words of dictionary are in lower, unpunct
    
   <!--Short  --><field name="country_name" type="string" indexed="false" stored="true"/>
   <!--Full  --><field name="country_name_alternate" type="string" indexed="false" stored="true" multiValued="true"/><!-- alternatenames without lang to be retrieved independently from those with languages -->
-  <!--Full  --><dynamicField name="country_name_alternate_*"  type="string"  indexed="true"  stored="true" multiValued="true"/><!-- no need to iso --><!--alternatenames with lang -->
-  <!--Full  --><field name="all_country_name" type="text" indexed="true" stored="false" multiValued="true"/><!-- the country search field -->
+  <!--Full  --><dynamicField name="country_name_alternate_*"  type="string"  indexed="false"  stored="true" multiValued="true"/><!-- no need to iso --><!--alternatenames with lang -->
+  <!--Full  --><field name="all_country_name" type="text" indexed="false" stored="false" multiValued="true"/><!-- the country search field -->
   <!--Short  --><field name="country_code" type="string" indexed="true" stored="true"/>
    
   <!--Long  --><field name="adm1_name" type="string" indexed="false" stored="true"/>
@@ -335,9 +335,9 @@ decompound after lower because words of dictionary are in lower, unpunct
   <!--Full  --><dynamicField name="adm2_name_alternate_*"  type="string"  indexed="false"  stored="true" multiValued="true"/><!-- no need to iso --><!--the adm2 output fields with lang-->
   <!--Full  --><field name="all_adm2_name" type="text" indexed="true" stored="false" multiValued="true"/><!-- the adm2 search field -->
    
-  <!--Long  --><field name="adm3_name" type="string_casesensitive" indexed="true" stored="true"/>
-  <!--Long  --><field name="adm4_name" type="string_casesensitive" indexed="true" stored="true"/>
-  <!--Long  --><field name="adm5_name" type="string_casesensitive" indexed="true" stored="true"/>
+  <!--Long  --><field name="adm3_name" type="string_casesensitive" indexed="false" stored="true"/>
+  <!--Long  --><field name="adm4_name" type="string_casesensitive" indexed="false" stored="true"/>
+  <!--Long  --><field name="adm5_name" type="string_casesensitive" indexed="false" stored="true"/>
    
   <!--Long  --><field name="adm1_code" type="string" indexed="false" stored="true"/>
   <!--Long  --><field name="adm2_code" type="string" indexed="false" stored="true"/>
@@ -373,7 +373,7 @@ decompound after lower because words of dictionary are in lower, unpunct
     
    
    <!-- fill the iso field -->
-   <copyField source="all_name" dest="iso_all_name"/>
+   <!--<copyField source="all_name" dest="iso_all_name"/>-->
    <copyField source="name" dest="iso_name"/> 
    
    <field name="suggest_name" type="suggest" indexed="true" stored="false" multiValued="true"/>

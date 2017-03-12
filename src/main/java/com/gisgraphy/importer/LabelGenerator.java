@@ -797,7 +797,10 @@ public class LabelGenerator {
 		if (city.getZipCodes()!=null && city.getZipCodes().size() >=1){  
 			address.setZipCode(city.getZipCodes().iterator().next().toString());
 		}
-		if (city.getLocation()!=null){
+		if (city.getAdminCentreLocation()!=null){
+			address.setLng(city.getAdminCentreLongitude());
+			address.setLat(city.getAdminCentreLatitude());
+		} else if (city.getLocation()!=null){
 			address.setLng(city.getLongitude());
 			address.setLat(city.getLatitude());
 		}

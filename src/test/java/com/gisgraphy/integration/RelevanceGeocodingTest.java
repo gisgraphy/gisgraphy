@@ -1587,7 +1587,9 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Klopstockstr berlin";
 				AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				
+				//we should find all the streets 
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1598,7 +1600,8 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Klopstockstr berlin";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress,"DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				//we should find all the streets 
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1608,7 +1611,8 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Klopstockstr. berlin";
 				AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				//we should find all the streets 
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1618,7 +1622,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Klopstockstr Zehlendorf berlin";
 				AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{33078711L}, addressResultsDto.getResult(), rawAddress);
+				isAllIdsPresentInResults(new long[]{33078711L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 	

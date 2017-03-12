@@ -996,7 +996,7 @@ public class GeocodingService implements IGeocodingService {
 				}
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
 					String streetName = solrResponseDto.getName();
-					String isIn = solrResponseDto.getIs_in();
+					String isIn = solrResponseDto.getFully_qualified_name();
 					if (!isEmptyString(streetName)){ 
 						if(streetName.equals(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin)){//probably the same street
 							if (housenumberFound){
