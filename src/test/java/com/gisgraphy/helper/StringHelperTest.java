@@ -193,6 +193,7 @@ public class StringHelperTest {
     	Assert.assertTrue("with additionnal words size =2",StringHelper.isSameName("notre dame de anges","notre dame anges"));
     	Assert.assertFalse(StringHelper.isSameName("Berg","Sternenberg"));
     	Assert.assertFalse(StringHelper.isSameName("normandie","avr"));
+    	Assert.assertFalse(StringHelper.isSameName("paris","paris 07"));
     	
     	Assert.assertTrue("synonyms in expected",StringHelper.isSameName("st omer","saint omer"));
     	Assert.assertTrue("synonyms in actual",StringHelper.isSameName("saint omer","st omer"));

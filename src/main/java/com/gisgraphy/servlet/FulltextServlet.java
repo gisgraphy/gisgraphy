@@ -102,7 +102,7 @@ public class FulltextServlet extends GisgraphyServlet {
 	    if (HTMLHelper.isParametersEmpty(req, FulltextQuery.QUERY_PARAMETER)) {
 		sendCustomError(ResourceBundle.getBundle(
 			Constants.BUNDLE_ERROR_KEY).getString(
-			"error.emptyQuery"), format, resp,req);
+			"error.emptyQuery"), 400,format, resp,req);
 		return;
 	    }
 	    FulltextQuery query = FulltextQueryHttpBuilder.getInstance().buildFromRequest(req);

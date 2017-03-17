@@ -35,6 +35,8 @@ public class OutputStyleHelper {
 			.append(",").append(FullTextFields.ZIPCODE.getValue())
 			.append(",").append(FullTextFields.LAT.getValue())
 			.append(",").append(FullTextFields.LONG.getValue())
+			.append(",").append(FullTextFields.ADMIN_CENTRE_LAT.getValue())
+			.append(",").append(FullTextFields.ADMIN_CENTRE_LONG.getValue())
 			.append(",").append(FullTextFields.PLACETYPE.getValue())
 			.append(",").append(
 				FullTextFields.COUNTRYCODE.getValue())

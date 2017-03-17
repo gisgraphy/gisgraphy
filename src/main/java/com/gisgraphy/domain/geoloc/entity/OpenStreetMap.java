@@ -941,19 +941,19 @@ public class OpenStreetMap {
 		this.adm5Name = adm5Name;
 	}
 	
-	 	/**
-		 * @return the zipCode
-		 */
-		public String getZipCode() {
-			return zipCode;
-		}
+ 	/**
+	 * @return the zipCode
+	 */
+	public String getZipCode() {
+		return zipCode;
+	}
 
-		/**
-		 * @param zipCode the zipCode to set
-		 */
-		public void setZipCode(String zipCode) {
-			this.zipCode = zipCode;
-		}
+	/**
+	 * @param zipCode the zipCode to set
+	 */
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
 
 
 	/**

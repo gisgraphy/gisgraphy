@@ -90,7 +90,12 @@ import com.vividsolutions.jts.geom.Point;
  */
 @Service
 public class GeocodingService implements IGeocodingService {
-	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
+	private static final String FUZZY_ACTIVE = "fuzzy:active";
+	//private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
+	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
+	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
+	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*)\\s\\b(\\d{2})[\\s-](\\d{3}\\b)");
+	private final static Pattern ZIPCONCATENATE_3_2__PATTERN = Pattern.compile("(.*)\\s\\b(\\d{3})[\\s-](\\d{2}\\b)");
 	private static final int INTERPOLATION_CURVE_TOLERANCE = 45;
 	private IStatsUsageService statsUsageService;
 	private ImporterConfig importerConfig;
@@ -124,15 +129,6 @@ public class GeocodingService implements IGeocodingService {
 			+")",
 			Pattern.CASE_INSENSITIVE);
 	
-	/*public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((("
-			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)"
-			//+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:\\s?(?:bis|ter)?)(?!(?:st\\b|th\\b|rd\\b|nd\\b))"
-			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b[\\s,])?)))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)"
-			//+ "|\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
-			+")",
-			Pattern.CASE_INSENSITIVE);
-			
-			*/
 	public final static Pattern FIRST_NUMBER_EXTRACTION_PATTERN = Pattern.compile("^([0-9]+)");
 	public final static List<String> countryWithZipIs4Number= new ArrayList<String>(){
 		{
@@ -251,6 +247,7 @@ public class GeocodingService implements IGeocodingService {
 			return addressResultsDto;
 		}
 		String rawAddress = query.getAddress();
+		Long startTime = System.currentTimeMillis();
 		if (isEmptyString(rawAddress)) {
 			throw new GeocodingException("Can not geocode a null or empty address");
 		}
@@ -278,7 +275,6 @@ public class GeocodingService implements IGeocodingService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Raw address to geocode : '" + rawAddress + "' for country code : " + countryCode);
 		}
-		Long startTime = System.currentTimeMillis();
 		AddressQuery addressQuery = new AddressQuery(rawAddress, countryCode);
 		AddressResultsDto addressResultDto = null;
 		logger.debug("is postal address : " +query.isPostal());
@@ -309,6 +305,7 @@ public class GeocodingService implements IGeocodingService {
 		//	logger.debug("is_in is active");
 			statsUsageService.increaseUsage(StatsUsageType.GEOCODING);
 			AddressResultsDto results;
+			rawAddress = prepareQuery(rawAddress);
 			HouseNumberAddressDto houseNumberAddressDto = findHouseNumber(rawAddress, countryCode);
 			String newAddress = rawAddress;
 			
@@ -470,48 +467,39 @@ public class GeocodingService implements IGeocodingService {
 
 	}
 
-	private String prepareQueryCompound(String rawAddress) {
+	protected String prepareQuery(String rawAddress) {
 		if (rawAddress == null){
 			return rawAddress;
 		}
-		/*Pattern p = Pattern.compile(" (?:straße|str|strasse)\\b", Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(rawAddress);
+		StringBuffer sb;
+		Matcher m = RN_PATTERN.matcher(rawAddress);
 		if (m.find()){
-			logger.error("will concatenate address"+rawAddress);
-			return prepareQueryConcatenate(rawAddress);
-		}*/
-		
-		
-		
-		String newAddress = "";
-		List<String> words = new ArrayList<String>(){
-			{
-				add("weg.");
-				add("clic");
-				add("str.");
-				add("straße.");
-				add("strasse.");
-				add("plätze.");
-				add("platze.");
-				add("wald.");
-				add("str.");
-			}
-		};
-		Decompounder decompounder = new Decompounder(words);
-		String[] addressWords = rawAddress.split(",|;|-|\\s");
-		for (String addressWord:addressWords){
-			String[] decompoundWords = decompounder.decompound(addressWord);
-			for (String word:decompoundWords){
-				newAddress= newAddress+", "+word;
-			}
-			//if (decompoundWords.length>1){
-		//		newAddress = newAddress+ " "+addressWord+" ";
-			//}
+			sb = new StringBuffer();
+			m.appendReplacement(sb,"route nationale "+m.group(2));
+			m.appendTail(sb);
+			rawAddress = sb.toString();
 		}
-		newAddress = newAddress.toLowerCase();
-		newAddress.replaceAll("str", "straße").replaceAll("[\\s]+", " ");
-		logger.error("newAddress compound="+newAddress);
-		return newAddress;
+		
+		m = ZIPCONCATENATE_3_2__PATTERN.matcher(rawAddress);
+		if (m.find()){
+			sb = new StringBuffer();
+			m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
+			m.appendTail(sb);
+			rawAddress = sb.toString();
+		} else {
+			m = ZIPCONCATENATE_2_3_PATTERN.matcher(rawAddress);
+			if (m.find()){
+				sb = new StringBuffer();
+				m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
+				m.appendTail(sb);
+				rawAddress = sb.toString();
+			} 
+			
+		}
+		
+		
+		logger.error("prepared address : "+rawAddress);
+		return rawAddress;
 	}
 	
 	
@@ -571,6 +559,9 @@ public class GeocodingService implements IGeocodingService {
 				}
 				results = buildAddressResultDtoFromSolrResponseDto(exactMatches, houseNumber);
 			}
+			if (fuzzy){
+				results.setMessage(FUZZY_ACTIVE);
+			}
 		return results;
 	}
 
@@ -582,6 +573,7 @@ public class GeocodingService implements IGeocodingService {
 		}
 		m.appendTail(sb);
 		String s = sb.toString();
+		s= s.replaceAll(" stra(?:(?:ss)|(?:ß))e", "strasse");
 		return s;
 	}
 
@@ -692,34 +684,40 @@ public class GeocodingService implements IGeocodingService {
 		address.setHouseNumber(null);
 		address.setHouseNumberInfo(null);
 		String rawAddress = addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA);
+		boolean fuzzy = false;
 		if (rawAddress!=null){
-		if (!isEmptyString(address.getStreetName())){
-			//search for street
-			//buildAddress string
-			streets = doSearchStreet(rawAddress,countryCode,false,null,null);
+			if (!isEmptyString(address.getStreetName())){
+				//search for street
+				//buildAddress string
+				streets = doSearchStreet(rawAddress,countryCode,false,null,null);
 				if (streets==null || streets.size()==0){
 					//retry in fuzzy
 					streets = doSearchStreet(rawAddress,countryCode,true,null,null);
+					fuzzy = true;
 				} 
-			
-		} else {
-			//not a street, search for city, Adm, subdivision
-			Class[] placetype = com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE;
-			if(address!=null){
-				if (address.getCity()!=null || address.getZipCode()!=null ||address.getCitySubdivision()!=null){
-					placetype= com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE;
+
+			} else {
+				//not a street, search for city, Adm, subdivision
+				Class[] placetype = com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE;
+				if(address!=null){
+					if (address.getCity()!=null || address.getZipCode()!=null ||address.getCitySubdivision()!=null){
+						placetype= com.gisgraphy.fulltext.Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE;
+					}
+					if (address.getState()!=null && (address.getCity()!=null && address.getZipCode()!=null && address.getCitySubdivision()!=null)){
+						placetype=com.gisgraphy.fulltext.Constants.ONLY_ADM_PLACETYPE;
+					}
 				}
-				if (address.getState()!=null && (address.getCity()!=null && address.getZipCode()!=null && address.getCitySubdivision()!=null)){
-					placetype=com.gisgraphy.fulltext.Constants.ONLY_ADM_PLACETYPE;
+				streets =  doSearchExact(rawAddress, countryCode, false, null, null, placetype);
+				if (streets==null || streets.size()==0){
+					fuzzy = true;
+					streets =  doSearchExact(rawAddress, countryCode, true, null, null, placetype);
 				}
 			}
-			streets =  doSearchExact(rawAddress, countryCode, false, null, null, placetype);
-			if (streets==null || streets.size()==0){
-				streets =  doSearchExact(rawAddress, countryCode, true, null, null, placetype);
-			}
-		}
 		}
 		results = buildAddressResultDtoFromSolrResponseDto(streets, houseNumber);
+		if (fuzzy){
+			results.setMessage(FUZZY_ACTIVE);
+		}
 		/*
 		if (isEmptyString(address.getCity()) && isEmptyString(address.getZipCode()) && isEmptyString(address.getPostTown())) {
 			String streetToSearch = address.getStreetName();
@@ -962,8 +960,13 @@ public class GeocodingService implements IGeocodingService {
 				}
 				address.setScore(solrResponseDto.getScore());
 				//address.setName(solrResponseDto.getName());
-				address.setLat(solrResponseDto.getLat());
-				address.setLng(solrResponseDto.getLng());
+				if (solrResponseDto.getLat_admin_centre()!=null && solrResponseDto.getLng_admin_centre()!=null){
+					address.setLat(solrResponseDto.getLat_admin_centre());
+					address.setLng(solrResponseDto.getLng_admin_centre());
+				} else {
+					address.setLat(solrResponseDto.getLat());
+					address.setLng(solrResponseDto.getLng());
+				}
 				if (solrResponseDto.getOpenstreetmap_id()!=null){
 					address.setId(solrResponseDto.getOpenstreetmap_id());
 				} else {
@@ -1501,6 +1504,10 @@ public class GeocodingService implements IGeocodingService {
 		Matcher m = HOUSENUMBERPATTERN.matcher(address);
 		if (m.find()) {
 			String houseNumber = m.group().trim();
+			if (houseNumber.length() >=4 && (address.trim().indexOf(houseNumber)+houseNumber.length()) >= address.length()-3){
+				//it is probably a zip code
+				return null;
+			}
 			if (houseNumber != null) {
 
 				Matcher m2 = FIRST_NUMBER_EXTRACTION_PATTERN

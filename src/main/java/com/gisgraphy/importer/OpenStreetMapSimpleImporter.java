@@ -224,7 +224,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	if (!isEmptyField(fields, 9, false)) {
 	    boolean oneWay = false;
 	    try {
-		oneWay  = Boolean.valueOf(fields[9]);
+		oneWay  = fields[9].equals("t");
 		street.setOneWay(oneWay);
 	    } catch (Exception e) {
 		logger.warn("can not determine oneway for "+fields[1]+"/"+fields[9]+" : "+e);
@@ -259,7 +259,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	
 	//13 toll
 	if (!isEmptyField(fields, 13, false)) {
-	    	if (fields[13].equalsIgnoreCase("yes")){
+	    	if (fields[13].equalsIgnoreCase("yes") || fields[13].equalsIgnoreCase("snowmobile")){
 	    		street.setToll(true);
 	    	}
 	}

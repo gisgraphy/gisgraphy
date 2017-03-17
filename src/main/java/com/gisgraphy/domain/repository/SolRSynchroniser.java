@@ -70,8 +70,10 @@ import com.gisgraphy.street.HouseNumberSerializer;
 public class SolRSynchroniser implements ISolRSynchroniser {
 	
 	HouseNumberSerializer houseNumberListSerializer = new HouseNumberSerializer();
-	//HouseNumberComparator houseNumberComparator = new HouseNumberComparator();
-    
+	Decompounder decompounder = new Decompounder();
+	
+	
+	
     private static int numberOfRetryOnFailure = 3;
 
     /**
@@ -318,6 +320,10 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 					EncodingHelper.toUTF8(gisFeature.getFullyQualifiedName()));
 			ex.setField(FullTextFields.LAT.getValue(), gisFeature.getLatitude());
 			ex.setField(FullTextFields.LONG.getValue(), gisFeature.getLongitude());
+			if (gisFeature.getAdminCentreLocation()!=null){
+				ex.setField(FullTextFields.ADMIN_CENTRE_LAT.getValue(), gisFeature.getAdminCentreLatitude());
+				ex.setField(FullTextFields.ADMIN_CENTRE_LONG.getValue(), gisFeature.getAdminCentreLongitude());
+			}
 			String latAsString = String.format(Locale.US, "%s", gisFeature.getLatitude().doubleValue());
 			String lngAsString = String.format(Locale.US, "%s", gisFeature.getLongitude().doubleValue());
 			ex.setField(FullTextFields.LOCATION.getValue(), latAsString+","+lngAsString);
@@ -369,6 +375,9 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 		    	ex.setField(FullTextFields.AZIMUTH_START.getValue(), ((Street) gisFeature).getAzimuthStart());
 		    	ex.setField(FullTextFields.AZIMUTH_END.getValue(), ((Street) gisFeature).getAzimuthEnd());
 		    	//only for street,  streets are Common Name but city are Proper name 
+		    	if (gisFeature.getName()!=null && Decompounder.isDecompoudCountryCode(countryCode) && decompounder.getSate(gisFeature.getName())!=state.NOT_APPLICABLE){
+		    		ex.setField("compound", decompounder.getOtherFormatForText(gisFeature.getName()));
+		    	}
 		    	
 		    	
 		    	/*if (((Street) gisFeature).getFullyQualifiedAddress()!=null && !((Street) gisFeature).getFullyQualifiedAddress().trim().equals("")){

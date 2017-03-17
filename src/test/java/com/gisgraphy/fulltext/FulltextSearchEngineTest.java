@@ -418,6 +418,87 @@ public class FulltextSearchEngineTest extends
     }
     
     @Test
+    public void testExecuteAndSerializeDE_decompoundStrasse() {
+    	Double length = 3.5D;
+    	boolean oneWay = true;
+    	StreetType streetType = StreetType.PATH;
+    	String countryCode= "DE";
+    	String name= "Stauffenbergstraße";
+    	long featureId =12345l;
+    	Float latitude = 4.5F;
+		Float longitude=3.9F;
+		Point location = GeolocHelper.createPoint(longitude, latitude);
+		LineString shape = GeolocHelper.createLineString("LINESTRING (30.001 30.001, 40 40)");
+    	String isIn= "is_in";
+    	String isInPlace="is_in_place";
+    	Set<String> isInZip =new HashSet<String>();
+    	String zip1 = "is_in_zip";
+    	String zip2 = "is_in_zip2";
+    	isInZip.add(zip1);
+    	isInZip.add(zip2);
+    	String isInAdm="is_in_adm";
+    	String fullyQualifiedAddress="FQA";
+		
+		
+		OpenStreetMap street = new OpenStreetMap();
+    	street.setName(name);
+    	street.setLength(length);
+    	street.setOneWay(oneWay);
+    	street.setStreetType(streetType);
+    	street.setCountryCode(countryCode);
+    	street.setGid(featureId);
+    	street.setOpenstreetmapId(1234L);
+    	street.setLocation(location);
+    	street.setShape(shape);
+    	street.setIsIn(isIn);
+    	street.setIsInZip(isInZip);
+    	street.setIsInAdm(isInAdm);
+    	street.setIsInPlace(isInPlace);
+    	street.setFullyQualifiedName(fullyQualifiedAddress);
+   
+
+    	openStreetMapDao.save(street);
+
+        this.solRSynchroniser.commit();
+      
+
+	
+
+	    Pagination pagination = paginate().from(1).to(10);
+	    Output output = Output.withFormat(OutputFormat.XML)
+		.withStyle(OutputStyle.FULL)
+		    .withIndentation();
+	    
+	    //exact
+	    FulltextQuery fulltextQuery = new FulltextQuery("Stauffenbergstr",
+		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
+	    FulltextResultsDto results = fullTextSearchEngine.executeQuery(fulltextQuery);
+        Assert.assertEquals(1, results.getNumFound());
+	   
+	    
+        
+        //separeted
+         fulltextQuery = new FulltextQuery("Stauffenberg straße",
+    		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
+    	     results = fullTextSearchEngine.executeQuery(fulltextQuery);
+            Assert.assertEquals(1, results.getNumFound());
+            
+          //separeted synonyms
+            fulltextQuery = new FulltextQuery("Stauffenberg str",
+       		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
+       	     results = fullTextSearchEngine.executeQuery(fulltextQuery);
+               Assert.assertEquals(1, results.getNumFound());
+               
+             //synonym collapse
+       	     fulltextQuery = new FulltextQuery("Stauffenbergstrasse",
+       		    pagination, output, new Class[]{Street.class},null).withoutSpellChecking();
+       	     results = fullTextSearchEngine.executeQuery(fulltextQuery);
+               Assert.assertEquals(1, results.getNumFound());
+    
+    }
+    
+    
+    @Test
     public void testExecuteAndSerializeDE_decompound_uncollapsed() {
     	Double length = 3.5D;
     	boolean oneWay = true;

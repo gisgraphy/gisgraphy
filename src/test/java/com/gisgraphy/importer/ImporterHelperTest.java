@@ -62,6 +62,29 @@ public class ImporterHelperTest {
 		
 	}
 	
+	@Test
+	public void isUnwantedAlternateName(){
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName(null));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName(""));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName(" "));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("FIXME:alt_name"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("fixme:alt_name"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("name:source_ref"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName(" source_2:alt:name"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("note:name"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("erroneous_name"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("RLIS:systemname"));
+		
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("note:name"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("source:name"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("mane:prefix"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("name:postfix"));
+		Assert.assertTrue(ImporterHelper.isUnwantedAlternateName("removed:name"));
+		
+		Assert.assertFalse(ImporterHelper.isUnwantedAlternateName("name:1982"));
+		
+	}
+	
 
 	@Test
 	public void virtualizeADMDshouldChangeADMDTOADMXAccordingToTheAdmcodes() {

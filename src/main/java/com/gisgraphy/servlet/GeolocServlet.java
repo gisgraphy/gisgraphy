@@ -109,7 +109,7 @@ public class GeolocServlet extends GisgraphyServlet {
 		    .isParametersEmpty(req, GeolocQuery.LAT_PARAMETER, GeolocQuery.LONG_PARAMETER)) {
 		sendCustomError(ResourceBundle.getBundle(
 			Constants.BUNDLE_ERROR_KEY).getString(
-			"error.emptyLatLong"), format, resp,req);
+			"error.emptyLatLong"),400, format, resp,req);
 		return;
 	    }
 	    GeolocQuery query = GeolocQueryHttpBuilder.getInstance().buildFromHttpRequest(req);

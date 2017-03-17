@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,6 +224,8 @@ public class StringHelper {
 					if (m.find() && m.groupCount()>=1){
 						actualSplitedLong.add(m.group(1).toLowerCase());
 					}
+				} else if (StringUtils.isNumeric(word)){
+					actualSplitedLong.add(normalize(word));
 				}
 			}
 			List<String> expectedSplitedLong = new ArrayList<String>();

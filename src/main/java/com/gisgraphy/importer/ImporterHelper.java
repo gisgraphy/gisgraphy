@@ -56,6 +56,8 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gisgraphy.compound.Decompounder;
+import com.gisgraphy.compound.Decompounder.state;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
@@ -100,16 +102,28 @@ public class ImporterHelper {
     
     public static final String UNWANTED_ZIPCODE_REGEXP = "(.*(?:CEDEX).*|(?:\\d{5}\\sSP\\s\\d+))";
     public static final Pattern UNWANTED_ZIPCODE_PATTERN = Pattern.compile(UNWANTED_ZIPCODE_REGEXP,Pattern.CASE_INSENSITIVE);
+   private static  Decompounder decompounder = new Decompounder();
     
-    public final static List<String> UNWANTED_ALTERNATE_NAMES = new ArrayList<String>(){
-		{
-		add("note:name");
-		add("source:name");
-		add("mane:prefix");
-		add("name:suffix");
-		add("name:postfix");
+	
+	public static boolean isUnwantedAlternateName(String alternateName){
+		if (alternateName!=null){
+			alternateName= alternateName.toLowerCase().trim();
 		}
-	};
+		if (alternateName == null || alternateName.length()==0 || alternateName.contains("source")|| 
+					alternateName.contains("fixme")|| 
+					alternateName.contains("prefix")|| 
+					alternateName.contains("suffix")|| 
+					alternateName.contains("postfix") ||
+					alternateName.contains("remove") ||
+					alternateName.contains("erroneous") ||
+					alternateName.contains("pronunciation") ||
+					alternateName.contains("systemname") ||
+					alternateName.contains("note") 
+					){
+				return true;
+			}
+		return false;
+	}
     
    /* public static final String ALTERNATENAMES_EXTRACTION_REGEXP = "(?:\"\\{\"\")?"//beginning of string
     		+ "(?:[_]{0,3})"//not the underscore (optionaly)
@@ -635,7 +649,7 @@ public class ImporterHelper {
 				logger.warn("wrong number of fields for alternatename no " + i + " for line " + alternateNamesAsString);
 				continue;
 			}
-			if (matcher.group(1)!=null && UNWANTED_ALTERNATE_NAMES.contains(matcher.group(1))){
+			if (matcher.group(1)!=null && isUnwantedAlternateName(matcher.group(1))){
 				logger.warn(matcher.group(1)+" is not an alternate name we want for line " + alternateNamesAsString);
 				continue;
 				
@@ -711,7 +725,7 @@ public class ImporterHelper {
 				logger.warn("wrong number of fields for alternatename no " + i + " for line " + alternateNamesAsString);
 				continue;
 			}
-			if (matcher.group(1)!=null && UNWANTED_ALTERNATE_NAMES.contains(matcher.group(1))){
+			if (matcher.group(1)!=null && isUnwantedAlternateName(matcher.group(1))){
 				logger.warn(matcher.group(1)+" is not an alternate name we want for line " + alternateNamesAsString);
 				continue;
 				
@@ -721,12 +735,20 @@ public class ImporterHelper {
 			String alternateName = matcher.group(3);
 			if (alternateName!= null && !"".equals(alternateName.trim())){
 					String[] alternateNames = alternateName.split(";|\\||,|:");
-					
+					boolean german = false;
+					if (street.getName()!=null ){
+			    		german = decompounder.getSate(street.getName())!=state.NOT_APPLICABLE;
+			    	}
 					
 					//check for duplicates 
 					if (street.getAlternateNames()!=null){
 						int counter=0;
-						String[] alternateNamesWODuplicates = new String[alternateNames.length];
+						String[] alternateNamesWODuplicates;
+						if (german){
+						 alternateNamesWODuplicates = new String[alternateNames.length+1];
+						} else {
+							 alternateNamesWODuplicates = new String[alternateNames.length];
+						}
 							toCheckNames :
 								for (String name:alternateNames){
 								currentNames :
@@ -740,8 +762,13 @@ public class ImporterHelper {
 									}
 							}
 						}
+						if (german){
+							alternateNamesWODuplicates[alternateNames.length]=decompounder.getOtherFormat(street.getName());
+						}
 						alternateNames = alternateNamesWODuplicates;
 					}
+					//only for street,  streets are Common Name but city are Proper name 
+			    	
 										
 					for (String name:alternateNames){
 						if (name!=null  && !"".equals(name) && name.length()<OpenStreetMap.MAX_ALTERNATENAME_SIZE){

@@ -106,8 +106,8 @@
 	      </analyzer>
     </fieldType>
     
-	
-	
+
+
 	<fieldType name="spell" class="solr.TextField" positionIncrementGap="100" omitNorms="true">
 		  <analyzer type="index">
 		    <tokenizer class="solr.StandardTokenizerFactory"/>
@@ -309,6 +309,9 @@ decompound after lower because words of dictionary are in lower, unpunct
   <!--Medium --><field name="timezone" type="string" indexed="false" stored="true"/>
   <!--Medium  --><field name="lat" type="double" indexed="false" stored="true"/>
   <!--Medium  --><field name="lng" type="double" indexed="false" stored="true"/>
+  
+   <!--Medium  --><field name="lat_admin_centre" type="double" indexed="false" stored="true"/>
+   <!--Medium  --><field name="lng_admin_centre" type="double" indexed="false" stored="true"/>
    
   <!--Medium  --><field name="feature_class" type="string" indexed="false" stored="true"/>
   <!--Medium  --><field name="feature_code" type="string" indexed="false" stored="true"/>
@@ -374,7 +377,7 @@ decompound after lower because words of dictionary are in lower, unpunct
    
    <!-- fill the iso field -->
    <!--<copyField source="all_name" dest="iso_all_name"/>-->
-   <copyField source="name" dest="iso_name"/> 
+  <!-- <copyField source="name" dest="iso_name"/> -->
    
    <field name="suggest_name" type="suggest" indexed="true" stored="false" multiValued="true"/>
   <field name="suggest_in" type="suggest" indexed="true" stored="false" multiValued="true"/>

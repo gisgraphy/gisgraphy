@@ -62,7 +62,7 @@ import com.vividsolutions.jts.geom.Point;
 
 
 
-public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolrTestCase
+public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSolrTestCase
 {
     
     private IImporterProcessor openStreetMapImporter;
@@ -227,6 +227,25 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
    		while (iterator.hasNext()){
    			Assert.assertEquals(AlternateNameSource.OPENSTREETMAP,iterator.next().getSource());
    		}
+   		//---
+   		 RawAlternateNames="name:fr===Cheka Jedid,Chekia Atiq:Chekia Jedide;Chekia Jedidé___name:historic:1952===Karl-Franzens-Universität Graz";
+		 importer = new OpenStreetMapSimpleImporter();
+		 street = new OpenStreetMap();
+		street = importer.populateAlternateNames(street, RawAlternateNames);
+		Assert.assertEquals(4, street.getAlternateNames().size());
+		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Chekia Atiq"));
+		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Chekia Jedide"));
+		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Chekia Jedidé"));
+		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Karl-Franzens-Universität Graz"));
+		
+		Assert.assertNotNull("street should be filled if the name is null",street.getName());
+		Assert.assertEquals("Cheka Jedid", street.getName());
+		
+		iterator = street.getAlternateNames().iterator();
+		while (iterator.hasNext()){
+			Assert.assertEquals(AlternateNameSource.OPENSTREETMAP,iterator.next().getSource());
+		}
+   	 //name:historic:1952
    		
 		
 	}

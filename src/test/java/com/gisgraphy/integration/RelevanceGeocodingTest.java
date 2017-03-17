@@ -33,6 +33,8 @@ import com.vividsolutions.jts.geom.Point;
 //@Ignore
 public class RelevanceGeocodingTest {
 
+	private static final long[] MAGDEBURGERSTRASSE = new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,91146628};
+
 	private static final long[] TOUQUET = new long[]{2972304L};
 
 	private static final long[] LE_TOUQUET = new long[]{2095264L,2999139l};
@@ -52,13 +54,15 @@ public class RelevanceGeocodingTest {
 	public final static long[] STOMER_PAYS_DE_LOIRE_IDs = new long[]{2977847L};//4039279022L;2977846
 	
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";
-	public final static String BASE_SERVER_URL ="http://127.0.0.1:8080/";
-	//public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com/";
+	//public final static String BASE_SERVER_URL ="http://127.0.0.1:8080/";
+	public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com/";
 	public final static String GEOCODING_BASE_SERVER_URI ="geocoding/geocoding?address=";
 	public final static String GEOCODING_BASE_STRUCTURED_SERVER_URI ="geocoding/geocoding?";
 	public final static String FULLTEXT_BASE_SERVER_URI ="fulltext/search?q=";
 	public final static String OUTPUT_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output.csv";
 	public final static String OUTPUT_FAIL_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output_fail.csv";
+
+	private static final boolean houseNumber = false;
 	
 	IRestClient restClient = new RestClient();
 	
@@ -149,16 +153,42 @@ public class RelevanceGeocodingTest {
 //
 //	 
 	
+	
+	
 	@Test
-	public void cityGermanWithFrenchNameTest() throws InterruptedException, IOException{
+	public void cityGermanWithFrenchNameTest_2() throws InterruptedException, IOException{
 		if (countryTest.contains("DE")){
-			String rawAddress = "munich";
-			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			String rawAddress = "cologne";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{2168237L},addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(new long[]{62578},addressResultsDto.getResult(), rawAddress);
 		}
 			
 	}
+	
+	@Test
+	public void cityGerman() throws InterruptedException, IOException{
+		if (countryTest.contains("DE")){
+			String rawAddress = "berlin";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstInExpectedIds(new long[]{62422},addressResultsDto.getResult(), rawAddress);
+		}
+			
+	}
+	
+	@Test
+	public void cityGermanTest_2() throws InterruptedException, IOException{
+		if (countryTest.contains("DE")){
+			String rawAddress = "Köln";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstInExpectedIds(new long[]{62578},addressResultsDto.getResult(), rawAddress);
+		}
+			
+	}
+	
+	
 	
 	@Test
 	public void cityCountryDetectionTest() throws InterruptedException, IOException{
@@ -440,12 +470,21 @@ public class RelevanceGeocodingTest {
 // \__,_|\__,_|\__,_|_|  \___||___/___/
 //                                     
 
+	@Test
+	public void StreetalternateCityTest() throws InterruptedException, IOException{
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) ){
+			String rawAddress = "grand place  lille";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstCorrectById(123721015L,addressResultsDto.getResult(), rawAddress);
+		}
+	}
 	
 	
 
 	@Test
 	public void germanAddressWithHouseNumberWithLetterTest() throws InterruptedException, IOException{
-		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("DE")|| countryTest.contains("ALL")) && houseNumber){
 			String rawAddress = "lottumstrasse 13a berlin";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
@@ -469,7 +508,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void addressWithNumberInStreetNameTest() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && houseNumber){
 			String rawAddress = "11 Rue du 14 Juillet nantes";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
@@ -482,7 +521,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void address1SynonymTest() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && houseNumber){
 			String rawAddress = "9 avenue de l'opera paname";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
@@ -494,7 +533,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void address1Test() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && houseNumber){
 			String rawAddress = "9 avenue de l'opera paris";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
@@ -506,7 +545,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void germanHouseNumberTest() throws InterruptedException, IOException{
-		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("DE")|| countryTest.contains("ALL")) && houseNumber){
 			String rawAddress = "lottumstrasse 4 berlin";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
@@ -524,7 +563,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void germanHouseNumber_Not_well_placedTest() throws InterruptedException, IOException{
-		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("DE")|| countryTest.contains("ALL")) && houseNumber){
 			String rawAddress = "4 lottumstrasse berlin";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
@@ -544,7 +583,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void address1InterpolationTest() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && houseNumber){
 			//40 is not a number known in the database, we interpolate it at runtime
 			String rawAddress = "40 avenue de l'opera paris";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
@@ -554,6 +593,52 @@ public class RelevanceGeocodingTest {
 			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
+	
+	@Test
+	public void RNtheGeocodingTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			//13000 is not the correct zip but the city one, correct is 13003
+			String rawAddress = "rn43 62 910";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	@Test
+	public void RouteNationaleGeocodingTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			//13000 is not the correct zip but the city one, correct is 13003
+			String rawAddress = "route nationale 43 serques";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	@Test
+	public void D_XXXGeocodingTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			//13000 is not the correct zip but the city one, correct is 13003
+			String rawAddress = "D 943 serques";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	@Test
+	public void DXXXGeocodingTest() throws InterruptedException, IOException{
+		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+			//13000 is not the correct zip but the city one, correct is 13003
+			String rawAddress = "D943 serques";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+			Assert.assertNotNull(addressResultsDto);
+			isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
+		}
+	}
+	
+	
 	
 	@Test
 	public void unknownPostcodeShouldNotdisturbtheGeocodingTest() throws InterruptedException, IOException{
@@ -831,7 +916,7 @@ public class RelevanceGeocodingTest {
 //	
 	@Test
 	public void structuredAddressGermanHouseNumberTest() throws InterruptedException, IOException{
-		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("DE")|| countryTest.contains("ALL")) && houseNumber){
 	Address address = new Address();
 	address.setHouseNumber("4");
 	address.setStreetName("lottumstrasse");
@@ -849,7 +934,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void structuredAddress1Test() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && houseNumber){
 			Address address = new Address();
 			address.setHouseNumber("9");
 			address.setStreetName("de l'opéra");
@@ -865,7 +950,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void structuredAddress1SynonymTest() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && houseNumber){
 			Address address = new Address();
 			address.setHouseNumber("9");
 			address.setStreetName("de l'opéra");
@@ -1427,6 +1512,8 @@ public class RelevanceGeocodingTest {
 		}
 	}
 	
+	
+	//todo
 	@Test
 	public void compoundConcatenateTwoWord_vs_SeparateSynonym1() throws InterruptedException, IOException{
 		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
@@ -1467,7 +1554,6 @@ public class RelevanceGeocodingTest {
 			isFirstInExpectedIds(new long[]{4597354L,465724298L,4597354L}, addressResultsDto.getResult(), rawAddress);
 		}
 	}
-	
 	
 	
 	
@@ -1589,7 +1675,7 @@ public class RelevanceGeocodingTest {
 				Assert.assertNotNull(addressResultsDto);
 				
 				//we should find all the streets 
-				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,145635383L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1601,7 +1687,7 @@ public class RelevanceGeocodingTest {
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress,"DE");
 				Assert.assertNotNull(addressResultsDto);
 				//we should find all the streets 
-				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,145635383L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1612,7 +1698,7 @@ public class RelevanceGeocodingTest {
 				AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
 				Assert.assertNotNull(addressResultsDto);
 				//we should find all the streets 
-				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,4377141L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,145635383L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1732,7 +1818,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "MagdeburgerStraße , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1742,7 +1828,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "Magdeburger Straße , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1752,7 +1838,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "Magdeburger Strasse , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1762,7 +1848,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "MagdeburgerStrasse , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1772,7 +1858,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "Magdeburger Str , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1782,7 +1868,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "MagdeburgerStr , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1792,7 +1878,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "Magdeburger Str. , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1802,7 +1888,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 			String rawAddress = "MagdeburgerStr. , oschersleben";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstInExpectedIds(new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502}, addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(MAGDEBURGERSTRASSE, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -2127,6 +2213,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 //------------------------------------------------------------------------------------
 	private AddressResultsDto doGeocoding (String address){
 		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json";
+		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		return result;
 	}

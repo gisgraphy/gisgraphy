@@ -423,42 +423,47 @@ public class LabelGenerator {
 				sb.append(address.getHouseNumber()).append(", ");
 			}
 		}
+		String lastname = "";
 		if (address.getDependentLocality()!=null){
+			lastname = address.getDependentLocality();
 			sb.append(address.getDependentLocality()).append(", ");
 		}
-		if (address.getDistrict()!=null){
+		if (address.getDistrict()!=null && !address.getDistrict().equalsIgnoreCase(lastname)){
+			lastname = address.getDistrict();
 			sb.append(address.getDistrict()).append(", ");
 		}
-		if (address.getQuarter()!=null){
+		if (address.getQuarter()!=null && !address.getQuarter().equalsIgnoreCase(lastname)){
+			lastname = address.getQuarter();
 			sb.append(address.getQuarter()).append(", ");
 		}
-		if (address.getCitySubdivision()!=null){
+		if (address.getCitySubdivision()!=null && !address.getCitySubdivision().equalsIgnoreCase(lastname)){
+			lastname = address.getCitySubdivision();
 			sb.append(address.getCitySubdivision()).append(", ");
 		}
-		if (address.getCity()!=null){
+		if (address.getCity()!=null && !address.getCity().equalsIgnoreCase(lastname)){
+			lastname = address.getCity();
 			sb.append(address.getCity()).append(", ");
 		}
 		if (address.getAdm1Name()==null && address.getAdm2Name()==null && address.getAdm3Name()==null && address.getAdm4Name()==null && address.getAdm5Name()==null && address.getState()!=null ){
 			sb.append(address.getState()).append(", ");
 		} else {
-			String lastState = "";
-			if (address.getAdm5Name()!=null){
+			if (address.getAdm5Name()!=null && !address.getAdm5Name().equalsIgnoreCase(lastname)){
 				sb.append(address.getAdm5Name()).append(", ");
-				lastState = address.getAdm5Name();
+				lastname = address.getAdm5Name();
 			}
-			if (address.getAdm4Name()!=null && !address.getAdm4Name().equalsIgnoreCase(lastState)){
+			if (address.getAdm4Name()!=null &&  !address.getAdm4Name().equalsIgnoreCase(lastname)){
 				sb.append(address.getAdm4Name()).append(", ");
-				lastState = address.getAdm4Name();
+				lastname = address.getAdm4Name();
 			}
-			if (address.getAdm3Name()!=null && !address.getAdm3Name().equalsIgnoreCase(lastState)){
+			if (address.getAdm3Name()!=null &&  !address.getAdm3Name().equalsIgnoreCase(lastname)){
 				sb.append(address.getAdm3Name()).append(", ");
-				lastState = address.getAdm3Name();
+				lastname = address.getAdm3Name();
 			}
-			if (address.getAdm2Name()!=null && !address.getAdm2Name().equalsIgnoreCase(lastState)){
+			if (address.getAdm2Name()!=null &&  !address.getAdm2Name().equalsIgnoreCase(lastname)){
 				sb.append(address.getAdm2Name()).append(", ");
-				lastState = address.getAdm2Name();
+				lastname = address.getAdm2Name();
 			}
-			if (address.getAdm1Name()!=null && !address.getAdm1Name().equalsIgnoreCase(lastState)){
+			if (address.getAdm1Name()!=null && !address.getAdm1Name().equalsIgnoreCase(lastname)){
 				if (address.getCountryCode()!=null){
 					sb.append(StateAbbreviator.addStateCode(address.getCountryCode(),address.getAdm1Name())).append(", ");
 				} else {
@@ -707,6 +712,8 @@ public class LabelGenerator {
 		}
 		address.setGeocodingLevel(GeocodingLevels.STREET);//We set it and don't calculate it cause if streetname is null
 		
+		address.setId(openStreetMap.getOpenstreetmapId());
+		
 		address.setFormatedFull(getFullyQualifiedName(address));
 		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
 		return address;
@@ -734,8 +741,11 @@ public class LabelGenerator {
 		Address address = new Address();
 		//we do the build address at the end because the formatedurl should take the housenumber into account
 		// and we have to set it first
-		if (houseNumberDistance.getHouseNumber().getNumber()!=null){
-			address.setHouseNumber(houseNumberDistance.getHouseNumber().getNumber());
+		if (houseNumberDistance.getHouseNumber() != null){
+			if (houseNumberDistance.getHouseNumber().getNumber()!=null){
+				address.setHouseNumber(houseNumberDistance.getHouseNumber().getNumber());
+			}
+			address.setId(houseNumberDistance.getHouseNumber().getId());
 		}
 		if (houseNumberDistance.getHouseNumber().getName()!=null){
 			address.setName(houseNumberDistance.getHouseNumber().getName());
@@ -812,6 +822,9 @@ public class LabelGenerator {
 		
 		address.setFormatedFull(getFullyQualifiedName(address));
 		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
+		
+		Long id= (city.getOpenstreetmapId()==null?city.getFeatureId():city.getOpenstreetmapId());
+		address.setId(id);
 		return address;
 	}
 

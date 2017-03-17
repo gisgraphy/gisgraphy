@@ -106,7 +106,7 @@ public class ReverseGeocodingServlet extends GisgraphyServlet {
 		    .isParametersEmpty(req, GeolocQuery.LAT_PARAMETER, GeolocQuery.LONG_PARAMETER)) {
 		sendCustomError(ResourceBundle.getBundle(
 			Constants.BUNDLE_ERROR_KEY).getString(
-			"error.emptyLatLong"), format, resp,req);
+			"error.emptyLatLong"),400, format, resp,req);
 		return;
 	    }
 	    ReverseGeocodingQuery query = ReverseGeocodingQueryHttpBuilder.getInstance().buildFromHttpRequest(req);

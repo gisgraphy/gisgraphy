@@ -110,7 +110,7 @@ public class StreetServlet extends GisgraphyServlet {
 		    .isParametersEmpty(req, StreetSearchQuery.NAME_PARAMETER)) {
 		sendCustomError(ResourceBundle.getBundle(
 			Constants.BUNDLE_ERROR_KEY).getString(
-			"error.emptyLatLong"), format, resp,req);
+			"error.emptyLatLong"),400, format, resp,req);
 		return;
 	    }
 	    StreetSearchQuery query = StreetSearchQueryHttpBuilder.getInstance().buildFromHttpRequest(req);

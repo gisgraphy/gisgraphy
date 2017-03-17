@@ -51,6 +51,10 @@ public class solrResponseDtoBuilder {
 		    .getValue());
 	    solrResponseDto.lng = getFieldAsDouble(solrDocument, FullTextFields.LONG
 		    .getValue());
+	    solrResponseDto.lat_admin_centre = getFieldAsDouble(solrDocument, FullTextFields.ADMIN_CENTRE_LAT
+		    .getValue());
+	    solrResponseDto.lng_admin_centre = getFieldAsDouble(solrDocument, FullTextFields.ADMIN_CENTRE_LONG
+		    .getValue());
 	    solrResponseDto.adm1_code = getFieldAsString(solrDocument,
 		    FullTextFields.ADM1CODE.getValue());
 	    solrResponseDto.adm2_code = getFieldAsString(solrDocument,

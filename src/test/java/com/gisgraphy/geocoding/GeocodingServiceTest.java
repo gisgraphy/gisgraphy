@@ -2399,9 +2399,10 @@ public class GeocodingServiceTest {
     @Test
     public void findHouseNumber(){
     	GeocodingService geocodingService = new GeocodingService();
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("2ème Avenue, Gilly, Charleroi, Hainaut, Wallonia, 6060",null));
     	
     	
-//    	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13 berlin",null).getHouseNumber());
+    	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13 berlin",null).getHouseNumber());
     	
     	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13a berlin",null).getHouseNumber());
     	Assert.assertEquals("Lottumstraße, berlin", geocodingService.findHouseNumber("Lottumstraße, 13a berlin",null).getAddressWithoutHouseNumber());
@@ -2440,6 +2441,11 @@ public class GeocodingServiceTest {
     	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 bis rue de la gare 59000 lille",null).getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 bis rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
+    	
+    	//ordinal french
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("5ieme avenue 59000 lille",null));
+    	//Assert.assertEquals(null, geocodingService.findHouseNumber("2ème Avenue, Gilly, Charleroi, Hainaut, Wallonia, 6060",null));
+    	
     	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165a, rue de la gare 59000 lille",null).getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165a, rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
@@ -2508,6 +2514,19 @@ public class GeocodingServiceTest {
     	Assert.assertTrue(geocodingService.needParsing("toto,toto"));
     	Assert.assertTrue(geocodingService.needParsing("toto;toto"));
     }
+    
+    @Test
+    public void testPrepareQuery(){
+    	GeocodingService geocodingService = new GeocodingService();
+    	Assert.assertEquals("4 route nationale 43 59230 serques",geocodingService.prepareQuery("4 rn 43 59 230 serques"));
+    	Assert.assertEquals("4 route nationale 43 12177 serques",geocodingService.prepareQuery("4 rn 43 121 77 serques"));
+    	Assert.assertEquals("route nationale 43 62910",geocodingService.prepareQuery("rn43 62 910"));
+    	Assert.assertEquals("4 route nationale 43 59130",geocodingService.prepareQuery("4 rn 43 59 130"));
+    	Assert.assertEquals("",geocodingService.prepareQuery(""));
+    	Assert.assertEquals("4 route nationale 43 serques",geocodingService.prepareQuery("4 rn43 serques"));
+    	Assert.assertEquals("4 route nationale 43 serques",geocodingService.prepareQuery("4 rn 43 serques"));
+    	
+    	}
 
    
 }

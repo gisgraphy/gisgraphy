@@ -50,7 +50,7 @@ public class OutputStyleHelperTest {
     @Test
     public void outputStyleGetFieldListForShortShouldBeCorrect() {
 	String list = outputStyleHelper.getFulltextFieldList(OutputStyle.SHORT,null);
-	assertEquals("The field list has a wrong size for SHORT :" + list, 10,
+	assertEquals("The field list has a wrong size for SHORT :" + list, 12,
 		list.split(",").length);
 	assertFalse(
 		"The field list for SHORT must not contains ',,' : " + list,
@@ -61,7 +61,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.SHORT,"fr");
 	assertEquals(
 		"The field list for SHORT should not be different for a specified country:"
-			+ list, 10, list.split(",").length);
+			+ list, 12, list.split(",").length);
 	assertFalse(
 		"The field list for SHORT must not ends with ',' : " + list,
 		list.endsWith(","));
@@ -71,7 +71,7 @@ public class OutputStyleHelperTest {
     @Test
     public void outputStyleGetFieldListForMediumShouldBeCorrect() {
 	String list = outputStyleHelper.getFulltextFieldList(OutputStyle.MEDIUM,null);
-	assertEquals("The field list has a wrong size for MEDIUM :" + list, 57,
+	assertEquals("The field list has a wrong size for MEDIUM :" + list, 59,
 		list.split(",").length);
 	assertFalse("The field list for MEDIUM must not contains ',,' : "
 		+ list, list.contains(",,"));
@@ -80,7 +80,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.MEDIUM,"fr");
 	assertEquals(
 		"The field list for MEDIUM should not be different for a specified country : "
-			+ list, 57, list.split(",").length);
+			+ list, 59, list.split(",").length);
 	assertFalse("The field list for MEDIUM must not ends with ',' : "
 		+ list, list.endsWith(","));
 
@@ -89,7 +89,7 @@ public class OutputStyleHelperTest {
     @Test
     public void outputStyleGetFieldListForLongShouldBeCorrect() {
 	String list =outputStyleHelper.getFulltextFieldList(OutputStyle.LONG,null);
-	assertEquals("The field list has a wrong size for LONG :" + list, 69,
+	assertEquals("The field list has a wrong size for LONG :" + list, 71,
 		list.split(",").length);
 	assertFalse("The field list for LONG must not contains ',,' : " + list,
 		list.contains(",,"));
@@ -98,7 +98,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.LONG,"fr");
 	assertEquals(
 		"The field list for LONG should not be different for a specified country : "
-			+ list, 69, list.split(",").length);
+			+ list, 71, list.split(",").length);
 	assertFalse("The field list for LONG must not ends with ',' : " + list,
 		list.endsWith(","));
 
@@ -117,7 +117,7 @@ public class OutputStyleHelperTest {
 	list = outputStyleHelper.getFulltextFieldList(OutputStyle.FULL,"fr");
 	assertEquals(
 		"The field list for medium should be different for a specified country :"
-			+ list, 77, list.split(",").length);
+			+ list, 79, list.split(",").length);
 	assertFalse("The field list for FULL must not ends with ',' : " + list,
 		list.endsWith(","));
 

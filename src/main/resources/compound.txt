@@ -2,7 +2,6 @@ aue.
 allee.
 berg.
 bg.
-burg.
 Bürgermeister.
 Brucke.
 Br.

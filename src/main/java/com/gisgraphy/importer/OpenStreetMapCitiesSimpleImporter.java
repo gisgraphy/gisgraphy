@@ -225,7 +225,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	if (isPoi(fields[12],countrycode, fields[7])) {
 		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		//find and delete the city or subdivision 
-		if (poiToremove!=null){
+		if (poiToremove!=null && poiToremove.getOpenstreetmap_id()!=null){
 			GisFeature cityToRemoveObj = null;
 			if (poiToremove.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
 				cityToRemoveObj = cityDao.getByFeatureId(poiToremove.getFeature_id());
@@ -234,7 +234,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				 cityToRemoveObj = citySubdivisionDao.getByFeatureId(poiToremove.getFeature_id());
 			}
 			if (cityToRemoveObj!=null){
-				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove , "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId());
+				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId());
 				gisFeatureDao.remove(cityToRemoveObj);
 			}
 		}
@@ -267,18 +267,15 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 					}
 				}
 				
-			} else if (nearestCity.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
+			} else if (nearestCity.getPlacetype().equalsIgnoreCase(City.class.getSimpleName()) && nearestCity.getOpenstreetmap_id()!=null){
 				//osm consider the place as a suburb, we delete the city and create a citysubdivision
 				City cityToRemove = cityDao.getByFeatureId(nearestCity.getFeature_id());
 				if (cityToRemove!=null && !cityToRemove.isMunicipality()){
-					logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove , "+nearestCity.getName()+","+nearestCity.getFeature_id());
+					logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id());
 					cityDao.remove(cityToRemove);
 				}
 				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
 			}
-			
-			
-			
 			
 		} else {
 			logger.warn("'"+name+"'/'"+fields[1]+"' is not found");
@@ -287,7 +284,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		
 	}  else {
 		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE, shape);
-		if (nearestCity != null ){
+		if (nearestCity != null && nearestCity.getOpenstreetmap_id()!=null){
 			place = cityDao.getByFeatureId(nearestCity.getFeature_id());
 			if (place==null){
 				place = createNewCity(name,countrycode,location,adminCentreLocation);

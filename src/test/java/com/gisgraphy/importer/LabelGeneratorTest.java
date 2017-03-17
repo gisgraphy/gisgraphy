@@ -1001,6 +1001,21 @@ public void testGenerateLabel_Adm(){
 			String actual = generator.getFullyQualifiedName(address);
 			System.out.println(actual);
 			Assert.assertEquals(1, countNumberOfOccurence(actual,"adm2"));
+			
+			
+			 address= new Address();
+				address.setStreetName("bar street");
+				address.setHouseNumber("3");
+				address.setCity("foo");
+				address.setAdm1Name("adm1");
+				address.setAdm2Name("adm2");
+				address.setAdm3Name("ADM2");
+				address.setAdm4Name("adm4");
+				address.setAdm5Name("foo");
+				address.setCountryCode("FR");
+				actual = generator.getFullyQualifiedName(address);
+				System.out.println(actual);
+				Assert.assertEquals(1, countNumberOfOccurence(actual,"foo"));
 		}
 	  
 	    
@@ -1236,6 +1251,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
+		Assert.assertEquals(osm.getOpenstreetmapId(), address.getId());
 		Assert.assertEquals("streettype in osm (service,...) is not the streettype in an address",null, address.getStreetType());
 		Assert.assertEquals(osm.getLength(), address.getLength());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
@@ -1377,6 +1393,7 @@ public void testGenerateLabel_Adm(){
 		city.setAdm4Name("adm4Name");
 		city.setAdm5Name("adm5Name");
 		city.setIsInAdm("isInAdm");
+		city.setOpenstreetmapId(12345L);
 		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
 		zipcodes.add(new ZipCode("zip"));
 		city.setZipCodes(zipcodes);
@@ -1397,6 +1414,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(GeocodingLevels.CITY, address.getGeocodingLevel());
 		Assert.assertEquals(city.getLatitude(), address.getLat());
 		Assert.assertEquals(city.getLongitude(), address.getLng());
+		Assert.assertEquals(city.getOpenstreetmapId(), address.getId());
 		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
 		
