@@ -1248,6 +1248,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getAzimuthStart(), address.getAzimuthStart());
 		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
 		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
+		Assert.assertEquals(osm.getStreetRef(), address.getStreetRef());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
@@ -1296,6 +1297,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
 		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		Assert.assertEquals(osm.getStreetRef(), address.getStreetRef());
 		
 		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
 		Assert.assertEquals("streettype in osm (service,...) is not the streettype in an address",null, address.getStreetType());
@@ -1327,6 +1329,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
 		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		Assert.assertEquals(osm.getStreetRef(), address.getStreetRef());
 		
 		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
@@ -1379,6 +1382,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getAzimuthEnd(), address.getAzimuthEnd());
 		Assert.assertEquals(osm.getMaxSpeed(), address.getMaxSpeed());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		Assert.assertEquals(osm.getStreetRef(), address.getStreetRef());
 		
 	}
 	

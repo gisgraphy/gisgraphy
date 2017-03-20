@@ -144,7 +144,23 @@ public class OpenStreetMap {
     
     private String isInAdm;
     
+    private String streetRef;
+    
     /**
+	 * @return the streetRef
+	 */
+	public String getStreetRef() {
+		return streetRef;
+	}
+
+	/**
+	 * @param streetRef the streetRef to set
+	 */
+	public void setStreetRef(String streetRef) {
+		this.streetRef = streetRef;
+	}
+
+	/**
      * This field is only for relevance and allow to search for street<->cities in 
      * many alternateNames. It is not in stored
      */

@@ -234,6 +234,7 @@ decompound after lower because words of dictionary are in lower, unpunct
  <fields>
    
   <!-- Medium --><field name="street_type" type="string" indexed="false" stored="true"/>
+   <!-- Medium --><field name="street_ref" type="string" indexed="true" stored="true"/>
   <!-- Medium --><field name="is_in" type="text" indexed="false" stored="true"/>
   <!-- Medium --><field name="is_in_cities" type="text" indexed="false" stored="false" multiValued="true"/>
   <!-- Medium --><field name="is_in_place" type="text" indexed="false" stored="true"/>

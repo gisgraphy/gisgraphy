@@ -1200,6 +1200,7 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 		isInZip.add("90002");
 		String altname1 = "alt name 1";
 		String altname2 = "alt name 2";
+		String streetRef= "A1";
 		HouseNumber houseNumber1 = new HouseNumber();
 		houseNumber1.setNumber("4");
 		houseNumber1.setLocation(GeolocHelper.createPoint(4F, 3F));
@@ -1224,6 +1225,7 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
     	street.setLength(length);
     	street.setOneWay(oneWay);
     	street.setStreetType(streetType);
+    	street.setStreetRef(streetRef);
     	street.setCountryCode(countryCode);
     	street.setGid(featureId);
     	street.setOpenstreetmapId(1234L);
@@ -1343,6 +1345,10 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 
 			"//*[@name='" + FullTextFields.LABEL.getValue()
 			+ "'][.='"+street.getLabel()+"']",
+			
+
+			"//*[@name='" + FullTextFields.STREET_REF.getValue()
+			+ "'][.='"+street.getStreetRef()+"']",
 
 			"//*[@name='" + FullTextFields.LABEL_POSTAL.getValue()
 			+ "'][.='"+street.getLabelPostal()+"']",

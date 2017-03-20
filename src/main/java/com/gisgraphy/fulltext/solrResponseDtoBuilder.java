@@ -45,6 +45,8 @@ public class solrResponseDtoBuilder {
 		    FullTextFields.FULLY_QUALIFIED_NAME.getValue());
 	    solrResponseDto.placetype = getFieldAsString(solrDocument,
 		    FullTextFields.PLACETYPE.getValue());
+	    solrResponseDto.street_ref = getFieldAsString(solrDocument,
+			    FullTextFields.STREET_REF.getValue());
 	    solrResponseDto.population = getFieldAsInteger(solrDocument,
 		    FullTextFields.POPULATION.getValue());
 	    solrResponseDto.lat = getFieldAsDouble(solrDocument, FullTextFields.LAT

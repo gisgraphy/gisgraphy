@@ -85,7 +85,7 @@ public class FulltextQuerySolrHelper {
 	public static String MM_NOT_ALL_WORD_REQUIRED ="3<-1 4<3";
 	public static String MM_ALL_WORD_REQUIRED ="100%%";
 	
-	protected static  String NESTED_QUERY_TEMPLATE = "_query_:\"{!edismax qf='name^25 all_name fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
+	protected static  String NESTED_QUERY_TEMPLATE = "_query_:\"{!edismax qf='name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
 	

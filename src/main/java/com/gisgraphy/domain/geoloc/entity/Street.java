@@ -68,13 +68,29 @@ public class Street extends GisFeature {
     
     private SpeedMode speedMode;
     
-    
-  
-    
-  
+    private String streetRef;
     
     
   
+    
+  
+    
+    
+  
+	/**
+	 * @return the streetRef
+	 */
+	public String getStreetRef() {
+		return streetRef;
+	}
+
+	/**
+	 * @param streetRef the streetRef to set
+	 */
+	public void setStreetRef(String streetRef) {
+		this.streetRef = streetRef;
+	}
+
 	/**
 	 * @return the speedMode
 	 */

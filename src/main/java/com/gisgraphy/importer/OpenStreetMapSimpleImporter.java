@@ -150,7 +150,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	// new table has the following fields :
 	// --------------------------------------------------- 
 	//0: id; 	1: name;	2: location; 	3: length ;	4: countrycode; 	5 : is_in; 	6: postcode; 	7: is_in_adm;
-	//	8: type;	9: oneway;10: shape;  11: max_speed;	12: lanes; 	13: toll; 	14: surface; 15 azimuth start ; 16 azimut end; 17: alternatenames; 
+	//	8: type;	9: oneway;10: shape;  11: max_speed;	12: lanes; 	13: toll; 	14: surface; 15 azimuth start ; 16 azimut end; 17 : street ref (http://wiki.openstreetmap.org/wiki/Key:ref) 18: alternatenames; 
 	//
 	checkNumberOfColumn(fields);
 	OpenStreetMap street = new OpenStreetMap();
@@ -291,9 +291,14 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	if (!isEmptyField(fields, 16, false)){
 		street.setAzimuthEnd(parseAzimuth(fields[16]));
 	}
+	
+	if (!isEmptyField(fields, 17, false)){
+		street.setStreetRef(fields[17]);
+	}
+	
 	//alternate names
-	if (fields.length == 18 && !isEmptyField(fields, 17, false)){
-		populateAlternateNames(street,fields[17]);
+	if (fields.length == 19 && !isEmptyField(fields, 18, false)){
+		populateAlternateNames(street,fields[18]);
 	}
 	
 	//labels
@@ -722,7 +727,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
      */
     @Override
     protected void checkNumberOfColumn(String[] fields) {
-	if (fields.length != 18 && fields.length != 17) {
+	if (fields.length != 19 && fields.length != 18) {
 
 	    throw new WrongNumberOfFieldsException(
 		    "The number of fields is not correct. expected : "

@@ -71,6 +71,7 @@ public class StreetFactoryTest {
 	openStreetMap.setLocation(location);
 	openStreetMap.setLength(length);
 	openStreetMap.setStreetType(streetType);
+	openStreetMap.setStreetRef("A1");
 	openStreetMap.setOneWay(oneWay);
 	openStreetMap.setOpenstreetmapId(openstreetmapId);
 	openStreetMap.setIsIn(isIn);
@@ -124,6 +125,7 @@ public class StreetFactoryTest {
 	Assert.assertEquals(location, street.getLocation());
 	Assert.assertEquals(length, street.getLength());
 	Assert.assertEquals(streetType, street.getStreetType());
+	Assert.assertEquals("A1", street.getStreetRef());
 	Assert.assertEquals(oneWay, street.isOneWay());
 	Assert.assertEquals(countryCode, street.getCountryCode());
 	Assert.assertEquals(isIn, street.getIsIn());

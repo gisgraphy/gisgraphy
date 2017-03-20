@@ -49,6 +49,7 @@ public class OutputStyleHelper {
 		.append(",").append(FullTextFields.ONE_WAY.getValue())
 		.append(",").append(FullTextFields.LENGTH.getValue())
 		.append(",").append(FullTextFields.STREET_TYPE.getValue())
+		.append(",").append(FullTextFields.STREET_REF.getValue())
 		.append(",").append(FullTextFields.OPENSTREETMAP_ID.getValue())
 		.append(",").append(
 			FullTextFields.FEATURECLASS.getValue()).append(

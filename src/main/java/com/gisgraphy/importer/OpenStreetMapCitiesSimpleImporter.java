@@ -318,6 +318,9 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 	}
 	//populate new fields
+	if (place==null){
+		place = createNewCity(name,countrycode,location,adminCentreLocation);
+}
 	//population
 	if(!isEmptyField(fields, 8, false)){
 		try {
@@ -336,6 +339,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		if(!isEmptyField(fields, 6, false) && (place.getZipCodes()==null || !place.getZipCodes().contains(new ZipCode(fields[6])))){
 				populateZip(fields[6], place);
 		}
+	
 	if (place.getZipCodes()!=null && place.getZipCodes().size()>0){
 		place.setZipCode(generator.getBestZip(place.getZipCodes()));
 	}

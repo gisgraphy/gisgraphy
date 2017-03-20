@@ -714,6 +714,8 @@ public class LabelGenerator {
 		
 		address.setId(openStreetMap.getOpenstreetmapId());
 		
+		address.setStreetRef(openStreetMap.getStreetRef());
+		
 		address.setFormatedFull(getFullyQualifiedName(address));
 		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
 		return address;

@@ -364,6 +364,7 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 		    	ex.setField(FullTextFields.LENGTH.getValue(), ((Street) gisFeature).getLength());
 		    	ex.setField(FullTextFields.ONE_WAY.getValue(), ((Street) gisFeature).isOneWay());
 		    	ex.setField(FullTextFields.STREET_TYPE.getValue(), ((Street) gisFeature).getStreetType());
+		    	ex.setField(FullTextFields.STREET_REF.getValue(), ((Street) gisFeature).getStreetRef());
 		    	ex.setField(FullTextFields.CITY_POPULATION.getValue(), ((Street) gisFeature).getPopulation());
 		    	
 		    	ex.setField(FullTextFields.LANES.getValue(), ((Street) gisFeature).getLanes());

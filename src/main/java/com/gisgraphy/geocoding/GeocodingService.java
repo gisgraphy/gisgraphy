@@ -1008,6 +1008,7 @@ public class GeocodingService implements IGeocodingService {
 							}else {
 								numberOfStreetThatHaveTheSameName++;
 							address.setStreetName(solrResponseDto.getName());
+							address.setStreetRef(solrResponseDto.getStreet_ref());
 							address.setCity(solrResponseDto.getIs_in());
 							address.setState(solrResponseDto.getIs_in_adm());
 							if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){

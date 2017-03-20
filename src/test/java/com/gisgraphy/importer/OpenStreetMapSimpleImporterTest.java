@@ -120,6 +120,7 @@ public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSo
 	assertEquals("The location->X is not correct ",((Point)GeolocHelper.convertFromHEXEWKBToGeometry("010100000006C82291A0521E4054CC39B16BC64740")).getX(), openStreetMap.getLocation().getX());
 	assertEquals("The location->Y is not correct ",((Point)GeolocHelper.convertFromHEXEWKBToGeometry("010100000006C82291A0521E4054CC39B16BC64740")).getY(), openStreetMap.getLocation().getY());
 	assertEquals("The length is not correct",0.00142246604529, openStreetMap.getLength());
+	assertEquals("The ref is not correct","A1", openStreetMap.getStreetRef());
 	assertEquals("The shape is not correct ",GeolocHelper.convertFromHEXEWKBToGeometry("01020000000200000009B254CD6218024038E22428D9EF484075C93846B217024090A8AB96CFEF4840").toString(), openStreetMap.getShape().toString());
 	
 	assertEquals("The lanes is not correct ",4, openStreetMap.getLanes().intValue());

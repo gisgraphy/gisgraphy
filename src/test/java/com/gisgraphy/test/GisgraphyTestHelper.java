@@ -710,6 +710,7 @@ public class GisgraphyTestHelper {
 	streetOSM.setSurface("surface");
 	streetOSM.setLanes(2);
 	streetOSM.setSpeedMode(SpeedMode.OSM);
+	streetOSM.setStreetRef("A1");
 	streetOSM.setAzimuthStart(100);
 	streetOSM.setAzimuthEnd(200);
 	streetOSM.setMaxSpeedBackward("50 km/h");

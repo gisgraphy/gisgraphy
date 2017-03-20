@@ -95,6 +95,7 @@ public class GisFeatureDistanceFactory {
 	gisFeatureDistance.setMaxSpeedBackward(street.getMaxSpeedBackward());
 	gisFeatureDistance.setAzimuthStart(street.getAzimuthStart());
 	gisFeatureDistance.setAzimuthEnd(street.getAzimuthEnd());
+	 gisFeatureDistance.setStreetRef(street.getStreetRef());
 	
 	return gisFeatureDistance;
     }

@@ -461,7 +461,7 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 		FullTextSearchEngine.disableLogging=false;
 		try {
 			this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
-			solRSynchroniser.optimize();
+			//solRSynchroniser.optimize();
 			logger.warn("fulltext engine has been optimized");
 		}  catch (Exception e){
 			logger.error("error durin fulltext optimization",e);

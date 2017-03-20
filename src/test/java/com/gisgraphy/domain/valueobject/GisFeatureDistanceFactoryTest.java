@@ -253,6 +253,12 @@ public class GisFeatureDistanceFactoryTest extends AbstractIntegrationHttpSolrTe
 			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
 			    + "/azimuthEnd[.='"
 			    + gisFeatureDistance.getAzimuthEnd() + "']",
+			    
+			    "/"
+			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
+			    + "/streetRef[.='"
+			    + gisFeatureDistance.getStreetRef() + "']",
+
 				"/"
 			    + GisFeatureDistance.GISFEATUREDISTANCE_JAXB_NAME
 			   	+ "/surface[.='"

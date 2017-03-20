@@ -48,6 +48,7 @@ public class StreetFactory implements IStreetFactory {
 			street.setLocation(openstreetmap.getLocation());
 			street.setCountryCode(openstreetmap.getCountryCode());
 			street.setStreetType(openstreetmap.getStreetType());
+			street.setStreetRef(openstreetmap.getStreetRef());
 			street.setLength(openstreetmap.getLength());
 			street.setOneWay(openstreetmap.isOneWay());
 			street.setIsIn(openstreetmap.getIsIn());
