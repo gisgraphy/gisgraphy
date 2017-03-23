@@ -24,6 +24,7 @@ package com.gisgraphy.helper;
 import static com.gisgraphy.helper.StringHelper.splitCamelCase;
 import static junit.framework.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -204,6 +205,26 @@ public class StringHelperTest {
     	Assert.assertFalse(StringHelper.isSameName("Les Chézeaux","Les grand Chézeaux"));
     	Assert.assertFalse("less long word but different",StringHelper.isSameName("route pepere","pepere"));
     	
+    	
+    }
+    
+    @Test
+    public void testIsSameAlternateNames(){
+    	ArrayList<String> names = new ArrayList<String>();
+    	Assert.assertFalse(StringHelper.isSameAlternateNames("notre dame anges",names));//empty list
+    	
+    	names.add("notre dame des anges");
+    	Assert.assertTrue("with additionnal words size =3",StringHelper.isSameAlternateNames("notre dame anges",names));//nominal case true
+    	
+    	names.clear();
+    	names.add("toto");
+    	Assert.assertFalse(StringHelper.isSameAlternateNames("notre dame anges",names));//nominal case false
+    	
+    	names.clear();
+    	names.add("toto");
+    	names.add("notre dame des anges");
+    	names.add(null);
+    	Assert.assertTrue("with additionnal words size =3",StringHelper.isSameAlternateNames("notre dame anges",names));//several names
     	
     }
     

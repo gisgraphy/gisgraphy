@@ -175,6 +175,12 @@
 		<property name="municipalityDetector" ref="municipalityDetector" />
 	</bean>
 	
+	<bean id="datastoreOptimizer" class="com.gisgraphy.importer.DatastoreOptimizer"
+	parent="abstractSimpleImporterProcessor">
+		<property name="openStreetMapDao" ref= "openStreetMapDao" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+	</bean>
+	
 	<bean id="openStreetMapHouseNumberFileRetriever"
 		class="com.gisgraphy.importer.OpenStreetMapHouseNumberFileRetriever" >
 	</bean>
@@ -240,6 +246,7 @@
 				
 				<ref bean="geonamesFeatureImporter" />
 				<ref bean="openStreetMapPoisSimpleImporter"/>
+				<ref bean="datastoreOptimizer"/>
 			</list>
 		</constructor-arg>
 	</bean>

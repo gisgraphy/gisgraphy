@@ -246,7 +246,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	   // }
 	} else if (results.getResults().size() == 1) {
 	    // we found the one!
-		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())  ||  results.getResults().get(0).getScore()> MIN_SCORE){
+		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())  ||  results.getResults().get(0).getScore()> MIN_SCORE || StringHelper.isSameAlternateNames(fields[2], results.getResults().get(0).getName_alternates())){
 			return results.getResults().get(0).getFeature_id();
 		} else {
 			return null;
@@ -256,7 +256,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	    // take the best one by score
 		for (SolrResponseDto result : results.getResults()){
 			//score is important for case when we search Munchen and city name is Munich
-			if (StringHelper.isSameName(fields[2], result.getName()) ||  result.getScore()> MIN_SCORE){
+			if (StringHelper.isSameName(fields[2], result.getName()) ||  result.getScore()> MIN_SCORE || StringHelper.isSameAlternateNames(fields[2], result.getName_alternates())){
 				return result.getFeature_id();
 			} 
 			//shortcut : if score is less than this, the next one will be automatically less, 
@@ -619,7 +619,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 						+ this.getClass().getSimpleName()
 						+ " has failed, the uncommitted changes will be commited with the auto commit of solr in few minuts");
 			}
-			solRSynchroniser.optimize();
+			//solRSynchroniser.optimize();
 		} finally {
 			this.statusMessage = savedMessage;
 		}

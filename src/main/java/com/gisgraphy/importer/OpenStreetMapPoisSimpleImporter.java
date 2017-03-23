@@ -474,14 +474,14 @@ public class OpenStreetMapPoisSimpleImporter extends AbstractSimpleImporterProce
     protected void tearDown() {
     	super.tearDown();
     	String savedMessage = this.statusMessage;
-    	try {
+    	/*try {
     		 FullTextSearchEngine.disableLogging=true;
     		this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
     		solRSynchroniser.optimize();
     	} finally {
     	    // we restore message in case of error
     	    this.statusMessage = savedMessage;
-    	}
+    	}*/
     }
     
     

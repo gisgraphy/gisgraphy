@@ -111,9 +111,11 @@ public class GeocodingService implements IGeocodingService {
 	SmartStreetDetection smartStreetDetection = new SmartStreetDetection();
 
 	public final static int ACCEPT_DISTANCE_BETWEEN_CITY_AND_STREET = 15000;
+	
 	public final static Output LONG_OUTPUT = Output.withDefaultFormat().withStyle(OutputStyle.LONG);
 	public final static Output MEDIUM_OUTPUT = Output.withDefaultFormat().withStyle(OutputStyle.MEDIUM);
 	public final static Output FULL_OUTPUT = Output.withDefaultFormat().withStyle(OutputStyle.FULL);
+	public final static Output DEFAULT_OUTPUT = LONG_OUTPUT;
 	
 	
 	public final static Pagination ONE_RESULT_PAGINATION = Pagination.paginate().from(0).to(1);
@@ -541,11 +543,7 @@ public class GeocodingService implements IGeocodingService {
 						logger.error("alternative results score is higher");
 						fulltextResultsDto = alternativeResults;
 					}
-					
-					
-					
 				} 
-				
 				
 				if (fulltextResultsDto!=null){
 					exactMatches.addAll(fulltextResultsDto);
@@ -598,7 +596,8 @@ public class GeocodingService implements IGeocodingService {
 					filterResults.add(result);
 					added =true;
 					logger.error("filter same name, adding "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
-				} else if (!added){
+				}
+				else if (!added){
 					for (String nameAlternate : result.getName_alternates()){
 						if (nameAlternate!=null && StringHelper.isSameName(rawaddress, nameAlternate,1)){
 							logger.error("filter same name, adding alternate "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+" :  "+nameAlternate+" / "+result.getFully_qualified_name() );
@@ -1189,7 +1188,7 @@ public class GeocodingService implements IGeocodingService {
 		if (isEmptyString(text)) {
 			return new ArrayList<SolrResponseDto>();
 		}
-		FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(FulltextQuerySolrHelper.NUMBER_OF_STREET_TO_RETRIEVE), LONG_OUTPUT, placetypes, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.paginate().from(0).to(FulltextQuerySolrHelper.NUMBER_OF_STREET_TO_RETRIEVE), DEFAULT_OUTPUT, placetypes, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking().withFuzzy(fuzzy);
 		if (fuzzy){
 			query.withFuzzy(fuzzy);
@@ -1483,7 +1482,7 @@ public class GeocodingService implements IGeocodingService {
 		if (placetypes==null){
 			placetypes = com.gisgraphy.fulltext.Constants.CITY_CITYSUB_ADM_PLACETYPE;
 		}
-		FulltextQuery query = new FulltextQuery(text, TEN_RESULT_PAGINATION, LONG_OUTPUT,placetypes , countryCode);
+		FulltextQuery query = new FulltextQuery(text, TEN_RESULT_PAGINATION, DEFAULT_OUTPUT,placetypes , countryCode);
 		query.withAllWordsRequired(true).withoutSpellChecking().withFuzzy(fuzzy);
 		if (point!=null){
 			query.around(point);

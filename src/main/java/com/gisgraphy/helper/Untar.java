@@ -25,12 +25,21 @@ package com.gisgraphy.helper;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.tools.bzip2.CBZip2InputStream;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarInputStream;
 import org.slf4j.Logger;
@@ -78,11 +87,103 @@ public class Untar {
 		    throw new RuntimeException("Invalid bz2 file." + name);
 		}
 	    }
-	    return new BufferedInputStream(new CBZip2InputStream(istream));
+	    //return new BufferedInputStream(new CBZip2InputStream(istream));//CBZip2InputStream
+	    return unBzip(new File(tarFileName),this.dest);
 	} else if (name.toLowerCase().endsWith("tar")) {
 	    return istream;
 	}
 	throw new RuntimeException("can only detect compression for extension tar, gzip, gz, bz2, or bzip2");
+    }
+    
+    private List<File> processUnTar(InputStream is, final File outputDir) throws FileNotFoundException, IOException, ArchiveException {
+
+        logger.info(String.format("Untaring file to dir %s.", outputDir.getAbsolutePath()));
+
+        final List<File> untaredFiles = new LinkedList<File>();
+       // final InputStream is = new FileInputStream(inputFile); 
+        final TarArchiveInputStream debInputStream = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", is);
+        TarArchiveEntry entry = null; 
+        while ((entry = (TarArchiveEntry)debInputStream.getNextEntry()) != null) {
+            final File outputFile = new File(outputDir, entry.getName());
+            if (entry.isDirectory()) {
+            	logger.info(String.format("Attempting to write output directory %s.", outputFile.getAbsolutePath()));
+                if (!outputFile.exists()) {
+                	logger.info(String.format("Attempting to create output directory %s.", outputFile.getAbsolutePath()));
+                    if (!outputFile.mkdirs()) {
+                        throw new IllegalStateException(String.format("Couldn't create directory %s.", outputFile.getAbsolutePath()));
+                    }
+                }
+            } else {
+            	logger.info(String.format("Creating output file %s.", outputFile.getAbsolutePath()));
+                final OutputStream outputFileStream = new FileOutputStream(outputFile); 
+                IOUtils.copy(debInputStream, outputFileStream);
+                outputFileStream.close();
+            }
+            untaredFiles.add(outputFile);
+        }
+        debInputStream.close(); 
+
+        return untaredFiles;
+    }
+
+    
+    
+    /**
+     * Ungzip an input file into an output file.
+     * <p>
+     * The output file is created in the output folder, having the same name
+     * as the input file, minus the '.gz' extension. 
+     * 
+     * @param inputFile     the input .gz file
+     * @param outputDir     the output directory file. 
+     * @throws IOException 
+     * @throws FileNotFoundException
+     *  
+     * @return  The {@File} with the ungzipped content.
+     */
+    private  File unGzip(final File inputFile, final File outputDir) throws FileNotFoundException, IOException {
+
+    	logger.info(String.format("Ungzipping %s to dir %s.", inputFile.getAbsolutePath(), outputDir.getAbsolutePath()));
+
+        final File outputFile = new File(outputDir, inputFile.getName().substring(0, inputFile.getName().length() - 3));
+
+        final GZIPInputStream in = new GZIPInputStream(new FileInputStream(inputFile));
+        final FileOutputStream out = new FileOutputStream(outputFile);
+
+        IOUtils.copy(in, out);
+
+        in.close();
+        out.close();
+
+        return outputFile;
+    }
+    
+    private  InputStream unBzip(final File inputFile, final File outputDir) throws FileNotFoundException, IOException {
+
+    	logger.info(String.format("UnBzipping %s to dir %s.", inputFile.getAbsolutePath(), outputDir.getAbsolutePath()));
+
+       // final File outputFile = new File(outputDir, inputFile.getName().substring(0, inputFile.getName().length() - 3));
+
+        final InputStream in = new BZip2CompressorInputStream(new FileInputStream(inputFile));
+       /* final FileOutputStream out = new FileOutputStream(outputFile);
+
+        IOUtils.copy(in, out);
+
+        in.close();
+        out.close();
+        */
+
+        return in;
+    }
+    
+    public void untar() throws IOException {
+    	
+    	try {
+    		InputStream bz2 = getDecompressedInputStream(tarFileName, new FileInputStream(new File(tarFileName)));
+			processUnTar( bz2 ,this.dest);
+		} catch (ArchiveException e) {
+			logger.error("can not decompress "+tarFileName+" in "+this.dest+" : "+e);
+		}
     }
 
     /**
@@ -90,7 +191,7 @@ public class Untar {
      * 
      * @throws IOException
      */
-    public void untar() throws IOException {
+    public void processUnTar_v1() throws IOException {
 	logger.info("untar: untar " + tarFileName + " to " + dest);
 	TarInputStream tin = null;
 	try {

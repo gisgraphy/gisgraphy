@@ -710,7 +710,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     		this.statusMessage = internationalisationService.getString("import.message.createIndex");
     		openStreetMapDao.createSpatialIndexes();
     		this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
-    		solRSynchroniser.optimize();
+    		//solRSynchroniser.optimize();
     	} catch (Exception e) {
     		logger.error("an error occured during spatial index creation, we ignore it but you have to manually run it to have good performances : "+e.getMessage(),e);
     	} finally{

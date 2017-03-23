@@ -118,6 +118,7 @@ public class ImporterHelper {
 					alternateName.contains("erroneous") ||
 					alternateName.contains("pronunciation") ||
 					alternateName.contains("systemname") ||
+					alternateName.contains("wikidata") ||
 					alternateName.contains("note") 
 					){
 				return true;

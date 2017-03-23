@@ -493,20 +493,20 @@
 
 	<repositories>
 	<!--  Our own repository -->
-		<repository>
+		<!-- <repository>
 			<id>gisgraphy</id>
 			<url>http://gisgraphy.free.fr/mavenrepo/</url>
-		</repository>
-		<repository>
+		</repository>-->
+		<!-- <repository>
 			<id>ibiblio</id>
 			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-		</repository>
+		</repository>-->
 		<repository>
 			<id>central</id>
 			<url>http://repo1.maven.org/maven2</url>
 		</repository>
 		<!-- Stuff such as Java/J2EE APIs, etc.. -->
-		<repository>
+		<!-- <repository>
 			<id>jboss.repository</id>
 			<name>Jboss Repository for Maven</name>
 			<url>http://repository.jboss.com/maven2</url>
@@ -517,9 +517,9 @@
 			<releases>
 				<updatePolicy>daily</updatePolicy>
 			</releases>
-		</repository>
+		</repository>-->
 		<!-- People Apache Repo : ActiveMQ.. -->
-		<repository>
+		<!-- <repository>
 			<id>apache-incubating</id>
 			<name>Apache Incubating Repository</name>
 			<url>
@@ -532,12 +532,12 @@
 			<releases>
 				<updatePolicy>daily</updatePolicy>
 			</releases>
-		</repository>
+		</repository>-->
 		<!--<repository>
 			<id>codehaus</id>
 			<url>http://repository.codehaus.org</url>
 		</repository>-->
-		<repository>
+		<!-- <repository>
 			<id>javanet</id>
 			<url>https://maven-repository.dev.java.net/repository/</url>
 		</repository>
@@ -548,19 +548,19 @@
 		<repository>
 			<id>appfuse</id>
 			<url>http://static.appfuse.org/repository</url>
-		</repository>
+		</repository>-->
 		<!-- for cxf purpose -->
-		<repository>
+		<!-- <repository>
 			<id>codehaus-release-repo</id>
 			<name>Codehaus Release Repo</name>
 			<url>http://repository.codehaus.org</url>
-		</repository>
+		</repository>-->
 		<!-- for jaxb-impl -->
-		<repository>
+		<!-- <repository>
 			<id>java.net</id>
 			<url>http://download.java.net/maven/1/</url>
 			<layout>legacy</layout>
-		</repository>
+		</repository>-->
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -642,6 +642,11 @@
 					<groupId>commons-io</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+  			<groupId>org.apache.commons</groupId>
+  			<artifactId>commons-compress</artifactId>
+  			<version>1.8.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -1615,7 +1620,7 @@
 
 		<!-- Framework dependency versions -->
 		<appfuse.version>2.0</appfuse.version>
-		<spring.version>3.2.1.RELEASE</spring.version>
+		<spring.version>3.2.1.RELEASE</spring.version><!-- 4.0.1.RELEASE-->
 
 		<!-- Testing dependency versions -->
 		<jmock.version>1.1.0</jmock.version>

@@ -37,6 +37,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class IdGenerator implements IIdGenerator {
+	
+	//|----0 to 20 000 000 for geonames native---- | 20 000 000 to 100 000 000 for geonames added| 100 000 000 for osm street|
 
 
     /**

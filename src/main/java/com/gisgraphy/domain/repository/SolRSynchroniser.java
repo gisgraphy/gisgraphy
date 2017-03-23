@@ -587,38 +587,43 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 	    return;
 	}
 
-	Map<String, List<String>> alternateNamesByAlpha3LanguageCode = new HashMap<String, List<String>>();
+	Map<String, List<String>> alternateNameswithLanguageCode = new HashMap<String, List<String>>();
+	List<String> alternateNamesWithoutLanguageCode = new ArrayList<String>();
 
-	List<String> alternateNamesWithoutAnAlpha3Code = new ArrayList<String>();
 	// List<String> alternateNamesAsStrings = new ArrayList<String>();
 	if (alternateNames != null) {
-	    for (AlternateName alternateName : alternateNames) {
-		String alpha3Code = alternateName.getLanguage();
-		if (alpha3Code != null){
-		    alpha3Code = alpha3Code.trim();
+		for (AlternateName alternateName : alternateNames) {
+			String alpha3Code = alternateName.getLanguage();
+			if (alpha3Code != null){
+				alpha3Code = alpha3Code.trim();
+			}
+			if ((alpha3Code == null || "".equals(alpha3Code)) && alternateName!=null && alternateName.getName()!=null) {
+				alternateNamesWithoutLanguageCode.add(EncodingHelper
+						.toUTF8(alternateName.getName()));
+				continue;
+			}
+			alpha3Code = alpha3Code.toLowerCase();
+			List<String> alternateNamesForCurrentLanguage = alternateNameswithLanguageCode
+					.get(alpha3Code);
+			if (alternateNamesForCurrentLanguage == null) {
+				alternateNamesForCurrentLanguage = new ArrayList<String>();
+				alternateNameswithLanguageCode.put(alpha3Code,
+						alternateNamesForCurrentLanguage);
+			}
+			alternateNamesForCurrentLanguage.add(EncodingHelper
+					.toUTF8(alternateName.getName()));
+			//add to the non localized anyway
+			if (alternateName!=null && alternateName.getName()!=null){
+			alternateNamesWithoutLanguageCode.add(EncodingHelper
+					.toUTF8(alternateName.getName()));
+			}
 		}
-		if (alpha3Code == null || "".equals(alpha3Code)) {
-		    alternateNamesWithoutAnAlpha3Code.add(EncodingHelper
-			    .toUTF8(alternateName.getName()));
-		    continue;
-		}
-		alpha3Code = alpha3Code.toLowerCase();
-		List<String> alternateNamesForCurrentLanguage = alternateNamesByAlpha3LanguageCode
-			.get(alpha3Code);
-		if (alternateNamesForCurrentLanguage == null) {
-		    alternateNamesForCurrentLanguage = new ArrayList<String>();
-		    alternateNamesByAlpha3LanguageCode.put(alpha3Code,
-			    alternateNamesForCurrentLanguage);
-		}
-		alternateNamesForCurrentLanguage.add(EncodingHelper
-			.toUTF8(alternateName.getName()));
-	    }
 	}
 
 	// Traverse the keys in the map, generating the fields in solr
-	Set<String> keys = alternateNamesByAlpha3LanguageCode.keySet();
+	Set<String> keys = alternateNameswithLanguageCode.keySet();
 	for (String key : keys) {
-	    List<String> alternateNamesForCurrentLanguage = alternateNamesByAlpha3LanguageCode
+	    List<String> alternateNamesForCurrentLanguage = alternateNameswithLanguageCode
 		    .get(key);
 	    ex
 		    .setField(
@@ -633,8 +638,8 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 	// Handle all the names without alpha 3 codes
 	ex.setField(fieldPrefix
 		+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue(),
-		alternateNamesWithoutAnAlpha3Code
-			.toArray(new String[alternateNamesWithoutAnAlpha3Code
+		alternateNamesWithoutLanguageCode
+			.toArray(new String[alternateNamesWithoutLanguageCode
 				.size()]));
     }
 

@@ -266,5 +266,18 @@ public class StringHelper {
 		return false;
 	}
 
+	public static boolean isSameAlternateNames(String name, List<String> name_alternates) {
+		if (name_alternates!=null && name !=null){
+			for (String nameAlternate:name_alternates){
+				if (nameAlternate!=null){
+					if (isSameName(name, nameAlternate)){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 
 }

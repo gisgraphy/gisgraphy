@@ -991,7 +991,7 @@ ___W___house"} SHAPE"
 		super.tearDown();
 		FullTextSearchEngine.disableLogging=false;
 		this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
-		solRSynchroniser.optimize();
+		//solRSynchroniser.optimize();
 	}
 
 

@@ -88,7 +88,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapCitiesSimpleImporter.class);
 	
-    public static final Output MEDIUM_OUTPUT_STYLE = Output.withDefaultFormat().withStyle(OutputStyle.MEDIUM);
+    public static final Output DEFAUL_OUTPUT_STYLE = Output.withDefaultFormat().withStyle(OutputStyle.LONG);
     
     protected IIdGenerator idGenerator;
     
@@ -221,11 +221,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 		
 	
-	GisFeature place=null;
-	if (isPoi(fields[12],countrycode, fields[7])) {
+	GisFeature place ;
+	if (isPoi(fields[12],countrycode, fields[7])) {//the feature to import is a poi
 		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
-		//find and delete the city or subdivision 
-		if (poiToremove!=null && poiToremove.getOpenstreetmap_id()!=null){
+		if (poiToremove!=null && poiToremove.getOpenstreetmap_id()==null && ! poiToremove.isMunicipality()){// we only remove geonames one
+			//we found a geonames city or subdivision that is not a municipality, we remove it
 			GisFeature cityToRemoveObj = null;
 			if (poiToremove.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
 				cityToRemoveObj = cityDao.getByFeatureId(poiToremove.getFeature_id());
@@ -234,16 +234,16 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				 cityToRemoveObj = citySubdivisionDao.getByFeatureId(poiToremove.getFeature_id());
 			}
 			if (cityToRemoveObj!=null){
-				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId());
+				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove the city / citySubdivision "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId()+" in the datastore");
 				gisFeatureDao.remove(cityToRemoveObj);
 			}
 		}
-		//recreate the poi
+		//create the poi
 		place = createNewPoi(name, countrycode, location, adminCentreLocation);
-	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12],countrycode,fields[7])){
+	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12],countrycode,fields[7])){// the feature to import is a subdivision
 		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		if (nearestCity != null ){
-			if (nearestCity.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){
+			if (nearestCity.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){// we found a subdivision, we will update it
 				place = citySubdivisionDao.getByFeatureId(nearestCity.getFeature_id());
 				if (place==null){
 					place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
@@ -267,29 +267,35 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 					}
 				}
 				
-			} else if (nearestCity.getPlacetype().equalsIgnoreCase(City.class.getSimpleName()) && nearestCity.getOpenstreetmap_id()!=null){
-				//osm consider the place as a suburb, we delete the city and create a citysubdivision
-				City cityToRemove = cityDao.getByFeatureId(nearestCity.getFeature_id());
-				if (cityToRemove!=null && !cityToRemove.isMunicipality()){
-					logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id());
-					cityDao.remove(cityToRemove);
+			} else if (nearestCity.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){ //we found a city
+				if (nearestCity.getOpenstreetmap_id()==null && !nearestCity.isMunicipality()){//geonames feature that is not a municipality
+					//osm consider the place as a suburb, but geonames consider it as a city,we delete the geonames one
+					City cityToRemove = cityDao.getByFeatureId(nearestCity.getFeature_id());
+					if (cityToRemove!=null){
+						logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id()+" in the datastore");
+						cityDao.remove(cityToRemove);
+					}
+				} else { //osm feature
+					//we got a suburb and osm consider it as a city too, we keep both
 				}
-				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
+				
 			}
+			// and create a citysubdivision
+			place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
 			
 		} else {
-			logger.warn("'"+name+"'/'"+fields[1]+"' is not found");
+			logger.warn("'"+name+"'/'"+fields[1]+"' is not in datastore, we create a new one");
 			place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
 		}
 		
-	}  else {
+	}  else { //the feature to import is a city
 		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE, shape);
-		if (nearestCity != null && nearestCity.getOpenstreetmap_id()!=null){
+		if (nearestCity != null ){
 			place = cityDao.getByFeatureId(nearestCity.getFeature_id());
 			if (place==null){
 				place = createNewCity(name,countrycode,location,adminCentreLocation);
 
-			} else{ 
+			} else { //we already got a city in datastore, we update it
 				place.setSource(GISSource.GEONAMES_OSM);
 				//generally osm data is better than geonames, we overide geonames values
 				if (name!=null && place.getOpenstreetmapId()==null){
@@ -318,9 +324,6 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 	}
 	//populate new fields
-	if (place==null){
-		place = createNewCity(name,countrycode,location,adminCentreLocation);
-}
 	//population
 	if(!isEmptyField(fields, 8, false)){
 		try {
@@ -565,9 +568,9 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		FulltextQuery query;
 		try {
 			if (placetypes==null){
-				query = (FulltextQuery) new FulltextQuery(name).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MEDIUM_OUTPUT_STYLE);
+				query = (FulltextQuery) new FulltextQuery(name).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(DEFAUL_OUTPUT_STYLE);
 			} else {
-				query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(MEDIUM_OUTPUT_STYLE);
+				query = (FulltextQuery) new FulltextQuery(name).withPlaceTypes(placetypes).around(location).withoutSpellChecking().withPagination(Pagination.ONE_RESULT).withOutput(DEFAUL_OUTPUT_STYLE);
 			}
 			
 		} catch (IllegalArgumentException e) {
@@ -581,12 +584,16 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		if (results != null){
 			for (SolrResponseDto solrResponseDto : results.getResults()) {
 				if (solrResponseDto!=null 
-						&& solrResponseDto.getOpenstreetmap_id()== null){
-					//if fopenstreetmapid is not null it is because the shape has already been set
-					//(R are before nodes), we ignore because we don't want the place if relation has been set
+						){
+					if (solrResponseDto.getOpenstreetmap_id()!= null){
+						continue;
+						//we are only interested in osm feature
+						//if openstreetmap id is not null it is because the shape has already been set
+						//(R are before nodes), we ignore because we don't want the place if relation has been set
+					}
 					String name2 = solrResponseDto.getName();
 					//score is important for case when we search Munchen and city name is Munich
-					if (name2!=null && StringHelper.isSameName(name, name2) || solrResponseDto.getScore() > MIN_SCORE){
+					if (name2!=null && StringHelper.isSameName(name, name2) || solrResponseDto.getScore() > MIN_SCORE || StringHelper.isSameAlternateNames(name,solrResponseDto.getName_alternates())){
 						if (shape!=null && shape.isValid()){
 							//we should verify
 							if (solrResponseDto.getLng()!=null && solrResponseDto.getLat()!=null){
@@ -604,7 +611,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 								logger.error("no GPS coordinate for "+solrResponseDto);
 							} 
 						} else {
-							//if the name is the same, no need to verify shape
+							//if the name is the same, and there is no shape
 							return solrResponseDto;
 						}
 					}
@@ -653,7 +660,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		FulltextQuery query;
 		try {
 			query = (FulltextQuery)new FulltextQuery(name).withAllWordsRequired(false).withoutSpellChecking().
-					withPlaceTypes(ONLY_ADM_PLACETYPE).withOutput(MEDIUM_OUTPUT_STYLE).withPagination(Pagination.ONE_RESULT);
+					withPlaceTypes(ONLY_ADM_PLACETYPE).withOutput(DEFAUL_OUTPUT_STYLE).withPagination(Pagination.ONE_RESULT);
 		} catch (IllegalArgumentException e) {
 			logger.error("can not create a fulltext query for "+name);
 			return null;
@@ -746,7 +753,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
     	    this.statusMessage = savedMessage;
 		}
     	FullTextSearchEngine.disableLogging=false;
-    	try {
+    	/*try {
     		this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
     		solRSynchroniser.optimize();
     		logger.warn("fulltext engine has been optimized");
@@ -755,7 +762,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}finally {
     	    // we restore message in case of error
     	    this.statusMessage = savedMessage;
-    	}
+    	}*/
     }
    
     

@@ -1,6 +1,7 @@
 package com.gisgraphy.importer;
 
 import static com.gisgraphy.fulltext.Constants.ONLY_CITY_PLACETYPE;
+import static com.gisgraphy.importer.OpenStreetMapCitiesSimpleImporter.DEFAUL_OUTPUT_STYLE;
 import static com.gisgraphy.test.GisgraphyTestHelper.alternateNameContains;
 
 import java.util.ArrayList;
@@ -309,7 +310,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		String countryCode = "FR";
 		Point location = GeolocHelper.createPoint(3F, 4F);
 		IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.MEDIUM_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, DEFAUL_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
@@ -342,7 +343,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		String countryCode = "FR";
 		Point location = GeolocHelper.createPoint(3F, 4F);
 		IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.MEDIUM_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.DEFAUL_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
@@ -377,7 +378,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		String countryCode = "FR";
 		Point location = GeolocHelper.createPoint(3F, 4F);
 		IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.MEDIUM_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.DEFAUL_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
@@ -412,7 +413,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		String countryCode = "FR";
 		Point location = GeolocHelper.createPoint(3F, 4F);
 		IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.MEDIUM_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.DEFAUL_OUTPUT_STYLE, ONLY_CITY_PLACETYPE, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);
@@ -459,7 +460,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		String text = "toto";
 		String countryCode = "FR";
 		IFullTextSearchEngine mockfullFullTextSearchEngine = EasyMock.createMock(IFullTextSearchEngine.class);
-		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.MEDIUM_OUTPUT_STYLE, Constants.ONLY_ADM_PLACETYPE, countryCode);
+		FulltextQuery query = new FulltextQuery(text, Pagination.ONE_RESULT, OpenStreetMapCitiesSimpleImporter.DEFAUL_OUTPUT_STYLE, Constants.ONLY_ADM_PLACETYPE, countryCode);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		EasyMock.expect(mockfullFullTextSearchEngine.executeQuery(query)).andReturn(mockResultDTO);

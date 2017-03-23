@@ -459,16 +459,16 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 		super.tearDown();
 		String savedMessage = this.statusMessage;
 		FullTextSearchEngine.disableLogging=false;
-		try {
+		/*try {
 			this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
-			//solRSynchroniser.optimize();
+			solRSynchroniser.optimize();
 			logger.warn("fulltext engine has been optimized");
 		}  catch (Exception e){
 			logger.error("error durin fulltext optimization",e);
 		}finally {
 			// we restore message in case of error
 			this.statusMessage = savedMessage;
-		}
+		}*/
 	}
 
 

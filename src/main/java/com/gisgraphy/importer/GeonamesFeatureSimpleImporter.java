@@ -920,7 +920,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	if (!solRSynchroniser.commit()){
 	    logger.warn("The commit in tearDown of "+this.getClass().getSimpleName()+" has failed, the uncommitted changes will be commited with the auto commit of solr in few minuts");
 	}
-	solRSynchroniser.optimize();
+	//solRSynchroniser.optimize();
     } finally{
     	this.statusMessage=savedMessage;
     }
