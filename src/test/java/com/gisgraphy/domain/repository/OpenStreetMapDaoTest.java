@@ -31,6 +31,7 @@ import org.easymock.EasyMock;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -55,9 +56,12 @@ import com.gisgraphy.test.GisgraphyTestHelper;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
+import static org.junit.Assert.*;
+
 
 public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 
+	@Autowired
  IOpenStreetMapDao openStreetMapDao;
     
  @Test
@@ -522,6 +526,7 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	    fail("Point is required when searchmode= " + StreetSearchMode.CONTAINS+". An exception should have been thrown");
 	} catch (IllegalArgumentException e) {
 	    // OK
+		throw e;
 	}
 
     }
@@ -700,16 +705,18 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     		OpenStreetMap streetOSM = GisgraphyTestHelper.createOpenStreetMapForPeterMartinStreet();
     		streetOSM.setShape(shape);
     		openStreetMapDao.save(streetOSM);
-    		assertNotNull(openStreetMapDao.get(streetOSM.getId()));
     	
-    	String shapeAsWKT = this.openStreetMapDao.getShapeAsWKTByGId(null);
-    	Assert.assertNull(shapeAsWKT);
-    	
-    	
+    		String shapeAsWKT = this.openStreetMapDao.getShapeAsWKTByGId(null);
+    		Assert.assertNull(shapeAsWKT);
+    		
     	shapeAsWKT = this.openStreetMapDao.getShapeAsWKTByGId(streetOSM.getGid());
     	Assert.assertEquals("LINESTRING(6.9416088 50.9154239,6.9410001 50.99999)", shapeAsWKT);
+
+    	
+    	
     }
     
+    @Autowired
     public void setOpenStreetMapDao(IOpenStreetMapDao openStreetMapDao) {
         this.openStreetMapDao = openStreetMapDao;
     }

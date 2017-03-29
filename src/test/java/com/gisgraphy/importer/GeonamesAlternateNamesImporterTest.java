@@ -22,6 +22,8 @@
  *******************************************************************************/
 package com.gisgraphy.importer;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +32,7 @@ import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.repository.IAlternateNameDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
@@ -87,7 +90,6 @@ public class GeonamesAlternateNamesImporterTest extends AbstractIntegrationHttpS
 	ISolRSynchroniser mockSolRSynchroniser = EasyMock.createMock(ISolRSynchroniser.class);
 	EasyMock.expect(mockSolRSynchroniser.commit()).andReturn(true);
 	EasyMock.expectLastCall();
-	mockSolRSynchroniser.optimize();
 	EasyMock.expectLastCall();
 	ISpellCheckerIndexer mockSpellCheckerIndexer = EasyMock.createMock(ISpellCheckerIndexer.class);
 	EasyMock.expect(mockSpellCheckerIndexer.buildAllIndex()).andReturn(new HashMap<String, Boolean>());
@@ -111,7 +113,6 @@ public class GeonamesAlternateNamesImporterTest extends AbstractIntegrationHttpS
 	ISolRSynchroniser mockSolRSynchroniser = EasyMock.createMock(ISolRSynchroniser.class);
 	EasyMock.expect(mockSolRSynchroniser.commit()).andReturn(true);
 	EasyMock.expectLastCall();
-	mockSolRSynchroniser.optimize();
 	EasyMock.expectLastCall();
 	ISpellCheckerIndexer mockSpellCheckerIndexer = EasyMock.createMock(ISpellCheckerIndexer.class);
 	EasyMock.expect(mockSpellCheckerIndexer.buildAllIndex()).andReturn(new HashMap<String, Boolean>());
@@ -144,7 +145,7 @@ public class GeonamesAlternateNamesImporterTest extends AbstractIntegrationHttpS
 	geonamesAlternateNamesImporter.process();
 	Assert.assertEquals(ImporterStatus.SKIPPED, geonamesAlternateNamesImporter.getStatus());
 	ImporterStatusDto statusDto = new ImporterStatusDto(geonamesAlternateNamesImporter);
-	Assert.assertEquals(100, statusDto.getPercent());
+	Assert.assertEquals(0, statusDto.getPercent());
     }
     
     @Test
@@ -207,15 +208,18 @@ public class GeonamesAlternateNamesImporterTest extends AbstractIntegrationHttpS
 	Assert.assertEquals("the first file return should be the alternate name features file",new File(importerConfig.getGeonamesDir()+alternateNameFeaturesFileName), files[0]);
     }
     
+    @Autowired
     public void setImporterConfig(ImporterConfig importerConfig) {
         this.importerConfig = importerConfig;
     }
 
+    @Autowired
     public void setGeonamesAlternateNamesImporter(
     	GeonamesAlternateNamesSimpleImporter geonamesAlternateNamesImporter) {
         this.geonamesAlternateNamesImporter = geonamesAlternateNamesImporter;
     }
     
+    @Autowired
     public void setSolRSynchroniser(ISolRSynchroniser solRSynchroniser) {
         this.solRSynchroniser = solRSynchroniser;
     }

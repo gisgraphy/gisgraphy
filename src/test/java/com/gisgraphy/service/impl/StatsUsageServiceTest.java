@@ -30,6 +30,7 @@ import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 import com.gisgraphy.domain.repository.IStatsUsageDao;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.stats.StatsUsageType;
+import static org.junit.Assert.*;
 
 public class StatsUsageServiceTest extends AbstractTransactionalTestCase {
 

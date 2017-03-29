@@ -99,8 +99,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -137,11 +137,26 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<components>
-						<component>
-							<name>hbm2ddl</name>
+	<version>3.0</version>
+	<configuration>
+			<hibernate.dialect>
+				org.hibernatespatial.postgis.PostgisDialectNG2
+			</hibernate.dialect>
+			<hibernatetool destdir="./target/sql">
+				<hbm2ddl update="false" create="true" drop="true" export="true" 
+					outputfilename="create_tables.sql" format="true" console="true"/>
+				<classpath>
+					<path location="${project.build.directory}/classes" />
+				</classpath>
+				<annotationconfiguration configurationfile="src/main/resources/hibernate.cfg.xml" propertyfile="target/classes/jdbc.properties" />
+				<!-- <hbm2ddl update="false" create="true" drop="${hbm2ddl.drop}" export="${resetdb}" 
+					outputfilename="create_tables.sql" format="true" console="true"/> -->
+				<!-- <hbm2ddl update="false" create="true" drop="true" export="true" 
+					outputfilename="create_tables.sql" format="true" console="true"/> -->
+			</hibernatetool>
+			<components>
+				<component>
+					<name>hbm2ddl</name>
 							<implementation>
 								annotationconfiguration
 							</implementation>
@@ -217,9 +232,9 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
+		<!--	<plugin>
+     <groupId>org.mortbay.jetty</groupId>
+    <artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
 					<contextPath>/</contextPath>
@@ -248,7 +263,7 @@
 						**/jdbc.properties,**/hibernate.cfg.xml,**/sql-map-config.xml,**/web.xml,WEB-INF/classes/META-INF/**
 					</dependentWarExcludes>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>native2ascii-maven-plugin</artifactId>
@@ -501,6 +516,14 @@
 			<id>ibiblio</id>
 			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
 		</repository>-->
+		 <repository>
+                    <id>OSGEO GeoTools repo</id>
+                    <url>http://download.osgeo.org/webdav/geotools</url>
+            </repository>
+            <repository>
+                    <id>Hibernate Spatial repo</id>
+                    <url>http://www.hibernatespatial.org/repository</url>
+            </repository>
 		<repository>
 			<id>central</id>
 			<url>http://repo1.maven.org/maven2</url>
@@ -663,7 +686,14 @@
 			<artifactId>displaytag</artifactId>
 			<version>${displaytag.version}</version>
 			<!-- <exclusions>
-			<exclusion>
+			
+			</exclusions>-->
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl104-over-slf4j</artifactId>
 			</exclusion>
@@ -671,18 +701,28 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			</exclusion>
-			</exclusions>-->
+			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>hibernate-spatial</groupId>
+    <groupId>org.hibernatespatial</groupId>
+    <artifactId>hibernate-spatial</artifactId>
+    <version>1.1.1</version>
+</dependency>
+<dependency>
+    <groupId>org.hibernatespatial</groupId>
+    <artifactId>hibernate-spatial-postgis</artifactId>
+    <version>1.1.1</version>
+</dependency>
+		<!-- <dependency>
+			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-spatial</artifactId>
-			<version>1.0</version>
+			<version>${hibernate-spatial.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>hibernate-spatial</groupId>
+		 <dependency>
+			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-spatial-${gisProvider}</artifactId>
-			<version>1.0</version>
-		</dependency>
+			<version>{hibernate-spatial.version}</version>
+		</dependency>-->
 		<!-- solr and lucene and jsp -->
 		<dependency>
 			<groupId>org.apache.ant</groupId>
@@ -694,44 +734,8 @@
 			<artifactId>jasper</artifactId>
 			<version>3.3.2</version>
 			</dependency-->
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jsp-api-2.1</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- <dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>embeded</artifactId>
-			<version>6.0.0beta17/</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>7.0.0.pre5</version>
-			<scope>test</scope>
-		</dependency>
-				
-				<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty-util</artifactId>
-			<version>7.0.0.pre5</version>
-			<scope>test</scope>
-		</dependency>
-				<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>7.0.0.pre5</version>
-			<scope>test</scope>
-		</dependency>
-		-->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-jsp -->
+
 		<dependency>
 		<groupId>org.reflections</groupId>
 		<artifactId>reflections</artifactId>
@@ -743,41 +747,118 @@
 		<version>3.0</version>
 		<scope>test</scope>
 	   </dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jsp-2.1</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
+	   
+	<!--    <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>${slf4j.version}</version>
+</dependency>
+	   <dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-log4j12</artifactId>
+	 <version>${slf4j.version}</version>
+</dependency>
+   <dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>jcl-over-slf4j</artifactId>
+	 <version>${slf4j.version}</version>
+</dependency>
+-->
+
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-log4j12</artifactId>
+    <version>${slf4j.version}</version>
+</dependency>
+	   <!-- JETTY -->
+	  <!--  		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>${jsp.version}</version>
+			<scope>provided</scope>
+		</dependency>-->
+		<!-- <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>>-->
+	<!-- <dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-jsp</artifactId>
+		<version>8.1.1.v20120215</version>
+		<scope>test</scope>
+	</dependency>-->
+	  <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.0.1</version>
+        <scope>compile</scope>
+    </dependency>
+     <!--  <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>3.0-alpha-1</version>
+        <scope>compile</scope>
+    </dependency>-->
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>test-jetty-servlet</artifactId>
+		<version>${jetty.version}</version>
+		<scope>test</scope>
+	</dependency>
+	
+	
+	
+			<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>${jsp.version}</version>
+			<scope>provided</scope>
 		</dependency>
-		<!-- dependency>
-			<groupId>jetty</groupId>
-			<artifactId>jetty-start</artifactId>
-			<version>6.1.3</version>
-			<scope>test</scope>
-			</dependency-->
-		<!-- dependency>
-			<groupId>jetty</groupId>
-			<artifactId>jetty-util</artifactId>
-			<version>6.1.7</version>
-			</dependency-->
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty-servlet-tester</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
 		</dependency>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-server</artifactId>
+		<version>${jetty.version}</version>
+		<scope>test</scope>
+		<exclusions>
+			<exclusion>
+				<artifactId>servlet-api</artifactId>
+				<groupId>org.mortbay.jetty</groupId>
+			</exclusion>
+		</exclusions>
+	</dependency>
 		<!-- Solr-Client for Java -->
 		  <dependency>
                <groupId>org.apache.solr</groupId>
@@ -809,26 +890,9 @@
 			<version>${javamail.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
+			<groupId>	org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
 			<version>${jpa.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>${jsp.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${servlet.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>${jstl.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>jmock</groupId>
@@ -845,7 +909,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
-			<optional>true</optional>
+			<!-- <optional>true</optional>-->
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -969,7 +1033,6 @@
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
 			<version>${struts.version}</version>
-			
 		</dependency>
 		<dependency>
 			<groupId>org.apache.struts</groupId>
@@ -1041,10 +1104,11 @@
 			<artifactId>dwr</artifactId>
 			<version>${dwr.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate</artifactId>
+			<dependency>
+<groupId>org.hibernate</groupId>
+<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
+			
 			<exclusions>
 				<exclusion>
 					<artifactId>ehcache</artifactId>
@@ -1057,6 +1121,13 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-ehcache</artifactId>
+    <version>${hibernate.version}</version>
+    <exclusions>
+    </exclusions>
+		</dependency>
+	<!-- 	<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-annotations</artifactId>
 			<version>${hibernate.annotations.version}</version>
@@ -1065,18 +1136,16 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-commons-annotations</artifactId>
 			<version>${hibernate.annotations.version}</version>
-		</dependency>
-		<dependency>
-  <groupId>org.springframework</groupId>
-  <artifactId>spring-test</artifactId>
-  <version>${spring.version}</version>
-  <optional>true</optional>
-  <scope>test</scope>
-</dependency>
+		</dependency>-->
 <dependency> 
      <groupId>org.springframework</groupId> 
      <artifactId>spring-aspects</artifactId> 
      <version>${spring.version}</version> 
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>${spring.version}</version>
 </dependency>
 		<!-- <dependency>
 			<groupId>org.springframework</groupId>
@@ -1135,9 +1204,16 @@
   <version>${spring.version}</version>
 </dependency>
 <dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-framework-bom</artifactId>
+    <version>${spring.version}</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+<dependency>
     <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-core-tiger</artifactId>
-    <version>2.0.8.RELEASE</version>
+    <artifactId>spring-security-core</artifactId>
+    <version>${spring.security.version}</version>
     <exclusions>
         <exclusion>
             <groupId>org.springframework</groupId>
@@ -1150,9 +1226,14 @@
     </exclusions>
 </dependency>
 <dependency>
+	<groupId>org.springframework.security</groupId>
+	<artifactId>spring-security-config</artifactId>
+	<version>${spring.security.version}</version>
+</dependency>
+ <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-taglibs</artifactId>
-    <version>${spring.version}</version>
+    <version>${spring.security.version}</version>
     <exclusions>
         <exclusion>
             <groupId>org.springframework</groupId>
@@ -1190,6 +1271,11 @@
   <version>${spring.version}</version>
 </dependency>
 <dependency>
+<groupId>org.springframework</groupId>
+	<artifactId>spring-test</artifactId>
+	<version>${spring.version}</version>
+	</dependency>
+<dependency>
   <groupId>org.springframework</groupId>
   <artifactId>spring-orm</artifactId>
   <version>${spring.version}</version>
@@ -1220,6 +1306,10 @@
 				<exclusion>
 					<artifactId>ant</artifactId>
 					<groupId>ant</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -1257,6 +1347,16 @@
 			<groupId>com.gisgraphy</groupId>
 			<artifactId>gisgraphy-utils</artifactId>
 			<version>4.0-beta1</version>
+			 <exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
@@ -1582,7 +1682,7 @@
 			<id>postgistest</id>
 			<properties>
 				<hibernate.dialect>
-					org.hibernatespatial.postgis.PostgisDialectNG
+					org.hibernatespatial.postgis.PostgisDialectNG2
 				</hibernate.dialect>
 				<jdbc.groupId>postgresql</jdbc.groupId>
 				<jdbc.artifactId>postgresql</jdbc.artifactId>
@@ -1620,13 +1720,14 @@
 
 		<!-- Framework dependency versions -->
 		<appfuse.version>2.0</appfuse.version>
-		<spring.version>3.2.1.RELEASE</spring.version><!-- 4.0.1.RELEASE-->
+		<spring.version>4.3.5.RELEASE</spring.version><!-- 3.2.1.RELEASE 4.0.1.RELEASE-->
+		<spring.security.version>4.2.2.RELEASE</spring.security.version>
 
 		<!-- Testing dependency versions -->
 		<jmock.version>1.1.0</jmock.version>
 		<jsp.version>2.0</jsp.version>
-		<junit.version>4.4</junit.version>
-		<servlet.version>2.4</servlet.version>
+		<junit.version>4.12</junit.version>
+		<servlet.version>2.5</servlet.version>
 		<wiser.version>1.2</wiser.version>
 
 		<!-- WebTest dependency versions  -->
@@ -1652,7 +1753,7 @@
 		<config.directory>${basedir}/src/main/resources</config.directory>
 
 		<hibernate.dialect>
-			org.hibernatespatial.postgis.PostgisDialectNG
+			org.hibernatespatial.postgis.PostgisDialectNG2
 		</hibernate.dialect>
 		<jdbc.groupId>postgresql</jdbc.groupId>
 		<jdbc.artifactId>postgresql</jdbc.artifactId>
@@ -1672,7 +1773,7 @@
 		 <aspectj.version>1.5.2a</aspectj.version>
 		<!--<aspectj.version>1.6.1</aspectj.version>-->
 		<lucene.version>2.3.1</lucene.version>
-		<jetty.version>6.1.8</jetty.version>
+		<jetty.version>8.1.0.RC5</jetty.version><!-- 8.1.0.RC5  8.1.20.v20160902-->
 		<clickstream.version>1.0.2</clickstream.version>
 		<commons.beanutils.version>1.7.0</commons.beanutils.version>
 		<commons.collections.version>3.2.2</commons.collections.version>
@@ -1684,12 +1785,15 @@
 		<dwr.version>2.0.1</dwr.version>
 		<ehcache.version>1.3.0</ehcache.version>
 		<solr.version>3.6.0</solr.version>
-		<hibernate.annotations.version>
-			3.3.0.ga
-		</hibernate.annotations.version>
-		<hibernate.version>3.2.5.ga</hibernate.version>
+		
+		<slf4j.version>1.6.1</slf4j.version>
+		<hibernate.annotations.version>3.3.0.ga</hibernate.annotations.version>
+		<hibernate.version>3.6.6.Final </hibernate.version>
+		<hibernate-spatial.version>1.1.1</hibernate-spatial.version>
+		
+		
 		<javamail.version>1.4</javamail.version>
-		<jpa.version>1.0</jpa.version>
+		<jpa.version>1.0.1.Final</jpa.version>
 		<jstl.version>1.1.2</jstl.version>
 		<log4j.version>1.2.13</log4j.version>
 		<oscache.version>2.3</oscache.version>

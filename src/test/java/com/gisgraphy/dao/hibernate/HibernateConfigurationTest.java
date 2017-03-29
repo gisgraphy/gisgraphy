@@ -28,10 +28,13 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.persister.entity.EntityPersister;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 
 public class HibernateConfigurationTest extends AbstractTransactionalTestCase {
+	@Autowired
     private SessionFactory sessionFactory;
 
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -39,6 +42,7 @@ public class HibernateConfigurationTest extends AbstractTransactionalTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testColumnMapping() throws Exception {
 	Session session = sessionFactory.openSession();
 	try {

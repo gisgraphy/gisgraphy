@@ -29,8 +29,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
@@ -885,12 +887,12 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	cityDao.createGISTIndexForLocationColumn();
     }
 
-    @Required
+    @Autowired
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }
 
-    @Required
+    @Autowired
     public void setGisFeatureDao(IGisFeatureDao gisFeatureDao) {
 	this.gisFeatureDao = gisFeatureDao;
     }

@@ -24,6 +24,7 @@ package com.gisgraphy.webapp.action;
 
 import org.apache.commons.logging.Log;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -86,6 +87,7 @@ public abstract class BaseActionTestCase extends AbstractTransactionalTestCase {
 	ActionContext.getContext().setSession(null);
     }
 
+    @Autowired
     public void setMailSender(JavaMailSenderImpl mailSender) {
 	this.mailSender = mailSender;
     }

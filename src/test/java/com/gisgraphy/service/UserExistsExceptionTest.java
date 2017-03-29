@@ -24,9 +24,12 @@ package com.gisgraphy.service;
 
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 import com.gisgraphy.model.User;
+
+import static org.junit.Assert.*;
 
 public class UserExistsExceptionTest extends AbstractTransactionalTestCase {
     private UserManager userManager = null;
@@ -54,6 +57,7 @@ public class UserExistsExceptionTest extends AbstractTransactionalTestCase {
 	}
     }
     
+    @Autowired
     public void setUserManager(UserManager userManager) {
 	this.userManager = userManager;
     }

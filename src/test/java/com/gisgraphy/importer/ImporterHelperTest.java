@@ -22,6 +22,7 @@
  *******************************************************************************/
 package com.gisgraphy.importer;
 
+import static com.gisgraphy.test.GisgraphyTestHelper.alternateOsmNameContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -37,6 +38,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.helper.FileHelper;
 import com.gisgraphy.test.GisgraphyTestHelper;
 
@@ -422,5 +424,51 @@ public class ImporterHelperTest {
 		 Assert.assertEquals("admName5", city.getAdm5Name());
 		 
 	 }
+	 
+
+	    
+	    @Test
+	  	public void testPopulateAlternateNames_Compound_WithDuplicate_sameName() {
+	      	String RawAlternateNames="name:de===trucstrasse___name:de===truc strasse";
+	  		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
+	  		OpenStreetMap street = new OpenStreetMap();
+	  		street.setName("trucstrasse");
+	  		street = importer.populateAlternateNames(street, RawAlternateNames);
+	  		Assert.assertEquals(2, street.getAlternateNames().size());
+	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"trucstrasse"));
+	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"truc strasse"));
+	     		
+	  		
+	  	}
+	    
+	    
+	    @Test
+	   	public void testPopulateAlternateNames_Compound_WithDuplicate_notSameName() {
+	       	String RawAlternateNames="name:de===trucstrasse___name:de===truc strasse";
+	   		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
+	   		OpenStreetMap street = new OpenStreetMap();
+	   		street.setName("trucstrasse");
+	   		street = importer.populateAlternateNames(street, RawAlternateNames);
+	   		Assert.assertEquals(2, street.getAlternateNames().size());
+	   		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"trucstrasse"));
+	   		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"truc strasse"));
+	      		
+	   		
+	   	}
+	    
+	    @Test
+	  	public void testPopulateAlternateNames_Compound_WithDuplicate_nullName() {
+	      	String RawAlternateNames="name:de===trucstrasse___name:de===truc strasse";
+	  		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
+	  		OpenStreetMap street = new OpenStreetMap();
+	  		street = importer.populateAlternateNames(street, RawAlternateNames);
+	  		Assert.assertEquals(2, street.getAlternateNames().size());
+	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"truc strasse"));
+	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"trucstrasse"));
+	     		
+	  		
+	  	}
+	    
+	   
 	
 }

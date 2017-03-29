@@ -26,6 +26,7 @@ import static com.gisgraphy.domain.valueobject.Pagination.paginate;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -710,7 +711,10 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='Saint-André']",
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]][.='cityalternate']",
+			+ "'][./str[1]/.='cityalternate']",
+			"//*[@name='" + FullTextFields.NAME.getValue()
+			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
+			+ "'][./str[2]/.='cityalternateFR']",
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
 			+ "FR'][./str[1]][.='cityalternateFR']"
@@ -724,12 +728,17 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='A1']",
 		"//*[@name='" + FullTextFields.ADM1NAME.getValue()
 			+ "'][.='preferedAdm1Name']",//we prefer adm name if set in the admXfields of the feature
+			
 		"//*[@name='" + FullTextFields.ADM1NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]='admGGPalternate']",
+			+ "'][./str[1]/.='admGGPalternateFR']",
 		"//*[@name='" + FullTextFields.ADM1NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[2]='admGGPalternate2']",
+			+ "'][./str[2]/.='admGGPalternate']",
+			"//*[@name='" + FullTextFields.ADM1NAME.getValue()
+			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
+			+ "'][./str[3]/.='admGGPalternate2']",
+		
 		"//*[@name='" + FullTextFields.ADM1NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
 			+ "FR'][./str[1]][.='admGGPalternateFR']"
@@ -739,12 +748,17 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='B2']",
 		"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ "'][.='admGrandParent']",
+			
 		"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]][.='admGPalternate']",
+			+ "'][./str[1]/.='admGPalternateFR']",
+			"//*[@name='" + FullTextFields.ADM2NAME.getValue()
+			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
+			+ "'][./str[2]/.='admGPalternate']",
 		"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
-			+ "FR'][./str[1]][.='admGPalternateFR']"
+			+ "FR'][./str[1]/.='admGPalternateFR']"
+		
 		// adm3
 		,
 		"//*[@name='" + FullTextFields.ADM3CODE.getValue()
@@ -984,7 +998,11 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='"+country.getArea()+"']",
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]][.='"+alternateName.getName()+"']",
+			+ "'][./str[1]/.='"+alternateName.getName()+"']",
+		"//*[@name='" + FullTextFields.NAME.getValue()
+			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
+			+ "'][./str[2]/.='"+alternateNameLocalized.getName()+"']",
+			
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
 			+ "FR'][./str[1]][.='"+alternateNameLocalized.getName()+"']"
@@ -1378,13 +1396,11 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='"+street.getAzimuthEnd()+"']",
 			
 			
-		/*	street.addAlternateLabel("alternateLabel");
-			street.addAlternateLabel("alternateLabel2");*/
-			
-			"//*[@name='" + FullTextFields.ALTERNATE_LABELS.getValue()
+			//we don't store alternate labels
+		/*	"//*[@name='" + FullTextFields.ALTERNATE_LABELS.getValue()
 			+ "'][./str[1]/.='"+labelIterator.next()+"']",
 			"//*[@name='" + FullTextFields.ALTERNATE_LABELS.getValue()
-			+ "'][./str[2]/.='"+labelIterator.next()+"']",
+			+ "'][./str[2]/.='"+labelIterator.next()+"']",*/
 			
 
 			"//*[@name='" + FullTextFields.ZIPCODE.getValue()

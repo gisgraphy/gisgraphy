@@ -7,3 +7,4 @@
 /.pydevproject
 /logs/*
 /logs/
+/target/

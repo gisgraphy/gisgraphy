@@ -22,15 +22,21 @@
  *******************************************************************************/
 package com.gisgraphy.fulltext.spell;
 
+
 import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.domain.valueobject.Constants;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
+
+import static org.junit.Assert.*;
+
+
 
 public class SpellCheckerIndexerTest extends
 	AbstractIntegrationHttpSolrTestCase {
@@ -106,7 +112,7 @@ public class SpellCheckerIndexerTest extends
 
     }
 
-    @Required
+    @Autowired
     public void setSpellCheckerIndexer(ISpellCheckerIndexer spellCheckerIndexer) {
 	this.spellCheckerIndexer = spellCheckerIndexer;
     }

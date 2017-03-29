@@ -28,9 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.jstester.util.Assert;
 
 import org.easymock.EasyMock;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.testing.ServletTester;
 import org.junit.Test;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.testing.ServletTester;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.gisgraphy.addressparser.AddressQuery;

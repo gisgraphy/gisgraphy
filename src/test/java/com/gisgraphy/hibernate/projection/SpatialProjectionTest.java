@@ -35,6 +35,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -49,12 +50,17 @@ import com.gisgraphy.test._DaoHelper;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
+import static org.junit.Assert.*;
+
 public class SpatialProjectionTest extends AbstractIntegrationHttpSolrTestCase {
 
+	@Autowired
     private ICityDao cityDao;
     
+	@Autowired
     private IOpenStreetMapDao openStreetMapDao;
 
+	@Autowired
     private _DaoHelper testDao;
 
     @SuppressWarnings("unchecked")

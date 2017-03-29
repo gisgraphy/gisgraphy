@@ -23,9 +23,13 @@
 package com.gisgraphy.webapp.action;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.subethamail.wiser.Wiser;
 
+import static org.junit.Assert.*;
+
 public class PasswordHintActionTest extends BaseActionTestCase {
+	@Autowired
     private PasswordHintAction passwordHintAction;
 
     public void setPasswordHintAction(PasswordHintAction action) {

@@ -32,9 +32,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.springframework.security.GrantedAuthority;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * This class is used to represent available roles in the database.

@@ -28,6 +28,9 @@ package com.gisgraphy.fulltext;
 import static com.gisgraphy.domain.valueobject.Pagination.paginate;
 
 import java.io.File;
+
+import static org.junit.Assert.*;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,6 +41,7 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -125,6 +129,7 @@ public class OutputstreamResponseWrapperTest extends
 
     }
 
+    @Autowired
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }

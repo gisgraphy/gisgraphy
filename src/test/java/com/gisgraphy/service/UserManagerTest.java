@@ -28,16 +28,20 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.Constants;
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 import com.gisgraphy.helper.PropertiesHelper;
 import com.gisgraphy.model.User;
 
-public class UserManagerTest extends AbstractTransactionalTestCase {
+import static org.junit.Assert.*;
 
+public class UserManagerTest extends AbstractTransactionalTestCase {
+	@Autowired
     private UserManager userManager = null;
 
+	@Autowired
     private RoleManager roleManager = null;
 
     private Log log = LogFactory.getLog(UserManagerTest.class);
@@ -114,10 +118,11 @@ public class UserManagerTest extends AbstractTransactionalTestCase {
 	}
     }
     
+    
     public void setUserManager(UserManager userManager) {
 	this.userManager = userManager;
     }
-
+ 
     public void setRoleManager(RoleManager roleManager) {
 	this.roleManager = roleManager;
     }

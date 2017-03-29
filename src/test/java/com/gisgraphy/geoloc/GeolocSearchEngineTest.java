@@ -30,6 +30,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static org.junit.Assert.*;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;

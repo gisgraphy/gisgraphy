@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -122,7 +123,7 @@ public class StreetServlet extends GisgraphyServlet {
 	    if (logger.isInfoEnabled()){
 		logger.info("A street request from "+req.getRemoteHost()+" / "+req.getRemoteAddr()+" was received , Referer : "+referer+" , UA : "+UA);
 	    }
-
+	    resp.setCharacterEncoding("UTF-8");
 	    streetSearchEngine.executeAndSerialize(query, resp
 		    .getOutputStream());
 	} catch (RuntimeException e) {
@@ -149,6 +150,7 @@ public class StreetServlet extends GisgraphyServlet {
      * @param streetSearchEngine
      *                the streetSearchEngine to set
      */
+    @Autowired
     public void setStreetSearchEngine(IStreetSearchEngine streetSearchEngine) {
 	this.streetSearchEngine = streetSearchEngine;
     }

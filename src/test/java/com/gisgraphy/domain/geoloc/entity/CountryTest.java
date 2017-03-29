@@ -22,6 +22,7 @@
  *******************************************************************************/
 package com.gisgraphy.domain.geoloc.entity;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
@@ -31,11 +32,11 @@ public class CountryTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testCountryStringStringIntShouldSetIsoCountryAlphaCodeToUpperCaseAndCountryCode() {
 	Country country = new Country("fr", "fra", 33);
-	assertEquals("the iso 3166-2 code should be in uppercase", "FR",
+	Assert.assertEquals("the iso 3166-2 code should be in uppercase", "FR",
 		country.getIso3166Alpha2Code());
-	assertEquals("The iso 3166-3 code should be in uppercase", "FRA",
+	Assert.assertEquals("The iso 3166-3 code should be in uppercase", "FRA",
 		country.getIso3166Alpha3Code());
-	assertNotNull("The countryCcode should be set", country
+	Assert.assertNotNull("The countryCcode should be set", country
 		.getCountryCode());
     }
 
@@ -43,9 +44,9 @@ public class CountryTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSetIso3166Alpha2CodeShouldSetIsoCountryAlpha2CodeToUpperCaseAndCountryCode() {
 	Country country = new Country();
 	country.setIso3166Alpha2Code("fr");
-	assertEquals("the iso 3166-2 code should be in uppercase", "FR",
+	Assert.assertEquals("the iso 3166-2 code should be in uppercase", "FR",
 		country.getIso3166Alpha2Code());
-	assertNotNull("The countryCcode should be set", country
+	Assert.assertNotNull("The countryCcode should be set", country
 		.getCountryCode());
     }
 
@@ -53,7 +54,7 @@ public class CountryTest extends AbstractIntegrationHttpSolrTestCase {
     public void testSetIso3166Alpha3CodeShouldBeSetInUpperCase() {
 	Country country = new Country();
 	country.setIso3166Alpha3Code("fra");
-	assertEquals("the iso 3166-2 code should be in uppercase", "FRA",
+	Assert.assertEquals("the iso 3166-2 code should be in uppercase", "FRA",
 		country.getIso3166Alpha3Code());
     }
 
@@ -61,21 +62,21 @@ public class CountryTest extends AbstractIntegrationHttpSolrTestCase {
     public void testGetCurrencyShouldReturnTheCorrectCurency() {
 	Country country = new Country();
 	country.setCurrencyCode("EUR");
-	assertNotNull(country.getCurrency());
-	assertEquals("EUR", country.getCurrency().getCurrencyCode());
+	Assert.assertNotNull(country.getCurrency());
+	Assert.assertEquals("EUR", country.getCurrency().getCurrencyCode());
     }
 
     @Test
     public void testGetCurrencyWithNullCurrencycodeShouldreturnNull() {
 	Country country = new Country();
-	assertNull(country.getCurrency());
+	Assert.assertNull(country.getCurrency());
     }
 
     @Test
     public void testGetCurrencyWithWrongCurrencycodeShouldreturnNull() {
 	Country country = new Country();
 	country.setCurrencyCode("ERROR");
-	assertNull(country.getCurrency());
+	Assert.assertNull(country.getCurrency());
     }
 
 }

@@ -32,6 +32,7 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -590,15 +591,21 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 
 				    public Object doInHibernate(Session session)
 					    throws PersistenceException {
-					String queryString = "select ST_AsText("+GisFeature.SHAPE_COLUMN_NAME+") from " + persistentClass.getSimpleName()
+					String queryString = "select st_astext("+GisFeature.SHAPE_COLUMN_NAME+") from " + persistentClass.getSimpleName()
 			+ " as o where o.gid=?";
 
 					Query qry = session.createQuery(queryString);
 					qry.setParameter(0, gid);
-					qry.setCacheable(true);
-					return (String) qry.uniqueResult();
+				//	qry.setCacheable(true);
+					Object shape = qry.uniqueResult();
+					if (shape !=null){
+						return  shape.toString();
+					} else {
+						return null;
+					}
 				    }
 				});
+    
 	}
 
 

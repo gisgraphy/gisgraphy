@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.jws.WebService;
 
-import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.gisgraphy.model.User;
 

@@ -18,11 +18,11 @@ import java.io.File;
 import java.util.Random;
 import java.util.logging.Level;
 
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.jetty.webapp.WebAppContext;
-import org.springframework.beans.factory.annotation.Required;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
@@ -154,12 +154,11 @@ public abstract class AbstractIntegrationHttpSolrTestCase extends
 	// TODO v2 remove solrdir after all test
     }
 
-    @Required
+    @Autowired
     public void setSolRSynchroniser(ISolRSynchroniser solRSynchroniser) {
 	this.solRSynchroniser = solRSynchroniser;
     }
-
-    @Required
+    @Autowired
     public void setFullTextSearchEngine(
 	    IFullTextSearchEngine fullTextSearchEngine) {
 	this.fullTextSearchEngine = fullTextSearchEngine;
@@ -169,7 +168,7 @@ public abstract class AbstractIntegrationHttpSolrTestCase extends
      * @param solrClient
      *                the solrClient to set
      */
-    @Required
+    @Autowired
     public void setSolrClient(IsolrClient solrClient) {
 	this.solrClient = solrClient;
     }

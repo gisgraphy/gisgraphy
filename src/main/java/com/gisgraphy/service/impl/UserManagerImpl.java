@@ -27,9 +27,10 @@ import java.util.List;
 import javax.jws.WebService;
 import javax.persistence.EntityExistsException;
 
-import org.springframework.security.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gisgraphy.dao.UserDao;
 import com.gisgraphy.model.User;
@@ -45,6 +46,7 @@ import com.gisgraphy.service.UserService;
 @WebService(serviceName = "UserService", endpointInterface = "com.gisgraphy.service.UserService")
 public class UserManagerImpl extends UniversalManagerImpl implements
 	UserManager, UserService {
+	@Autowired
     private UserDao dao;
 
     /**

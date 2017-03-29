@@ -24,6 +24,7 @@ package com.gisgraphy.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,10 +43,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.userdetails.UserDetails;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * This class represents the basic "user" object in AppFuse that allows for
@@ -216,8 +217,13 @@ public class User extends BaseObject implements Serializable, UserDetails {
      * @return GrantedAuthority[] an array of roles.
      */
     @Transient
-    public GrantedAuthority[] getAuthorities() {
-	return roles.toArray(new GrantedAuthority[0]);
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+	List<GrantedAuthority> auts = new ArrayList<GrantedAuthority>();
+    	//roles.toArray(new GrantedAuthority[0]);
+	for (GrantedAuthority aut:roles){
+		auts.add(aut);
+	}
+    	return auts;
     }
 
     @Version
@@ -376,15 +382,14 @@ public class User extends BaseObject implements Serializable, UserDetails {
 			this.credentialsExpired).append("accountLocked",
 			this.accountLocked);
 
-	GrantedAuthority[] auths = this.getAuthorities();
+	Collection<? extends GrantedAuthority> auths = this.getAuthorities();
 	if (auths != null) {
 	    sb.append("Granted Authorities: ");
 
-	    for (int i = 0; i < auths.length; i++) {
-		if (i > 0) {
-		    sb.append(", ");
-		}
-		sb.append(auths[i].toString());
+	    for (GrantedAuthority aut:auths){
+	    	 sb.append(", ");
+	    	 sb.append(aut.toString());
+	    	 
 	    }
 	} else {
 	    sb.append("No Granted Authorities");

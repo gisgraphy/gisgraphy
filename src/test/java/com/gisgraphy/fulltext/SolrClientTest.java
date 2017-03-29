@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.junit.Assert;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class SolrClientTest extends AbstractIntegrationHttpSolrTestCase {
 	

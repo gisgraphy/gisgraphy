@@ -22,11 +22,17 @@
  *******************************************************************************/
 package com.gisgraphy.webapp.action;
 
-import org.springframework.security.context.SecurityContextHolder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.struts2.ServletActionContext;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.subethamail.wiser.Wiser;
 
 import com.gisgraphy.Constants;
@@ -34,6 +40,7 @@ import com.gisgraphy.model.Address;
 import com.gisgraphy.model.User;
 
 public class SignupActionTest extends BaseActionTestCase {
+	@Autowired
     private SignupAction signupAction;
 
     public void setSignupAction(SignupAction action) {

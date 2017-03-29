@@ -28,6 +28,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.Assert.*;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -40,10 +43,13 @@ import com.vividsolutions.jts.geom.Point;
 
 public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 
+	@Autowired
     private IAdmDao admDao;
 
+	@Autowired
     private IGisFeatureDao gisFeatureDao;
 
+	@Autowired
     private GisgraphyTestHelper geolocTestHelper;
 
 
@@ -390,7 +396,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	City city = geolocTestHelper
 		.createAndSaveCityWithFullAdmTreeAndCountry(3L);
 	gisFeatureDao.remove(city);
-	assertEquals(3, admDao.count());
+	assertEquals(5, admDao.count());
 	assertEquals(1, admDao.deleteAllByLevel(3));
 	assertEquals(2, admDao.count());
 
@@ -1247,13 +1253,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     	Assert.assertTrue("the result list for level 1 doesn't contains the featureId "+admParent.getFeatureId(),listOfFeatureId.contains(admParent.getFeatureId()));
     }
 
-    public void setAdmDao(IAdmDao admDao) {
-	this.admDao = admDao;
-    }
-
-    public void setGisFeatureDao(IGisFeatureDao gisFeatureDao) {
-	this.gisFeatureDao = gisFeatureDao;
-    }
+   
     
     @Test
     public void testGetByShape(){
@@ -1277,4 +1277,13 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
     	
     }
 
+    @Autowired
+    public void setAdmDao(IAdmDao admDao) {
+	this.admDao = admDao;
+    }
+
+    @Autowired
+    public void setGisFeatureDao(IGisFeatureDao gisFeatureDao) {
+	this.gisFeatureDao = gisFeatureDao;
+    }
 }

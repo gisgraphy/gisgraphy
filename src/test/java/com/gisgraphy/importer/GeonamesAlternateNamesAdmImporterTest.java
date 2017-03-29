@@ -30,6 +30,7 @@ import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -81,7 +82,6 @@ public class GeonamesAlternateNamesAdmImporterTest extends AbstractIntegrationHt
 	ISolRSynchroniser mockSolRSynchroniser = EasyMock.createMock(ISolRSynchroniser.class);
 	EasyMock.expect(mockSolRSynchroniser.commit()).andReturn(true);
 	EasyMock.expectLastCall();
-	mockSolRSynchroniser.optimize();
 	EasyMock.expectLastCall();
 	ISpellCheckerIndexer mockSpellCheckerIndexer = EasyMock.createMock(ISpellCheckerIndexer.class);
 	EasyMock.expect(mockSpellCheckerIndexer.buildAllIndex()).andReturn(new HashMap<String, Boolean>());
@@ -105,7 +105,6 @@ public class GeonamesAlternateNamesAdmImporterTest extends AbstractIntegrationHt
 	ISolRSynchroniser mockSolRSynchroniser = EasyMock.createMock(ISolRSynchroniser.class);
 	EasyMock.expect(mockSolRSynchroniser.commit()).andReturn(true);
 	EasyMock.expectLastCall();
-	mockSolRSynchroniser.optimize();
 	EasyMock.expectLastCall();
 	ISpellCheckerIndexer mockSpellCheckerIndexer = EasyMock.createMock(ISpellCheckerIndexer.class);
 	EasyMock.expect(mockSpellCheckerIndexer.buildAllIndex()).andReturn(new HashMap<String, Boolean>());
@@ -138,7 +137,7 @@ public class GeonamesAlternateNamesAdmImporterTest extends AbstractIntegrationHt
 	geonamesAlternateNamesImporter.process();
 	Assert.assertEquals(ImporterStatus.SKIPPED, geonamesAlternateNamesImporter.getStatus());
 	ImporterStatusDto statusDto = new ImporterStatusDto(geonamesAlternateNamesImporter);
-	Assert.assertEquals(100, statusDto.getPercent());
+	Assert.assertEquals(0, statusDto.getPercent());
     }
     
     @Test
@@ -203,19 +202,19 @@ public class GeonamesAlternateNamesAdmImporterTest extends AbstractIntegrationHt
 	Assert.assertEquals("the third file return should be the alternate name adm2 file",new File(importerConfig.getGeonamesDir()+alternateNameAdm2FileName), files[2]);
     }
     
-    @Required
+    @Autowired
     public void setImporterConfig(ImporterConfig importerConfig) {
         this.importerConfig = importerConfig;
     }
 
     
-    @Required
+    @Autowired
     public void setSolRSynchroniser(ISolRSynchroniser solRSynchroniser) {
         this.solRSynchroniser = solRSynchroniser;
     }
 
 
-    @Required
+    @Autowired
 	protected void setGeonamesAlternateNamesAdmImporter(
 			GeonamesAlternateNamesAdmImporter geonamesAlternateNamesAdmImporter) {
 		this.geonamesAlternateNamesAdmImporter = geonamesAlternateNamesAdmImporter;

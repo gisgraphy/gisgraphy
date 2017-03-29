@@ -164,4 +164,5 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
      * @return the shape as wkt
      */
     public String getShapeAsWKTByGId(final Long gid);
+    
 }

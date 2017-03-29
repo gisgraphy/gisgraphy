@@ -11,6 +11,7 @@
 	         </list>
     	</property>
  	</bean>
+ 	
 
 
     <!-- UniversalDao - can be used when doing standard CRUD - made available 

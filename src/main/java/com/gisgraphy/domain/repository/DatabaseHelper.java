@@ -22,7 +22,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.hibernatespatial.postgis.PostgisDialectNG;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -135,7 +134,7 @@ public class DatabaseHelper extends HibernateDaoSupport implements IDatabaseHelp
 	private List<SQLException> createSqlSchemaFile(File outputFile,boolean create, boolean drop, boolean execute ){
 	Assert.notNull(outputFile,"Can not create a sql schema in a null file, please specify a valid one");
 	AnnotationConfiguration config = new AnnotationConfiguration();
-	config.setProperty("hibernate.dialect",PostgisDialectNG.class.getName());
+	config.setProperty("hibernate.dialect",org.hibernatespatial.postgis.PostgisDialectNG2.class.getName());
 		config.configure();
 		SchemaExport schemaExporter =null;
 		if (execute == true){

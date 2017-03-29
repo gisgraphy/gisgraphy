@@ -27,6 +27,7 @@ package com.gisgraphy.domain.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -24,16 +24,20 @@ package com.gisgraphy.service.impl;
 import java.util.Locale;
 
 import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 
 public class InternationalisationServiceTest extends AbstractTransactionalTestCase {
 
+	@Autowired
     private InternationalisationService internationalisationService;
 
+	@Autowired
     private ReloadableResourceBundleMessageSource applicationResourcesSource;
 
     private ReloadableResourceBundleMessageSource createRessourceBundleTest() {

@@ -23,6 +23,10 @@
 package com.gisgraphydao;
 
 import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.ObjectRetrievalFailureException;
@@ -84,7 +88,7 @@ public class UniversalDaoTest extends AbstractTransactionalTestCase {
 	}
     }
 
-    @Required
+    @Autowired
     public void setUniversalDao(UniversalDao universalDao) {
 	this.universalDao = universalDao;
     }

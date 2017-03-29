@@ -42,7 +42,6 @@ public class LookupDaoHibernate extends UniversalDaoHibernate implements
     @SuppressWarnings("unchecked")
     public List<Role> getRoles() {
 	log.debug("retrieving all role names...");
-
-	return getHibernateTemplate().find("from Role order by name");
+	return (List<Role>) getHibernateTemplate().find("from Role order by name");
     }
 }

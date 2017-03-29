@@ -22,6 +22,7 @@
  *******************************************************************************/
 package com.gisgraphydao;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -29,6 +30,8 @@ import com.gisgraphy.Constants;
 import com.gisgraphy.dao.RoleDao;
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 import com.gisgraphy.model.Role;
+
+import static org.junit.Assert.*;
 
 public class RoleDaoTest extends AbstractTransactionalTestCase {
     @Autowired
@@ -38,16 +41,19 @@ public class RoleDaoTest extends AbstractTransactionalTestCase {
     /*
      * public void setRoleDao(RoleDao dao) { this.dao = dao; }
      */
+    @Test
     public void testGetRoleInvalid() throws Exception {
 	Role role = roleDao.getRoleByName("badrolename");
 	assertNull(role);
     }
 
+    @Test
     public void testGetRole() throws Exception {
 	Role role = roleDao.getRoleByName(Constants.USER_ROLE);
 	assertNotNull(role);
     }
 
+    @Test
     public void testUpdateRole() throws Exception {
 	Role role = roleDao.getRoleByName("ROLE_USER");
 	role.setDescription("test descr");
@@ -58,6 +64,7 @@ public class RoleDaoTest extends AbstractTransactionalTestCase {
 	assertEquals("test descr", role.getDescription());
     }
 
+    @Test
     public void testAddAndRemoveRole() throws Exception {
 	Role role = new Role("testrole");
 	role.setDescription("new role descr");

@@ -22,7 +22,11 @@
  *******************************************************************************/
 package com.gisgraphy.domain.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.geoloc.entity.Language;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
@@ -118,6 +122,7 @@ public class LanguageDaoTest extends AbstractIntegrationHttpSolrTestCase {
      * assertEquals(0, languageDao.deleteAll()); }
      */
 
+    @Autowired
     public void setLanguageDao(ILanguageDao languageDao) {
 	this.languageDao = languageDao;
     }

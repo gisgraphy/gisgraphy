@@ -24,7 +24,7 @@ package com.gisgraphy.service;
 
 import java.util.List;
 
-import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.gisgraphy.dao.UserDao;
 import com.gisgraphy.model.User;

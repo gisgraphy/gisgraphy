@@ -24,6 +24,10 @@ package com.gisgraphy.dao;
 
 import java.util.List;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 import com.gisgraphy.model.Role;
 
@@ -33,15 +37,17 @@ import com.gisgraphy.model.Role;
  * @author mraible
  */
 public class LookupDaoTest extends AbstractTransactionalTestCase {
-    private LookupDao dao;
+    @Autowired
+	private LookupDao dao;
 
     public void setLookupDao(LookupDao dao) {
 	this.dao = dao;
     }
 
+    @Test
     public void testGetRoles() {
 	List<Role> roles = dao.getRoles();
 	log.debug(roles);
-	assertTrue(roles.size() > 0);
+	Assert.assertTrue(roles.size() > 0);
     }
 }

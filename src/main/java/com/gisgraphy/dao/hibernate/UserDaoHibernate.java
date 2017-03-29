@@ -24,9 +24,9 @@ package com.gisgraphy.dao.hibernate;
 
 import java.util.List;
 
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
-import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.gisgraphy.dao.UserDao;
 import com.gisgraphy.model.User;
@@ -57,7 +57,8 @@ public class UserDaoHibernate extends GenericDaoHibernate<User, Long> implements
      */
     @SuppressWarnings("unchecked")
     public List<User> getUsers() {
-	return getHibernateTemplate().find(
+   
+	return  (List<User>)getHibernateTemplate().find(
 		"from User u order by upper(u.username)");
     }
 

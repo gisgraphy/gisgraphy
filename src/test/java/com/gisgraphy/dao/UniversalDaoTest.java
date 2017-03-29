@@ -22,7 +22,9 @@
  *******************************************************************************/
 package com.gisgraphy.dao;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.ObjectRetrievalFailureException;
@@ -34,6 +36,7 @@ import com.gisgraphy.model.User;
  * This class tests the generic GenericDao and BaseDao implementation.
  */
 public class UniversalDaoTest extends AbstractTransactionalTestCase {
+	@Autowired
     protected UniversalDao universalDao;
 
     /**
@@ -54,12 +57,12 @@ public class UniversalDaoTest extends AbstractTransactionalTestCase {
 	// create
 	user = (User) universalDao.save(user);
 	flush();
-	assertNotNull(user.getId());
+	Assert.assertNotNull(user.getId());
 
 	// retrieve
 	user = (User) universalDao.get(User.class, user.getId());
-	assertNotNull(user);
-	assertEquals("last", user.getLastName());
+	Assert.assertNotNull(user);
+	Assert.assertEquals("last", user.getLastName());
 
 	// update
 	user.getAddress().setCountry("USA");
@@ -67,23 +70,22 @@ public class UniversalDaoTest extends AbstractTransactionalTestCase {
 	flush();
 
 	user = (User) universalDao.get(User.class, user.getId());
-	assertEquals("USA", user.getAddress().getCountry());
+	Assert.assertEquals("USA", user.getAddress().getCountry());
 
 	// delete
 	universalDao.remove(User.class, user.getId());
 	flush();
 	try {
 	    universalDao.get(User.class, user.getId());
-	    fail("User 'foo' found in database");
+	    Assert.fail("User 'foo' found in database");
 	} catch (ObjectRetrievalFailureException e) {
-	    assertNotNull(e.getMessage());
+		Assert.assertNotNull(e.getMessage());
 	} catch (InvalidDataAccessApiUsageException e) { // Spring 2.0 throws
 	    // this one
-	    assertNotNull(e.getMessage());
+		Assert.assertNotNull(e.getMessage());
 	}
     }
 
-    @Required
     public void setUniversalDao(UniversalDao universalDao) {
 	this.universalDao = universalDao;
     }

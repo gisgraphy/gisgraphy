@@ -22,6 +22,9 @@
 package com.gisgraphy.domain.repository;
 
 import static com.gisgraphy.test.GisgraphyTestHelper.isFileContains;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,12 +34,14 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.helper.FileHelper;
 import com.gisgraphy.test.GisgraphyTestHelper;
 
 public class DatabaseHelperTest extends AbstractTransactionalTestCase {
 
+	@Autowired
     IDatabaseHelper databaseHelper;
 
     /**

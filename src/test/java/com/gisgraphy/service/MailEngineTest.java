@@ -29,7 +29,10 @@ import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -37,15 +40,19 @@ import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
+import com.gisgraphy.importer.GeonamesDatabaseIndexer;
 
 /**
  * @author Bryan Noll
  */
 public class MailEngineTest extends AbstractTransactionalTestCase {
+	@Autowired
     MailEngine mailEngine;
 
+    @Autowired
     SimpleMailMessage mailMessage;
 
+    @Autowired
     JavaMailSenderImpl mailSender;
 
 

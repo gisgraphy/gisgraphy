@@ -28,6 +28,9 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import org.easymock.EasyMock;
+
+import static org.junit.Assert.*;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaQuery;
@@ -35,6 +38,7 @@ import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -188,10 +192,12 @@ public class ProjectionOrderTest extends AbstractIntegrationHttpSolrTestCase {
 	EasyMock.verify(criteriaQuery);
     }
 
+    @Autowired
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }
 
+    @Autowired
     public void setTestDao(_DaoHelper testDao) {
 	this.testDao = testDao;
     }

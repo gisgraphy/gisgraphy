@@ -25,8 +25,12 @@ import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
+
+import static org.junit.Assert.*;
+
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.repository.AbstractTransactionalTestCase;
 import com.gisgraphy.domain.repository.AdmDao;
@@ -95,10 +99,7 @@ public class GeonamesDatabaseIndexerTest extends AbstractTransactionalTestCase {
 	Assert.assertFalse(geonamesDatabaseIndexerTobeSkipped.shouldBeSkipped());
     }
 
-    
-    public void setGeonamesDatabaseIndexer(GeonamesDatabaseIndexer geonamesDatabaseIndexer) {
-        this.geonamesDatabaseIndexer = geonamesDatabaseIndexer;
-    }
+   
     
     @Test
     public void testResetStatusShouldReset() {
@@ -124,5 +125,10 @@ public class GeonamesDatabaseIndexerTest extends AbstractTransactionalTestCase {
 		Assert.assertEquals("", indexer.getStatusMessage());
 		Assert.assertEquals("curentFileName should be null at the end of the reset",GeonamesDatabaseIndexer.DEFAULT_CURRENT_FILENAME, indexer.getCurrentFileName());
 	}
+    
+    @Autowired
+    public void setGeonamesDatabaseIndexer(GeonamesDatabaseIndexer geonamesDatabaseIndexer) {
+        this.geonamesDatabaseIndexer = geonamesDatabaseIndexer;
+    }
 
 }

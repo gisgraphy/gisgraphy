@@ -22,9 +22,13 @@
  *******************************************************************************/
 package com.gisgraphydao;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataAccessException;
+
+import static org.junit.Assert.*;
 
 import com.gisgraphy.Constants;
 import com.gisgraphy.dao.RoleDao;
@@ -35,16 +39,16 @@ import com.gisgraphy.model.Role;
 import com.gisgraphy.model.User;
 
 public class UserDaoTest extends AbstractTransactionalTestCase {
-    private UserDao dao = null;
+    @Autowired
+	private UserDao dao = null;
 
+    @Autowired
     private RoleDao rdao = null;
 
-    @Required
     public void setUserDao(UserDao dao) {
 	this.dao = dao;
     }
 
-    @Required
     public void setRoleDao(RoleDao rdao) {
 	this.rdao = rdao;
     }
@@ -164,12 +168,12 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
     @Test
     public void testUserExists() throws Exception {
 	boolean b = dao.exists(-1L);
-	super.assertTrue(b);
+	Assert.assertTrue(b);
     }
 
     @Test
     public void testUserNotExists() throws Exception {
 	boolean b = dao.exists(111L);
-	super.assertFalse(b);
+	Assert.assertFalse(b);
     }
 }

@@ -32,6 +32,8 @@ import java.io.IOException;
 
 import javax.annotation.Resource;
 
+import static org.junit.Assert.*;
+
 import net.sf.jstester.util.Assert;
 
 import org.junit.Test;
@@ -172,6 +174,7 @@ public class StreetSearchEngineTest extends AbstractIntegrationHttpSolrTestCase 
 	    StreetSearchResultsDto results = streetSearchEngine.executeQuery(query);
 	    fail("Point is required when searchmode= " + StreetSearchMode.CONTAINS+". An exception should have been thrown");
 	} catch (IllegalArgumentException e) {
+	throw e;
 	    // OK
 	}
 	

@@ -22,6 +22,8 @@
  *******************************************************************************/
 package com.gisgraphy.dao;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -37,16 +39,19 @@ public class RoleDaoTest extends AbstractTransactionalTestCase {
     /*
      * public void setRoleDao(RoleDao dao) { this.dao = dao; }
      */
+    @Test
     public void testGetRoleInvalid() throws Exception {
 	Role role = roleDao.getRoleByName("badrolename");
-	assertNull(role);
+	Assert.assertNull(role);
     }
 
+    @Test
     public void testGetRole() throws Exception {
 	Role role = roleDao.getRoleByName(Constants.USER_ROLE);
-	assertNotNull(role);
+	Assert.assertNotNull(role);
     }
 
+    @Test
     public void testUpdateRole() throws Exception {
 	Role role = roleDao.getRoleByName("ROLE_USER");
 	role.setDescription("test descr");
@@ -54,9 +59,10 @@ public class RoleDaoTest extends AbstractTransactionalTestCase {
 	flush();
 
 	role = roleDao.getRoleByName("ROLE_USER");
-	assertEquals("test descr", role.getDescription());
+	Assert.assertEquals("test descr", role.getDescription());
     }
 
+    @Test
     public void testAddAndRemoveRole() throws Exception {
 	Role role = new Role("testrole");
 	role.setDescription("new role descr");
@@ -64,12 +70,12 @@ public class RoleDaoTest extends AbstractTransactionalTestCase {
 	flush();
 
 	role = roleDao.getRoleByName("testrole");
-	assertNotNull(role.getDescription());
+	Assert.assertNotNull(role.getDescription());
 
 	roleDao.removeRole("testrole");
 	flush();
 
 	role = roleDao.getRoleByName("testrole");
-	assertNull(role);
+	Assert.assertNull(role);
     }
 }

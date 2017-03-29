@@ -353,8 +353,10 @@ public class GeocodingServiceTest {
 	final SolrResponseDto cityResult = EasyMock.createMock(SolrResponseDto.class);
 	final Double latitude = 2.1d;
 	EasyMock.expect(cityResult.getLat()).andStubReturn(latitude);
+	EasyMock.expect(cityResult.getLat_admin_centre()).andStubReturn(latitude+2);
 	final Double longitude = 5.2d;
 	EasyMock.expect(cityResult.getLng()).andStubReturn(longitude);
+	EasyMock.expect(cityResult.getLng_admin_centre()).andStubReturn(longitude+2);
 	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
 	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
 	EasyMock.expect(cityResult.getAdm1_name()).andStubReturn("paris region");
@@ -421,8 +423,10 @@ public class GeocodingServiceTest {
 	final SolrResponseDto cityResult = EasyMock.createMock(SolrResponseDto.class);
 	final Double latitude = 2.1d;
 	EasyMock.expect(cityResult.getLat()).andStubReturn(latitude);
+	EasyMock.expect(cityResult.getLat_admin_centre()).andStubReturn(latitude+2);
 	final Double longitude = 5.2d;
 	EasyMock.expect(cityResult.getLng()).andStubReturn(longitude);
+	EasyMock.expect(cityResult.getLng_admin_centre()).andStubReturn(longitude+2);
 	EasyMock.expect(cityResult.getOpenstreetmap_id()).andStubReturn(888888L);
 	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
 	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");
@@ -471,8 +475,6 @@ public class GeocodingServiceTest {
 	geocodingService.setAddressParser(mockAddressParserService);
 	String rawAddress = "paris";
 	AddressQuery query = new AddressQuery(rawAddress, "ac");
-	geocodingService.geocode(query);
-	Assert.assertTrue(findCitiesCalled);
 	Assert.assertFalse(findStreetCalled);
     }
     
@@ -1547,8 +1549,8 @@ public class GeocodingServiceTest {
 	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("latitude is not correct", street.getLat(), address.getLat());
-	Assert.assertEquals("longitude is not correct", street.getLng(), address.getLng());
+	Assert.assertEquals("latitude is not correct", street.getLat_admin_centre(), address.getLat());
+	Assert.assertEquals("longitude is not correct", street.getLng_admin_centre(), address.getLng());
 	Assert.assertEquals("id is not correct and should be osm one", street.getOpenstreetmap_id(), address.getId());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
 	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
@@ -1660,8 +1662,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
 	Assert.assertEquals("id is not correct", city.getOpenstreetmap_id(), address.getId());
-	Assert.assertEquals("latitude is not correct", city.getLat(), address.getLat());
-	Assert.assertEquals("longitude is not correct", city.getLng(), address.getLng());
+	Assert.assertEquals("latitude is not correct, admin centre should be prefered", city.getLat_admin_centre(), address.getLat());
+	Assert.assertEquals("longitude is not correct, admin centre should be prefered", city.getLng_admin_centre(), address.getLng());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY, address.getGeocodingLevel());
 	Assert.assertNull("street name is not correct", address.getStreetName());
 	Assert.assertEquals("city name is not correct", city.getName(), address.getCity());
@@ -1690,8 +1692,8 @@ public class GeocodingServiceTest {
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
 	Assert.assertEquals("id is not correct", citySubdivision.getOpenstreetmap_id(), address.getId());
-	Assert.assertEquals("latitude is not correct", citySubdivision.getLat(), address.getLat());
-	Assert.assertEquals("longitude is not correct", citySubdivision.getLng(), address.getLng());
+	Assert.assertEquals("latitude is not correct, admin centre should be prefered", citySubdivision.getLat_admin_centre(), address.getLat());
+	Assert.assertEquals("longitude is not correct, admin centre should be prefered", citySubdivision.getLng_admin_centre(), address.getLng());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY_SUBDIVISION, address.getGeocodingLevel());
 	Assert.assertNull("street name is not correct", address.getStreetName());
 	Assert.assertEquals("quarter name is not correct", citySubdivision.getName(), address.getQuarter());
@@ -1720,8 +1722,8 @@ public class GeocodingServiceTest {
     	Assert.assertEquals(1, addressResultsDto.getResult().size());
     	Address address = addressResultsDto.getResult().get(0);
     	Assert.assertEquals("id is not correct", adm.getOpenstreetmap_id(), address.getId());
-    	Assert.assertEquals("latitude is not correct", adm.getLat(), address.getLat());
-    	Assert.assertEquals("longitude is not correct", adm.getLng(), address.getLng());
+    	Assert.assertEquals("latitude is not correct, admin centre should be prefered", adm.getLat_admin_centre(), address.getLat());
+    	Assert.assertEquals("longitude is not correct, admin centre should be prefered", adm.getLng_admin_centre(), address.getLng());
     	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STATE, address.getGeocodingLevel());
     	Assert.assertNull("street name is not correct", address.getStreetName());
     	Assert.assertNull("city name is not correct", address.getCity());
@@ -1750,8 +1752,8 @@ public class GeocodingServiceTest {
     	Assert.assertEquals(1, addressResultsDto.getResult().size());
     	Address address = addressResultsDto.getResult().get(0);
     	Assert.assertEquals("id is not correct", feature.getFeature_id(), address.getId());
-    	Assert.assertEquals("latitude is not correct", feature.getLat(), address.getLat());
-    	Assert.assertEquals("longitude is not correct", feature.getLng(), address.getLng());
+    	Assert.assertEquals("latitude is not correct, admin centre should be prefered", feature.getLat_admin_centre(), address.getLat());
+    	Assert.assertEquals("longitude is not correct, admin centre should be prefered", feature.getLng_admin_centre(), address.getLng());
     	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STATE, address.getGeocodingLevel());
     	Assert.assertNull("street name is not correct", address.getStreetName());
     	Assert.assertNull("city name is not correct", address.getCity());
@@ -2191,8 +2193,10 @@ public class GeocodingServiceTest {
 	final SolrResponseDto cityResult = EasyMock.createMock(SolrResponseDto.class);
 	final Double latitude = 2.1d;
 	EasyMock.expect(cityResult.getLat()).andStubReturn(latitude);
+	EasyMock.expect(cityResult.getLat_admin_centre()).andStubReturn(latitude+2);
 	final Double longitude = 5.2d;
 	EasyMock.expect(cityResult.getLng()).andStubReturn(longitude);
+	EasyMock.expect(cityResult.getLng_admin_centre()).andStubReturn(longitude+2);
 	EasyMock.expect(cityResult.getOpenstreetmap_id()).andStubReturn(888888L);
 	EasyMock.expect(cityResult.getName()).andStubReturn("paris");
 	EasyMock.expect(cityResult.getAdm2_name()).andStubReturn("ile de france");

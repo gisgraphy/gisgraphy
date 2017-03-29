@@ -44,7 +44,9 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.Type;
+import org.hibernate.util.ArrayHelper;
 import org.hibernatespatial.GeometryUserType;
+import org.opengis.feature.type.GeometryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Required;
@@ -97,8 +99,7 @@ import com.vividsolutions.jts.geom.Point;
 public class GenericGisDao<T extends GisFeature> extends
 	GenericDao<T, java.lang.Long> implements IGisDao<T> {
 
-    public static final Type GEOMETRY_TYPE = new CustomType(
-	    GeometryUserType.class, null);
+    public static final Type GEOMETRY_TYPE = new CustomType(new GeometryUserType());
 
     public static final int MAX_FULLTEXT_RESULTS = 100;
 

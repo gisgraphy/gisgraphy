@@ -33,13 +33,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.Assert;
-
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -51,7 +49,6 @@ import com.gisgraphy.domain.repository.ICitySubdivisionDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
-import com.gisgraphy.domain.valueobject.GisFeatureDistanceFactory;
 import com.gisgraphy.domain.valueobject.ImporterStatus;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 import com.gisgraphy.domain.valueobject.SpeedMode;
@@ -62,13 +59,15 @@ import com.vividsolutions.jts.geom.Point;
 
 
 
-public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSolrTestCase
+public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolrTestCase
 {
-    
+    @Autowired
     private IImporterProcessor openStreetMapImporter;
     
+    @Autowired
     private IOpenStreetMapDao openStreetMapDao;
     
+    @Autowired
     private IIdGenerator idGenerator;
     
     static boolean setupIsCalled = false;
@@ -104,7 +103,8 @@ public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSo
     	Assert.assertEquals(5, deleted.get(0).getValue().intValue());
 	}
     
-    @Test
+    @SuppressWarnings("deprecation")
+	@Test
     public void testImporterShouldImport() throws InterruptedException{
 	openStreetMapImporter.process();
 	assertEquals(4L,openStreetMapDao.count());
@@ -146,9 +146,10 @@ public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSo
 	
 	
 	//check alternate names when there is 2
-	Assert.assertEquals(2, openStreetMap.getAlternateNames().size());
+	Assert.assertEquals(3, openStreetMap.getAlternateNames().size());
 	Assert.assertTrue(alternateNamesContains(openStreetMap.getAlternateNames(),"Rue de Bachlettenstrasse","FR"));
 	Assert.assertTrue(alternateNamesContains(openStreetMap.getAlternateNames(),"Bachletten strasse","DE"));
+	Assert.assertTrue("the compound name should be added",alternateNamesContains(openStreetMap.getAlternateNames(),"Bachlettenstrasse","DE"));
 	
 	//check alternate names when there is no name but alternate
 	openStreetMap = openStreetMapDao.getByGid(firstIdAssigned+1);
@@ -250,6 +251,8 @@ public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSo
    		
 		
 	}
+    
+ 
     
     
     
@@ -476,7 +479,7 @@ public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSo
     
     @Test
     public void testProcessLineWithBadShapeShouldNotTryToSaveLine(){
-	String line = "11\tBachlettenstrasse\t010100000006C82291A0521E4054CC39B16BC64740\t0.00142246604529\tFR\ta city\t59000\t\tresidential\ttrue\tBADSHAPE\t70___20___30\t4\tyes\tasphalt\t100\t200name:fr===Rue de Bachlettenstrasse___name:de===Bachletten strasse";
+	String line = "11\tBachlettenstrasse\t010100000006C82291A0521E4054CC39B16BC64740\t0.00142246604529\tFR\ta city\t59000\t\tresidential\ttrue\tBADSHAPE\t70___20___30\t4\tyes\tasphalt\t100\t200\tA1name:fr===Rue de Bachlettenstrasse___name:de===Bachletten strasse";
 	OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 	IOpenStreetMapDao dao = EasyMock.createMock(IOpenStreetMapDao.class);
 	//now we simulate the fact that the dao should not be called
@@ -1305,18 +1308,15 @@ public class OpenStreetMapSimpleImporterTest //extends AbstractIntegrationHttpSo
     }
     
     
-    @Required
     public void setIdGenerator(IIdGenerator idGenerator) {
         this.idGenerator = idGenerator;
     }
     
     
-    @Required
     public void setOpenStreetMapDao(IOpenStreetMapDao openStreetMapDao) {
         this.openStreetMapDao = openStreetMapDao;
     }
 
-    @Required
     public void setOpenStreetMapImporter(IImporterProcessor openStreetMapImporter) {
         this.openStreetMapImporter = openStreetMapImporter;
     }

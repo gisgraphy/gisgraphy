@@ -31,17 +31,20 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.SessionFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com.gisgraphy.domain.valueobject.Constants;
 import com.gisgraphy.helper.EncodingHelper;
 import com.gisgraphy.helper.PropertiesHelper;
 
@@ -53,9 +56,23 @@ import com.gisgraphy.helper.PropertiesHelper;
  * 
  * @see AbstractDependencyInjectionSpringContextTests for more information
  */
-public abstract class AbstractTransactionalTestCase extends
-	AbstractDependencyInjectionSpringContextTests {
+@ContextConfiguration(locations={
 
+	    "classpath:/applicationContext.xml",
+		    "classpath:/applicationContext-resources.xml",
+		    "classpath:/applicationContext-repository.xml",
+		    "classpath:/applicationContext-geoloc.xml",
+		    "classpath:/applicationContext-dao.xml",
+		    "classpath:/applicationContext-service.xml",
+		    "classpath:/WEB-INF/applicationContext-struts.xml",
+		    "classpath:**/applicationContext*.xml",
+		    "classpath:/applicationContext-test.xml",
+		    "classpath:/applicationContext-dao-test.xml" })
+@RunWith(SpringJUnit4ClassRunner.class)
+//@TestExecutionListeners(DependencyInjectionTestExecutionListener.class)
+@Transactional
+public abstract class AbstractTransactionalTestCase 
+extends AbstractJUnit4SpringContextTests{
     protected boolean isTransactionNeeded() {
 	return true;
     }
@@ -71,9 +88,19 @@ public abstract class AbstractTransactionalTestCase extends
      */
     protected final Log log = LogFactory.getLog(getClass());
 
-    protected PlatformTransactionManager transactionManager;
+    @Autowired
+    public PlatformTransactionManager transactionManager;
 
-    protected TransactionStatus txStatus = null;
+    /**
+	 * @return the transactionManager
+	 */
+	public PlatformTransactionManager getTransactionManager() {
+		return transactionManager;
+	}
+
+
+
+	protected TransactionStatus txStatus = null;
 
     /**
      * ResourceBundle loaded from
@@ -87,8 +114,7 @@ public abstract class AbstractTransactionalTestCase extends
      */
     public AbstractTransactionalTestCase() {
 	super();
-	this
-		.setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
+	//this.setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
 	// Since a ResourceBundle is not required for each class, just
 	// do a simple check to see if one exists
 	String className = this.getClass().getName();
@@ -105,18 +131,18 @@ public abstract class AbstractTransactionalTestCase extends
      * 
      * @see org.springframework.test.AbstractDependencyInjectionSpringContextTests#getConfigLocations()
      */
-    @Override
+  /*  @Override
     protected String[] getConfigLocations() {
 	setAutowireMode(AUTOWIRE_BY_NAME);
 	return Constants.APPLICATION_CONTEXT_NAMES_FOR_TEST;
-    }
+    }*/
 
     /**
      * Begins a new transaction
      */
-    @Override
-    protected void onSetUp() throws Exception {
-	super.onSetUp();
+   @Before
+    public void onSetUp() throws Exception {
+	//super.onSetUp();
 	EncodingHelper.setJVMEncodingToUTF8();
 	DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 	def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -135,8 +161,8 @@ public abstract class AbstractTransactionalTestCase extends
     /**
      * Rolls back the current transaction
      */
-    @Override
-    protected void onTearDown() throws Exception {
+   @After
+    public void onTearDown() throws Exception {
 	endTransaction();
     }
 
@@ -144,7 +170,7 @@ public abstract class AbstractTransactionalTestCase extends
      * @throws Exception
      */
     public void endTransaction() throws Exception {
-	super.onTearDown();
+	//super.onTearDown();
 	this.onTearDownInTransaction();
 	if (isTransactionNeeded()) {
 	    this.transactionManager.rollback(this.txStatus);
@@ -157,11 +183,11 @@ public abstract class AbstractTransactionalTestCase extends
 
     }
 
-    @Required
+   /* @Required
     public void setTransactionManager(
 	    PlatformTransactionManager transactionManager) {
 	this.transactionManager = transactionManager;
-    }
+    }*/
 
     /**
      * Utility method to populate a javabean-style object with values from a
@@ -189,10 +215,12 @@ public abstract class AbstractTransactionalTestCase extends
      * http://issues.appfuse.org/browse/APF-178.
      */
     protected void flush() {
-	HibernateTemplate hibernateTemplate = new HibernateTemplate(
+	/*HibernateTemplate hibernateTemplate = new HibernateTemplate(
 		(SessionFactory) applicationContext.getBean("sessionFactory"));
 	hibernateTemplate.flush();
-	hibernateTemplate.clear();
+	hibernateTemplate.clear();*/
     }
+    
+   
 
 }

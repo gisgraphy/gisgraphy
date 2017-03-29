@@ -33,8 +33,6 @@ import java.util.List;
 
 import org.hibernate.FlushMode;
 import org.hibernate.exception.ConstraintViolationException;
-import org.junit.Assert;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -58,7 +56,6 @@ import com.gisgraphy.domain.valueobject.Pagination;
 import com.gisgraphy.fulltext.Constants;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.fulltext.FulltextQuery;
-import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
@@ -278,10 +275,13 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				} else { //osm feature
 					//we got a suburb and osm consider it as a city too, we keep both
 				}
+				// and create a citysubdivision
+				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
 				
 			}
-			// and create a citysubdivision
-			place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
+			else {
+				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
+			}
 			
 		} else {
 			logger.warn("'"+name+"'/'"+fields[1]+"' is not in datastore, we create a new one");

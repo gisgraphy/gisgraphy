@@ -256,19 +256,27 @@ public class AlternateOsmName {
 	if (getClass() != obj.getClass()) {
 	    return false;
 	}
+	
 	final AlternateOsmName other = (AlternateOsmName) obj;
-	if (street == null) {
-	    if (other.street != null) {
-		return false;
-	    }
-	} else if (!street.equals(other.street)) {
-	    return false;
+	if (id != null && other.id!=null){
+		if (other.id.equals(id)) {
+		return true;
+		} else {
+		return false;	
+		}
 	}
 	if (name == null) {
 	    if (other.name != null) {
 		return false;
 	    }
-	} else if (!name.equals(other.name)) {
+	} else if (!name.equalsIgnoreCase(other.name)) {
+	    return false;
+	}
+	if (language == null) {
+	    if (other.language != null) {
+		return false;
+	    }
+	} else if (!language.equalsIgnoreCase(other.language)) {
 	    return false;
 	}
 	return true;

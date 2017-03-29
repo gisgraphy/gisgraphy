@@ -25,6 +25,8 @@ package com.gisgraphy.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.gisgraphy.dao.LookupDao;
 import com.gisgraphy.model.LabelValue;
 import com.gisgraphy.model.Role;
@@ -38,6 +40,8 @@ import com.gisgraphy.service.LookupManager;
 @SuppressWarnings("unchecked")
 public class LookupManagerImpl extends UniversalManagerImpl implements
 	LookupManager {
+	
+	@Autowired
     private LookupDao dao;
 
     /**
@@ -58,8 +62,12 @@ public class LookupManagerImpl extends UniversalManagerImpl implements
 	List<Role> roles = dao.getRoles();
 	List<LabelValue> list = new ArrayList<LabelValue>();
 
-	for (Role role1 : roles) {
-	    list.add(new LabelValue(role1.getName(), role1.getName()));
+	if (roles != null){
+		for (Role role1 : roles) {
+			list.add(new LabelValue(role1.getName(), role1.getName()));
+		}
+	} else {
+		log.error("No roles found !");
 	}
 
 	return list;

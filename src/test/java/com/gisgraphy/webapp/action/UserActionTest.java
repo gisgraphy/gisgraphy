@@ -24,14 +24,19 @@ package com.gisgraphy.webapp.action;
 
 import org.apache.struts2.ServletActionContext;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.gisgraphy.model.User;
 import com.gisgraphy.service.UserManager;
 
+import static org.junit.Assert.*;
+
 public class UserActionTest extends BaseActionTestCase {
+	@Autowired
     private UserAction userAction;
 
+    @Autowired
     public void setUserAction(UserAction action) {
 	this.userAction = action;
     }
@@ -77,11 +82,13 @@ public class UserActionTest extends BaseActionTestCase {
 	assertNotNull(userAction.getUser());
 	assertFalse(userAction.hasActionErrors());
     }
+    
+    @Autowired
+    public UserManager userManager;
 
     @Test
     public void testSaveConflictingUser() throws Exception {
-	UserManager userManager = (UserManager) applicationContext
-		.getBean("userManager");
+	
 	User user = userManager.getUserByUsername("user");
 	user.setPassword("user");
 	user.setConfirmPassword("user");

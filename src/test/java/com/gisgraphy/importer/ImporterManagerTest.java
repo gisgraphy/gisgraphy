@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.easymock.EasyMock;
 import org.junit.Ignore;
@@ -2030,44 +2031,44 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	return returnMap;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesAdm1Importer(IImporterProcessor geonamesAdm1Importer) {
 	this.geonamesAdm1Importer = geonamesAdm1Importer;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesAdm2Importer(IImporterProcessor geonamesAdm2Importer) {
 	this.geonamesAdm2Importer = geonamesAdm2Importer;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesAdmExtracter(IImporterProcessor geonamesAdmExtracter) {
 	this.geonamesAdmExtracter = geonamesAdmExtracter;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesAdm3Importer(IImporterProcessor geonamesAdm3Importer) {
 	this.geonamesAdm3Importer = geonamesAdm3Importer;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesAdm4Importer(IImporterProcessor geonamesAdm4Importer) {
 	this.geonamesAdm4Importer = geonamesAdm4Importer;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesCountryImporter(
 	    IImporterProcessor geonamesCountryImporter) {
 	this.geonamesCountryImporter = geonamesCountryImporter;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesFeatureImporter(
 	    IImporterProcessor geonamesFeatureImporter) {
 	this.geonamesFeatureImporter = geonamesFeatureImporter;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesLanguageImporter(
 	    IImporterProcessor geonamesLanguageImporter) {
 	this.geonamesLanguageImporter = geonamesLanguageImporter;
@@ -2077,7 +2078,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param geonamesAlternateNamesImporter
      *                the geonamesAlternateNamesImporter to set
      */
-    @Required
+    @Autowired
     public void setGeonamesAlternateNamesImporter(
 	    IImporterProcessor geonamesAlternateNamesImporter) {
 	this.geonamesAlternateNamesImporter = geonamesAlternateNamesImporter;
@@ -2087,7 +2088,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param importerConfig
      *                the importerConfig to set
      */
-    @Required
+    @Autowired
     public void setImporterConfig(ImporterConfig importerConfig) {
 	this.importerConfig = importerConfig;
     }
@@ -2096,7 +2097,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param geonamesFileRetriever
      *                the geonamesFileRetriever to set
      */
-    @Required
+    @Autowired
     public void setGeonamesFileRetriever(
 	    IImporterProcessor geonamesFileRetriever) {
 	this.geonamesFileRetriever = geonamesFileRetriever;
@@ -2106,7 +2107,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param admDao
      *                the admDao to set
      */
-    @Required
+    @Autowired
     public void setAdmDao(IAdmDao admDao) {
 	this.admDao = admDao;
     }
@@ -2115,7 +2116,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param cityDao
      *                the cityDao to set
      */
-    @Required
+    @Autowired
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }
@@ -2124,7 +2125,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param gisFeatureDao
      *                the gisFeatureDao to set
      */
-    @Required
+    @Autowired
     public void setGisFeatureDao(IGisFeatureDao gisFeatureDao) {
 	this.gisFeatureDao = gisFeatureDao;
     }
@@ -2133,7 +2134,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param countryDao
      *                the countryDao to set
      */
-    @Required
+    @Autowired
     public void setCountryDao(ICountryDao countryDao) {
 	this.countryDao = countryDao;
     }
@@ -2142,22 +2143,22 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
      * @param languageDao
      *                the languageDao to set
      */
-    @Required
+    @Autowired
     public void setLanguageDao(ILanguageDao languageDao) {
 	this.languageDao = languageDao;
     }
 
-    @Required
+    @Autowired
     public void setAlternateNameDao(IAlternateNameDao alternateNameDao) {
 	this.alternateNameDao = alternateNameDao;
     }
 
-    @Required
+    @Autowired
     public void setGeonamesAlternateNamesExtracter(IImporterProcessor geonamesAlternateNamesExtracter) {
         this.geonamesAlternateNamesExtracter = geonamesAlternateNamesExtracter;
     }
 
-    @Required
+    @Autowired
 	public void setGeonamesAlternateNamesAdmImporter(IImporterProcessor geonamesAlternateNamesAdmImporter) {
 		this.geonamesAlternateNamesAdmImporter = geonamesAlternateNamesAdmImporter;
 	}

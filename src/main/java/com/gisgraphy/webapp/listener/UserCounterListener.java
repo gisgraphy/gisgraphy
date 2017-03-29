@@ -31,13 +31,12 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 
-import org.springframework.security.Authentication;
-import org.springframework.security.AuthenticationTrustResolver;
-import org.springframework.security.AuthenticationTrustResolverImpl;
-import org.springframework.security.context.HttpSessionContextIntegrationFilter;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.ui.webapp.AuthenticationProcessingFilter;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import com.gisgraphy.model.User;
 
@@ -64,7 +63,7 @@ public class UserCounterListener implements ServletContextListener,
     /**
      * The default event we're looking to trap.
      */
-    public static final String EVENT_KEY = HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY;
+    public static final String EVENT_KEY = HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
     private transient ServletContext servletContext;
 
@@ -162,7 +161,7 @@ public class UserCounterListener implements ServletContextListener,
 	} else if (event
 		.getName()
 		.equals(
-			AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY)) {
+				"SPRING_SECURITY_LAST_USERNAME")) {
 	    String username = (String) event.getValue();
 	    User user = new User(username);
 	    addUsername(user);

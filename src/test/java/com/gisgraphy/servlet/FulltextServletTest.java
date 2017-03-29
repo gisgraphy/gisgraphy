@@ -22,6 +22,10 @@
  *******************************************************************************/
 package com.gisgraphy.servlet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.ResourceBundle;
 
@@ -30,10 +34,10 @@ import net.sf.jstester.JsTester;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.testing.ServletTester;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.testing.ServletTester;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.valueobject.Constants;
@@ -180,7 +184,7 @@ public class FulltextServletTest extends AbstractIntegrationHttpSolrTestCase {
 	    
 	    //check content 
 	    Header contentType = get.getResponseHeader("Content-Type");
-		assertEquals("The content-type is not correct",OutputFormat.JSON.getContentType(),contentType.getValue()
+		assertTrue("The content-type is not correct",contentType.getValue().contains(OutputFormat.JSON.getContentType())
 			);
 
 	    // JsTester
@@ -227,7 +231,7 @@ public class FulltextServletTest extends AbstractIntegrationHttpSolrTestCase {
 		client.executeMethod(get);
 		// result = get.getResponseBodyAsString();
 
-		assertEquals("status code is not correct ",500,get.getStatusCode());
+		assertEquals("status code is not correct ",400,get.getStatusCode());
 
 	    } catch (IOException e) {
 		fail("An exception has occured " + e.getMessage());

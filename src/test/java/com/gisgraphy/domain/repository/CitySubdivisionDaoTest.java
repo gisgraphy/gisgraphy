@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
@@ -146,17 +147,17 @@ public class CitySubdivisionDaoTest extends AbstractIntegrationHttpSolrTestCase 
 	    }
 	
 	
-	@Required
+	@Autowired
 	public void setCitySubdivisionDao(ICitySubdivisionDao citySubdivisionDao) {
 		this.citySubdivisionDao = citySubdivisionDao;
 	}
 
-	@Required
+	@Autowired
 	public void setCityDao(ICityDao cityDao) {
 		this.cityDao = cityDao;
 	}
 
-	@Required
+	@Autowired
 	public void setAdmDao(IAdmDao admDao) {
 		this.admDao = admDao;
 	}

@@ -23,6 +23,7 @@
 package com.gisgraphy.webapp.listener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -33,14 +34,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.providers.AuthenticationProvider;
-import org.springframework.security.providers.ProviderManager;
-import org.springframework.security.providers.encoding.Md5PasswordEncoder;
-import org.springframework.security.providers.encoding.PasswordEncoder;
-import org.springframework.security.providers.rememberme.RememberMeAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.gisgraphy.Constants;
+import com.gisgraphy.model.LabelValue;
 import com.gisgraphy.service.LookupManager;
 
 /**
@@ -128,10 +128,23 @@ public class StartupListener implements ServletContextListener {
     public static void setupContext(ServletContext context) {
 	ApplicationContext ctx = WebApplicationContextUtils
 		.getRequiredWebApplicationContext(context);
+	if (ctx==null){
+		log.error("can not get ctx!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	}else {
+		log.error("CTX is not null");
+	}
+	
 	LookupManager mgr = (LookupManager) ctx.getBean("lookupManager");
 
+	if (mgr==null){
+		log.error("can not get mgr!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	} else {
+		log.error("MGR is not null");
+	}
+	
 	// get list of possible roles
-	context.setAttribute(Constants.AVAILABLE_ROLES, mgr.getAllRoles());
+	List<LabelValue> allRoles = mgr.getAllRoles();
+	context.setAttribute(Constants.AVAILABLE_ROLES, allRoles);
 	log.debug("Drop-down initialization complete [OK]");
     }
 

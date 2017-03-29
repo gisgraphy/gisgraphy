@@ -28,10 +28,12 @@ import java.util.Random;
 import java.util.Set;
 
 import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.reflections.Reflections;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.domain.repository.ICityDao;
@@ -71,7 +73,7 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
 	alternateNames.add(a1);
 	alternateNames.add(a2);
 	gisFeature.addAlternateNames(alternateNames);
-	assertEquals("The long alternateName should not be added",4, gisFeature.getAlternateNames().size());
+	Assert.assertEquals("The long alternateName should not be added",4, gisFeature.getAlternateNames().size());
     }
     
     @Test
@@ -335,12 +337,12 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
     	g.setAdmName(6, "adm6name");
     	g.setAdmName(0, "adm0name");
     }
-    @Required
+    @Autowired
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }
 
-    @Required
+    @Autowired
     public void setCountryDao(ICountryDao countryDao) {
 	this.countryDao = countryDao;
     }

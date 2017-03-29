@@ -25,10 +25,13 @@ package com.gisgraphy.domain.repository;
 import java.util.List;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
 import com.gisgraphy.test.GisgraphyTestHelper;
+
+import static org.junit.Assert.*;
 
 public class GenericDaoTest extends AbstractIntegrationHttpSolrTestCase {
 
@@ -55,6 +58,7 @@ public class GenericDaoTest extends AbstractIntegrationHttpSolrTestCase {
 
     }
 
+    @Autowired
     public void setAdmDao(IAdmDao admDao) {
 	this.admDao = admDao;
     }

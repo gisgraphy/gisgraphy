@@ -22,7 +22,9 @@
  *******************************************************************************/
 package com.gisgraphy.dao;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataAccessException;
 
@@ -37,12 +39,12 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
 
     private RoleDao rdao = null;
 
-    @Required
+    @Autowired
     public void setUserDao(UserDao dao) {
 	this.dao = dao;
     }
 
-    @Required
+    @Autowired
     public void setRoleDao(RoleDao rdao) {
 	this.rdao = rdao;
     }
@@ -51,9 +53,9 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
     public void testGetUserInvalid() throws Exception {
 	try {
 	    dao.get(1000L);
-	    fail("'badusername' found in database, failing test...");
+	    Assert.fail("'badusername' found in database, failing test...");
 	} catch (DataAccessException d) {
-	    assertTrue(d != null);
+		Assert.assertTrue(d != null);
 	}
     }
 
@@ -61,9 +63,9 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
     public void testGetUser() throws Exception {
 	User user = dao.get(-1L);
 
-	assertNotNull(user);
-	assertEquals(1, user.getRoles().size());
-	assertTrue(user.isEnabled());
+	Assert.assertNotNull(user);
+	Assert.assertEquals(1, user.getRoles().size());
+	Assert.assertTrue(user.isEnabled());
     }
 
     @Test
@@ -77,8 +79,8 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
 	flush();
 
 	user = dao.get(-1L);
-	assertEquals(address, user.getAddress());
-	assertEquals("new address", user.getAddress().getAddress());
+	Assert.assertEquals(address, user.getAddress());
+	Assert.assertEquals("new address", user.getAddress().getAddress());
 
 	try {
 	    // verify that violation occurs when adding new user with same
@@ -86,9 +88,9 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
 	    user.setId(null);
 	    dao.saveUser(user);
 	    flush();
-	    fail("saveUser didn't throw DataIntegrityViolationException");
+	    Assert.fail("saveUser didn't throw DataIntegrityViolationException");
 	} catch (Exception e) {
-	    assertNotNull(e);
+		Assert.assertNotNull(e);
 	    log.debug("expected exception: " + e.getMessage());
 	}
     }
@@ -96,7 +98,7 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
     @Test
     public void testAddUserRole() throws Exception {
 	User user = dao.get(-1L);
-	assertEquals(1, user.getRoles().size());
+	Assert.assertEquals(1, user.getRoles().size());
 
 	Role role = rdao.getRoleByName(Constants.ADMIN_ROLE);
 	user.addRole(role);
@@ -104,7 +106,7 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
 	flush();
 
 	user = dao.get(-1L);
-	assertEquals(2, user.getRoles().size());
+	Assert.assertEquals(2, user.getRoles().size());
 
 	// add the same role twice - should result in no additional role
 	user.addRole(role);
@@ -112,14 +114,14 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
 	flush();
 
 	user = dao.get(-1L);
-	assertEquals("more than 2 roles", 2, user.getRoles().size());
+	Assert.assertEquals("more than 2 roles", 2, user.getRoles().size());
 
 	user.getRoles().remove(role);
 	dao.saveUser(user);
 	flush();
 
 	user = dao.get(-1L);
-	assertEquals(1, user.getRoles().size());
+	Assert.assertEquals(1, user.getRoles().size());
     }
 
     @Test
@@ -138,36 +140,36 @@ public class UserDaoTest extends AbstractTransactionalTestCase {
 	user.setWebsite("http://raibledesigns.com");
 
 	Role role = rdao.getRoleByName(Constants.USER_ROLE);
-	assertNotNull(role.getId());
+	Assert.assertNotNull(role.getId());
 	user.addRole(role);
 
 	user = dao.saveUser(user);
 	flush();
 
-	assertNotNull(user.getId());
+	Assert.assertNotNull(user.getId());
 	user = dao.get(user.getId());
-	assertEquals("testpass", user.getPassword());
+	Assert.assertEquals("testpass", user.getPassword());
 
 	dao.remove(user.getId());
 	flush();
 
 	try {
 	    dao.get(user.getId());
-	    fail("getUser didn't throw DataAccessException");
+	    Assert.fail("getUser didn't throw DataAccessException");
 	} catch (DataAccessException d) {
-	    assertNotNull(d);
+		Assert. assertNotNull(d);
 	}
     }
 
     @Test
     public void testUserExists() throws Exception {
 	boolean b = dao.exists(-1L);
-	super.assertTrue(b);
+	Assert.assertTrue(b);
     }
 
     @Test
     public void testUserNotExists() throws Exception {
 	boolean b = dao.exists(111L);
-	super.assertFalse(b);
+	Assert.assertFalse(b);
     }
 }

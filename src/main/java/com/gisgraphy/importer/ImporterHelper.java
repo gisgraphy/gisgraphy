@@ -39,8 +39,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -736,56 +738,82 @@ public class ImporterHelper {
 			String alternateName = matcher.group(3);
 			if (alternateName!= null && !"".equals(alternateName.trim())){
 					String[] alternateNames = alternateName.split(";|\\||,|:");
-					boolean german = false;
+					/*boolean german = false;
 					if (street.getName()!=null ){
 			    		german = decompounder.getSate(street.getName())!=state.NOT_APPLICABLE;
-			    	}
+			    	}*/
 					
 					//check for duplicates 
 					if (street.getAlternateNames()!=null){
 						int counter=0;
 						String[] alternateNamesWODuplicates;
-						if (german){
-						 alternateNamesWODuplicates = new String[alternateNames.length+1];
-						} else {
+						//if (german){
+						 alternateNamesWODuplicates = new String[(alternateNames.length)];
+						/*} else {
 							 alternateNamesWODuplicates = new String[alternateNames.length];
-						}
+						}*/
 							toCheckNames :
-								for (String name:alternateNames){
-								currentNames :
-									for (AlternateOsmName an :street.getAlternateNames()){
-									if (an !=null && an.getName()!= null && an.getName().equals(name) && lang !=null && an.getLanguage()!= null && an.getLanguage().equals(lang)){
-										continue currentNames;
-									} else {
-										alternateNamesWODuplicates[counter]=name;
-										counter++;
-										continue toCheckNames;
-									}
-							}
-						}
-						if (german){
-							alternateNamesWODuplicates[alternateNames.length]=decompounder.getOtherFormat(street.getName());
-						}
+								for (String name:alternateNames){//check if actual an already contains the ones wa are to add
+									currentNames :
+										for (AlternateOsmName an :street.getAlternateNames()){
+											if (an !=null && an.getName()!= null && an.getName().equals(name) && lang !=null && an.getLanguage()!= null && an.getLanguage().equals(lang)){
+												continue currentNames;
+											} else {
+												alternateNamesWODuplicates[counter]=name;
+												counter++;
+												continue toCheckNames;
+											}
+										}
+								}
+						
 						alternateNames = alternateNamesWODuplicates;
+						alternateNames = new HashSet<String>(Arrays.asList(alternateNames)).toArray(new String[0]);
 					}
-					//only for street,  streets are Common Name but city are Proper name 
-			    	
 										
 					for (String name:alternateNames){
+						AlternateOsmName alternateNameToAdd;
 						if (name!=null  && !"".equals(name) && name.length()<OpenStreetMap.MAX_ALTERNATENAME_SIZE){
 							if (street.getName()==null){
 								street.setName(name);
+								if (lang.equals("de") && decompounder.getSate(name)!=state.NOT_APPLICABLE){
+									String otherFormat = decompounder.getOtherFormat(name);
+									alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+									if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
+										street.addAlternateName(alternateNameToAdd);
+									}
+								}
 								continue;
 							} 
 							if (lang!=null &&  !"".equals(lang.trim()) && lang.length()<29){
-								street.addAlternateName(new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP));
+								alternateNameToAdd = new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+								if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
+									street.addAlternateName(alternateNameToAdd);
+								}
+									if (lang.equals("de") && decompounder.getSate(name)!=state.NOT_APPLICABLE){
+										String otherFormat = decompounder.getOtherFormat(name);
+										alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+										if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
+											street.addAlternateName(alternateNameToAdd);
+										}
+									}
 							} else {
-								street.addAlternateName(new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP));
+								alternateNameToAdd = new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP);
+								if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
+									street.addAlternateName(alternateNameToAdd);
+								}
 							}
 						}
 					}
-			}
+				
+					
+			}	
 		}
+		if (street.getName()!=null && street.getCountryCode()!=null && street.getCountryCode().equals("DE") && decompounder.getSate(street.getName())!=state.NOT_APPLICABLE){
+						AlternateOsmName alternateNameOtherFormat = new AlternateOsmName(decompounder.getOtherFormat(street.getName()),"DE",AlternateNameSource.OPENSTREETMAP);
+						if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameOtherFormat)){
+							street.addAlternateName(alternateNameOtherFormat);
+						}
+			    	}
 		return street;
 		
 	}

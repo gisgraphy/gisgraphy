@@ -22,11 +22,17 @@
  *******************************************************************************/
 package com.gisgraphy.domain.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.Language;
@@ -320,12 +326,12 @@ public class CountryDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	assertEquals(0, countryDao.deleteAll());
     }
 
-    @Required
+    @Autowired
     public void setCountryDao(ICountryDao countryDao) {
 	this.countryDao = countryDao;
     }
 
-    @Required
+    @Autowired
     public void setLanguageDao(ILanguageDao languageDao) {
 	this.languageDao = languageDao;
     }

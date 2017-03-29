@@ -710,7 +710,7 @@ public class FulltextQuerySolrHelperTest {
 				parameters.get(Constants.FILTER_QUERY_PARAMETER).get(0));
 
 		assertEquals("wrong nested parameter found", String.format(
-				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, "", "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION, "foo"),
+				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION, "foo"),
 				parameters.get(Constants.QUERY_PARAMETER).get(0));
 
 		assertNotNull("spellchecker query should be set ",
@@ -751,7 +751,7 @@ public class FulltextQuerySolrHelperTest {
 				Constants.SolrQueryType.advanced.toString(),
 				parameters.get(Constants.QT_PARAMETER).get(0));
 		assertEquals("wrong nested parameter found", String.format(
-				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, "", "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION,
+				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION,
 				searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
 		assertEquals("wrong filter query parameter for placetype",
 				"placetype:(Adm)",
@@ -797,7 +797,7 @@ public class FulltextQuerySolrHelperTest {
 				Constants.SolrQueryType.advanced.toString(),
 				parameters.get(Constants.QT_PARAMETER).get(0));
 		assertEquals("wrong nested parameter found ",
-				String.format(NESTED_QUERY_TEMPLATE, "", "",FulltextQuerySolrHelper.MM_ALL_WORD_REQUIRED, BF_POPULATION,searchTerm),
+				String.format(NESTED_QUERY_TEMPLATE, FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",FulltextQuerySolrHelper.MM_ALL_WORD_REQUIRED, BF_POPULATION,searchTerm),
 				parameters.get(Constants.QUERY_PARAMETER).get(0));
 
 		assertEquals("wrong filter query parameter for placetype",
@@ -847,7 +847,7 @@ public class FulltextQuerySolrHelperTest {
 				Constants.SolrQueryType.advanced.toString(),
 				parameters.get(Constants.QT_PARAMETER).get(0));
 		assertEquals("wrong query parameter found ", String.format(
-				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, "", "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION,
+				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION,
 				searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
 		assertEquals("wrong filter query parameter for placetype",
 				"placetype:(Adm)",
@@ -897,7 +897,7 @@ public class FulltextQuerySolrHelperTest {
 				Constants.SolrQueryType.advanced.toString(),
 				parameters.get(Constants.QT_PARAMETER).get(0));
 		assertEquals("wrong query parameter found ", String.format(
-				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, "", "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION,
+				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_POPULATION,
 				searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
 		assertEquals("wrong filter query parameter for placetype",
 				"placetype:(Adm)",
@@ -1025,7 +1025,7 @@ public class FulltextQuerySolrHelperTest {
 				parameters.get(Constants.QT_PARAMETER).get(0));
 		System.out.println(String.format(
 										NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,
-										"", "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm));
+										FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm));
 		assertTrue(
 				"wrong query parameter found (no search term part) actual : "
 						+ parameters.get(Constants.QUERY_PARAMETER).get(0),
@@ -1035,11 +1035,11 @@ public class FulltextQuerySolrHelperTest {
 						.contains(
 								String.format(
 										NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,
-										"", "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm)));
+										FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm)));
 
 		assertEquals("wrong query parameter found, if location is given, the nearest will be boost",String.format(
 				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,
-				"", "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
+				FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
 
 		assertEquals("wrong filter query parameter for placetype",
 				"placetype:(Adm)",
@@ -1107,11 +1107,11 @@ public class FulltextQuerySolrHelperTest {
 						.contains(
 								String.format(
 										NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,
-										"", "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm)));
+										FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm)));
 
 		assertEquals("wrong query parameter found, if location is given, the nearest will be boost",String.format(
 				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,
-				"", "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
+				FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
 
 		assertEquals("wrong filter query parameter for placetype",
 				"placetype:(Adm)",
@@ -1177,10 +1177,10 @@ public class FulltextQuerySolrHelperTest {
 						.contains(
 								String.format(
 										NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,
-										"", "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST, searchTerm)));
+										FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST, searchTerm)));
 
 		assertEquals("wrong query parameter found, if location is given, the nearest will be boost", String.format(
-				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, "", "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,
+				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,
 				searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
 
 		assertEquals("wrong filter query parameter for countrycode",
@@ -1242,10 +1242,10 @@ public class FulltextQuerySolrHelperTest {
 						.contains(
 								String.format(
 										NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,
-										"","",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,  searchTerm)));
+										FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME,"",FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,  searchTerm)));
 
 		assertEquals("wrong query parameter found, if location is given, the nearest will be boost", String.format(
-				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE, "", "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,
+				NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE,FulltextQuerySolrHelper.ALL_ADM1_NAME_ALL_ADM2_NAME, "",MM_NOT_ALL_WORD_REQUIRED,BF_NEAREST,
 				searchTerm), parameters.get(Constants.QUERY_PARAMETER).get(0));
 
 		assertEquals("wrong filter query parameter for geoloc",

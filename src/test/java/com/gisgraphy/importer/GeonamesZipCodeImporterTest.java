@@ -86,6 +86,7 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.expect(dtoThreeLowScore.getLat()).andStubReturn(34D);
 	EasyMock.expect(dtoThreeLowScore.getLng()).andStubReturn(5D);
 	EasyMock.expect(dtoThreeLowScore.getName()).andStubReturn("name");
+	EasyMock.expect(dtoThreeLowScore.getName_alternates()).andStubReturn(new ArrayList<String>());
 	EasyMock.expect(dtoThreeLowScore.getScore()).andStubReturn(FulltextQuerySolrHelper.MIN_SCORE-5);
 	EasyMock.replay(dtoThreeLowScore);
 	
@@ -94,6 +95,7 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.expect(dtoFoorLowScore.getLat()).andStubReturn(34D);
 	EasyMock.expect(dtoFoorLowScore.getLng()).andStubReturn(5D);
 	EasyMock.expect(dtoFoorLowScore.getName()).andStubReturn("name");
+	EasyMock.expect(dtoFoorLowScore.getName_alternates()).andStubReturn(new ArrayList<String>());
 	EasyMock.expect(dtoFoorLowScore.getScore()).andStubReturn(FulltextQuerySolrHelper.MIN_SCORE-5);
 	EasyMock.replay(dtoFoorLowScore);
 	

@@ -22,6 +22,9 @@
  *******************************************************************************/
 package com.gisgraphy.hibernate.projection;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -155,10 +159,12 @@ public class ProjectionBeanTest extends AbstractIntegrationHttpSolrTestCase {
 	assertEquals(1L, cities.get(0)[0]);
     }
 
+    @Autowired
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }
 
+    @Autowired
     public void setTestDao(_DaoHelper testDao) {
 	this.testDao = testDao;
     }

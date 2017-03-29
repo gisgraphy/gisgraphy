@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.*;
+
 import javax.annotation.Resource;
 
 import junit.framework.Assert;
@@ -43,6 +45,7 @@ import junit.framework.Assert;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.easymock.EasyMock;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
@@ -1721,10 +1724,12 @@ public class FulltextSearchEngineTest extends
 	// duplicate tests
     }
 
+    @Autowired
     public void setCityDao(ICityDao cityDao) {
 	this.cityDao = cityDao;
     }
 
+    @Autowired
 	public void setAdmDao(IAdmDao admDao) {
 		this.admDao = admDao;
 	}

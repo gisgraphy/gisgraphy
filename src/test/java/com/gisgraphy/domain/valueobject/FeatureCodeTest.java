@@ -27,6 +27,7 @@ package com.gisgraphy.domain.valueobject;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import static org.junit.Assert.*;
 
 import javax.annotation.Resource;
 

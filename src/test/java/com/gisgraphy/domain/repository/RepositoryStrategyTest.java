@@ -31,6 +31,7 @@ import org.junit.Test;
 
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import static org.junit.Assert.*;
 
 
 public class RepositoryStrategyTest extends AbstractTransactionalTestCase {

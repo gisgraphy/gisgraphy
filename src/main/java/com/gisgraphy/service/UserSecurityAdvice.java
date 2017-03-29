@@ -23,23 +23,24 @@
 package com.gisgraphy.service;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.security.AccessDeniedException;
-import org.springframework.security.Authentication;
-import org.springframework.security.AuthenticationTrustResolver;
-import org.springframework.security.AuthenticationTrustResolverImpl;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.userdetails.UserDetails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gisgraphy.Constants;
 import com.gisgraphy.model.Role;
@@ -80,7 +81,7 @@ public class UserSecurityAdvice implements MethodBeforeAdvice,
 	if (ctx.getAuthentication() != null) {
 	    Authentication auth = ctx.getAuthentication();
 	    boolean administrator = false;
-	    GrantedAuthority[] roles = auth.getAuthorities();
+	    Collection<? extends GrantedAuthority> roles = auth.getAuthorities();
 	    for (GrantedAuthority role1 : roles) {
 		if (role1.getAuthority().equals(Constants.ADMIN_ROLE)) {
 		    administrator = true;

@@ -29,6 +29,7 @@ import org.junit.Test;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.stats.StatsUsage;
 import com.gisgraphy.stats.StatsUsageType;
+import static org.junit.Assert.*;
 
 public class StatsUsageDaoTest extends AbstractTransactionalTestCase {
 

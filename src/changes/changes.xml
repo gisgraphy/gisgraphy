@@ -937,6 +937,22 @@
 				the address in geocoding returns the Openstreetmap or Geonames id in the id field
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				return http 400 when parameters are missing
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				update to Spring 4 and hibernate 3.6.6 to be compatible with java 8
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				migrate all test to junit4
+			</action>
+			
+			<action dev="David Masclet" type="update">
+				now, Alternatenames contains alos localized alternatenames
+			</action>
+			
 			</release>
 			
 	</body>

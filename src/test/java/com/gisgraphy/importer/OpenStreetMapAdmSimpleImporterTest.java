@@ -7,7 +7,7 @@ import net.sf.jstester.util.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.Adm;
@@ -183,14 +183,14 @@ LabelGenerator generator = LabelGenerator.getInstance();
 
 	}
 
-	@Required
+	@Autowired
 	public void setOpenStreetMapAdmSimpleImporter(
 			OpenStreetMapAdmSimpleImporter openStreetMapAdmSimpleImporter) {
 		this.openStreetMapAdmSimpleImporter = openStreetMapAdmSimpleImporter;
 	}
 
 
-	@Required
+	@Autowired
 	public void setAdmDao(IAdmDao admDao) {
 		this.admDao = admDao;
 	}

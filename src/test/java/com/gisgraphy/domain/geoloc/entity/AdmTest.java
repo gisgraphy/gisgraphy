@@ -41,13 +41,13 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 		Assert.assertEquals(2, adm.getLevel().intValue());
 		try {
 			adm= new Adm(0);
-			fail("0 is not an accepted level for adm");
+			Assert.fail("0 is not an accepted level for adm");
 		} catch (Exception e) {
 		}
 		
 		try {
 			adm= new Adm(6);
-			fail("6 is not an accepted level for adm");
+			Assert.fail("6 is not an accepted level for adm");
 		} catch (Exception e) {
 		}
 	}
@@ -73,12 +73,12 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 	adms.add(admChildren3);
 	// add a child
 	adm.addChild(admChildren);
-	assertEquals(1, adm.getChildren().size());
+	Assert.assertEquals(1, adm.getChildren().size());
 
 	// add some children
 	adm.addChildren(adms);
 	// check that children has benn added and not replace
-	assertEquals(3, adm.getChildren().size());
+	Assert.assertEquals(3, adm.getChildren().size());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 	adm.addChildren(adms);
 	// check that children has been added and not replace
 	for (Adm child : adm.getChildren()) {
-	    assertEquals(adm, child.getParent());
+		Assert.assertEquals(adm, child.getParent());
 	}
     }
 
@@ -120,7 +120,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 	// add some children
 	try {
 	    adm.addChildren(adms);
-	    fail("Adding children with a lower Level should throws an IllegalArgumentException");
+	    Assert.fail("Adding children with a lower Level should throws an IllegalArgumentException");
 	} catch (IllegalArgumentException e) {
 	}
 
@@ -141,7 +141,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 	// add some children
 	try {
 	    adm.addChildren(adms);
-	    fail("Adding a children with same Level should throws an IllegalArgumentException");
+	    Assert.fail("Adding a children with same Level should throws an IllegalArgumentException");
 	} catch (IllegalArgumentException e) {
 	}
 
@@ -162,7 +162,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 	try {
 	    adm.addChildren(null);
 	} catch (IllegalArgumentException e) {
-	    fail("Adding a null children List should not throw");
+		Assert.fail("Adding a null children List should not throw");
 	}
 
     }
@@ -180,7 +180,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 
 	try {
 	    adm.addChild(admChildren);
-	    fail("Adding a child with lower Level should throws an IllegalArgumentException");
+	    Assert.fail("Adding a child with lower Level should throws an IllegalArgumentException");
 	} catch (IllegalArgumentException e) {
 	}
 
@@ -194,7 +194,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 
 	try {
 	    adm.addChild(null);
-	    fail("Adding a null child should throws an IllegalArgumentException");
+	    Assert.fail("Adding a null child should throws an IllegalArgumentException");
 	} catch (IllegalArgumentException e) {
 	}
 
@@ -212,7 +212,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 
 	try {
 	    adm.addChild(admChildren);
-	    fail("Adding a child with same Level should throws an IllegalArgumentException");
+	    Assert.fail("Adding a child with same Level should throws an IllegalArgumentException");
 	} catch (IllegalArgumentException e) {
 	}
 
@@ -224,7 +224,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 	try {
 	    GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3", "D4",
 		    null, null,6);
-	    fail("An adm should not have a level > 5");
+	    Assert.fail("An adm should not have a level > 5");
 	} catch (IllegalArgumentException e) {
 	}
     }
@@ -234,7 +234,7 @@ public class AdmTest extends AbstractIntegrationHttpSolrTestCase {
 	try {
 	    GisgraphyTestHelper.createAdm("adm", "FR", "A1", "B2", "C3", "D4",
 		    null,null, 0);
-	    fail("An adm should not have a level < 1");
+	    Assert.fail("An adm should not have a level < 1");
 	} catch (IllegalArgumentException e) {
 	}
     }

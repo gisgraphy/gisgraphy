@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
@@ -164,10 +165,11 @@ public class ZipCodeDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	}
 	
 
+	@Autowired
 	public void setZipCodeDao(IZipCodeDao zipCodeDao) {
 		this.zipCodeDao = zipCodeDao;
 	}
-
+	@Autowired
 	public void setGisFeatureDao(GisFeatureDao gisFeatureDao) {
 		this.gisFeatureDao = gisFeatureDao;
 	}
