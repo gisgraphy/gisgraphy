@@ -595,7 +595,6 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
     @Override
     protected void setup() {
     	super.setup();
-    	cityDao.createGISTIndexForShapeColumn();
     	FullTextSearchEngine.disableLogging=true;
     	IdGenerator.sync();
     }

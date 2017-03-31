@@ -556,6 +556,27 @@ public class ImporterHelper {
 	return fields;
 
     }
+    
+    public static void callURL(String address){
+    	if (address == null || address.trim().equals("")){
+    		logger.error("can not call a null URL");
+    		return;
+    	}
+    	HttpURLConnection conn = null;
+    	 try {
+			URL url = new URL(address);
+			conn = (HttpURLConnection) url.openConnection();
+			if (conn instanceof HttpURLConnection) {
+				conn.setRequestProperty("User-Agent", "gisgraphy_");
+			((HttpURLConnection) conn).setInstanceFollowRedirects(false);
+			}
+				
+			((HttpURLConnection) conn).getResponseCode();
+		} catch (Exception e) {
+			logger.error("error when calling "+address+" "+e.getMessage(),e);
+		}
+ 		
+    }
 
     public static String[] correctLastAdmCodeIfPossible(String[] fields) {
 	if (FeatureClassCodeHelper.is_Adm(fields[6], fields[7]) && !AbstractSimpleImporterProcessor.isEmptyField(fields, 0, false)) {
@@ -744,14 +765,14 @@ public class ImporterHelper {
 			    	}*/
 					
 					//check for duplicates 
-					if (street.getAlternateNames()!=null){
+					/*if (street.getAlternateNames()!=null){
 						int counter=0;
 						String[] alternateNamesWODuplicates;
 						//if (german){
 						 alternateNamesWODuplicates = new String[(alternateNames.length)];
-						/*} else {
+						} else {
 							 alternateNamesWODuplicates = new String[alternateNames.length];
-						}*/
+						}
 							toCheckNames :
 								for (String name:alternateNames){//check if actual an already contains the ones wa are to add
 									currentNames :
@@ -768,7 +789,7 @@ public class ImporterHelper {
 						
 						alternateNames = alternateNamesWODuplicates;
 						alternateNames = new HashSet<String>(Arrays.asList(alternateNames)).toArray(new String[0]);
-					}
+					}*/
 										
 					for (String name:alternateNames){
 						AlternateOsmName alternateNameToAdd;

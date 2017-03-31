@@ -23,6 +23,12 @@
 package com.gisgraphy.fulltext;
 
 import static com.gisgraphy.domain.valueobject.Pagination.paginate;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,14 +42,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-
 import javax.annotation.Resource;
-
-import junit.framework.Assert;
 
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -1475,7 +1478,7 @@ public class FulltextSearchEngineTest extends
 	    Assert.assertEquals("The results are not correct", street.getName(),
 		    results.getResults().get(0).getName());
 	    Assert.assertEquals("The length is not correct", length,
-		    results.getResults().get(0).getLength());
+		    results.getResults().get(0).getLength(),0.01);
 	    Assert.assertEquals("The one_way is not correct", true,
 		    results.getResults().get(0).getOne_way().booleanValue());
 	    Assert.assertEquals("The street type is not correct", streetType.toString(),
@@ -1686,7 +1689,7 @@ public class FulltextSearchEngineTest extends
 	    Assert
 		    .assertEquals(
 			    "maxScore should  be equals to 0 when no results are found ",
-			    0F, results.getMaxScore());
+			    0F, results.getMaxScore(),0.001);
 	    Assert.assertEquals(
 		    "The results should not be null, bt an empty List", 0,
 		    results.getResults().size());

@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeanUtils;
@@ -165,6 +166,11 @@ extends AbstractJUnit4SpringContextTests{
     public void onTearDown() throws Exception {
 	endTransaction();
     }
+   
+   @AfterClass
+   public static void onTestsEnd() throws Exception{
+	   
+   }
 
     /**
      * @throws Exception

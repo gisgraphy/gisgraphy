@@ -272,7 +272,8 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
     /* (non-Javadoc)
      * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#createGISTIndex()
      */
-    public void createSpatialIndexes() {
+    @SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
+	public void createSpatialIndexes() {
 	 this.getHibernateTemplate().execute(
 			 new HibernateCallback() {
 

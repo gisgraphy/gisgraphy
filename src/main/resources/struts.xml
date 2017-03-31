@@ -229,6 +229,13 @@
             <result name="wait" type="freemarker">/WEB-INF/views/wait.ftl</result>
             <result name="success" type="freemarker">/WEB-INF/views/importSuccess.ftl</result>
              <result name="error"  type="freemarker">/WEB-INF/views/importError.ftl</result>
+              <result name="hook"  type="freemarker">/WEB-INF/views/hook.ftl</result>
+        </action>
+
+	<action name="hook" class="com.gisgraphy.webapp.action.HookAction">
+         <interceptor-ref name="adminCheck"/>
+            	<result name="success" type="freemarker">/WEB-INF/views/hook.ftl</result>
+              <result name="hookajax"  type="freemarker">/WEB-INF/views/hookajax.ftl</result>
         </action>
         
         <action name="importstatus" class="com.gisgraphy.webapp.action.ImportAction">

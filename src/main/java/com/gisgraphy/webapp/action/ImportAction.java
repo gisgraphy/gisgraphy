@@ -53,10 +53,38 @@ public class ImportAction extends ActionSupport {
 
     public static String WAIT = "wait";
     
+    public static String HOOK = "hook";
+    
     private String errorMessage ="";
     
+    private String hookURL;
+    
+    
+    
 
-    private IImporterManager importerManager;
+    /**
+	 * @return the hookURL
+	 */
+	public String getImporterManagerHookURL() {
+		if (importerManager.getHookURL()!=null){
+			return importerManager.getHookURL();
+		} else {
+			return "not set";
+		}
+	}
+
+	
+	/**
+	 * @param hookURL the hookURL to set
+	 */
+	public void setHookURL(String hookURL) {
+		if (hookURL!=null){
+    		this.importerManager.setHookURL(hookURL);
+    	}
+	}
+
+
+	private IImporterManager importerManager;
     
     public String getImportFormatedTimeElapsed(){
 	return importerManager.getFormatedTimeElapsed();
@@ -70,6 +98,8 @@ public class ImportAction extends ActionSupport {
     public boolean isImportAlreadyDone() throws ImporterMetaDataException{
 	return importerManager.isAlreadyDone();
     }
+    
+    
 
     /**
      * Run import if not in progress or already done, otherwise return Wait view
@@ -110,6 +140,12 @@ public class ImportAction extends ActionSupport {
 	}
 	ImportAction.logger.debug("do status");
 	return WAIT;
+    }
+    
+    
+    public String definehookurl(){
+       	return HOOK;
+    	
     }
 
     /*

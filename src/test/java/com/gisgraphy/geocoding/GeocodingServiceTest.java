@@ -1562,7 +1562,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
 	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
 	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+	Assert.assertEquals("formated full is not correct", street.getFully_qualified_name(), address.getFormatedFull());
 	
 	Assert.assertNotNull(address.getAdm1Name());
 	Assert.assertEquals("adm1Name is not correct", street.getAdm1_name(), address.getAdm1Name());
@@ -1576,6 +1576,59 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("adm5Name is not correct", street.getAdm5_name(), address.getAdm5Name());
 	
     }
+    
+    
+    
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	streets.add(street);
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	streets.add(street2);
+	
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
+	Address address = addressResultsDto.getResult().get(0);
+	
+	
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_and_more_street() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	streets.add(street);
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	streets.add(street2);
+	SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in2");
+	streets.add(street3);
+	
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(2, addressResultsDto.getResult().size());
+	Address address = addressResultsDto.getResult().get(0);
+	
+	
+    }
+    
+    
     
     @Test
     public void buildAddressResultDtoFromSolrResponseDto_street_houseNumber() {
@@ -1673,7 +1726,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("Adm Name should be the lower one", city.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
 	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+	Assert.assertEquals("formated full is not correct", city.getFully_qualified_name(), address.getFormatedFull());
     }
     
     @Test
@@ -1704,7 +1757,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("Adm Name should be the lower one", citySubdivision.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", citySubdivision.getCountry_code(), address.getCountryCode());
 	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
-	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+	Assert.assertEquals("formated full is not correct", citySubdivision.getFully_qualified_name(), address.getFormatedFull());
     }
     
     @Test
@@ -1734,7 +1787,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("countrycode is not correct", adm.getCountry_code(), address.getCountryCode());
     	
     	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
-    	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+    	Assert.assertEquals("formated full is not correct", adm.getFully_qualified_name(), address.getFormatedFull());
     }
     
     @Test
@@ -1763,7 +1816,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("Adm Name should be the lower one", feature.getAdm1_name(), address.getState());
     	Assert.assertEquals("countrycode is not correct", feature.getCountry_code(), address.getCountryCode());
     	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
-    	Assert.assertEquals("formated full is not correct", labelGenerator.getFullyQualifiedName(address), address.getFormatedFull());
+    	Assert.assertEquals("formated full is not correct", feature.getFully_qualified_name(), address.getFormatedFull());
     }
 
    

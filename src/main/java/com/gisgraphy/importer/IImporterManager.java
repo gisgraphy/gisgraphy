@@ -87,5 +87,9 @@ public interface IImporterManager {
      * @return a list of DTO for each importers
      */
     public List<ImporterStatusDto> getStatusDtoList();
+    
+    public String getHookURL() ;
+    
+    public void setHookURL(String hookURL) ;
 
 }

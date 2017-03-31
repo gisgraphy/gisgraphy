@@ -1006,6 +1006,7 @@ public class GisgraphyTestHelper {
      	EasyMock.expect(city.getOpenstreetmap_id()).andStubReturn(888888L);
     	EasyMock.expect(city.getCountry_code()).andStubReturn("XX");
     	EasyMock.expect(city.getIs_in()).andStubReturn(null);
+    	EasyMock.expect(city.getFully_qualified_name()).andStubReturn("fqdn");
     	Set<String> zipcodes = new HashSet<String>();
     	zipcodes.add("zip1");
     	EasyMock.expect(city.getZipcodes()).andStubReturn(zipcodes);
@@ -1031,6 +1032,8 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(citySubdivision.getStreet_type()).andStubReturn(null);
     	EasyMock.expect(citySubdivision.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(citySubdivision.getLng()).andStubReturn(2.36D);
+    	EasyMock.expect(citySubdivision.getFully_qualified_name()).andStubReturn("FQDN");
+    	
     	
     	EasyMock.expect(citySubdivision.getLat_admin_centre()).andStubReturn(1.6D);
     	EasyMock.expect(citySubdivision.getLng_admin_centre()).andStubReturn(2.4D);
@@ -1057,6 +1060,7 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(adm.getStreet_type()).andStubReturn(null);
     	EasyMock.expect(adm.getLat()).andStubReturn(1.55D);
     	EasyMock.expect(adm.getLng()).andStubReturn(2.36D);
+    	EasyMock.expect(adm.getFully_qualified_name()).andStubReturn("fqdn");
     	
     	EasyMock.expect(adm.getLat_admin_centre()).andStubReturn(1.55D+2);
     	EasyMock.expect(adm.getLng_admin_centre()).andStubReturn(2.36D+2);
@@ -1091,6 +1095,7 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(feature.getZipcodes()).andStubReturn(null);
     	EasyMock.expect(feature.getIs_in()).andStubReturn(null);
     	EasyMock.expect(feature.getIs_in_zip()).andStubReturn(null);
+    	EasyMock.expect(feature.getFully_qualified_name()).andStubReturn("fqdn");
     	EasyMock.expect(feature.getPlacetype()).andStubReturn(GisFeature.class.getSimpleName());
     	EasyMock.replay(feature);
     	return feature;
@@ -1130,7 +1135,7 @@ public class GisgraphyTestHelper {
     	return city;
 	}
 	
-	public static SolrResponseDto createSolrResponseDtoForStreet(String is_in) {
+	public static SolrResponseDto createSolrResponseDtoForStreet(String fqdn) {
 		SolrResponseDto street = EasyMock.createMock(SolrResponseDto.class);
     	EasyMock.expect(street.getAdm1_name()).andStubReturn("adm1 Name");
     	EasyMock.expect(street.getAdm2_name()).andStubReturn("adm2 Name");
@@ -1141,7 +1146,7 @@ public class GisgraphyTestHelper {
       	EasyMock.expect(street.getAzimuth_start()).andStubReturn(120);
     	EasyMock.expect(street.getAzimuth_end()).andStubReturn(300);
     	EasyMock.expect(street.getScore()).andStubReturn(42.5F);
-    	EasyMock.expect(street.getFully_qualified_name()).andStubReturn("FQN");
+    	EasyMock.expect(street.getFully_qualified_name()).andStubReturn(fqdn);
     	
     	
     	EasyMock.expect(street.getLat()).andStubReturn(1.6D);
@@ -1149,7 +1154,7 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(street.getLat_admin_centre()).andStubReturn(1.53D);
     	EasyMock.expect(street.getLng_admin_centre()).andStubReturn(2.35D);
     	EasyMock.expect(street.getName()).andStubReturn("street Name");
-    	EasyMock.expect(street.getIs_in()).andStubReturn(is_in);
+    	EasyMock.expect(street.getIs_in()).andStubReturn("is_in");
     	Set<String> zips = new HashSet<String>();
     	zips.add("Zip");
     	EasyMock.expect(street.getZipcodes()).andStubReturn(zips);
@@ -1158,6 +1163,7 @@ public class GisgraphyTestHelper {
     	EasyMock.expect(street.getStreet_type()).andStubReturn("street type");
     	EasyMock.expect(street.getCountry_code()).andStubReturn("FR");
     	EasyMock.expect(street.getScore()).andStubReturn(1F);
+    	EasyMock.expect(street.getStreet_ref()).andStubReturn("A1");
     	
     	EasyMock.expect(street.getIs_in_adm()).andStubReturn("isinadm");
     	EasyMock.expect(street.getIs_in_place()).andStubReturn("isinplace");

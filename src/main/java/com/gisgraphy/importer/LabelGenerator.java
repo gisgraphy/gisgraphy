@@ -308,6 +308,13 @@ public class LabelGenerator {
 		}
 	}
 	
+	/**
+	 * @return a name with the Administrative division (but without Country)
+	 * By default we don't put country because it should not appears in search term (it is already filtered at query time
+	 */
+	public String getFullyQualifiedName(GisFeature gisFeature) {
+		return getFullyQualifiedName(gisFeature, false);
+	}
 	
 	public String getFullyQualifiedName(OpenStreetMap osm,
 			boolean withCountry) {
@@ -359,10 +366,10 @@ public class LabelGenerator {
 		String adm1Name = osm.getAdm1Name();
 		if (adm1Name != null && !adm1Name.trim().equals("") && !adm1Name.equalsIgnoreCase(lastname)) {
 			if (osm.getCountryCode()!=null){
-				completeCityName.append(preAppend + StateAbbreviator.addStateCode(osm.getCountryCode(),adm1Name));
+				completeCityName.append(preAppend).append(StateAbbreviator.addStateCode(osm.getCountryCode(),adm1Name));
 				preAppend=", ";
 			} else {
-				completeCityName.append(preAppend + adm1Name);
+				completeCityName.append(preAppend).append(adm1Name);
 				preAppend=", ";
 			}
 		}
@@ -374,7 +381,7 @@ public class LabelGenerator {
 			bestZip = getBestZipString(osm.getIsInZip());
 		}
 		if (bestZip != null){
-			completeCityName.append(preAppend+" (");
+			completeCityName.append(preAppend).append(" (");
 			completeCityName.append(bestZip);
 			completeCityName.append(")");
 		}
@@ -382,7 +389,7 @@ public class LabelGenerator {
 		if (withCountry && osm.getCountryCode() != null) {
 			String country = getCountry(osm.getCountryCode());
 			if (country != null) {
-				completeCityName.append(preAppend + country);
+				completeCityName.append(preAppend).append(country);
 			}
 		}
 		if (completeCityName.length()==0){
@@ -394,13 +401,7 @@ public class LabelGenerator {
 		return null;
 	}
 
-	/**
-	 * @return a name with the Administrative division (but without Country)
-	 * By default we don't put country because it should not appears in search term (it is already filtered at query time
-	 */
-	public String getFullyQualifiedName(GisFeature gisFeature) {
-		return getFullyQualifiedName(gisFeature, false);
-	}
+	
 	
 	public  String getFullyQualifiedName(Address address){
 		StringBuffer sb = new StringBuffer();
@@ -473,7 +474,7 @@ public class LabelGenerator {
 			}
 		}
 		if (address.getZipCode() != null){
-			sb.append(address.getZipCode()).append(", ");
+			sb.append(" (").append(address.getZipCode()).append("), ");
 		} 
 		if (address.getCountryCode()!=null){
 			String countryName = countryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase());

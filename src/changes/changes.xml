@@ -953,6 +953,10 @@
 				now, Alternatenames contains alos localized alternatenames
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				add the possibility to call a hook url when the import is done
+			</action>
+			
 			</release>
 			
 	</body>

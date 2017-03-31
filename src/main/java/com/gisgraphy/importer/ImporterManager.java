@@ -73,11 +73,27 @@ public class ImporterManager implements IImporterManager {
     
     @Autowired
     private IDatabaseHelper databaseHelper;
+    
+    private String hookURL="";
 
   
 
 
     /**
+	 * @return the hookURL
+	 */
+	public String getHookURL() {
+		return hookURL;
+	}
+
+	/**
+	 * @param hookURL the hookURL to set
+	 */
+	public void setHookURL(String hookURL) {
+		this.hookURL = hookURL;
+	}
+
+	/**
      * The logger
      */
     protected static final Logger logger = LoggerFactory
@@ -130,6 +146,7 @@ public class ImporterManager implements IImporterManager {
 			this.endTime = System.currentTimeMillis();
 			this.inProgress = false;
 			setAlreadyDone(true);
+			ImporterHelper.callURL(hookURL);
 		} catch (Exception e) {
 			logger.error("The import is done but we can not persist the already done status : "+e.getMessage(),e);
 		}

@@ -5,12 +5,16 @@
 </head>
 
 <body>
-    <p style="border: 1px solid silver; padding: 5px; background: #ffd; text-align: center;margin-left:auto;margin-right:auto;">
+
+<p style="border: 1px solid silver; padding: 5px; background: #ffd; text-align: center;margin-left:auto;margin-right:auto;">
        
       <@s.if test="importInProgress">
       <@s.text name="import.processingRequest"/>
      <br/><img src="/images/loading.gif" width=20px /> <@s.text name="import.wait.importSince"/> ${importFormatedTimeElapsed}<br/> 
      <br/><@s.text name="import.time.info" ><@s.param>10</@s.param><@s.param>30</@s.param></@s.text>. <@s.text name="import.time.why"><@s.param>http://www.gisgraphy.com/faq.html#why-import-long</@s.param><@s.param>http://www.gisgraphy.com/faq.html#how-long-import</@s.param></@s.text>
+<br/>
+<@s.url id="hookURL" action="hook" method="execute"/>
+Want to be notify when import has finished ? you can define an URL that will be called when the import will be done : click <a href="${hookURL}">here</a>
         
     </@s.if>
      <@s.if test="importAlreadyDone">

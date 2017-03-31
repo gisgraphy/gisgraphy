@@ -223,6 +223,7 @@
 				<ref bean="openstreetmapFileRetriever" />
 				<ref bean="openStreetMapHouseNumberFileRetriever"/>
 				<ref bean="openStreetMapPoisFileRetriever"/>
+				
 				<ref bean="geonamesLanguageImporter" />
 				<ref bean="geonamesCountryImporter" />
 
@@ -231,6 +232,7 @@
 				<ref bean="geonamesFeatureCitiesImporter" />
 				<ref bean="openStreetMapCitiesSimpleImporter"/>
 
+				<ref bean="geonamesFeatureImporter" />
 
 				<ref bean="geonamesAlternateNamesExtracter" />
 				<ref bean="geonamesAlternateNamesImporter" />
@@ -244,7 +246,6 @@
 				
 				<ref bean="openStreetMapHouseNumberSimpleImporter"/>
 				
-				<ref bean="geonamesFeatureImporter" />
 				<ref bean="openStreetMapPoisSimpleImporter"/>
 				<ref bean="datastoreOptimizer"/>
 			</list>

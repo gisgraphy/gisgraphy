@@ -950,9 +950,12 @@ public class GeocodingService implements IGeocodingService {
 			}
 			String lastName=null;
 			String lastIsin=null;
+			boolean sameStreet = false;
 			boolean housenumberFound =false;
+			int count=0;
 			int numberOfStreetThatHaveTheSameName = 0;
 			for (SolrResponseDto solrResponseDto : solResponseDtos) {
+				count++;
 				Address address = new Address();
 				if (solrResponseDto == null) {
 					continue;
@@ -1000,7 +1003,8 @@ public class GeocodingService implements IGeocodingService {
 					String streetName = solrResponseDto.getName();
 					String isIn = solrResponseDto.getFully_qualified_name();
 					if (!isEmptyString(streetName)){ 
-						if(streetName.equals(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin)){//probably the same street
+						if(streetName.equals(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin)){
+							sameStreet=true;//probably the same street
 							if (housenumberFound){
 								continue;
 								//do nothing it has already been found in the street
@@ -1042,7 +1046,7 @@ public class GeocodingService implements IGeocodingService {
 							//}
 						}
 						} else { //the streetName is different, 
-							
+							sameStreet=false;
 							//remove the last results added
 							for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
 								addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
@@ -1119,12 +1123,27 @@ public class GeocodingService implements IGeocodingService {
 					logger.debug("=>place (" + (solrResponseDto.getOpenstreetmap_id()==null?solrResponseDto.getFeature_id():solrResponseDto.getOpenstreetmap_id())+") : "+solrResponseDto.getName() +" in "+solrResponseDto.getIs_in());
 				}
 				address.getGeocodingLevel();//force calculation of geocodingLevel
-				address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
+				if ((solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName()) && address.getHouseNumber()!=null) || solrResponseDto.getFully_qualified_name()==null){
+					//we need to update the labels
+					address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
+				} else {
+					address.setFormatedFull(solrResponseDto.getFully_qualified_name());
+				}
 				address.setFormatedPostal(addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA));
 				//set the street type after postal because street type is something like RESIDENTIAL and 
 				//has not the same meaning than with address parsing
 				address.setStreetType(solrResponseDto.getStreet_type());
-				addresses.add(address);
+				//if (!sameStreet){
+					addresses.add(address);
+				//}
+					if (sameStreet && solResponseDtos.size()==count){
+						System.out.println("need remove");
+						//remove the last results added
+						for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
+							addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
+						}
+					}
+				sameStreet=false;
 
 			}
 		}

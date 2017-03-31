@@ -39,7 +39,7 @@ public abstract class AbstractIntegrationHttpSolrTestCase extends
     private static boolean serverStarted = false;
 
    
-
+    static Server server = null;
    
     protected boolean isMustStartServlet() {
 	return true;
@@ -105,10 +105,10 @@ public abstract class AbstractIntegrationHttpSolrTestCase extends
 	    String jetty_default=new java.io.File("./start.jar").exists()?".":"./src/dist/";;
 	    String jetty_home = System.getProperty("jetty.home",jetty_default);
 
-	    Server server = new Server();
-	    //int port = generateRandomPort();
+	    server = new Server();
+	    int port = generateRandomPort();
 	    //force port
-	    int port=54611;
+	    //int port=54611;
 	    Connector connector=new SelectChannelConnector();
 	    connector.setPort(Integer.getInteger("jetty.port",port).intValue());
 	    System.out.println("starting solr on port "+port);
@@ -148,11 +148,20 @@ public abstract class AbstractIntegrationHttpSolrTestCase extends
     @Override
     public void onTearDown() throws Exception {
 	super.onTearDown();
-	// server.stop();
+	/*if (server!=null){
+	 server.stop();
+	}*/
 	solRSynchroniser.deleteAll();
 	// tester.stop();
 	// TODO v2 remove solrdir after all test
     }
+    
+public static void onTestsEnd() throws Exception {
+	AbstractTransactionalTestCase.onTestsEnd();
+	if (server!=null){
+	 server.stop();
+	}
+}
 
     @Autowired
     public void setSolRSynchroniser(ISolRSynchroniser solRSynchroniser) {
