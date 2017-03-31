@@ -1,0 +1,15 @@
+/AbstractAdvancedImporterProcessor.java
+/GeonamesAlternateNamesAdvancedImporter.java
+/GeonamesAlternateNamesImporterTask.java
+/GeonamesFeatureAdvancedImporter.java
+/GeonamesFeatureImporterTask.java
+/GeonamesZipCodeAdvancedImporter.java
+/GeonamesZipCodeImporterTask.java
+/OpenStreetMapAdvancedImporter.java
+/OpenStreetMapCitiesAdvancedImporter.java
+/OpenStreetMapCitiesSimpleImporterTask.java
+/OpenStreetMapHouseNumberAdvancedImporter.java
+/OpenStreetMapHouseNumberImporterTask.java
+/OpenStreetMapImporterTask.java
+/OpenStreetMapPoisAdvancedImporter.java
+/OpenStreetMapPoisImporterTask.java

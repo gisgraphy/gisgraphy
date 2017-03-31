@@ -8,3 +8,4 @@
 /logs/*
 /logs/
 /target/
+/.externalToolBuilders/
