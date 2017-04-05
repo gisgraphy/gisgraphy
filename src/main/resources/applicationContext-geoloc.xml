@@ -363,6 +363,8 @@
 		<property name="openStreetMapFillIsIn" value="${importerConfig.openstreetmap.fill.isin.field}"/>
 		<property name="renameFilesAfterProcessing" value="${importer.rename.files.after.processing}"/>
 		<property name="parsedAddressUnlockKey" value="${parsedAddress.unlock.key}" />
+		<property name="key" value="${importer.key}" />
+		
 		
 	</bean>
 	

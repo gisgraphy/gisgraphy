@@ -219,6 +219,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		
 	
 	GisFeature place ;
+	Integer population=null;
+	Integer elevation=null;
+	Integer gtopo30 = null;
+	String timezone=null;
+	String asciiName=null;
 	if (isPoi(fields[12],countrycode, fields[7])) {//the feature to import is a poi
 		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		if (poiToremove!=null && poiToremove.getOpenstreetmap_id()==null && ! poiToremove.isMunicipality()){// we only remove geonames one
@@ -232,11 +237,17 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			}
 			if (cityToRemoveObj!=null){
 				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove the city / citySubdivision "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId()+" in the datastore");
+				 population=cityToRemoveObj.getPopulation();
+				 elevation=cityToRemoveObj.getPopulation();
+				 gtopo30 = cityToRemoveObj.getGtopo30();
+				 timezone=cityToRemoveObj.getTimezone();
+				 asciiName=cityToRemoveObj.getAsciiName();
 				gisFeatureDao.remove(cityToRemoveObj);
 			}
 		}
 		//create the poi
 		place = createNewPoi(name, countrycode, location, adminCentreLocation);
+		setGeonamesFields(place,population,elevation,gtopo30,timezone,asciiName);
 	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12],countrycode,fields[7])){// the feature to import is a subdivision
 		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		if (nearestCity != null ){
@@ -270,6 +281,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 					City cityToRemove = cityDao.getByFeatureId(nearestCity.getFeature_id());
 					if (cityToRemove!=null){
 						logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id()+" in the datastore");
+						 population=cityToRemove.getPopulation();
+						 elevation=cityToRemove.getPopulation();
+						 gtopo30 = cityToRemove.getGtopo30();
+						 timezone=cityToRemove.getTimezone();
+						 asciiName=cityToRemove.getAsciiName();
 						cityDao.remove(cityToRemove);
 					}
 				} else { //osm feature
@@ -277,10 +293,12 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				}
 				// and create a citysubdivision
 				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
+				setGeonamesFields(place,population,elevation,gtopo30,timezone,asciiName);
 				
 			}
 			else {
 				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
+				setGeonamesFields(place,population,elevation,gtopo30,timezone,asciiName);
 			}
 			
 		} else {
@@ -328,7 +346,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	if(!isEmptyField(fields, 8, false)){
 		try {
 			String populationStr = fields[8];
-			int population = parsePopulation(populationStr);
+			population = parsePopulation(populationStr);
 			place.setPopulation(population);
 		} catch (NumberFormatException e) {
 			logger.error("can not parse population :"+fields[8]+" for "+fields[1]);
@@ -424,6 +442,19 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 
     }
 
+	private void setGeonamesFields(GisFeature place, Integer population,
+			Integer elevation, Integer gtopo30, String timezone,
+			String asciiName) {
+		if (place!=null){
+			place.setPopulation(population);
+			place.setElevation(elevation);
+			place.setGtopo30(gtopo30);
+			place.setTimezone(timezone);
+			place.setAsciiName(asciiName);
+		}
+		
+	}
+
 	protected int parsePopulation(String populationStr) {
 		int population = Integer.parseInt(populationStr.replaceAll("[\\s\\,]", ""));
 		return population;
@@ -467,7 +498,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				|| "suburb".equalsIgnoreCase(placeType)
 				|| "city_block".equalsIgnoreCase(placeType)
 				|| "borough".equalsIgnoreCase(placeType)||
-				!AdmStateLevelInfo.isCityLevel(countryCode, admLevel)
+				(admLevel!=null &&!AdmStateLevelInfo.isCityLevel(countryCode, admLevel))
 				) {
 			return true;
 		}

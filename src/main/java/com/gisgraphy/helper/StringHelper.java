@@ -36,6 +36,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gisgraphy.compound.Decompounder;
+import com.gisgraphy.compound.Decompounder.state;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 
 /**
@@ -53,7 +55,12 @@ public class StringHelper {
 	
 	protected static final int MISSING_WORD_TOLERANCE = 1;
 	
-	protected static Pattern p = Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
+	protected static Pattern synonyms_Pattern= Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
+	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
+	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*)\\s\\b(\\d{2})[\\s-](\\d{3}\\b)");
+	private final static Pattern ZIPCONCATENATE_3_2__PATTERN = Pattern.compile("(.*)\\s\\b(\\d{3})[\\s-](\\d{2}\\b)");
+	
+	private static Decompounder decompounder = new Decompounder();
 
 	/**
 	 * Process a string to apply filter as lucene and solr does :
@@ -220,7 +227,7 @@ public class StringHelper {
 						actualSplitedLong.add(normalize(word));
 					}
 				}  else if (word.equals("st")){
-					Matcher m =p.matcher(expected);
+					Matcher m =synonyms_Pattern.matcher(expected);
 					if (m.find() && m.groupCount()>=1){
 						actualSplitedLong.add(m.group(1).toLowerCase());
 					}
@@ -235,7 +242,7 @@ public class StringHelper {
 						expectedSplitedLong.add(normalize(word));
 					}
 				} else if (word.equals("st")){
-					Matcher m =p.matcher(actual);
+					Matcher m =synonyms_Pattern.matcher(actual);
 					if (m.find()&&m.groupCount()>=1){
 						expectedSplitedLong.add(m.group(1).toLowerCase());
 					}
@@ -265,6 +272,105 @@ public class StringHelper {
 		}
 		return false;
 	}
+	
+	public static boolean isSameStreetName(String expected, String actual, String countrycode){
+		Pattern p = Pattern.compile("\\d\\s?(?:rd|st|nd|th)");
+		if (actual!=null && expected!=null){
+		if (countrycode!=null && countrycode.equalsIgnoreCase("DE") && decompounder.getSate(actual)!=state.NOT_APPLICABLE){
+			return isSameStreetName_intern(expected,actual) || isSameStreetName_intern(expected,decompounder.getOtherFormat(actual));
+		}/* else if (countrycode!=null && (countrycode.equalsIgnoreCase("US") || countrycode.equalsIgnoreCase("CA"))
+				&& actual.matches("\\d") && expected.matches("\\d")
+				){
+			
+		}*/
+		else {
+			return isSameStreetName_intern(expected,actual);
+		}
+		}
+		return false;
+	}
+	
+	private static boolean isSameStreetName_intern(String expected, String actual){
+		Pattern ordinalPattern = Pattern.compile("(\\d+)\\s?(?:rd|st|nd|th)?\\b");
+		int tolerance = 0;
+		if (actual!=null && expected!=null){
+			if (actual.equalsIgnoreCase(expected)){ //shortcut
+				return true;
+			}
+			//split the strings
+			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;]");
+			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一]");
+
+			//first we check if actual has more long words than expected
+			//saint jean is not saint jean de luz, but 'la petite maison' is ok for 'petite maison'
+			List<String> actualSplitedLong = new ArrayList<String>();
+			for (String word:actualSplited){
+				if (word.length()>3){
+					if (word!=null){
+						actualSplitedLong.add(normalize(word));
+					}
+				}  else if (word.equals("st")){
+					Matcher m =synonyms_Pattern.matcher(expected);
+					if (m.find() && m.groupCount()>=1){
+						actualSplitedLong.add(m.group(1).toLowerCase());
+					}
+				} else if (StringUtils.isNumeric(word)){
+					actualSplitedLong.add(normalize(word));
+				}
+			}
+			List<String> expectedSplitedLong = new ArrayList<String>();
+			for (String word:expectedSplited){
+				if (word.length()>3){
+					if (word!=null){
+						expectedSplitedLong.add(normalize(word));
+					}
+				} else if (word.equals("st")){
+					Matcher m =synonyms_Pattern.matcher(actual);
+					if (m.find()&&m.groupCount()>=1){
+						expectedSplitedLong.add(m.group(1).toLowerCase());
+					}
+				}
+			}
+			if (actualSplitedLong.size() > expectedSplitedLong.size() ){
+				return false;
+			}
+			if (actualSplitedLong.size() < expectedSplitedLong.size() ){
+				return false;
+			}
+			//same number of word but are they the same ?
+			int countMissing = 0;
+			for (String word :actualSplitedLong){
+				Matcher matcher1 = ordinalPattern.matcher(word);
+				if (matcher1.find()){
+					boolean foundOrdinal = false;
+					for (String expectedLong:expectedSplitedLong){
+						Matcher matcher2 = ordinalPattern.matcher(expectedLong);
+						if (!foundOrdinal && matcher2.find()){
+							if(matcher1.group(1).equals(matcher2.group(1))){
+							foundOrdinal=true;
+						}
+						}
+					}
+					if (!foundOrdinal){
+						countMissing++;
+					}
+				}else {
+				if(!expectedSplitedLong.contains(word)){
+					countMissing++;
+				}
+				if (expectedSplitedLong.size() == actualSplitedLong.size() &&  (expectedSplitedLong.size()==1 || expectedSplitedLong.size()==2)  && countMissing >0){
+					//if one or two words, every words should be present
+					return false;
+				} else if (countMissing > tolerance){
+					return false;
+				}
+				}
+			}
+
+			return true;
+		}
+		return false;
+	}
 
 	public static boolean isSameAlternateNames(String name, List<String> name_alternates) {
 		if (name_alternates!=null && name !=null){
@@ -277,6 +383,41 @@ public class StringHelper {
 			}
 		}
 		return false;
+	}
+	
+	public static String prepareQuery(String rawAddress) {
+		if (rawAddress == null){
+			return rawAddress;
+		}
+		StringBuffer sb;
+		Matcher m = RN_PATTERN.matcher(rawAddress);
+		if (m.find()){
+			sb = new StringBuffer();
+			m.appendReplacement(sb,"route nationale "+m.group(2));
+			m.appendTail(sb);
+			rawAddress = sb.toString();
+		}
+		
+		m = ZIPCONCATENATE_3_2__PATTERN.matcher(rawAddress);
+		if (m.find()){
+			sb = new StringBuffer();
+			m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
+			m.appendTail(sb);
+			rawAddress = sb.toString();
+		} else {
+			m = ZIPCONCATENATE_2_3_PATTERN.matcher(rawAddress);
+			if (m.find()){
+				sb = new StringBuffer();
+				m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
+				m.appendTail(sb);
+				rawAddress = sb.toString();
+			} 
+			
+		}
+		
+		
+		logger.error("prepared address : "+rawAddress);
+		return rawAddress;
 	}
 
 

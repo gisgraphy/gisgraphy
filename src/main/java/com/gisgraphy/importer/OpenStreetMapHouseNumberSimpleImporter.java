@@ -475,6 +475,9 @@ ___W___house"} SHAPE"
 						street = findNearestStreet(houseMember.getStreetName(),houseMember.getLocation());
 					}
 					if (street!=null){
+						if (street!=null && houseMember!=null && houseMember.getZipCode()!=null){
+							street.setZipCode(houseMember.getZipCode());
+						}
 						//Long openstreetmapId = street.getOpenstreetmap_id();
 						//OpenStreetMap osm = openStreetMapDao.getByOpenStreetMapId(openstreetmapId);
 						HouseNumber houseNumber = buildHouseNumberFromAssociatedHouseNumber(houseMember);
@@ -508,6 +511,9 @@ ___W___house"} SHAPE"
 				return;
 			}
 			for (AssociatedStreetMember houseMember : houseMembers){
+				if (houseMember!=null && houseMember.getZipCode()!=null){
+					associatedStreet.setZipCode(houseMember.getZipCode());
+				}
 				HouseNumber houseNumber = buildHouseNumberFromAssociatedHouseNumber(houseMember);
 				if (houseNumber!=null){
 					associatedStreet.addHouseNumber(houseNumber);
@@ -529,9 +535,13 @@ ___W___house"} SHAPE"
 				}
 			}
 			for (AssociatedStreetMember houseMember : houseMembers){
+				
 				if (houseMember!=null && houseMember.getLocation()!=null){
 					HouseNumber houseNumber = buildHouseNumberFromAssociatedHouseNumber(houseMember);
 				OpenStreetMap associatedStreet = openStreetMapDao.getNearestByosmIds(houseMember.getLocation(), streetIds);
+				if (associatedStreet!=null && houseMember!=null && houseMember.getZipCode()!=null){
+					associatedStreet.setZipCode(houseMember.getZipCode());
+				}
 				if (associatedStreet!=null && houseNumber!=null){
 					associatedStreet.addHouseNumber(houseNumber);
 					saveOsm(associatedStreet);
@@ -569,6 +579,7 @@ ___W___house"} SHAPE"
 						if (house.getZipCode()!=null && osm.getIsInZip()!=null){
 							//we override even if it is already present because it is a set
 							osm.addIsInZip(house.getZipCode());
+							osm.setZipCode(house.getZipCode());
 						}
 						if (house.getCity()!= null && !osm.isCityConfident()){//we override if it not cityConfident 
 							osm.setIsIn(house.getCity());

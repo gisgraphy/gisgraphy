@@ -2572,18 +2572,7 @@ public class GeocodingServiceTest {
     	Assert.assertTrue(geocodingService.needParsing("toto;toto"));
     }
     
-    @Test
-    public void testPrepareQuery(){
-    	GeocodingService geocodingService = new GeocodingService();
-    	Assert.assertEquals("4 route nationale 43 59230 serques",geocodingService.prepareQuery("4 rn 43 59 230 serques"));
-    	Assert.assertEquals("4 route nationale 43 12177 serques",geocodingService.prepareQuery("4 rn 43 121 77 serques"));
-    	Assert.assertEquals("route nationale 43 62910",geocodingService.prepareQuery("rn43 62 910"));
-    	Assert.assertEquals("4 route nationale 43 59130",geocodingService.prepareQuery("4 rn 43 59 130"));
-    	Assert.assertEquals("",geocodingService.prepareQuery(""));
-    	Assert.assertEquals("4 route nationale 43 serques",geocodingService.prepareQuery("4 rn43 serques"));
-    	Assert.assertEquals("4 route nationale 43 serques",geocodingService.prepareQuery("4 rn 43 serques"));
-    	
-    	}
+  
 
    
 }

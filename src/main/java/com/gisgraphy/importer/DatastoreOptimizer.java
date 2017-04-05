@@ -23,40 +23,18 @@
 package com.gisgraphy.importer;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.hibernate.FlushMode;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.gisgraphy.addressparser.format.BasicAddressFormater;
-import com.gisgraphy.domain.geoloc.entity.AlternateName;
-import com.gisgraphy.domain.geoloc.entity.City;
-import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
-import com.gisgraphy.domain.geoloc.entity.GisFeature;
-import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
-import com.gisgraphy.domain.geoloc.entity.ZipCode;
-import com.gisgraphy.domain.repository.ICityDao;
-import com.gisgraphy.domain.repository.ICitySubdivisionDao;
-import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
-import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.geoloc.GeolocSearchEngine;
-import com.gisgraphy.helper.GeolocHelper;
-import com.gisgraphy.helper.StringHelper;
-import com.gisgraphy.street.StreetType;
-import com.gisgraphy.util.StringUtil;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * Import the street from an (pre-processed) openStreet map data file .

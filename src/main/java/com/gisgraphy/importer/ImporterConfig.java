@@ -1190,7 +1190,24 @@ public class ImporterConfig {
     
     //_____________________________________________________end importer specific config______________________________
     
+    
+    private  Integer key = 0;
+    
     /**
+	 * @return the key
+	 */
+	public Integer getKey() {
+		return key;
+	}
+
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(Integer key) {
+		this.key = key;
+	}
+
+	/**
   	 * @return the parsedAddressUnlockKey
   	 */
   	public int getParsedAddressUnlockKey() {

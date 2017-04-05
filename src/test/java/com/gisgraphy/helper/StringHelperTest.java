@@ -28,12 +28,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang.RandomStringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
+import com.gisgraphy.geocoding.GeocodingService;
 import com.gisgraphy.test.GisgraphyTestHelper;
 
 public class StringHelperTest {
@@ -205,6 +205,48 @@ public class StringHelperTest {
     	Assert.assertFalse(StringHelper.isSameName("Les Chézeaux","Les grand Chézeaux"));
     	Assert.assertFalse("less long word but different",StringHelper.isSameName("route pepere","pepere"));
     	
+    	Assert.assertTrue(StringHelper.isSameName("Stauffenbergstraße", "Stauffenberg straße"));
+    	
+    	
+    }
+    
+    @Test
+    public void isSameStreetNameTest(){
+    
+    	Assert.assertFalse("different",StringHelper.isSameStreetName("Finkenhof","Bildhauerhof",null));
+    	Assert.assertFalse("more words",StringHelper.isSameStreetName("Le Breuil","Le Breuil-Mingot",null));
+    	Assert.assertFalse("more words",StringHelper.isSameStreetName("Morgon","Villié-Morgon",null));
+    	Assert.assertTrue("accent",StringHelper.isSameStreetName("Bélair","Belair",null));
+    	Assert.assertTrue("case sensitive",StringHelper.isSameStreetName("La Salce","la salce",null));
+    	Assert.assertTrue("same",StringHelper.isSameStreetName("La Salce","La Salce",null));
+    	Assert.assertTrue("less long word but same",StringHelper.isSameStreetName("Les Agnès","agnes",null));
+    	
+    	Assert.assertTrue("with additionnal words size =3",StringHelper.isSameStreetName("notre dame anges","notre dame des anges",null));
+    	Assert.assertTrue("with additionnal words size =3",StringHelper.isSameStreetName("notre dame des anges","notre dame anges",null));
+    	
+    	Assert.assertTrue("with additionnal words size =2",StringHelper.isSameStreetName("notre dame anges","notre dame de anges",null));
+    	Assert.assertTrue("with additionnal words size =2",StringHelper.isSameStreetName("notre dame de anges","notre dame anges",null));
+    	Assert.assertFalse(StringHelper.isSameStreetName("Berg","Sternenberg",null));
+    	Assert.assertFalse(StringHelper.isSameStreetName("normandie","avr",null));
+    	Assert.assertFalse(StringHelper.isSameStreetName("paris","paris 07",null));
+    	
+    	Assert.assertTrue("synonyms in expected",StringHelper.isSameStreetName("st omer","saint omer",null));
+    	Assert.assertTrue("synonyms in actual",StringHelper.isSameStreetName("saint omer","st omer",null));
+    	
+    	Assert.assertTrue("synonyms in expected case sensitive",StringHelper.isSameStreetName("st omer","Saint omer",null));
+    	Assert.assertTrue("synonyms in actual case sensitive",StringHelper.isSameStreetName("Saint omer","st omer",null));
+    	
+    	Assert.assertFalse(StringHelper.isSameStreetName("Les Chézeaux","Les grand Chézeaux",null));
+    	Assert.assertFalse("less long word but different",StringHelper.isSameStreetName("route pepere","pepere",null));
+    	
+    
+    	Assert.assertTrue(StringHelper.isSameStreetName("EAST 236st STREET", "EAST 236 STREET","US"));
+    	Assert.assertFalse(StringHelper.isSameStreetName("east 235st STREET", "EAST 236 STREET",null));
+    	
+    	
+    	Assert.assertTrue(StringHelper.isSameStreetName("Stauffenbergstraße", "Stauffenberg straße","DE"));
+    	Assert.assertTrue(StringHelper.isSameStreetName("Stauffenberg straße", "Stauffenbergstraße","DE"));
+    	
     	
     }
     
@@ -227,6 +269,18 @@ public class StringHelperTest {
     	Assert.assertTrue("with additionnal words size =3",StringHelper.isSameAlternateNames("notre dame anges",names));//several names
     	
     }
+    
+    @Test
+    public void testPrepareQuery(){
+    	Assert.assertEquals("4 route nationale 43 59230 serques",StringHelper.prepareQuery("4 rn 43 59 230 serques"));
+    	Assert.assertEquals("4 route nationale 43 12177 serques",StringHelper.prepareQuery("4 rn 43 121 77 serques"));
+    	Assert.assertEquals("route nationale 43 62910",StringHelper.prepareQuery("rn43 62 910"));
+    	Assert.assertEquals("4 route nationale 43 59130",StringHelper.prepareQuery("4 rn 43 59 130"));
+    	Assert.assertEquals("",StringHelper.prepareQuery(""));
+    	Assert.assertEquals("4 route nationale 43 serques",StringHelper.prepareQuery("4 rn43 serques"));
+    	Assert.assertEquals("4 route nationale 43 serques",StringHelper.prepareQuery("4 rn 43 serques"));
+    	
+    	}
     
 
 

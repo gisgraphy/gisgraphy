@@ -93,9 +93,6 @@ public class GeocodingService implements IGeocodingService {
 	private static final String FUZZY_ACTIVE = "fuzzy:active";
 	//private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
-	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
-	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*)\\s\\b(\\d{2})[\\s-](\\d{3}\\b)");
-	private final static Pattern ZIPCONCATENATE_3_2__PATTERN = Pattern.compile("(.*)\\s\\b(\\d{3})[\\s-](\\d{2}\\b)");
 	private static final int INTERPOLATION_CURVE_TOLERANCE = 45;
 	private IStatsUsageService statsUsageService;
 	private ImporterConfig importerConfig;
@@ -307,7 +304,7 @@ public class GeocodingService implements IGeocodingService {
 		//	logger.debug("is_in is active");
 			statsUsageService.increaseUsage(StatsUsageType.GEOCODING);
 			AddressResultsDto results;
-			rawAddress = prepareQuery(rawAddress);
+			rawAddress = StringHelper.prepareQuery(rawAddress);
 			HouseNumberAddressDto houseNumberAddressDto = findHouseNumber(rawAddress, countryCode);
 			String newAddress = rawAddress;
 			
@@ -469,40 +466,7 @@ public class GeocodingService implements IGeocodingService {
 
 	}
 
-	protected String prepareQuery(String rawAddress) {
-		if (rawAddress == null){
-			return rawAddress;
-		}
-		StringBuffer sb;
-		Matcher m = RN_PATTERN.matcher(rawAddress);
-		if (m.find()){
-			sb = new StringBuffer();
-			m.appendReplacement(sb,"route nationale "+m.group(2));
-			m.appendTail(sb);
-			rawAddress = sb.toString();
-		}
-		
-		m = ZIPCONCATENATE_3_2__PATTERN.matcher(rawAddress);
-		if (m.find()){
-			sb = new StringBuffer();
-			m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
-			m.appendTail(sb);
-			rawAddress = sb.toString();
-		} else {
-			m = ZIPCONCATENATE_2_3_PATTERN.matcher(rawAddress);
-			if (m.find()){
-				sb = new StringBuffer();
-				m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
-				m.appendTail(sb);
-				rawAddress = sb.toString();
-			} 
-			
-		}
-		
-		
-		logger.error("prepared address : "+rawAddress);
-		return rawAddress;
-	}
+
 	
 	
 	/*private String prepareQueryConcatenate(String rawAddress) {

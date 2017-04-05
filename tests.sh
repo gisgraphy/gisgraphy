@@ -1,3 +1,3 @@
 #!/bin/bash
-export MAVEN_OPTS='-Xmx2048m -Xms256m';
+export MAVEN_OPTS='-Xmx4048m -Xms256m';
 mvn clean test

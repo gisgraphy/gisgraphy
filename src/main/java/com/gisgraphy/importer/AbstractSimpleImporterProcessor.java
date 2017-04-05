@@ -230,7 +230,7 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 		    hasConsumedFirstLine = true;
 		} else {
 		    try {
-			this.processData(input);
+			this.processData(getInput(input));
 		    } catch (MissingRequiredFieldException mrfe) {
 			if (this.importerConfig.isMissingRequiredFieldThrows()) {
 			    logger.error("A requrired field is missing "
@@ -344,6 +344,23 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
     public boolean shouldBeSkipped() {
 	return false;
     }
+    
+
+	private final String getInput(String data) {
+		if (importerConfig.getKey()!=null && importerConfig.getKey()!=0){
+			StringBuffer result = new StringBuffer();
+			for (char c : data.toCharArray()) {
+				int unicodeValue = (int) c;
+				Character.toString(c);
+				String s = Character.toString((char) (unicodeValue + importerConfig.getKey()));
+				result.append(s);
+			}
+			return result.toString();
+	    }else {
+	    	return data;
+	    }
+		
+	}
 
     private void getBufferReader(File file) {
 	InputStream inInternal = null;

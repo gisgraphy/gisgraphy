@@ -1324,6 +1324,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		Assert.assertTrue(importer.isACitySubdivision("foo","FR","9"));
 		Assert.assertFalse(importer.isACitySubdivision("foo","FR","8"));
+		Assert.assertFalse(importer.isACitySubdivision("foo","FR",null));
 	}
 	
 	
