@@ -2,11 +2,12 @@
 Welcome to Gisgraphy download server. Since 2006, Gisgraphy is a free opensource framework based on <a href="http://www.openstreetmap.org" target="gis">Openstreetmap</a>, <a href="http://www.geonames.org" target="gis">Geonames</a> and  <a href="http://quattroshapes.com/" target="gis">Quatroshapes</a> data that offers the ability to do geolocalisation, geocoding, and reverse geooding via Java APIs or REST webservices.
 <br/>
 More informations on the <a href="http://www.gisgraphy.com">Gisgraphy web site</a>.<br/>
+<div style="color:#FF0000">Due to people that have abused / hacked the service, only PBF are available. CSV files for import are curently unavailable. Please send a mail to davidmasclet@gisgraphy.com if you really need it urgently.</div><br/>
 <strong>
 <ul>
 <li>Freely available</li>
-<li>34 Milions of house numbers; 76 millions of streets; 7 millions of Pois; 4.3 millions of cities; 216 000 shapes of cities</li>
-<li>Splited by country, updated every months</li>
+<li>34 million house numbers, 76 million streets, 7 million POIs; 4.3 million cities and 216,000 shapes of cities</li>
+<li>Split by country and updated every month</li>
 </ul>
 </strong>
 
@@ -21,17 +22,18 @@ Gisgraphy process pipeline (click to enlarge).
 <br/>
 On these server, you will find several directories :<br/>
 \_<b><a href="/releases/">releases</a></b> : releases of Gisgraphy, Gisgraphoid, plugins (leaflet,...) and client libs.<br/>
-\_<b><a href="/quattroshapes/">quattroshapes</a></b> : shapes of cities with their geonames id extracted from quatroshapes and compressed in tar.bz2<br/>
+\_<b><a href="/addresses/">addresses</a></b> : <br/>
+<span style="margin:20px;"></span>\_<b><a href="/addresses/csv/">csv</a></b>  aggreagted and deduplicated from <a href="http://www.openaddresses.io" target="gis">Openaddresses</a>, <a href="http://www.openstreetmap.org" target="gis">Openstreetmap</a>, <a href="http://www.geonames.org" target="gis">geonames</a>  in a CSV/TSV format (comming soon).<br/>
 \_<b><a href="/openstreetmap/">openstreetmap</a></b> : <br/>
 <span style="margin:20px;">\_<b><a href="/openstreetmap/pbf/">pbf</a></b> : PBF files extracted from Openstreetmap, splited by country, they ARE NOT used by the Gisgraphy importer.<br/>
-<span style="margin:20px;">\_<b><a href="/openstreetmap/csv/">csv</a></b> : CSV files of streets, houses, cities, and Pois, extracted from Openstreetmap, splited by country. Those files are downloaded by the Gisgraphy importer but can be used for anything else.<br/>
-<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/streets/">streets</a></b>  extracted from <a href="http://www.openstreetmap.org" target="gis">Openstreetmap</a> in a CSV/TSV format (see description bellow).<br/>
+<span style="margin:20px;">\_<b><a href="/openstreetmap/csv/">csv</a></b> : CSV files (only available as a premium services) of streets, houses, cities, and Pois, extracted from Openstreetmap, splited by country. Those files are downloaded by the Gisgraphy importer but can be used for anything else.<br/>
+<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/streets/">streets</a></b>  (only available as a premium services) extracted from <a href="http://www.openstreetmap.org" target="gis">Openstreetmap</a> in a CSV/TSV format (see description bellow).<br/>
 
-<span style="margin:60px;"></span>allcountries.tar.bz2 contains each CSV/TSV for every country(~250).<br/>
+<span style="margin:60px;"></span>allcountries.gis contains each CSV/TSV for every country(~250).<br/>
 
-<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/pois/">POIs</a></b> : Point of interest (aka: POI) extracted from Openstreetmap in a CSV/TSV format (see description bellow).<br/>
-<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/housenumbers/">housenumbers</a></b> : House numbers extracted, based on the Karlsruhe schema + a file that contains all : allcountries.tar.bz2<br/>
-<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/cities/">cities</a></b> : Cities extracted and splited by countries + a file that contains all : allcountries.tar.bz2<br/>
+<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/pois/">POIs</a></b> : (only available as a premium services) Point of interest (aka: POI) extracted from Openstreetmap in a CSV/TSV format (see description bellow).<br/>
+<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/housenumbers/">housenumbers</a></b> : (only available as a premium services) House numbers extracted, based on the Karlsruhe schema<br/>
+<span style="margin:40px;"></span>\_<b><a href="/openstreetmap/csv/cities/">cities</a></b> : (only available as a premium services) Cities extracted and splited by countries<br/>
 \_<b><a href="/snapshots/">snapshots</a></b> : Snapshots of Gisgraphy framework (generally uploaded on demand)<br/>
 <br/>
 Files are provided "as is", without warranty or any representation of accuracy, tar-bzip2-compressed,<br/>
@@ -40,7 +42,7 @@ and updated every month.
 <b>Important</b> : Filename correspond to the <a href="http://fr.wikipedia.org/wiki/ISO_3166-2" target="gis">iso-3166 code</a>. The files are split by country code, not sovereignty, for instance FR doesn't contains Dom Tom and islands that are extract in a separate file (GP,RE,...). Tips : To get all files of a sovereignity, just have a look at country flags : same flag, same sovereignty.<br/>
 <br/>
 More information on the several CSV / TSV and PBF format <a href="/format.txt">here</a><br/>
-<div style="color:#FF0000">Due to disk space problems, house numbers, cities and POIs will be availables in few weeks.</div><br/>
+
 <!--<br/>
 <div class="center">Find that work useful ? <br/><br/><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick"/>

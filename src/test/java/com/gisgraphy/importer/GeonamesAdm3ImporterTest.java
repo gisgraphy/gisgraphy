@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;

@@ -21,9 +21,9 @@
  ******************************************************************************/
 package com.gisgraphy.webapp.action;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -31,7 +31,7 @@ import static org.easymock.EasyMock.replay;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.struts2.ServletActionContext;
 import org.junit.Before;

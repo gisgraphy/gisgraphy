@@ -55,6 +55,8 @@ public class StringHelper {
 	
 	protected static final int MISSING_WORD_TOLERANCE = 1;
 	
+	private static final Pattern ORDINAL_PATTERN = Pattern.compile("\\d\\s?(?:rd|st|nd|th)");
+	
 	protected static Pattern synonyms_Pattern= Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
 	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
 	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*)\\s\\b(\\d{2})[\\s-](\\d{3}\\b)");
@@ -199,7 +201,16 @@ public class StringHelper {
 	
 	
 	public static boolean isSameName(String expected, String actual){
-		return isSameName(expected, actual, MISSING_WORD_TOLERANCE);
+		
+		if (actual!=null && expected!=null){
+			if (decompounder.getSate(actual)!=state.NOT_APPLICABLE){
+				return isSameName(expected, actual, MISSING_WORD_TOLERANCE) || isSameName(expected, decompounder.getOtherFormat(actual), MISSING_WORD_TOLERANCE);
+			}
+			else {
+				return isSameStreetName_intern(expected,actual);
+			}
+		}
+		return false;
 	}
 
 	
@@ -274,18 +285,14 @@ public class StringHelper {
 	}
 	
 	public static boolean isSameStreetName(String expected, String actual, String countrycode){
-		Pattern p = Pattern.compile("\\d\\s?(?:rd|st|nd|th)");
+
 		if (actual!=null && expected!=null){
-		if (countrycode!=null && countrycode.equalsIgnoreCase("DE") && decompounder.getSate(actual)!=state.NOT_APPLICABLE){
-			return isSameStreetName_intern(expected,actual) || isSameStreetName_intern(expected,decompounder.getOtherFormat(actual));
-		}/* else if (countrycode!=null && (countrycode.equalsIgnoreCase("US") || countrycode.equalsIgnoreCase("CA"))
-				&& actual.matches("\\d") && expected.matches("\\d")
-				){
-			
-		}*/
-		else {
-			return isSameStreetName_intern(expected,actual);
-		}
+			if (countrycode!=null && countrycode.equalsIgnoreCase("DE") && decompounder.getSate(actual)!=state.NOT_APPLICABLE){
+				return isSameStreetName_intern(expected,actual) || isSameStreetName_intern(expected,decompounder.getOtherFormat(actual));
+			}
+			else {
+				return isSameStreetName_intern(expected,actual);
+			}
 		}
 		return false;
 	}

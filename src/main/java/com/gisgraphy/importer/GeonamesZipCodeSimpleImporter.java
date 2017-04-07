@@ -632,7 +632,12 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
      */
     @Override
     protected File[] getFiles() {
-	return ImporterHelper.listCountryFilesToImport(importerConfig.getGeonamesZipCodeDir());
+    	return ImporterHelper.listCountryFilesToImport(importerConfig.getGeonamesZipCodeDir());
+    }
+    
+    @Override
+    Integer getImportKey() {
+    	return 0;
     }
 
     /**

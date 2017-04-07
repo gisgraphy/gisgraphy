@@ -25,7 +25,7 @@ package com.gisgraphy.helper;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,7 +34,7 @@ import org.junit.Test;
 import com.gisgraphy.test.GisgraphyTestHelper;
 
 
-public class UntarTest {
+public class GISFilerTest {
     
     File tempDir = null;
 
@@ -51,42 +51,37 @@ public class UntarTest {
     
     @Test
     public void untarGzipForGzipExtension() throws IOException{
-	Untar untar = new Untar("./data/tests/tar/test.tar.gz",tempDir);
-	untar.untar();
+	GISFiler untar = new GISFiler("./data/tests/gis/test.tar.gz",tempDir);
+	untar.decompress();
 	Assert.assertTrue("",new File(tempDir+File.separator+"tarfilegzip.txt").exists());
     }
     
     @Test
     public void untarGzipForGZExtension() throws IOException{
-	Untar untar = new Untar("./data/tests/tar/test.tar.gzip",tempDir);
-	untar.untar();
+	GISFiler untar = new GISFiler("./data/tests/gis/test.tar.gzip",tempDir);
+	untar.decompress();
 	Assert.assertTrue("",new File(tempDir+File.separator+"tarfilegzip.txt").exists());
     }
     
     @Test
-    public void untarBzip2ForBZ2Extension() throws IOException{
-	Untar untar = new Untar("./data/tests/tar/test.tar.bz2",tempDir);
-	untar.untar();
-	Assert.assertTrue("",new File(tempDir+File.separator+"tarfilebz2.txt").exists());
+    public void manageGis() throws IOException{
+	GISFiler untar = new GISFiler("./data/tests/gis/test.gis",tempDir);
+	untar.decompress();
+	Assert.assertTrue("",new File(tempDir+File.separator+"testgis").exists());
     }
     
-    @Test
-    public void untarBzip2ForBzip2Extension() throws IOException{
-	Untar untar = new Untar("./data/tests/tar/test.tar.bzip2",tempDir);
-	untar.untar();
-	Assert.assertTrue("",new File(tempDir+File.separator+"tarfilebz2.txt").exists());
-    }
+   
     
     @Test (expected=RuntimeException.class)
     public void untarForUnknowCompression() throws IOException{
-	Untar untar = new Untar("./data/tests/tar/test.tar.unknowext",tempDir);
-	untar.untar();
+	GISFiler untar = new GISFiler("./data/tests/gis/test.tar.unknowext",tempDir);
+	untar.decompress();
     }
     
     @Test
     public void untarForNotCompressed() throws IOException{
-	Untar untar = new Untar("./data/tests/tar/test.tar",tempDir);
-	untar.untar();
+	GISFiler untar = new GISFiler("./data/tests/gis/test.tar",tempDir);
+	untar.decompress();
 	Assert.assertTrue("",new File(tempDir+File.separator+"tarwocompression.txt").exists());
     }
     

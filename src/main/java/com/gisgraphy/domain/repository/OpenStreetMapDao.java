@@ -518,20 +518,31 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
     
     public OpenStreetMap getNearestRoadFrom(
     	    final Point point) {
-    	return getNearestFrom(point,true,true);
+    	return getNearestFrom(point,true,true, DEFAULT_DISTANCE);
     
     }
     
+    
     public OpenStreetMap getNearestFrom(
     	    final Point point) {
-    	return getNearestFrom(point,false,true);
+    	return getNearestFrom(point,false,true, DEFAULT_DISTANCE);
+    }
+    
+    public OpenStreetMap getNearestFrom(
+    	    final Point point,final double distance) {
+    	return getNearestFrom(point,false,true,distance);
+    }
+    
+    public OpenStreetMap getNearestFrom(
+    	    final Point point,final boolean onlyroad,final boolean filterEmptyName) {
+    	return getNearestFrom(point,onlyroad,filterEmptyName, DEFAULT_DISTANCE);
     }
     
  
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public OpenStreetMap getNearestFrom(
-	    final Point point,final boolean onlyroad,final boolean filterEmptyName) {
+	    final Point point,final boolean onlyroad,final boolean filterEmptyName, final double distance) {
     	if (point==null){
     		return null;
     	}
@@ -546,7 +557,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 					
 		    		if (point!=null){
 		    			//An intersect restriction will probably have better performances and use the index than a distance restriction 
-		    			Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), DEFAULT_DISTANCE);
+		    			Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), distance);
 		    			criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
 		    		}
 					if (onlyroad) {

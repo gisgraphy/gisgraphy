@@ -26,7 +26,11 @@ import static com.gisgraphy.domain.valueobject.Pagination.paginate;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,14 +46,13 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import junit.framework.Assert;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
@@ -751,10 +754,10 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			
 		"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]/.='admGPalternateFR']",
+			+ "'][./str[2]/.='admGPalternateFR']",
 			"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[2]/.='admGPalternate']",
+			+ "'][./str[1]/.='admGPalternate']",
 		"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
 			+ "FR'][./str[1]/.='admGPalternateFR']"
@@ -998,10 +1001,10 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='"+country.getArea()+"']",
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]/.='"+alternateName.getName()+"']",
+			+ "'][./str[2]/.='"+alternateName.getName()+"']",
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[2]/.='"+alternateNameLocalized.getName()+"']",
+			+ "'][./str[1]/.='"+alternateNameLocalized.getName()+"']",
 			
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()

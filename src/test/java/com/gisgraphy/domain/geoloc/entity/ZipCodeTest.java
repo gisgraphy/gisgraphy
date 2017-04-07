@@ -21,8 +21,8 @@
  ******************************************************************************/
 package com.gisgraphy.domain.geoloc.entity;
 
-import junit.framework.Assert;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 

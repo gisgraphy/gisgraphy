@@ -22,15 +22,18 @@
  *******************************************************************************/
 package com.gisgraphy.domain.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.Assert.*;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
@@ -39,7 +42,6 @@ import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.test.GisgraphyTestHelper;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 
 public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 

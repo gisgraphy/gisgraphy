@@ -337,6 +337,11 @@ public class GeonamesAlternateNamesSimpleImporter extends AbstractSimpleImporter
 		+ importerConfig.getAlternateNameFeaturesFileName());
 	return files;
     }
+    
+    @Override
+    Integer getImportKey() {
+    	return 0;
+    }
 
     /**
      * @param solRSynchroniser

@@ -38,6 +38,9 @@ import com.gisgraphy.model.User;
 public class UniversalDaoTest extends AbstractTransactionalTestCase {
 	@Autowired
     protected UniversalDao universalDao;
+	
+	public UniversalDaoTest() {
+	}
 
     /**
      * Simple test to verify CRUD works.

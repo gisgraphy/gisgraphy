@@ -22,19 +22,22 @@
  *******************************************************************************/
 package com.gisgraphy.domain.geoloc.entity;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import junit.framework.Assert;
-import static org.junit.Assert.*;
-
 import org.apache.commons.lang.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.domain.repository.ICityDao;
 import com.gisgraphy.domain.repository.ICountryDao;

@@ -79,7 +79,7 @@
 
 <b:bean id="userdao" class="com.gisgraphy.service.UserSecurityAdvice"/>
 
-   <global-method-security>
+   <global-method-security proxy-target-class="false">
         <protect-pointcut expression="execution(* *..service.UserManager.removeUser(..))" access="ROLE_ADMIN"/>
     </global-method-security>
 

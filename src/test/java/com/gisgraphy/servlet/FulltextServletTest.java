@@ -37,6 +37,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.testing.ServletTester;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -52,6 +53,9 @@ public class FulltextServletTest extends AbstractIntegrationHttpSolrTestCase {
 
     private static ServletTester servletTester;
     private static String fulltextServletUrl;
+    
+    public FulltextServletTest() {
+	}
 
     @Autowired
     private IFullTextSearchEngine fullTextSearchEngine;

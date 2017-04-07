@@ -822,6 +822,8 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	return true;
     }
 
+    
+   
     /*
      * (non-Javadoc)
      * 
@@ -944,6 +946,11 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
     protected File[] getFiles() {
 	return ImporterHelper.listCountryFilesToImport(importerConfig
 		.getGeonamesDir());
+    }
+    
+    @Override
+    Integer getImportKey() {
+    	return 0;
     }
 
     /**

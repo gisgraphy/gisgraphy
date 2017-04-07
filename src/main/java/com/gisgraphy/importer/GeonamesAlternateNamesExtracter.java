@@ -407,6 +407,11 @@ public class GeonamesAlternateNamesExtracter extends AbstractSimpleImporterProce
 		+ importerConfig.getAlternateNamesFileName());
 	return files;
     }
+    
+    @Override
+    Integer getImportKey() {
+    	return 0;
+    }
 
     /*
      * (non-Javadoc)

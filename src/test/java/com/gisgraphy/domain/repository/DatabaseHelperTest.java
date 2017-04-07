@@ -31,8 +31,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

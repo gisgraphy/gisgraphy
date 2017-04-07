@@ -328,8 +328,8 @@ public class ImporterConfigTest {
 	    ImporterConfig importerConfig = new ImporterConfig();
 	    importerConfig.setOpenStreetMapFilesToDownload(" ");
 	    Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
-	    importerConfig.setOpenStreetMapFilesToDownload("FR.bz2");
-	    Assert.assertEquals("FR.bz2", importerConfig.getOpenStreetMapFilesToDownload());
+	    importerConfig.setOpenStreetMapFilesToDownload("FR.gis");
+	    Assert.assertEquals("FR.gis", importerConfig.getOpenStreetMapFilesToDownload());
 	    importerConfig.setOpenStreetMapFilesToDownload(null);
 	    Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
 	}
@@ -339,8 +339,8 @@ public class ImporterConfigTest {
 	    ImporterConfig importerConfig = new ImporterConfig();
 	    importerConfig.setQuattroshapesFilesToDownload(" ");
 	    Assert.assertEquals(ImporterConfig.QUATTROSHAPES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getQuattroshapesFilesToDownload());
-	    importerConfig.setQuattroshapesFilesToDownload("shapeXX.tar.bz2");
-	    Assert.assertEquals("shapeXX.tar.bz2", importerConfig.getQuattroshapesFilesToDownload());
+	    importerConfig.setQuattroshapesFilesToDownload("shapeXX.gis");
+	    Assert.assertEquals("shapeXX.gis", importerConfig.getQuattroshapesFilesToDownload());
 	    importerConfig.setQuattroshapesFilesToDownload(null);
 	    Assert.assertEquals(ImporterConfig.QUATTROSHAPES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getQuattroshapesFilesToDownload());
 	}
@@ -350,8 +350,8 @@ public class ImporterConfigTest {
 	    ImporterConfig importerConfig = new ImporterConfig();
 	    importerConfig.setOpenStreetMapHouseNumberFilesToDownload(" ");
 	    Assert.assertEquals(ImporterConfig.OPENSTREETMAP_HOUSENUMBER_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
-	    importerConfig.setOpenStreetMapHouseNumberFilesToDownload("FR.bz2");
-	    Assert.assertEquals("FR.bz2", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
+	    importerConfig.setOpenStreetMapHouseNumberFilesToDownload("FR.gis");
+	    Assert.assertEquals("FR.gis", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
 	    importerConfig.setOpenStreetMapHouseNumberFilesToDownload(null);
 	    Assert.assertEquals(ImporterConfig.OPENSTREETMAP_HOUSENUMBER_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
 	}

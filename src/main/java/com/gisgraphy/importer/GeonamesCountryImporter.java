@@ -260,6 +260,13 @@ public class GeonamesCountryImporter extends AbstractSimpleImporterProcessor {
 		+ importerConfig.getCountriesFileName());
 	return files;
     }
+    
+    
+    @Override
+    Integer getImportKey() {
+    	return 0;
+    }
+   
 
     /*
      * (non-Javadoc)

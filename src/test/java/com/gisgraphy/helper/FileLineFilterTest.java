@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

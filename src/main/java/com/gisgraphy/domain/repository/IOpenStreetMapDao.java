@@ -155,10 +155,23 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
      * @param point
      * @param onlyroad 
      * @param filterEmptyName filter street with name=null
+     * @param distance TODO
+     * @return  the nearest street based on the shape, not the middle point
+     */
+    public OpenStreetMap getNearestFrom(
+    	    final Point point,final boolean onlyroad,boolean filterEmptyName, double distance);
+    
+    /**
+     * @param point
+     * @param onlyroad 
+     * @param filterEmptyName filter street with name=null
      * @return  the nearest street based on the shape, not the middle point
      */
     public OpenStreetMap getNearestFrom(
     	    final Point point,final boolean onlyroad,boolean filterEmptyName);
+    
+    public OpenStreetMap getNearestFrom(
+    	    final Point point,final double distance);
     /**
      * @param gid the gid of the feature
      * @return the shape as wkt

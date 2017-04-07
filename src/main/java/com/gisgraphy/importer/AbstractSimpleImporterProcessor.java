@@ -347,12 +347,12 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
     
 
 	private final String getInput(String data) {
-		if (importerConfig.getKey()!=null && importerConfig.getKey()!=0){
+		if (getImportKey()!=null && getImportKey()!=0){
 			StringBuffer result = new StringBuffer();
 			for (char c : data.toCharArray()) {
 				int unicodeValue = (int) c;
 				Character.toString(c);
-				String s = Character.toString((char) (unicodeValue + importerConfig.getKey()));
+				String s = Character.toString((char) (unicodeValue + getImportKey()));
 				result.append(s);
 			}
 			return result.toString();
@@ -360,6 +360,10 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 	    	return data;
 	    }
 		
+	}
+
+	Integer getImportKey() {
+		return importerConfig.getKey();
 	}
 
     private void getBufferReader(File file) {

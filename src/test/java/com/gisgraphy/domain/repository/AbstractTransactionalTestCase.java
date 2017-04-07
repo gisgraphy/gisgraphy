@@ -78,6 +78,7 @@ extends AbstractJUnit4SpringContextTests{
 	return true;
     }
 
+    
  
 
     // private final static String[] resources = { "classpath:/spring/*.xml",

@@ -122,8 +122,8 @@ public class GeocodingService implements IGeocodingService {
 	//public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((((?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?))");
 	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((("
 			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)"
-			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:\\s?(?:bis|ter)?)(?!(?:st\\b|th\\b|rd\\b|nd\\b))"
-			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)"
+			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b))"
+			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b))(?=\\w+)+?)"
 			+ "|\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
 			+")",
 			Pattern.CASE_INSENSITIVE);

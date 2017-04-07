@@ -32,7 +32,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gisgraphy.helper.Untar;
+import com.gisgraphy.helper.GISFiler;
 
 
 /**
@@ -44,7 +44,7 @@ public class OpenStreetMapFileRetriever extends AbstractFileRetriever {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapFileRetriever.class);
 
-    private Untar untar;
+    private GISFiler untar;
     
     public String getcurrentExtractedFileNameIntoArchive(){
 	return untar == null? null : untar.getCurrentFileNameIntoArchiveExtracted();
@@ -73,8 +73,8 @@ public class OpenStreetMapFileRetriever extends AbstractFileRetriever {
 	File destDirectory = new File(getDownloadDirectory());
 	for (int i = 0; i < filesToUntar.length; i++) {
 	    try {
-			untar = new Untar(filesToUntar[i].getAbsolutePath(),destDirectory);
-			untar.untar();
+			untar = new GISFiler(filesToUntar[i].getAbsolutePath(),destDirectory);
+			untar.decompress();
 		} catch (Exception e) {
 			logger.error(filesToUntar[i].getAbsolutePath()+" is not a valid tar file");
 		}

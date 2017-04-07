@@ -21,8 +21,8 @@
  ******************************************************************************/
 package com.gisgraphy.importer;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Before;

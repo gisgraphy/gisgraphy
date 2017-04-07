@@ -40,62 +40,57 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.tools.tar.TarEntry;
-import org.apache.tools.tar.TarInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility class to untar files, files can be zipped in multi format (extension
- * tar, tar.gzip,tar.gz, tar.bz2, tar.bzip2 are supported).
+ * Utility class to decompress files.
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  * 
  */
-public class Untar {
-    private String tarFileName;
+public class GISFiler {
+    private String gisFileName;
     private File dest;
     private String currentFileNameIntoArchiveExtracted;
 
     /**
      * The logger
      */
-    private static final Logger logger = LoggerFactory.getLogger(Untar.class);
+    private static final Logger logger = LoggerFactory.getLogger(GISFiler.class);
 
     /**
-     * @param tarFileName
-     *            the path to the file we want to untar
+     * @param gisFileName
      * @param dest
-     *            the path where the file should be untar
      */
-    public Untar(String tarFileName, File dest) {
-	this.tarFileName = tarFileName;
+    public GISFiler(String gisFileName, File dest) {
+	this.gisFileName = gisFileName;
 	this.dest = dest;
     }
 
     private InputStream getDecompressedInputStream(final String name, final InputStream istream) throws IOException {
-	logger.info("untar: decompress " + name + " to " + dest);
+	logger.info("decompress " + name + " to " + dest);
 	if (name == null) {
 	    throw new RuntimeException("fileName to decompress can not be null");
 	}
 	if (name.toLowerCase().endsWith("gzip") || name.toLowerCase().endsWith("gz")) {
 	    return new BufferedInputStream(new GZIPInputStream(istream));
-	} else if (name.toLowerCase().endsWith("bz2") || name.toLowerCase().endsWith("bzip2")) {
+	} else if (name.toLowerCase().endsWith(".gis")) {
 	    final char[] magic = new char[] { 'B', 'Z' };
 	    for (int i = 0; i < magic.length; i++) {
 		if (istream.read() != magic[i]) {
-		    throw new RuntimeException("Invalid bz2 file." + name);
+		    throw new RuntimeException("Invalid compressed file file." + name);
 		}
 	    }
 	    //return new BufferedInputStream(new CBZip2InputStream(istream));//CBZip2InputStream
-	    return unBzip(new File(tarFileName),this.dest);
+	    return unBzip(new File(gisFileName),this.dest);
 	} else if (name.toLowerCase().endsWith("tar")) {
 	    return istream;
 	}
-	throw new RuntimeException("can only detect compression for extension tar, gzip, gz, bz2, or bzip2");
+	throw new RuntimeException("can not detect format");
     }
     
-    private List<File> processUnTar(InputStream is, final File outputDir) throws FileNotFoundException, IOException, ArchiveException {
+    private List<File> processGis1(InputStream is, final File outputDir) throws FileNotFoundException, IOException, ArchiveException {
 
         logger.info(String.format("Untaring file to dir %s.", outputDir.getAbsolutePath()));
 
@@ -160,7 +155,7 @@ public class Untar {
     
     private  InputStream unBzip(final File inputFile, final File outputDir) throws FileNotFoundException, IOException {
 
-    	logger.info(String.format("UnBzipping %s to dir %s.", inputFile.getAbsolutePath(), outputDir.getAbsolutePath()));
+    	logger.info(String.format("decompress %s to dir %s.", inputFile.getAbsolutePath(), outputDir.getAbsolutePath()));
 
        // final File outputFile = new File(outputDir, inputFile.getName().substring(0, inputFile.getName().length() - 3));
 
@@ -176,63 +171,17 @@ public class Untar {
         return in;
     }
     
-    public void untar() throws IOException {
+    public void decompress() throws IOException {
     	
     	try {
-    		InputStream bz2 = getDecompressedInputStream(tarFileName, new FileInputStream(new File(tarFileName)));
-			processUnTar( bz2 ,this.dest);
+    		InputStream inputStream = getDecompressedInputStream(gisFileName, new FileInputStream(new File(gisFileName)));
+			processGis1( inputStream ,this.dest);
 		} catch (ArchiveException e) {
-			logger.error("can not decompress "+tarFileName+" in "+this.dest+" : "+e);
+			logger.error("can not decompress "+gisFileName+" in "+this.dest+" : "+e);
 		}
     }
 
-    /**
-     * process the untar operation
-     * 
-     * @throws IOException
-     */
-    public void processUnTar_v1() throws IOException {
-	logger.info("untar: untar " + tarFileName + " to " + dest);
-	TarInputStream tin = null;
-	try {
-	    if (!dest.exists()) {
-		dest.mkdir();
-	    }
-
-	    tin = new TarInputStream(getDecompressedInputStream(tarFileName, new FileInputStream(new File(tarFileName))));
-
-	    TarEntry tarEntry = tin.getNextEntry();
-
-	    while (tarEntry != null) {
-		File destPath = new File(dest.toString() + File.separatorChar + tarEntry.getName());
-
-		if (tarEntry.isDirectory()) {
-		    destPath.mkdir();
-		} else {
-		    if (!destPath.getParentFile().exists()) {
-			destPath.getParentFile().mkdirs();
-		    }
-		    currentFileNameIntoArchiveExtracted = tarEntry.getName();
-		    logger.info("untar: untar " + tarEntry.getName() + " to " + destPath);
-		    FileOutputStream fout = new FileOutputStream(destPath);
-		    try {
-			tin.copyEntryContents(fout);
-		    } finally {
-			fout.flush();
-			fout.close();
-		    }
-		}
-		tarEntry = tin.getNextEntry();
-	    }
-	} finally {
-	    currentFileNameIntoArchiveExtracted = null;
-	    if (tin != null) {
-		tin.close();
-	    }
-	}
-
-    }
-
+  
     public String getCurrentFileNameIntoArchiveExtracted() {
 	return currentFileNameIntoArchiveExtracted;
     }

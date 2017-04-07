@@ -22,7 +22,7 @@
 package com.gisgraphy.helper;
 
 import static com.gisgraphy.helper.StringHelper.splitCamelCase;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -212,6 +212,7 @@ public class StringHelperTest {
     
     @Test
     public void isSameStreetNameTest(){
+    	Assert.assertTrue("synonyms of street",StringHelper.isSameStreetName("omer street","omer st",null));
     
     	Assert.assertFalse("different",StringHelper.isSameStreetName("Finkenhof","Bildhauerhof",null));
     	Assert.assertFalse("more words",StringHelper.isSameStreetName("Le Breuil","Le Breuil-Mingot",null));
@@ -232,6 +233,8 @@ public class StringHelperTest {
     	
     	Assert.assertTrue("synonyms in expected",StringHelper.isSameStreetName("st omer","saint omer",null));
     	Assert.assertTrue("synonyms in actual",StringHelper.isSameStreetName("saint omer","st omer",null));
+    	
+    	
     	
     	Assert.assertTrue("synonyms in expected case sensitive",StringHelper.isSameStreetName("st omer","Saint omer",null));
     	Assert.assertTrue("synonyms in actual case sensitive",StringHelper.isSameStreetName("Saint omer","st omer",null));

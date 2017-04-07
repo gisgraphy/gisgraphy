@@ -158,7 +158,7 @@ public class ImporterHelper {
      */
     public static final String ZIP_FILE_ACCEPT_REGEX_STRING = ".*(.zip)";
 
-    public static final String TAR_BZ2_FILE_ACCEPT_REGEX_STRING = ".*(.tar.bz2)";
+    public static final String GIS_FILE_ACCEPT_REGEX_STRING = ".*(.tar.bz2)|.*(.gis)";
 
     protected static final Logger logger = LoggerFactory.getLogger(ImporterHelper.class);
     
@@ -202,9 +202,9 @@ public class ImporterHelper {
 	}
     };
 
-    private static FileFilter tarBZ2FileFilter = new FileFilter() {
+    private static FileFilter gisFileFilter = new FileFilter() {
 	public boolean accept(File file) {
-	    Pattern pattern = Pattern.compile(TAR_BZ2_FILE_ACCEPT_REGEX_STRING);
+	    Pattern pattern = Pattern.compile(GIS_FILE_ACCEPT_REGEX_STRING);
 
 	    return (file.isFile() && file.exists()) && pattern.matcher(file.getName()).matches();
 	}
@@ -303,7 +303,7 @@ public class ImporterHelper {
      * @param directoryPath
      *            The directory where openstreetmap files are to be downloaded
      *            in order to be processed
-     * @see #TAR_BZ2_FILE_ACCEPT_REGEX_STRING
+     * @see #GIS_FILE_ACCEPT_REGEX_STRING
      * @return all the zip files present in the specified directory or an empty
      *         array if there is no file
      */
@@ -311,7 +311,7 @@ public class ImporterHelper {
 
 	File dir = new File(directoryPath);
 
-	File[] files = dir.listFiles(tarBZ2FileFilter);
+	File[] files = dir.listFiles(gisFileFilter);
 	return files == null ? new File[0] : files;
     }
 

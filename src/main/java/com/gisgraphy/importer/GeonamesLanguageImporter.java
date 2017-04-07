@@ -181,6 +181,11 @@ public class GeonamesLanguageImporter extends AbstractSimpleImporterProcessor {
 		+ importerConfig.getLanguageFileName());
 	return files;
     }
+    
+    @Override
+    Integer getImportKey() {
+    	return 0;
+    }
 
     /*
      * (non-Javadoc)

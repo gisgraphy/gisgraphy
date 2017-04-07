@@ -342,7 +342,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 				com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, null);
 		Point point = GeolocHelper.createPoint(2F,	3F);
 		query.around(point);
-		query.withRadius(OpenStreetMapHouseNumberSimpleImporter.SEARCH_DISTANCE);
+		query.withRadius(OpenStreetMapHouseNumberSimpleImporter.DEFAULT_SEARCH_DISTANCE);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		OpenStreetMap osm = new OpenStreetMap();
@@ -372,7 +372,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 				com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, null);
 		Point point = GeolocHelper.createPoint(2F,	3F);
 		query.around(point);
-		query.withRadius(OpenStreetMapHouseNumberSimpleImporter.SEARCH_DISTANCE);
+		query.withRadius(OpenStreetMapHouseNumberSimpleImporter.DEFAULT_SEARCH_DISTANCE);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		
@@ -413,7 +413,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 				com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, null);
 		Point point = GeolocHelper.createPoint(2F,	3F);
 		query.around(point);
-		query.withRadius(OpenStreetMapHouseNumberSimpleImporter.SEARCH_DISTANCE);
+		query.withRadius(OpenStreetMapHouseNumberSimpleImporter.DEFAULT_SEARCH_DISTANCE);
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		
 		OpenStreetMap osm = new OpenStreetMap();
@@ -451,7 +451,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		Point point = GeolocHelper.createPoint(2F, 3F);
 		IOpenStreetMapDao openStreetMapDao = EasyMock.createMock(IOpenStreetMapDao.class);
 		OpenStreetMap openStreetMap = new OpenStreetMap();
-		EasyMock.expect(openStreetMapDao.getNearestFrom(point)).andReturn(openStreetMap);
+		EasyMock.expect(openStreetMapDao.getNearestFrom(point,OpenStreetMapHouseNumberSimpleImporter.DEFAULT_SEARCH_DISTANCE)).andReturn(openStreetMap);
 		EasyMock.replay(openStreetMapDao);
 		importer.openStreetMapDao=openStreetMapDao;
 		org.junit.Assert.assertEquals(openStreetMap,importer.findNearestStreet(null, point));
@@ -464,7 +464,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		Point point = GeolocHelper.createPoint(2F, 3F);
 		IOpenStreetMapDao openStreetMapDao = EasyMock.createMock(IOpenStreetMapDao.class);
 		OpenStreetMap openStreetMap = new OpenStreetMap();
-		EasyMock.expect(openStreetMapDao.getNearestFrom(point)).andReturn(openStreetMap);
+		EasyMock.expect(openStreetMapDao.getNearestFrom(point,OpenStreetMapHouseNumberSimpleImporter.DEFAULT_SEARCH_DISTANCE)).andReturn(openStreetMap);
 		EasyMock.replay(openStreetMapDao);
 		importer.openStreetMapDao=openStreetMapDao;
 		org.junit.Assert.assertEquals(openStreetMap,importer.findNearestStreet("", point));
@@ -477,7 +477,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		Point point = GeolocHelper.createPoint(2F, 3F);
 		IOpenStreetMapDao openStreetMapDao = EasyMock.createMock(IOpenStreetMapDao.class);
 		OpenStreetMap openStreetMap = new OpenStreetMap();
-		EasyMock.expect(openStreetMapDao.getNearestFrom(point)).andReturn(openStreetMap);
+		EasyMock.expect(openStreetMapDao.getNearestFrom(point,OpenStreetMapHouseNumberSimpleImporter.DEFAULT_SEARCH_DISTANCE)).andReturn(openStreetMap);
 		EasyMock.replay(openStreetMapDao);
 		importer.openStreetMapDao=openStreetMapDao;
 		org.junit.Assert.assertEquals(openStreetMap,importer.findNearestStreet("\"\"", point));

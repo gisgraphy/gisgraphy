@@ -30,13 +30,13 @@ import net.sf.jstester.util.Assert;
 import org.easymock.EasyMock;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.testing.ServletTester;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.gisgraphy.addressparser.AddressQuery;
 import com.gisgraphy.domain.valueobject.GisgraphyServiceType;
 import com.gisgraphy.geocoding.IGeocodingService;
-
 
 public class GeocodingServletTest {
     

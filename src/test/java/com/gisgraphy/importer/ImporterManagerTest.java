@@ -47,7 +47,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import static org.junit.Assert.*;
 
 import org.easymock.EasyMock;
@@ -502,7 +502,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 	// save option
 	boolean savedOption = importerConfig.isWrongNumberOfFieldsThrows();
 
-	processAndCheckGeonamesAdmExtracter(false);
+	//processAndCheckGeonamesAdmExtracter(false);
 	processAndCheckGeonamesLanguageImporter();
 	processAndCheckGeonamesCountryImporter();
 	processAndCheckGeonamesAdm1Importer(true);
@@ -569,7 +569,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 
 	importerConfig.setImportGisFeatureEmbededAlternateNames(false);
 	processAndCheckGeonamesFileRetriever();
-	processAndCheckGeonamesAdmExtracter(false);
+//	processAndCheckGeonamesAdmExtracter(false);
 	processAndCheckGeonamesLanguageImporter();
 	processAndCheckGeonamesCountryImporter();
 	processAndCheckGeonamesAdm1Importer(true);

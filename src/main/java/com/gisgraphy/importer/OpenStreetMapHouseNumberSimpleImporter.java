@@ -70,6 +70,8 @@ import com.vividsolutions.jts.geom.Point;
 public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImporterProcessor {
 
 
+	public static final long DEFAULT_SEARCH_DISTANCE = 2000L;
+
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapHouseNumberSimpleImporter.class);
 
 	protected IOpenStreetMapDao openStreetMapDao;
@@ -90,7 +92,6 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	
 	protected final static Output MEDIUM_OUTPUT = Output.withDefaultFormat().withStyle(OutputStyle.MEDIUM);
 
-	protected static final double SEARCH_DISTANCE = 6000;
 
 	
 	/*
@@ -761,7 +762,7 @@ ___W___house"} SHAPE"
 		}
 		if (streetName==null || "".equals(streetName.trim()) || "\"\"".equals(streetName.trim()) || "-".equals(streetName.trim()) || "---".equals(streetName.trim()) || "--".equals(streetName.trim())){
 			logger.warn("findNearestStreet : no streetname, we search by location "+location);
-				OpenStreetMap osm =	openStreetMapDao.getNearestFrom(location);
+				OpenStreetMap osm =	openStreetMapDao.getNearestFrom(location,DEFAULT_SEARCH_DISTANCE);
 				logger.error("findNearestStreet :getNearestFrom return "+osm);
 				return osm;
 		}
@@ -771,11 +772,11 @@ ___W___house"} SHAPE"
 					com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, null);
 		} catch (IllegalArgumentException e) {
 			logger.error("can not create a fulltext query for "+streetName+", will return the nearest");
-			return openStreetMapDao.getNearestFrom(location);
+			return openStreetMapDao.getNearestFrom(location,2000L);
 		}
 		query.withAllWordsRequired(false).withoutSpellChecking();
 		query.around(location);
-			query.withRadius(SEARCH_DISTANCE);
+			query.withRadius(DEFAULT_SEARCH_DISTANCE);
 		FulltextResultsDto results;
 		try {
 			results = fullTextSearchEngine.executeQuery(query);

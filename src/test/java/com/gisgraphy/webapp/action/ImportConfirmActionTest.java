@@ -198,11 +198,11 @@ public class ImportConfirmActionTest {
     	countryCodes.add("x");//countrycode should only have two letters
     	action.setCountryCodes(countryCodes);
     	action.setConfig();
-    	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapFilesToDownload());
-    	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
-    	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapCitiesFilesToDownload());
-    	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapAdmFilesToDownload());
-    	Assert.assertEquals("FR.tar.bz2;DE.tar.bz2;US.tar.bz2", importerConfig.getOpenStreetMapPoisFilesToDownload());
+    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapFilesToDownload());
+    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
+    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapCitiesFilesToDownload());
+    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapAdmFilesToDownload());
+    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapPoisFilesToDownload());
     	Assert.assertEquals("FR.zip;DE.zip;US.zip;"+ImporterConfig.GEONAMES_ALTERNATENAME_ZIP_FILE, importerConfig.getGeonamesFilesToDownload());
     }
     

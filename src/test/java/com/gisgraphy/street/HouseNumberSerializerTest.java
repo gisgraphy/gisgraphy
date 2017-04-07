@@ -1,6 +1,6 @@
 package com.gisgraphy.street;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -22,8 +22,8 @@
  *******************************************************************************/
 package com.gisgraphy.domain.valueobject;
 
-import junit.framework.Assert;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.domain.valueobject.StreetDistance.StreetDistanceBuilder;
@@ -49,15 +49,15 @@ public class StreetDistanceTest {
 	.withStreetType(StreetType.FOOTWAY).build();
 
 	Assert.assertEquals("countryCode Should be upperCased","FR",streetDistance.getCountryCode());
-	Assert.assertEquals(3D,streetDistance.getDistance());
+	Assert.assertEquals(3D,streetDistance.getDistance(),0.0001);
 	Assert.assertEquals(123L,streetDistance.getGid().longValue());
 	Assert.assertEquals(point,streetDistance.getLocation());
 	Assert.assertEquals("name",streetDistance.getName());
 	Assert.assertEquals("los angeles",streetDistance.getIsIn());
 	Assert.assertEquals(Boolean.TRUE,streetDistance.getOneWay());
 	Assert.assertEquals(StreetType.FOOTWAY,streetDistance.getStreetType());
-	Assert.assertEquals("calculated fields should be process",45F,streetDistance.getLng().floatValue());
-	Assert.assertEquals("calculated fields should be process",56F,streetDistance.getLat().floatValue());
+	Assert.assertEquals("calculated fields should be process",45F,streetDistance.getLng().floatValue(),0.00001);
+	Assert.assertEquals("calculated fields should be process",56F,streetDistance.getLat().floatValue(),0.00001);
     }
     
 }

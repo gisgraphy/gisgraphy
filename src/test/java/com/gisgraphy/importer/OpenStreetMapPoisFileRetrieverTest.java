@@ -1,6 +1,6 @@
 package com.gisgraphy.importer;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -116,7 +116,7 @@ public class OpenStreetMapPoisFileRetrieverTest {
 
 		// get files to download
 		List<String> filesToDownload =new ArrayList<String>();
-		String fileTobeDownload = "NU.tar.bz2";
+		String fileTobeDownload = "NU.gis";
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setOpenStreetMapPoisFilesToDownload(fileTobeDownload);
 		importerConfig.setRetrieveFiles(true);
@@ -157,7 +157,7 @@ public class OpenStreetMapPoisFileRetrieverTest {
 		// check that files have been untar
 		for (String fileToDownload : filesToDownload) {
 		    String fileNameWithCSVExtension = fileToDownload.substring(0,
-			    (fileToDownload.length()) - 8)
+			    (fileToDownload.length()) - importerConfig.OPENSTREETAMP_COMPRESSED_FILE_EXTENSION.length())
 			    + ".txt";
 		    file = new File(importerConfig.getOpenStreetMapPoisDir()
 			    + fileNameWithCSVExtension);
@@ -195,7 +195,7 @@ public class OpenStreetMapPoisFileRetrieverTest {
 
 		// get files to download
 		List<String> filesToDownload =new ArrayList<String>();
-		String fileTobeDownload = "notExisting.bz2";
+		String fileTobeDownload = "notExisting.gis";
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setOpenStreetMapPoisFilesToDownload(fileTobeDownload);
 		importerConfig.setRetrieveFiles(true);
@@ -284,7 +284,7 @@ public class OpenStreetMapPoisFileRetrieverTest {
 	    @Test
 	    public void getFilesToDownloadShouldReturnTheImporterConfigOption(){
 		ImporterConfig importerConfig = new ImporterConfig();
-		String fileTobeDownload = "AD.tar.bz2";
+		String fileTobeDownload = "AD.gis";
 		List<String> filesToDownload =new ArrayList<String>();
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setOpenStreetMapPoisFilesToDownload(fileTobeDownload);

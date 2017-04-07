@@ -1,6 +1,6 @@
 package com.gisgraphy.importer;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class QuattroshapesFileRetrieverTest {
 		};
 		ImporterConfig importerConfig = new ImporterConfig();
 		List<String> filesToDownload =new ArrayList<String>();
-		String fileTobeDownload = "shapes.test.tar.bz2";
+		String fileTobeDownload = "shapes.test.gis";
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setQuattroshapesFilesToDownload(fileTobeDownload);
 		importerConfig.setQuattroshapesImporterEnabled(true);
@@ -71,7 +71,7 @@ public class QuattroshapesFileRetrieverTest {
 		};
 		ImporterConfig importerConfig = new ImporterConfig();
 		List<String> filesToDownload =new ArrayList<String>();
-		String fileTobeDownload = "shapes.test.tar.bz2";
+		String fileTobeDownload = "shapes.test.gis";
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setQuattroshapesImporterEnabled(true);
 		importerConfig.setRetrieveFiles(true);
@@ -102,7 +102,7 @@ public class QuattroshapesFileRetrieverTest {
 		};
 		ImporterConfig importerConfig = new ImporterConfig();
 		List<String> filesToDownload =new ArrayList<String>();
-		String fileTobeDownload = "shapes.test.tar.bz2";
+		String fileTobeDownload = "shapes.test.gis";
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setQuattroshapesImporterEnabled(false);
 		importerConfig.setRetrieveFiles(true);
@@ -126,7 +126,7 @@ public class QuattroshapesFileRetrieverTest {
 
 		// get files to download
 		List<String> filesToDownload =new ArrayList<String>();
-		String fileTobeDownload = "shapes.test.tar.bz2";
+		String fileTobeDownload = "shapes.test.gis";
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setQuattroshapesFilesToDownload(fileTobeDownload);
 		importerConfig.setRetrieveFiles(true);
@@ -201,7 +201,7 @@ public class QuattroshapesFileRetrieverTest {
 
 		// get files to download
 		List<String> filesToDownload =new ArrayList<String>();
-		String fileTobeDownload = "notExisting.bz2";
+		String fileTobeDownload = "notExisting.gis";
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setQuattroshapesFilesToDownload(fileTobeDownload);
 		importerConfig.setRetrieveFiles(true);
@@ -304,7 +304,7 @@ public class QuattroshapesFileRetrieverTest {
 	    @Test
 	    public void getFilesToDownloadShouldReturnTheImporterConfigOption(){
 		ImporterConfig importerConfig = new ImporterConfig();
-		String fileTobeDownload = "shapes.tar.bz2";
+		String fileTobeDownload = "shapes.gis";
 		List<String> filesToDownload =new ArrayList<String>();
 		filesToDownload.add(fileTobeDownload);
 		importerConfig.setQuattroshapesFilesToDownload(fileTobeDownload);

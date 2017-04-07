@@ -3,7 +3,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" default-autowire="byName"
        default-lazy-init="false" >
 
-    <!-- AOP Advisor -->
      <bean id="userSecurityInterceptor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
         <property name="advice" ref="userSecurityAdvice"/>
         <property name="patterns">
@@ -13,7 +12,7 @@
         </property>
     </bean>
 
-    <!-- Advice Class -->
+
      <bean id="userSecurityAdvice" class="com.gisgraphy.service.UserSecurityAdvice"/>
 
     <bean id="userManager" class="com.gisgraphy.service.impl.UserManagerImpl"/>

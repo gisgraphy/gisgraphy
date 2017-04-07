@@ -2,11 +2,9 @@ package com.gisgraphy.domain.repository;
 
 import javax.annotation.Resource;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;

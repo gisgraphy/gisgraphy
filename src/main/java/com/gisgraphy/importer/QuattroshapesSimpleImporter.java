@@ -72,6 +72,11 @@ public class QuattroshapesSimpleImporter extends AbstractSimpleImporterProcessor
 	protected File[] getFiles() {
 		return ImporterHelper.listCountryFilesToImport(importerConfig.getQuattroshapesDir());
 	}
+	
+	 @Override
+	    Integer getImportKey() {
+	    	return 0;
+	    }
 
 	/* (non-Javadoc)
 	 * @see com.gisgraphy.domain.geoloc.importer.AbstractImporterProcessor#getNumberOfColumns()

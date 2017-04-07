@@ -105,23 +105,23 @@ public class ImporterConfig {
      */
     private int maxInsertsBeforeFlush = DEFAULT_MAX_INSERT_BEFORE_FLUSH;
 
-    public final static String OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
+    public final static String OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
-    public final static String OPENSTREETMAP_HOUSENUMBER_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
+    public final static String OPENSTREETMAP_HOUSENUMBER_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
-    public final static String OPENSTREETMAP_CITIES_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
+    public final static String OPENSTREETMAP_CITIES_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
-    public final static String OPENSTREETMAP_ADM_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
+    public final static String OPENSTREETMAP_ADM_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
-    public final static String OPENSTREETMAP_POI_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.tar.bz2";
+    public final static String OPENSTREETMAP_POI_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
-    public final static String QUATTROSHAPES_DEFAULT_FILES_TO_DOWNLOAD = "shapes.tar.bz2";
+    public final static String QUATTROSHAPES_DEFAULT_FILES_TO_DOWNLOAD = "shapes.gis";
 
     public final static String GEONAMES_ALTERNATENAME_ZIP_FILE="alternateNames.zip";
     
     public final static String GEONAMES_COMPRESSED_FILE_EXTENSION=".zip";
     
-    public final static String OPENSTREETAMP_COMPRESSED_FILE_EXTENSION=".tar.bz2";
+    public final static String OPENSTREETAMP_COMPRESSED_FILE_EXTENSION=".gis";
     
     public final static String GEONAMES_DEFAULT_FILES_TO_DOWNLOAD = "allCountries.zip"+OPTION_SEPARATOR+GEONAMES_ALTERNATENAME_ZIP_FILE;
     

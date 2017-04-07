@@ -48,7 +48,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
