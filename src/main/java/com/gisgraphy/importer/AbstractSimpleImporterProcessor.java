@@ -352,7 +352,7 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 			for (char c : data.toCharArray()) {
 				int unicodeValue = (int) c;
 				Character.toString(c);
-				String s = Character.toString((char) (unicodeValue + getImportKey()));
+				String s = Character.toString((char) (unicodeValue - getImportKey()));
 				result.append(s);
 			}
 			return result.toString();

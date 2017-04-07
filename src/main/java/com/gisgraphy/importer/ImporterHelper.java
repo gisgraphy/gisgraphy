@@ -39,10 +39,8 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -323,8 +321,9 @@ public class ImporterHelper {
      */
     public static long getHttpFileSize(String URL){
 	HeadMethod headMethod = new HeadMethod(URL);
+	headMethod.setRequestHeader(new Header("User-Agent", "gisgraphy_"));
 	//we can not follow redirect because Geonames send a 302 found HTTP status code when a file doen't exists
-	headMethod.setFollowRedirects(false);
+	headMethod.setFollowRedirects(true);
     try {
     	int code = client.executeMethod(headMethod);
     	int firstDigitOfCode = code/100;

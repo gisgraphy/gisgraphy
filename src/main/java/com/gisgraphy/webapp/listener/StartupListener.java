@@ -128,19 +128,9 @@ public class StartupListener implements ServletContextListener {
     public static void setupContext(ServletContext context) {
 	ApplicationContext ctx = WebApplicationContextUtils
 		.getRequiredWebApplicationContext(context);
-	if (ctx==null){
-		log.error("can not get ctx!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	}else {
-		log.error("CTX is not null");
-	}
-	
 	LookupManager mgr = (LookupManager) ctx.getBean("lookupManager");
 
-	if (mgr==null){
-		log.error("can not get mgr!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	} else {
-		log.error("MGR is not null");
-	}
+	
 	
 	// get list of possible roles
 	List<LabelValue> allRoles = mgr.getAllRoles();
