@@ -86,7 +86,8 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 	protected static final Logger logger = LoggerFactory
 			.getLogger(ReverseGeocodingService.class);
 
-	public static int DEFAULT_RADIUS = 30000;
+	public static int DEFAULT_CITY_RADIUS = 30000;
+	public static int DEFAULT_STREET_RADIUS = 1000;
 
 	
 
@@ -97,11 +98,11 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 		Assert.notNull(point, "Can not execute a query without a valid point");
 		long start = System.currentTimeMillis();
 		statsUsageService.increaseUsage(StatsUsageType.REVERSEGEOCODING);
-		OpenStreetMap openStreetMap = openStreetMapDao.getNearestRoadFrom(point);
+		OpenStreetMap openStreetMap = openStreetMapDao.getNearestRoadFrom(point,DEFAULT_STREET_RADIUS);
 		//AddressResultsDto addressResultsDto = null;
 		if (openStreetMap==null){
 			logger.debug("no road found, try to search deeper");
-			openStreetMap =openStreetMapDao.getNearestFrom(point);
+			openStreetMap =openStreetMapDao.getNearestFrom(point,DEFAULT_STREET_RADIUS);
 		}
 		if (openStreetMap!= null){
 			//stupid patch
@@ -175,7 +176,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 			Address address = null;
 			if (city == null){
 				logger.info("No city by shape found, try by vicinity");
-				city = cityDao.getNearest(point,null, false, DEFAULT_RADIUS);
+				city = cityDao.getNearest(point,null, false, DEFAULT_CITY_RADIUS);
 				if (city == null){
 					logger.info("No city by vicinity found");
 				} else {

@@ -673,7 +673,7 @@ public class ImporterHelper {
 				continue;
 			}
 			if (matcher.group(1)!=null && isUnwantedAlternateName(matcher.group(1))){
-				logger.warn(matcher.group(1)+" is not an alternate name we want for line " + alternateNamesAsString);
+				logger.info(matcher.group(1)+" is not an alternate name we want for line " + alternateNamesAsString);
 				continue;
 				
 			}

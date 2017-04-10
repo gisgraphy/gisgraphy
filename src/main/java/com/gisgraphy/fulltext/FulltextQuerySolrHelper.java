@@ -294,7 +294,7 @@ public class FulltextQuerySolrHelper {
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
 			String querySolr = querybuffer.toString();
-			logger.error("querysolr="+querySolr);
+			//logger.error("querysolr="+querySolr);
 			String queryAsStr = querySolr;
 			
 			parameters.set(Constants.QUERY_PARAMETER, queryAsStr);

@@ -148,7 +148,10 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
      *                The point from which we want to find street
      */
     public OpenStreetMap getNearestRoadFrom(
-    	    final Point point);
+    	    final Point point,final double distance);
+    
+    public OpenStreetMap getNearestFrom(
+    	    final Point point,final double distance);
 
     
     /**
@@ -161,17 +164,10 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
     public OpenStreetMap getNearestFrom(
     	    final Point point,final boolean onlyroad,boolean filterEmptyName, double distance);
     
-    /**
-     * @param point
-     * @param onlyroad 
-     * @param filterEmptyName filter street with name=null
-     * @return  the nearest street based on the shape, not the middle point
-     */
-    public OpenStreetMap getNearestFrom(
-    	    final Point point,final boolean onlyroad,boolean filterEmptyName);
-    
-    public OpenStreetMap getNearestFrom(
-    	    final Point point,final double distance);
+      
+     
+    public OpenStreetMap getNearestFromByName(
+    	    final Point point,final double distance, final String  name) ;
     /**
      * @param gid the gid of the feature
      * @return the shape as wkt

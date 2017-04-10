@@ -32,7 +32,6 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -45,6 +44,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import com.gisgraphy.GisgraphyException;
+import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.Street;
@@ -59,7 +59,6 @@ import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.IntrospectionHelper;
 import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.hibernate.criterion.DistanceRestriction;
-import com.gisgraphy.hibernate.criterion.FulltextRestriction;
 import com.gisgraphy.hibernate.criterion.IntersectsRestriction;
 import com.gisgraphy.hibernate.criterion.NativeSQLOrder;
 import com.gisgraphy.hibernate.criterion.ProjectionOrder;
@@ -79,157 +78,157 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
 @Repository
+@SuppressWarnings({ "unchecked", "deprecation", "rawtypes" })
 public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements IOpenStreetMapDao
 {
 	private IStreetFactory streetFactory = new StreetFactory();
-	 
-	 private EventManager eventManager;
-	
+
+	private EventManager eventManager;
+
 	/**
-     * The logger
-     */
-    protected static final Logger logger = LoggerFactory
-	    .getLogger(OpenStreetMapDao.class);
+	 * The logger
+	 */
+	protected static final Logger logger = LoggerFactory
+			.getLogger(OpenStreetMapDao.class);
 
 	protected static final int DEFAULT_DISTANCE = 7000;
-	
-    /**
-     * Default constructor
-     */
-    public OpenStreetMapDao() {
-	    super(OpenStreetMap.class);
-    }
-    
 
-    /* (non-Javadoc)
-     * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#getNearestAndDistanceFrom(com.vividsolutions.jts.geom.Point, double, int, int, java.lang.String, java.lang.String)
-     */
-    @SuppressWarnings("unchecked")
-    public List<StreetDistance> getNearestAndDistanceFrom(
-	    final Point point, final double distance,
-	    final int firstResult, final int maxResults,
-	    final StreetType streetType, final Boolean oneWay ,final String name, final StreetSearchMode streetSearchMode,final boolean includeDistanceField) {
-	if (streetSearchMode==StreetSearchMode.FULLTEXT && !GisgraphyConfig.STREET_SEARCH_FULLTEXT_MODE){
-		throw new GisgraphyException("The fulltext mode has been removed in gisgraphy v 3.0 and has been replaced by fulltext webservice with placetype=street. please Consult user guide.");
+	/**
+	 * Default constructor
+	 */
+	public OpenStreetMapDao() {
+		super(OpenStreetMap.class);
 	}
-	if (name != null && streetSearchMode==null){
-		throw new IllegalArgumentException("streetSearchmode can not be null if name is provided");
-	}
-	if (point == null && streetSearchMode==StreetSearchMode.CONTAINS){
-		throw new IllegalArgumentException("you must specify lat/lng when streetsearchmode = "+StreetSearchMode.CONTAINS);
-	}
-	return (List<StreetDistance>) this.getHibernateTemplate().execute(
-		new HibernateCallback() {
 
-		    public Object doInHibernate(Session session)
-			    throws PersistenceException {
-			Criteria criteria = session
-				.createCriteria(OpenStreetMap.class);
-			
-			List<String> fieldList = IntrospectionHelper
-				.getFieldsAsList(OpenStreetMap.class);
 
-			ProjectionList projections = ProjectionBean.fieldList(
-				fieldList,false);
-				if (includeDistanceField && point!=null){
-				projections.add(
-//				SpatialProjection.distance_sphere(point, GisFeature.LOCATION_COLUMN_NAME).as(
-//					"distance"));
-						SpatialProjection.distance_pointToLine(point, OpenStreetMap.SHAPE_COLUMN_NAME).as(
-						"distance"));
-				}
-			criteria.setProjection(projections);
-			if (includeDistanceField && point !=null){
-			    criteria.addOrder(new ProjectionOrder("distance"));
-			}
-			if (maxResults > 0) {
-			    criteria = criteria.setMaxResults(maxResults);
-			}
-			if (firstResult >= 1) {
-			    criteria = criteria.setFirstResult(firstResult - 1);
-			}
-			if (point!=null){
-			    Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), distance);
-			    criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
-			}
-			if (name != null) {
-					if (streetSearchMode==StreetSearchMode.CONTAINS){
-					    	criteria = criteria.add(Restrictions.isNotNull("name"));//optimisation!
-					    	criteria = criteria.add(Restrictions.ilike(OpenStreetMap.FULLTEXTSEARCH_PROPERTY_NAME, "%"+StringHelper.normalize(name)+"%"));
-					    	//criteria = criteria.add(new PartialWordSearchRestriction(OpenStreetMap.PARTIALSEARCH_VECTOR_COLUMN_NAME, name));
-					} /*else if (streetSearchMode == StreetSearchMode.FULLTEXT){
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#getNearestAndDistanceFrom(com.vividsolutions.jts.geom.Point, double, int, int, java.lang.String, java.lang.String)
+	 */
+	public List<StreetDistance> getNearestAndDistanceFrom(
+			final Point point, final double distance,
+			final int firstResult, final int maxResults,
+			final StreetType streetType, final Boolean oneWay ,final String name, final StreetSearchMode streetSearchMode,final boolean includeDistanceField) {
+		if (streetSearchMode==StreetSearchMode.FULLTEXT && !GisgraphyConfig.STREET_SEARCH_FULLTEXT_MODE){
+			throw new GisgraphyException("The fulltext mode has been removed in gisgraphy v 3.0 and has been replaced by fulltext webservice with placetype=street. please Consult user guide.");
+		}
+		if (name != null && streetSearchMode==null){
+			throw new IllegalArgumentException("streetSearchmode can not be null if name is provided");
+		}
+		if (point == null && streetSearchMode==StreetSearchMode.CONTAINS){
+			throw new IllegalArgumentException("you must specify lat/lng when streetsearchmode = "+StreetSearchMode.CONTAINS);
+		}
+		return (List<StreetDistance>) this.getHibernateTemplate().execute(
+				new HibernateCallback() {
+
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						Criteria criteria = session
+								.createCriteria(OpenStreetMap.class);
+
+						List<String> fieldList = IntrospectionHelper
+								.getFieldsAsList(OpenStreetMap.class);
+
+						ProjectionList projections = ProjectionBean.fieldList(
+								fieldList,false);
+						if (includeDistanceField && point!=null){
+							projections.add(
+									//				SpatialProjection.distance_sphere(point, GisFeature.LOCATION_COLUMN_NAME).as(
+									//					"distance"));
+									SpatialProjection.distance_pointToLine(point, OpenStreetMap.SHAPE_COLUMN_NAME).as(
+											"distance"));
+						}
+						criteria.setProjection(projections);
+						if (includeDistanceField && point !=null){
+							criteria.addOrder(new ProjectionOrder("distance"));
+						}
+						if (maxResults > 0) {
+							criteria = criteria.setMaxResults(maxResults);
+						}
+						if (firstResult >= 1) {
+							criteria = criteria.setFirstResult(firstResult - 1);
+						}
+						if (point!=null){
+							Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), distance);
+							criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
+						}
+						if (name != null) {
+							if (streetSearchMode==StreetSearchMode.CONTAINS){
+								criteria = criteria.add(Restrictions.isNotNull("name"));//optimisation!
+								criteria = criteria.add(Restrictions.ilike(OpenStreetMap.FULLTEXTSEARCH_PROPERTY_NAME, "%"+StringHelper.normalize(name)+"%"));
+								//criteria = criteria.add(new PartialWordSearchRestriction(OpenStreetMap.PARTIALSEARCH_VECTOR_COLUMN_NAME, name));
+							} /*else if (streetSearchMode == StreetSearchMode.FULLTEXT){
 						  criteria = criteria.add(new FulltextRestriction(OpenStreetMap.FULLTEXTSEARCH_VECTOR_PROPERTY_NAME, name));
 					} */else {
 						throw new NotImplementedException(streetSearchMode+" is not implemented for street search");
 					}
-			}
-			if (streetType != null) {
-			    criteria = criteria.add(Restrictions.eq("streetType",streetType));
-			}
-			if (oneWay != null) {
-			    criteria = criteria.add(Restrictions.eq("oneWay",oneWay));
-			}
-			criteria.setCacheable(true);
-			// List<Object[]> queryResults =testCriteria.list();
-			List<?> queryResults = criteria.list();
-			
-			if (queryResults != null && queryResults.size()!=0){
-			    String[] propertiesNameArray ;
-			    if (includeDistanceField && point!=null){
-			propertiesNameArray = (String[]) ArrayUtils
-			    	.add(
-			    		IntrospectionHelper
-			    			.getFieldsAsArray(OpenStreetMap.class),
-			    		"distance");
-			    } else  {
-				propertiesNameArray = IntrospectionHelper
-	    			.getFieldsAsArray(OpenStreetMap.class);
-			    }
-			List<StreetDistance> results = ResultTransformerUtil
-				.transformToStreetDistance(
-					propertiesNameArray,
-					queryResults);
-			return results;
-			} else {
-			    return new ArrayList<StreetDistance>();
-			}
-			
-		    }
-		});
-    }
-    
+						}
+						if (streetType != null) {
+							criteria = criteria.add(Restrictions.eq("streetType",streetType));
+						}
+						if (oneWay != null) {
+							criteria = criteria.add(Restrictions.eq("oneWay",oneWay));
+						}
+						criteria.setCacheable(true);
+						// List<Object[]> queryResults =testCriteria.list();
+						List<?> queryResults = criteria.list();
 
-    /* (non-Javadoc)
-     * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#getByGid(java.lang.Long)
-     */
-    public OpenStreetMap getByGid(final Long gid) {
-	Assert.notNull(gid);
-	return (OpenStreetMap) this.getHibernateTemplate().execute(
-		new HibernateCallback() {
+						if (queryResults != null && queryResults.size()!=0){
+							String[] propertiesNameArray ;
+							if (includeDistanceField && point!=null){
+								propertiesNameArray = (String[]) ArrayUtils
+										.add(
+												IntrospectionHelper
+												.getFieldsAsArray(OpenStreetMap.class),
+												"distance");
+							} else  {
+								propertiesNameArray = IntrospectionHelper
+										.getFieldsAsArray(OpenStreetMap.class);
+							}
+							List<StreetDistance> results = ResultTransformerUtil
+									.transformToStreetDistance(
+											propertiesNameArray,
+											queryResults);
+							return results;
+						} else {
+							return new ArrayList<StreetDistance>();
+						}
 
-		    public Object doInHibernate(Session session)
-			    throws PersistenceException {
-			String queryString = "from "
-				+ OpenStreetMap.class.getSimpleName()
-				+ " as c where c.gid= ?";
+					}
+				});
+	}
 
-			Query qry = session.createQuery(queryString);
-			qry.setCacheable(true);
 
-			qry.setParameter(0, gid);
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#getByGid(java.lang.Long)
+	 */
+	public OpenStreetMap getByGid(final Long gid) {
+		Assert.notNull(gid);
+		return (OpenStreetMap) this.getHibernateTemplate().execute(
+				new HibernateCallback() {
 
-			OpenStreetMap result = (OpenStreetMap) qry.uniqueResult();
-			return result;
-		    }
-		});
-    }
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						String queryString = "from "
+								+ OpenStreetMap.class.getSimpleName()
+								+ " as c where c.gid= ?";
 
-    
-  
-    /* (non-Javadoc)
-     * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#buildIndexForStreetNameSearch()
-     */
-   /* public Integer updateTS_vectorColumnForStreetNameSearch() {
+						Query qry = session.createQuery(queryString);
+						qry.setCacheable(true);
+
+						qry.setParameter(0, gid);
+
+						OpenStreetMap result = (OpenStreetMap) qry.uniqueResult();
+						return result;
+					}
+				});
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#buildIndexForStreetNameSearch()
+	 */
+	/* public Integer updateTS_vectorColumnForStreetNameSearch() {
 	return (Integer) this.getHibernateTemplate().execute(
 			 new HibernateCallback() {
 
@@ -242,15 +241,15 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 				int numberOfLineUpdatedForFulltext = qryUpdateFulltextField.executeUpdate();
 				int numberOfLineUpdatedForPartial = 0;
 				return Integer.valueOf(numberOfLineUpdatedForFulltext + numberOfLineUpdatedForPartial);
-				
+
 			    }
 			});
     }*/
-    
-    /* (non-Javadoc)
-     * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#buildIndexForStreetNameSearch()
-     */
-   /* public Integer updateTS_vectorColumnForStreetNameSearchPaginate(final long from,final long to ) {
+
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#buildIndexForStreetNameSearch()
+	 */
+	/* public Integer updateTS_vectorColumnForStreetNameSearchPaginate(final long from,final long to ) {
 	return (Integer) this.getHibernateTemplate().execute(
 			 new HibernateCallback() {
 
@@ -263,60 +262,59 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 				int numberOfLineUpdatedForFulltext = qryUpdateFulltextField.executeUpdate();
 				int numberOfLineUpdatedForPartial = 0;
 				return Integer.valueOf(numberOfLineUpdatedForFulltext + numberOfLineUpdatedForPartial);
-				
+
 			    }
 			});
     }*/
 
 
-    /* (non-Javadoc)
-     * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#createGISTIndex()
-     */
-    @SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#createGISTIndex()
+	 */
 	public void createSpatialIndexes() {
-	 this.getHibernateTemplate().execute(
-			 new HibernateCallback() {
+		this.getHibernateTemplate().execute(
+				new HibernateCallback() {
 
-			    public Object doInHibernate(Session session)
-				    throws PersistenceException {
-				session.flush();
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						session.flush();
 
-				String locationIndexName = OpenStreetMap.LOCATION_COLUMN_NAME.toLowerCase()+"indexopenstreetmap";
-				logger.info("checking if "+locationIndexName+" exists");
-				String checkingLocationIndex= "SELECT 1 FROM   pg_class c  JOIN   pg_namespace n ON n.oid = c.relnamespace WHERE  c.relname = '"+locationIndexName+"'";
-				Query checkingLocationIndexQuery = session.createSQLQuery(checkingLocationIndex);
-				Object locationIndexExists = checkingLocationIndexQuery.uniqueResult();
-				if (locationIndexExists != null){
-					logger.info("will create GIST index for  the "+OpenStreetMap.LOCATION_COLUMN_NAME+" column");
-					String createIndexForLocation = "CREATE INDEX "+locationIndexName+" ON openstreetmap USING GIST ("+OpenStreetMap.LOCATION_COLUMN_NAME.toLowerCase()+")";  
-					Query qryUpdateLocationIndex = session.createSQLQuery(createIndexForLocation);
-					qryUpdateLocationIndex.executeUpdate();
-				} else {
-					logger.info("won't create GIST index for  the "+OpenStreetMap.LOCATION_COLUMN_NAME+" column because it already exists");
-				}
-				
-				String shapeIndexName=OpenStreetMap.SHAPE_COLUMN_NAME.toLowerCase()+"indexopenstreetmap";
-				logger.info("checking if "+shapeIndexName+" exists");
-				String checkingShapeIndex= "SELECT 1 FROM   pg_class c  JOIN   pg_namespace n ON n.oid = c.relnamespace WHERE  c.relname = '"+shapeIndexName+"'";
-				Query checkingShapeIndexQuery = session.createSQLQuery(checkingShapeIndex);
-				Object shapeIndexExists = checkingShapeIndexQuery.uniqueResult();
-				if (shapeIndexExists!=null){
-					logger.info("will create GIST index for  the "+OpenStreetMap.SHAPE_COLUMN_NAME+" column");
-					String createIndexForShape = "CREATE INDEX "+OpenStreetMap.SHAPE_COLUMN_NAME.toLowerCase()+"indexopenstreetmap ON openstreetmap USING GIST ("+OpenStreetMap.SHAPE_COLUMN_NAME.toLowerCase()+")";  
-					Query qryUpdateShapeIndex = session.createSQLQuery(createIndexForShape);
-					qryUpdateShapeIndex.executeUpdate();
-				} else {
-					logger.info("won't create GIST index for  the "+OpenStreetMap.SHAPE_COLUMN_NAME+" column because it already exists");
-				}
-				return null;
-			    }
-			});
-   }
-    
-    /* (non-Javadoc)
-     * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#createGISTIndex()
-     */
-   /* public void createFulltextIndexes() {
+						String locationIndexName = OpenStreetMap.LOCATION_COLUMN_NAME.toLowerCase()+"indexopenstreetmap";
+						logger.info("checking if "+locationIndexName+" exists");
+						String checkingLocationIndex= "SELECT 1 FROM   pg_class c  JOIN   pg_namespace n ON n.oid = c.relnamespace WHERE  c.relname = '"+locationIndexName+"'";
+						Query checkingLocationIndexQuery = session.createSQLQuery(checkingLocationIndex);
+						Object locationIndexExists = checkingLocationIndexQuery.uniqueResult();
+						if (locationIndexExists != null){
+							logger.info("will create GIST index for  the "+OpenStreetMap.LOCATION_COLUMN_NAME+" column");
+							String createIndexForLocation = "CREATE INDEX "+locationIndexName+" ON openstreetmap USING GIST ("+OpenStreetMap.LOCATION_COLUMN_NAME.toLowerCase()+")";  
+							Query qryUpdateLocationIndex = session.createSQLQuery(createIndexForLocation);
+							qryUpdateLocationIndex.executeUpdate();
+						} else {
+							logger.info("won't create GIST index for  the "+OpenStreetMap.LOCATION_COLUMN_NAME+" column because it already exists");
+						}
+
+						String shapeIndexName=OpenStreetMap.SHAPE_COLUMN_NAME.toLowerCase()+"indexopenstreetmap";
+						logger.info("checking if "+shapeIndexName+" exists");
+						String checkingShapeIndex= "SELECT 1 FROM   pg_class c  JOIN   pg_namespace n ON n.oid = c.relnamespace WHERE  c.relname = '"+shapeIndexName+"'";
+						Query checkingShapeIndexQuery = session.createSQLQuery(checkingShapeIndex);
+						Object shapeIndexExists = checkingShapeIndexQuery.uniqueResult();
+						if (shapeIndexExists!=null){
+							logger.info("will create GIST index for  the "+OpenStreetMap.SHAPE_COLUMN_NAME+" column");
+							String createIndexForShape = "CREATE INDEX "+OpenStreetMap.SHAPE_COLUMN_NAME.toLowerCase()+"indexopenstreetmap ON openstreetmap USING GIST ("+OpenStreetMap.SHAPE_COLUMN_NAME.toLowerCase()+")";  
+							Query qryUpdateShapeIndex = session.createSQLQuery(createIndexForShape);
+							qryUpdateShapeIndex.executeUpdate();
+						} else {
+							logger.info("won't create GIST index for  the "+OpenStreetMap.SHAPE_COLUMN_NAME+" column because it already exists");
+						}
+						return null;
+					}
+				});
+	}
+
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#createGISTIndex()
+	 */
+	/* public void createFulltextIndexes() {
 	 this.getHibernateTemplate().execute(
 			 new HibernateCallback() {
 
@@ -327,95 +325,123 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 				String createFulltextIndex = "CREATE INDEX "+OpenStreetMap.FULLTEXTSEARCH_VECTOR_PROPERTY_NAME.toLowerCase()+"indexopenstreetmap ON openstreetmap USING gin("+OpenStreetMap.FULLTEXTSEARCH_VECTOR_PROPERTY_NAME.toLowerCase()+")";  
 				Query fulltextIndexQuery = session.createSQLQuery(createFulltextIndex);
 				fulltextIndexQuery.executeUpdate();
-				
+
 				return null;
 			    }
 			});
    }*/
-    
 
-    
-    /* (non-Javadoc)
-     * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#countEstimate()
-     */
-    public long countEstimate(){
-	return (Long) this.getHibernateTemplate().execute(
-		new HibernateCallback() {
 
-		    public Object doInHibernate(Session session)
-			    throws PersistenceException {
-			String queryString = "select max(gid)-min(gid)+1 from "
-				+ persistentClass.getSimpleName();
 
-			Query qry = session.createQuery(queryString);
-			qry.setCacheable(true);
-			Long count = (Long) qry.uniqueResult();
-			return count==null?0:count;
-		    }
-		});
-    }
-    
-    @Override
-    public OpenStreetMap save(OpenStreetMap openStreetMap) {
-	OpenStreetMap savedEntity = super.save(openStreetMap);
-	Street street = streetFactory.create(savedEntity);
-	GisFeatureStoredEvent CreatedEvent = new GisFeatureStoredEvent(
-		street);
-	eventManager.handleEvent(CreatedEvent);
-	return savedEntity;
-    }
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#countEstimate()
+	 */
+	public long countEstimate(){
+		return (Long) this.getHibernateTemplate().execute(
+				new HibernateCallback() {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.gisgraphy.domain.repository.GenericDao#remove(java.lang.Object)
-     */
-    @Override
-    public void remove(OpenStreetMap openStreetMap) {
-	super.remove(openStreetMap);
-	Street street = streetFactory.create(openStreetMap);
-	GisFeatureDeletedEvent gisFeatureDeletedEvent = new GisFeatureDeletedEvent(
-		street);
-	eventManager.handleEvent(gisFeatureDeletedEvent);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.gisgraphy.domain.repository.GenericDao#deleteAll()
-     */
-    @Override
-    public int deleteAll() {
-	int numberOfOpenStreetMapDeleted = super.deleteAll();
-	PlaceTypeDeleteAllEvent placeTypeDeleteAllEvent = new PlaceTypeDeleteAllEvent(
-		Street.class);
-	eventManager.handleEvent(placeTypeDeleteAllEvent);
-	return numberOfOpenStreetMapDeleted;
-    }
-    
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						String queryString = "select max(gid)-min(gid)+1 from "
+								+ persistentClass.getSimpleName();
+
+						Query qry = session.createQuery(queryString);
+						qry.setCacheable(true);
+						Long count = (Long) qry.uniqueResult();
+						return count==null?0:count;
+					}
+				});
+	}
+
+	@Override
+	public OpenStreetMap save(OpenStreetMap openStreetMap) {
+		OpenStreetMap savedEntity = super.save(openStreetMap);
+		Street street = streetFactory.create(savedEntity);
+		GisFeatureStoredEvent CreatedEvent = new GisFeatureStoredEvent(
+				street);
+		eventManager.handleEvent(CreatedEvent);
+		return savedEntity;
+	}
+	
+
+	public String getShapeAsWKTByGId(final Long gid) {
+		if (gid ==null){
+			return null;
+		}
+		return (String) this.getHibernateTemplate().execute(
+				new HibernateCallback() {
+
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						String queryString = "select st_astext("+GisFeature.SHAPE_COLUMN_NAME+") from " + persistentClass.getSimpleName()
+								+ " as o where o.gid=?";
+
+						Query qry = session.createQuery(queryString);
+						qry.setParameter(0, gid);
+						//	qry.setCacheable(true);
+						Object shape = qry.uniqueResult();
+						if (shape !=null){
+							return  shape.toString();
+						} else {
+							return null;
+						}
+					}
+				});
+
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.gisgraphy.domain.repository.GenericDao#remove(java.lang.Object)
+	 */
+	@Override
+	public void remove(OpenStreetMap openStreetMap) {
+		super.remove(openStreetMap);
+		Street street = streetFactory.create(openStreetMap);
+		GisFeatureDeletedEvent gisFeatureDeletedEvent = new GisFeatureDeletedEvent(
+				street);
+		eventManager.handleEvent(gisFeatureDeletedEvent);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.gisgraphy.domain.repository.GenericDao#deleteAll()
+	 */
+	@Override
+	public int deleteAll() {
+		int numberOfOpenStreetMapDeleted = super.deleteAll();
+		PlaceTypeDeleteAllEvent placeTypeDeleteAllEvent = new PlaceTypeDeleteAllEvent(
+				Street.class);
+		eventManager.handleEvent(placeTypeDeleteAllEvent);
+		return numberOfOpenStreetMapDeleted;
+	}
+
 
 	public OpenStreetMap getByOpenStreetMapId(final Long openstreetmapId) {
 		Assert.notNull(openstreetmapId);
 		return (OpenStreetMap) this.getHibernateTemplate().execute(
-			new HibernateCallback() {
+				new HibernateCallback() {
 
-			    public Object doInHibernate(Session session)
-				    throws PersistenceException {
-				String queryString = "from "
-					+ OpenStreetMap.class.getSimpleName()
-					+ " as c where c.openstreetmapId= ?";
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						String queryString = "from "
+								+ OpenStreetMap.class.getSimpleName()
+								+ " as c where c.openstreetmapId= ?";
 
-				Query qry = session.createQuery(queryString);
-				qry.setMaxResults(1);
-				//we need to limit to 1 because a street can be in two countries
-				qry.setCacheable(true);
+						Query qry = session.createQuery(queryString);
+						qry.setMaxResults(1);
+						//we need to limit to 1 because a street can be in two countries
+						qry.setCacheable(true);
 
-				qry.setParameter(0, openstreetmapId);
+						qry.setParameter(0, openstreetmapId);
 
-				OpenStreetMap result = (OpenStreetMap) qry.uniqueResult();
-				return result;
-			    }
-			});
+						OpenStreetMap result = (OpenStreetMap) qry.uniqueResult();
+						return result;
+					}
+				});
 	}
 
 
@@ -423,23 +449,22 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#getMaxOpenstreetMapId()
 	 */
 	public long getMaxOpenstreetMapId() {
-			return (Long) this.getHibernateTemplate().execute(
+		return (Long) this.getHibernateTemplate().execute(
 				new HibernateCallback() {
 
-				    public Object doInHibernate(Session session)
-					    throws PersistenceException {
-					String queryString = "select max(openstreetmapId) from "
-						+ OpenStreetMap.class.getSimpleName();
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						String queryString = "select max(openstreetmapId) from "
+								+ OpenStreetMap.class.getSimpleName();
 
-					Query qry = session.createQuery(queryString);
-					qry.setCacheable(true);
-					Long count = (Long) qry.uniqueResult();
-					return count==null?0:count;
-				    }
+						Query qry = session.createQuery(queryString);
+						qry.setCacheable(true);
+						Long count = (Long) qry.uniqueResult();
+						return count==null?0:count;
+					}
 				});
 	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+
 	public OpenStreetMap getNearestByosmIds(final Point point,final List<Long> ids) {
 		if (ids==null || ids.size()==0){
 			return null;
@@ -447,178 +472,227 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 		return (OpenStreetMap) this.getHibernateTemplate().execute(
 				new HibernateCallback() {
 
-				    public Object doInHibernate(Session session)
-					    throws PersistenceException {
-				    	
-				    	Criteria criteria = session
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+
+						Criteria criteria = session
 								.createCriteria(OpenStreetMap.class);
-							
-							criteria.add(new DistanceRestriction(point,DEFAULT_DISTANCE,true));
-							criteria.add(Restrictions.in("openstreetmapId", ids));
-							
-							String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
-							String distanceCondition = new StringBuffer()
-							.append(DISTANCE_SPHERE_FUNCTION)
-							.append("(")
-								.append(pointAsString)
-								.append(",")
-								.append(SpatialProjection.ST_CLOSEST_POINT)
-								.append("(")
-									.append("this_.").append(OpenStreetMap.SHAPE_COLUMN_NAME)
-									.append(",")
-									.append(pointAsString)
-								.append(")")
-							.append(")")
-							.toString();
-							criteria.addOrder(new NativeSQLOrder(distanceCondition));
-							criteria = criteria.setMaxResults(1);
-							criteria.setCacheable(true);
-							// List<Object[]> queryResults =testCriteria.list();
-							OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
-							
-							return openStreetMap;
-							
-						    }
-						});
-		    }
-		    
-	
-	
-	/* (non-Javadoc)
-	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#getMaxOpenstreetMapId()
-	 */
-	public long getMaxGid() {
-			return (Long) this.getHibernateTemplate().execute(
-				new HibernateCallback() {
 
-				    public Object doInHibernate(Session session)
-					    throws PersistenceException {
-					String queryString = "select max(gid) from "
-						+ OpenStreetMap.class.getSimpleName();
+						criteria.add(new DistanceRestriction(point,DEFAULT_DISTANCE,true));
+						criteria.add(Restrictions.in("openstreetmapId", ids));
 
-					Query qry = session.createQuery(queryString);
-					qry.setCacheable(true);
-					Long count = (Long) qry.uniqueResult();
-					return count==null?0:count;
-				    }
-				});
-	}
-
-
-
-    @Autowired
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-    public void setStreetFactory(IStreetFactory streetFactory) {
-        this.streetFactory = streetFactory;
-    }
-    
-    public OpenStreetMap getNearestRoadFrom(
-    	    final Point point) {
-    	return getNearestFrom(point,true,true, DEFAULT_DISTANCE);
-    
-    }
-    
-    
-    public OpenStreetMap getNearestFrom(
-    	    final Point point) {
-    	return getNearestFrom(point,false,true, DEFAULT_DISTANCE);
-    }
-    
-    public OpenStreetMap getNearestFrom(
-    	    final Point point,final double distance) {
-    	return getNearestFrom(point,false,true,distance);
-    }
-    
-    public OpenStreetMap getNearestFrom(
-    	    final Point point,final boolean onlyroad,final boolean filterEmptyName) {
-    	return getNearestFrom(point,onlyroad,filterEmptyName, DEFAULT_DISTANCE);
-    }
-    
- 
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	public OpenStreetMap getNearestFrom(
-	    final Point point,final boolean onlyroad,final boolean filterEmptyName, final double distance) {
-    	if (point==null){
-    		return null;
-    	}
-	return (OpenStreetMap) this.getHibernateTemplate().execute(
-		new HibernateCallback() {
-
-		    public Object doInHibernate(Session session)
-			    throws PersistenceException {
-		    	
-		    	Criteria criteria = session
-						.createCriteria(OpenStreetMap.class);
-					
-		    		if (point!=null){
-		    			//An intersect restriction will probably have better performances and use the index than a distance restriction 
-		    			Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), distance);
-		    			criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
-		    		}
-					if (onlyroad) {
-						criteria = criteria.add(Restrictions.ne("streetType",StreetType.FOOTWAY));
-					}
-					if (filterEmptyName){
-						criteria = criteria.add(Restrictions.isNotNull("name"));
-					}
-					
-					String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
-					String distanceCondition = new StringBuffer()
-					.append(DISTANCE_SPHERE_FUNCTION)
-					.append("(")
+						String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
+						String distanceCondition = new StringBuffer()
+						.append(DISTANCE_SPHERE_FUNCTION)
+						.append("(")
 						.append(pointAsString)
 						.append(",")
 						.append(SpatialProjection.ST_CLOSEST_POINT)
 						.append("(")
-							.append("this_.").append(OpenStreetMap.SHAPE_COLUMN_NAME)
-							.append(",")
-							.append(pointAsString)
+						.append("this_.").append(OpenStreetMap.SHAPE_COLUMN_NAME)
+						.append(",")
+						.append(pointAsString)
 						.append(")")
-					.append(")")
-					.toString();
-					criteria.addOrder(new NativeSQLOrder(distanceCondition));
-					criteria = criteria.setMaxResults(1);
-					criteria.setCacheable(true);
-					// List<Object[]> queryResults =testCriteria.list();
-					OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
-					
-					return openStreetMap;
-					
-				    }
+						.append(")")
+						.toString();
+						criteria.addOrder(new NativeSQLOrder(distanceCondition));
+						criteria = criteria.setMaxResults(1);
+						criteria.setCacheable(true);
+						// List<Object[]> queryResults =testCriteria.list();
+						OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
+
+						return openStreetMap;
+
+					}
 				});
-    }
-    
-    
-    public String getShapeAsWKTByGId(final Long gid) {
-		if (gid ==null){
-			return null;
-		}
-		return (String) this.getHibernateTemplate().execute(
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.gisgraphy.domain.repository.IOpenStreetMapDao#getMaxOpenstreetMapId()
+	 */
+	public long getMaxGid() {
+		return (Long) this.getHibernateTemplate().execute(
 				new HibernateCallback() {
 
-				    public Object doInHibernate(Session session)
-					    throws PersistenceException {
-					String queryString = "select st_astext("+GisFeature.SHAPE_COLUMN_NAME+") from " + persistentClass.getSimpleName()
-			+ " as o where o.gid=?";
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+						String queryString = "select max(gid) from "
+								+ OpenStreetMap.class.getSimpleName();
 
-					Query qry = session.createQuery(queryString);
-					qry.setParameter(0, gid);
-				//	qry.setCacheable(true);
-					Object shape = qry.uniqueResult();
-					if (shape !=null){
-						return  shape.toString();
-					} else {
-						return null;
+						Query qry = session.createQuery(queryString);
+						qry.setCacheable(true);
+						Long count = (Long) qry.uniqueResult();
+						return count==null?0:count;
 					}
-				    }
 				});
-    
 	}
+
+
+
+	@Autowired
+	public void setEventManager(EventManager eventManager) {
+		this.eventManager = eventManager;
+	}
+
+
+	public void setStreetFactory(IStreetFactory streetFactory) {
+		this.streetFactory = streetFactory;
+	}
+
+	
+
+
+//*************************don't search for name****************************************************
+
+	
+	public OpenStreetMap getNearestFrom(final Point point) {
+		return  getNearestFrom(point,DEFAULT_DISTANCE) ;
+	}
+	
+	public OpenStreetMap getNearestRoadFrom(final Point point,final double distance) {
+		return getNearestFrom(point,true,true, distance);
+
+	}
+	
+	
+	public OpenStreetMap getNearestFrom(final Point point,final double distance) {
+		return getNearestFrom(point,false,false, distance);
+	}
+	
+	
+
+
+
+	public OpenStreetMap getNearestFrom(
+			final Point point,final boolean onlyroad,final boolean filterEmptyName, final double distance) {
+		if (point==null){
+			return null;
+		}
+		return (OpenStreetMap) this.getHibernateTemplate().execute(
+				new HibernateCallback() {
+
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+
+						Criteria criteria = session
+								.createCriteria(OpenStreetMap.class);
+
+						if (point!=null){
+							//An intersect restriction will probably have better performances and use the index than a distance restriction 
+							Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), distance);
+							criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
+						}
+						if (onlyroad) {
+							criteria = criteria.add(Restrictions.ne("streetType",StreetType.FOOTWAY));
+						}
+						if (filterEmptyName){
+							criteria = criteria.add(Restrictions.isNotNull("name"));
+						}
+
+						String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
+						String distanceCondition = new StringBuffer()
+						.append(DISTANCE_SPHERE_FUNCTION)
+						.append("(")
+						.append(pointAsString)
+						.append(",")
+						.append(SpatialProjection.ST_CLOSEST_POINT)
+						.append("(")
+						.append("this_.").append(OpenStreetMap.SHAPE_COLUMN_NAME)
+						.append(",")
+						.append(pointAsString)
+						.append(")")
+						.append(")")
+						.toString();
+						criteria.addOrder(new NativeSQLOrder(distanceCondition));
+						criteria = criteria.setMaxResults(1);
+						criteria.setCacheable(true);
+						// List<Object[]> queryResults =testCriteria.list();
+						OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
+
+						return openStreetMap;
+
+					}
+				});
+	}
+
+//***************************search for name***************************************************
+	
+	
+	public OpenStreetMap getNearestFromByName(
+			final Point point,final double distance, final String  name) {
+		
+		if (name ==null){
+			return  getNearestFrom(point, distance);
+		}
+		
+		
+		return (OpenStreetMap) this.getHibernateTemplate().execute(
+				new HibernateCallback() {
+
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+
+						Criteria criteria = session
+								.createCriteria(OpenStreetMap.class);
+
+						if (point!=null){
+							//An intersect restriction will probably have better performances and use the index than a distance restriction 
+							Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), distance);
+							criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
+						}
+						if (name!=null && !"".equals(name.trim()) ){
+							criteria = criteria.add(Restrictions.isNotNull("name"));
+						}
+
+						String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
+						String distanceCondition = new StringBuffer()
+						.append(DISTANCE_SPHERE_FUNCTION)
+						.append("(")
+						.append(pointAsString)
+						.append(",")
+						.append(SpatialProjection.ST_CLOSEST_POINT)
+						.append("(")
+						.append("this_.").append(OpenStreetMap.SHAPE_COLUMN_NAME)
+						.append(",")
+						.append(pointAsString)
+						.append(")")
+						.append(")")
+						.toString();
+						criteria.addOrder(new NativeSQLOrder(distanceCondition));
+						if (name==null || "".equals(name.trim())){
+							criteria = criteria.setMaxResults(1);
+							return criteria.uniqueResult();
+						} 
+						criteria = criteria.setMaxResults(20);
+
+						List<OpenStreetMap> openStreetMaps = (List<OpenStreetMap>)criteria.list();
+						if (openStreetMaps!=null && openStreetMaps.size()>0){
+							for (OpenStreetMap openstreetmap:openStreetMaps){
+								if (StringHelper.isSameStreetName(name, openstreetmap.getName(), openstreetmap.getCountryCode())){
+									return openstreetmap;
+								}
+								//search deeper
+								if (openstreetmap.getAlternateNames()!=null){
+									for (AlternateOsmName alterString:openstreetmap.getAlternateNames()){
+										if (alterString!=null){
+											if (StringHelper.isSameStreetName(name, alterString.getName(), openstreetmap.getCountryCode())){
+												return openstreetmap;
+											}
+										}
+									}
+								}
+
+							}
+						}
+						return null;
+
+					}
+				});
+
+	}
+
 
 
 

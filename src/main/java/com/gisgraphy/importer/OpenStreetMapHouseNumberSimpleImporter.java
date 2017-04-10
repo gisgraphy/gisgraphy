@@ -59,7 +59,6 @@ import com.gisgraphy.importer.dto.InterpolationHouseNumber;
 import com.gisgraphy.importer.dto.InterpolationMember;
 import com.gisgraphy.importer.dto.InterpolationType;
 import com.gisgraphy.importer.dto.NodeHouseNumber;
-import com.gisgraphy.service.ServiceException;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -70,7 +69,7 @@ import com.vividsolutions.jts.geom.Point;
 public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImporterProcessor {
 
 
-	public static final long DEFAULT_SEARCH_DISTANCE = 2000L;
+	public static final long DEFAULT_SEARCH_DISTANCE = 1000L;
 
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapHouseNumberSimpleImporter.class);
 
@@ -91,6 +90,13 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	private static final Pattern INTERPOLATION_HOUSE_NUMBER_PATTERN = Pattern.compile(INTERPOLATION_HOUSE_NUMBER_REGEXP, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 	
 	protected final static Output MEDIUM_OUTPUT = Output.withDefaultFormat().withStyle(OutputStyle.MEDIUM);
+	
+	long cummulative_db_time = 0;
+	long cummulative_fulltext_time = 0;
+	
+	long cummulative_db_nb_request = 0;
+	long cummulative_fulltext_nb_request = 0;
+	
 
 
 	
@@ -420,6 +426,7 @@ ___W___house"} SHAPE"
 			OpenStreetMap osm = null;
 			if (house.getStreetName() != null && !"".equals(house.getStreetName().trim()) && !"\"\"".equals(house.getStreetName().trim())) {
 				osm = findNearestStreet(house.getStreetName(), members.get(0).getLocation());
+				logger.error("execution time : db="+cummulative_db_time/cummulative_db_nb_request+" ft:"+cummulative_fulltext_time/cummulative_fulltext_nb_request);
 				if (osm == null) {
 					logger.warn("interpolation : can not find street for name "+house.getStreetName()+", position :"+ members.get(0).getLocation());
 					return;// we don't know which street to add the numbers
@@ -761,11 +768,23 @@ ___W___house"} SHAPE"
 			return null;
 		}
 		if (streetName==null || "".equals(streetName.trim()) || "\"\"".equals(streetName.trim()) || "-".equals(streetName.trim()) || "---".equals(streetName.trim()) || "--".equals(streetName.trim())){
-			logger.warn("findNearestStreet : no streetname, we search by location "+location);
+				logger.warn("findNearestStreet : no streetname, we search by location "+location);
 				OpenStreetMap osm =	openStreetMapDao.getNearestFrom(location,DEFAULT_SEARCH_DISTANCE);
 				logger.error("findNearestStreet :getNearestFrom return "+osm);
+				
 				return osm;
 		}
+		long start = System.currentTimeMillis();
+		
+		OpenStreetMap osmDB =	openStreetMapDao.getNearestFromByName(location, DEFAULT_SEARCH_DISTANCE, streetName);
+		
+		long end = System.currentTimeMillis();
+		long duration = end - start;
+		cummulative_db_nb_request++;
+		cummulative_db_time+=duration;
+		
+		
+		start = System.currentTimeMillis();
 		FulltextQuery query;
 		try {
 			query = new FulltextQuery(streetName, Pagination.DEFAULT_PAGINATION, MEDIUM_OUTPUT, 
@@ -786,6 +805,7 @@ ___W___house"} SHAPE"
 		}
 		int resultsSize = results.getResultsSize();
 	//	logger.warn(query + "returns "+resultsSize +" results");
+		OpenStreetMap osm =null;
 		List<SolrResponseDto> resultsList = results.getResults();
 		if (resultsSize == 1) {
 			SolrResponseDto street = resultsList.get(0);
@@ -793,20 +813,25 @@ ___W___house"} SHAPE"
 				Long openstreetmapId = street.getOpenstreetmap_id();
 				//logger.warn("findNearestStreet : find a street with osmId "+openstreetmapId);
 				if (openstreetmapId!=null){
-					OpenStreetMap osm = openStreetMapDao.getByOpenStreetMapId(openstreetmapId);
+					 osm = openStreetMapDao.getByOpenStreetMapId(openstreetmapId);
 					if (osm == null) {
 						logger.warn("can not find street for id "+openstreetmapId);
 					}
-					return osm;
 				}
 			}
 		} if (resultsSize > 1) {
-					OpenStreetMap osm = getNearestByIds(resultsList,location,streetName);
+					 osm = getNearestByIds(resultsList,location,streetName);
 					//logger.warn("findNearestStreet : getNearestByIds returns "+osm+" for "+streetName);
-					return osm;
-		} else {
-			return null;
 		}
+		 end = System.currentTimeMillis();
+		 duration = end - start;
+		cummulative_fulltext_nb_request++;
+		cummulative_fulltext_time+=duration;
+		
+		if (osmDB!=null && osm!=null && osmDB.getId()!= osm.getId()){
+			logger.error("notsame street : "+streetName+"/"+location+" returns "+osmDB+" and "+osm);
+		}
+		return osm;
 	}
 
 	protected OpenStreetMap getNearestByIds(List<SolrResponseDto> results,Point point,String streetname) {
