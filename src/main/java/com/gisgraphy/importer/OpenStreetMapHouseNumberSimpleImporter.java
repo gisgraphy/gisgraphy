@@ -41,6 +41,7 @@ import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
 import com.gisgraphy.domain.repository.IhouseNumberDao;
+import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.HouseNumberType;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 import com.gisgraphy.domain.valueobject.Output;
@@ -570,6 +571,7 @@ ___W___house"} SHAPE"
 		HouseNumber houseNumber = new HouseNumber();
 		houseNumber.setNumber(normalizeNumber(house.getHouseNumber()));
 		houseNumber.setName(house.getName());
+		houseNumber.setSource(GISSource.OSM);
 		houseNumber.setType(HouseNumberType.NODE);
 		try {
 			Long id = Long.valueOf(house.getNodeId());
@@ -732,6 +734,7 @@ ___W___house"} SHAPE"
 									houseNumberToAdd.setType(HouseNumberType.INTERPOLATION);
 									houseNumberToAdd.setLocation(p);
 									houseNumberToAdd.setNumber(firstNumberAsInt+(increment*i)+"");
+									houseNumberToAdd.setSource(GISSource.OSM);
 									houseNumbers.add(houseNumberToAdd);
 								}
 								//return houseNumbers;
@@ -881,6 +884,7 @@ ___W___house"} SHAPE"
 	protected HouseNumber buildHouseNumberFromAssociatedHouseNumber(
 			AssociatedStreetMember houseMember) {
 		HouseNumber houseNumber = new HouseNumber();
+		houseNumber.setSource(GISSource.OSM);
 		if (houseMember.getLocation()!=null){//it is a mandatory field
 			houseNumber.setLocation(houseMember.getLocation());
 		} else {
@@ -1027,8 +1031,6 @@ ___W___house"} SHAPE"
 	protected void tearDown() {
 		super.tearDown();
 		FullTextSearchEngine.disableLogging=false;
-		this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
-		//solRSynchroniser.optimize();
 	}
 
 

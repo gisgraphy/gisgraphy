@@ -40,6 +40,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
 
+import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.HouseNumberType;
 import com.gisgraphy.domain.valueobject.SRID;
 import com.gisgraphy.helper.IntrospectionIgnoredField;
@@ -94,9 +95,26 @@ public class HouseNumber implements Comparable<HouseNumber>{
     private Point location;
     
     private OpenStreetMap street;
+    private GISSource source;
 
     
     /**
+	 * @return the source
+	 */
+
+     @Enumerated(EnumType.STRING)
+	public GISSource getSource() {
+		return source;
+	}
+
+	/**
+	 * @param source the source to set
+	 */
+	public void setSource(GISSource source) {
+		this.source = source;
+	}
+
+	/**
      * @return the id (technical one)
      */
     @Id

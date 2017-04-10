@@ -47,6 +47,7 @@ import com.gisgraphy.domain.repository.ICitySubdivisionDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
+import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
@@ -154,6 +155,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	//
 	checkNumberOfColumn(fields);
 	OpenStreetMap street = new OpenStreetMap();
+	street.setSource(GISSource.OSM);
 	
 	// set id
 	if (!isEmptyField(fields, 0, false)) {

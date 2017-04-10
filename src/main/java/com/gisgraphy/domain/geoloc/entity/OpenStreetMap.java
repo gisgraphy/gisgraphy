@@ -53,6 +53,7 @@ import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.SRID;
 import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.IntrospectionIgnoredField;
@@ -145,6 +146,11 @@ public class OpenStreetMap {
     private String isInAdm;
     
     private String streetRef;
+    
+private GISSource source;
+
+    
+   
     
     /**
 	 * @return the streetRef
@@ -1024,6 +1030,21 @@ public class OpenStreetMap {
 	    }
 	}
     }
+    /**
+   	 * @return the source
+   	 */
+
+        @Enumerated(EnumType.STRING)
+   	public GISSource getSource() {
+   		return source;
+   	}
+
+   	/**
+   	 * @param source the source to set
+   	 */
+   	public void setSource(GISSource source) {
+   		this.source = source;
+   	}
 
 	public boolean isCityConfident() {
 		return cityConfident;
