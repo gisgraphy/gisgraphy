@@ -91,7 +91,7 @@ public class SmartStreetDetection {
 		int counter =0;
     	while (matcher.find()) {
     	    for (int j = 1; j <= matcher.groupCount(); j++) {
-    	    	System.out.println(matcher.group(j));
+    	    	//System.out.println(matcher.group(j));
     	    	int shift=0;
     	    	if (nbSpecialchar > 0 && matcher.group(j).indexOf("strasse")>=0){
     	    		nbSpecialchar--;

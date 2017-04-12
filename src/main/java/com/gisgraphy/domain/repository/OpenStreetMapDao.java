@@ -670,18 +670,8 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						List<OpenStreetMap> openStreetMaps = (List<OpenStreetMap>)criteria.list();
 						if (openStreetMaps!=null && openStreetMaps.size()>0){
 							for (OpenStreetMap openstreetmap:openStreetMaps){
-								if (StringHelper.isSameStreetName(name, openstreetmap.getName(), openstreetmap.getCountryCode())){
+								if (StringHelper.isSameStreetName(name, openstreetmap)){
 									return openstreetmap;
-								}
-								//search deeper
-								if (openstreetmap.getAlternateNames()!=null){
-									for (AlternateOsmName alterString:openstreetmap.getAlternateNames()){
-										if (alterString!=null){
-											if (StringHelper.isSameStreetName(name, alterString.getName(), openstreetmap.getCountryCode())){
-												return openstreetmap;
-											}
-										}
-									}
 								}
 
 							}

@@ -212,7 +212,8 @@ public class StringHelperTest {
     
     @Test
     public void isSameStreetNameTest(){
-    	Assert.assertTrue("synonyms of street",StringHelper.isSameStreetName("omer street","omer st",null));
+    	Assert.assertTrue(StringHelper.isSameStreetName("Untere Hauptstr.", "Untere Hauptstraße","DE"));
+    	//Assert.assertTrue("synonyms of street",StringHelper.isSameStreetName("omer street","omer st",null));
     
     	Assert.assertFalse("different",StringHelper.isSameStreetName("Finkenhof","Bildhauerhof",null));
     	Assert.assertFalse("more words",StringHelper.isSameStreetName("Le Breuil","Le Breuil-Mingot",null));
@@ -251,6 +252,9 @@ public class StringHelperTest {
     	Assert.assertTrue(StringHelper.isSameStreetName("Stauffenberg straße", "Stauffenbergstraße","DE"));
     	
     	
+    	
+    	
+    	
     }
     
     @Test
@@ -284,6 +288,50 @@ public class StringHelperTest {
     	Assert.assertEquals("4 route nationale 43 serques",StringHelper.prepareQuery("4 rn 43 serques"));
     	
     	}
+    
+    @Test
+    public void testExpandStreetSynonyms(){
+    	
+    	//no str
+    	Assert.assertEquals("foo",StringHelper.expandStreetSynonyms("foo", null));
+    	
+    	//one without point
+    	Assert.assertEquals("trucstraße",StringHelper.expandStreetSynonyms("trucStr", null));
+    	Assert.assertEquals("trucStrasse",StringHelper.expandStreetSynonyms("trucStrasse", null));
+    	Assert.assertEquals("truc Strasse",StringHelper.expandStreetSynonyms("truc Strasse", null));
+    //	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str"));
+    	
+    	//one with point
+    	Assert.assertEquals("trucstraße",StringHelper.expandStreetSynonyms("trucStr.", null));
+    	Assert.assertEquals("trucStrasse.",StringHelper.expandStreetSynonyms("trucStrasse.", null));
+    	Assert.assertEquals("truc Strasse.",StringHelper.expandStreetSynonyms("truc Strasse.", null));
+    //	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str."));
+    	
+    	//one without point + other word
+    	Assert.assertEquals("foo trucstraße",StringHelper.expandStreetSynonyms("foo trucStr", null));
+    	Assert.assertEquals("foo trucStrasse",StringHelper.expandStreetSynonyms("foo trucStrasse", null));
+    	Assert.assertEquals("foo truc Strasse",StringHelper.expandStreetSynonyms("foo truc Strasse", null));
+    //	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str"));
+    	
+    	//one with point + other word
+    	Assert.assertEquals("foo trucstraße",StringHelper.expandStreetSynonyms("foo trucStr.", null));
+    	Assert.assertEquals("foo trucStrasse.",StringHelper.expandStreetSynonyms("foo trucStrasse.", null));
+    	Assert.assertEquals("foo truc Strasse.",StringHelper.expandStreetSynonyms("foo truc Strasse.", null));
+    //	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str."));
+    	
+    	
+    	Assert.assertEquals("trucstraße",StringHelper.expandStreetSynonyms("trucStr", "DE"));
+    	Assert.assertEquals("trucstraße",StringHelper.expandStreetSynonyms("trucStr", "AT"));
+    	Assert.assertEquals("trucstrasse",StringHelper.expandStreetSynonyms("trucStr", "CH"));
+    	Assert.assertEquals("trucstraat",StringHelper.expandStreetSynonyms("trucStr", "NL"));
+    	Assert.assertEquals("trucstræde",StringHelper.expandStreetSynonyms("trucStr", "DK"));
+    	Assert.assertEquals("trucstrada",StringHelper.expandStreetSynonyms("trucStr", "MD"));
+    	//two 
+    	//Assert.assertEquals("foo trucstraße foo trucstraße",service.replaceGermanSynonyms("foo trucStr. foo trucStr."));
+    	
+    //	Assert.assertEquals("foo truc str",service.replaceGermanSynonyms("foo truc Str."));
+    }
+    
     
 
 

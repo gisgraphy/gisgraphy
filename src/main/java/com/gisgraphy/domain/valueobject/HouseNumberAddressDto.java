@@ -67,4 +67,31 @@ public class HouseNumberAddressDto {
 		this.houseNumber = houseNumber;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HouseNumberAddressDto [");
+		if (addressWithoutHouseNumber != null) {
+			builder.append("addressWithoutHouseNumber=");
+			builder.append(addressWithoutHouseNumber);
+			builder.append(", ");
+		}
+		if (addresWithHouseNumber != null) {
+			builder.append("addresWithHouseNumber=");
+			builder.append(addresWithHouseNumber);
+			builder.append(", ");
+		}
+		if (houseNumber != null) {
+			builder.append("houseNumber=");
+			builder.append(houseNumber);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
+
 }

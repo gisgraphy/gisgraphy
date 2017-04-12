@@ -1240,43 +1240,7 @@ public class GeocodingServiceTest {
 	
     }*/
     
-    @Test
-    public void testReplaceGermanSynonyms(){
-    	GeocodingService service = new GeocodingService();
-    	
-    	//no str
-    	Assert.assertEquals("foo",service.replaceGermanSynonyms("foo"));
-    	
-    	//one without point
-    	Assert.assertEquals("trucstraße",service.replaceGermanSynonyms("trucStr"));
-    	Assert.assertEquals("trucStrasse",service.replaceGermanSynonyms("trucStrasse"));
-    	Assert.assertEquals("truc Strasse",service.replaceGermanSynonyms("truc Strasse"));
-    //	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str"));
-    	
-    	//one with point
-    	Assert.assertEquals("trucstraße",service.replaceGermanSynonyms("trucStr."));
-    	Assert.assertEquals("trucStrasse.",service.replaceGermanSynonyms("trucStrasse."));
-    	Assert.assertEquals("truc Strasse.",service.replaceGermanSynonyms("truc Strasse."));
-    //	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str."));
-    	
-    	//one without point + other word
-    	Assert.assertEquals("foo trucstraße",service.replaceGermanSynonyms("foo trucStr"));
-    	Assert.assertEquals("foo trucStrasse",service.replaceGermanSynonyms("foo trucStrasse"));
-    	Assert.assertEquals("foo truc Strasse",service.replaceGermanSynonyms("foo truc Strasse"));
-    //	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str"));
-    	
-    	//one with point + other word
-    	Assert.assertEquals("foo trucstraße",service.replaceGermanSynonyms("foo trucStr."));
-    	Assert.assertEquals("foo trucStrasse.",service.replaceGermanSynonyms("foo trucStrasse."));
-    	Assert.assertEquals("foo truc Strasse.",service.replaceGermanSynonyms("foo truc Strasse."));
-    //	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str."));
-    	
-    	//two 
-    	//Assert.assertEquals("foo trucstraße foo trucstraße",service.replaceGermanSynonyms("foo trucStr. foo trucStr."));
-    	
-    //	Assert.assertEquals("foo truc str",service.replaceGermanSynonyms("foo truc Str."));
-    }
-    
+   
     @Test
     public void searchHouseNumberTest(){
     	GeocodingService service = new GeocodingService();
@@ -2458,9 +2422,17 @@ public class GeocodingServiceTest {
     	GeocodingService geocodingService = new GeocodingService();
     	
     	//ordinal without suffix
-    	Assert.assertEquals(null, geocodingService.findHouseNumber("EAST 236 STREET",null));
-    	Assert.assertEquals(null, geocodingService.findHouseNumber("236 STREET",null));
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("Straße des 17 Juni",null));
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("Straße des 17. Juni","DE"));
     	
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("rue du 01 septembre",null));
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("rue du 1 septembre","FR"));
+
+
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("EAST 236 STREET",null));
+    	
+    	
+    	Assert.assertEquals(null, geocodingService.findHouseNumber("236 STREET",null));
     	Assert.assertEquals(null, geocodingService.findHouseNumber("11 DE SEPTIEMBRE DE 1888",null));
     	
     	

@@ -53,9 +53,8 @@ public class LoginAction extends BaseAction implements Preparable {
     @Override
     public String execute() throws Exception {
     	super.execute();
- System.out.println("YEAHH"+SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
- SecurityContextHolder.getContext().getAuthentication().setAuthenticated(true);
- SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+    	SecurityContextHolder.getContext().getAuthentication().setAuthenticated(true);
+    	SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
         Principal principal = ServletActionContext.getRequest().getUserPrincipal();
         /*ServletActionContext.getRequest().getParameterMap();
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -246,6 +246,9 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		HouseNumber hn = new HouseNumber(fields[2],location);
 		hn.setSource(GISSource.OPENADDRESSES);
 		street.addHouseNumber(hn);
+		street.setCountryCode(null);//todo
+		
+		
 		
 		if (newStreet){
 			openStreetMapDao.save(street);
@@ -263,6 +266,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 				streetName = streetName.substring(0, MAX_NAME_SIZE);
 			}
 		}
+		//todo expand streetname
 		return streetName;
 	}
 

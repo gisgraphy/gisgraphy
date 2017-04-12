@@ -66,6 +66,7 @@ public class Decompounder {
 			add("CH");
 			add("LI");
 			add("AT");
+			add("DK");
 		}
 	};
 	

@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.compound.Decompounder;
 import com.gisgraphy.compound.Decompounder.state;
+import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 
 /**
@@ -61,6 +62,7 @@ public class StringHelper {
 	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
 	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*)\\s\\b(\\d{2})[\\s-](\\d{3}\\b)");
 	private final static Pattern ZIPCONCATENATE_3_2__PATTERN = Pattern.compile("(.*)\\s\\b(\\d{3})[\\s-](\\d{2}\\b)");
+	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 	
 	private static Decompounder decompounder = new Decompounder();
 
@@ -287,7 +289,9 @@ public class StringHelper {
 	public static boolean isSameStreetName(String expected, String actual, String countrycode){
 
 		if (actual!=null && expected!=null){
-			if (countrycode!=null && countrycode.equalsIgnoreCase("DE") && decompounder.getSate(actual)!=state.NOT_APPLICABLE){
+			if (countrycode!=null && Decompounder.isDecompoudCountryCode(countrycode) && decompounder.getSate(actual)!=state.NOT_APPLICABLE){
+				actual=expandStreetSynonyms(actual, null);
+				expected=expandStreetSynonyms(expected, null);
 				return isSameStreetName_intern(expected,actual) || isSameStreetName_intern(expected,decompounder.getOtherFormat(actual));
 			}
 			else {
@@ -388,6 +392,53 @@ public class StringHelper {
 					}
 				}
 			}
+		}
+		return false;
+	}
+	
+	public static String expandStreetSynonyms(String alternativeGermanAddress, String countryCode) {
+		StringBuffer sb = new StringBuffer();
+		Matcher m = GERMAN_SYNONYM_PATTEN.matcher(alternativeGermanAddress);
+		  while (m.find()) {
+			if (countryCode!=null){
+				countryCode = countryCode.toUpperCase();
+				if (countryCode.equals("DE")|countryCode.equals("AT")){
+					m.appendReplacement(sb, "straße");
+				} else if (countryCode.equals("NL")){
+					m.appendReplacement(sb, "straat");
+				} else if (countryCode.equals("CH")){
+					m.appendReplacement(sb, "strasse");
+				}else if (countryCode.equals("DK")){
+					m.appendReplacement(sb, "stræde");
+				}else if (countryCode.equals("MD")){
+					m.appendReplacement(sb, "strada");
+				}
+			}else {
+				//default to straße
+				m.appendReplacement(sb, "straße");
+			}
+		}
+		m.appendTail(sb);
+		String s = sb.toString();
+	//	s= s.replaceAll(" stra(?:(?:ss)|(?:ß))e", "strasse");
+		return s;
+	}
+	
+	public static boolean isSameStreetName(String name,OpenStreetMap openstreetmap){
+		if (name!=null && openstreetmap!=null){
+		if (StringHelper.isSameStreetName(name, openstreetmap.getName(), openstreetmap.getCountryCode())){
+			return true;
+		}
+		//search deeper
+		if (openstreetmap.getAlternateNames()!=null){
+			for (AlternateOsmName alterString:openstreetmap.getAlternateNames()){
+				if (alterString!=null){
+					if (StringHelper.isSameStreetName(name, alterString.getName(), openstreetmap.getCountryCode())){
+						return true;
+					}
+				}
+			}
+		}
 		}
 		return false;
 	}

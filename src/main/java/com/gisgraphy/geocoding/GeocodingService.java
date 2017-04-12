@@ -92,7 +92,7 @@ import com.vividsolutions.jts.geom.Point;
 public class GeocodingService implements IGeocodingService {
 	private static final String FUZZY_ACTIVE = "fuzzy:active";
 	//private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
-	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
+	
 	private static final int INTERPOLATION_CURVE_TOLERANCE = 45;
 	private IStatsUsageService statsUsageService;
 	private ImporterConfig importerConfig;
@@ -121,12 +121,14 @@ public class GeocodingService implements IGeocodingService {
 	public final static SolrResponseDtoDistanceComparator comparator = new SolrResponseDtoDistanceComparator();
 	//public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((((?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?))");
 	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((("
-			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?)"
-			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b))"
-			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b))(?=\\w+)+?)"
+			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
+			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,\\.;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))"
+			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
 			+ "|\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
 			+")",
 			Pattern.CASE_INSENSITIVE);
+	//
+	//
 	
 	public final static Pattern FIRST_NUMBER_EXTRACTION_PATTERN = Pattern.compile("^([0-9]+)");
 	public final static List<String> countryWithZipIs4Number= new ArrayList<String>(){
@@ -326,7 +328,7 @@ public class GeocodingService implements IGeocodingService {
 					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
 					logger.error("alternativeGermanAddress= "+alternativeGermanAddress);
 					alternativeGermanAddress = replaceGermanSynonyms(alternativeGermanAddress);*/
-					newAddress = replaceGermanSynonyms(newAddress);
+					newAddress = StringHelper.expandStreetSynonyms(newAddress, null);
 					logger.error("new rawAddress with synonyms ="+newAddress);
 					//logger.error("new alternative with synonyms ="+alternativeGermanAddress);
 					
@@ -527,17 +529,7 @@ public class GeocodingService implements IGeocodingService {
 		return results;
 	}
 
-	protected String replaceGermanSynonyms(String alternativeGermanAddress) {
-		StringBuffer sb = new StringBuffer();
-		Matcher m = GERMAN_SYNONYM_PATTEN.matcher(alternativeGermanAddress);
-		  while (m.find()) {
-			m.appendReplacement(sb, "straße");
-		}
-		m.appendTail(sb);
-		String s = sb.toString();
-		s= s.replaceAll(" stra(?:(?:ss)|(?:ß))e", "strasse");
-		return s;
-	}
+	
 
 	protected List<SolrResponseDto> doSearchStreet(String rawaddress,
 			String countryCode, boolean fuzzy, Point point, Double radius) {
@@ -1101,7 +1093,7 @@ public class GeocodingService implements IGeocodingService {
 					addresses.add(address);
 				//}
 					if (sameStreet && solResponseDtos.size()==count){
-						System.out.println("need remove");
+						//System.out.println("need remove");
 						//remove the last results added
 						for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
 							addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
