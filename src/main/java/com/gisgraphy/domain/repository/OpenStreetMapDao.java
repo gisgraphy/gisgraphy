@@ -497,7 +497,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						.toString();
 						criteria.addOrder(new NativeSQLOrder(distanceCondition));
 						criteria = criteria.setMaxResults(1);
-						criteria.setCacheable(true);
+						//criteria.setCacheable(true);
 						// List<Object[]> queryResults =testCriteria.list();
 						OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
 

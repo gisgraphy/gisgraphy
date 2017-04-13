@@ -182,7 +182,9 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		}
 		//0:LON 1:LAT 2: NUMBER 3:STREET 4:UNIT 5:CITY 6:DISTRICT 7:REGION 8:POSTCODE 9:ID 10:HASH
 		String[] fields = line.split(",");
-		checkNumberOfColumn(fields);
+		if (fields.length != getNumberOfColumns()) {
+			logger.error("wrong number of column ("+fields.length+") for "+line); 
+		}
 		if (!isAllRequiredFieldspresent(fields)){
 			logger.warn("some fields are not present for line "+line);
 		};
