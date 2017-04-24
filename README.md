@@ -113,7 +113,7 @@ In addition to the native openstreetmap data, some pre-calculated fields (length
 
 [Learn More](http://www.gisgraphy.com/gisgraphoid.htm) | [Download library](http://www.gisgraphy.com/gisgraphoid.htm#download) | [Download Demo app](http://www.gisgraphy.com/gisgraphoid.htm#demo)
 
-##Leaflet Plugins ##
+## Leaflet Plugins  ##
 [Demo](http://services.gisgraphy.com/static/leaflet/index.html) with the two plugins on a map.
 
 **Geocoding** : It allows to add a geocoding to add a geocoding input with autocompletion on a leaflet map. It wraps the [Gisgraphy js API.](http://www.gisgraphy.com/leaflet.htm#jsapi)
