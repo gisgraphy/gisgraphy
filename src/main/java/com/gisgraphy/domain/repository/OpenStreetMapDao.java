@@ -668,6 +668,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						criteria = criteria.setMaxResults(20);
 
 						List<OpenStreetMap> openStreetMaps = (List<OpenStreetMap>)criteria.list();
+						
 						if (openStreetMaps!=null && openStreetMaps.size()>0){
 							for (OpenStreetMap openstreetmap:openStreetMaps){
 								if (StringHelper.isSameStreetName(name, openstreetmap)){

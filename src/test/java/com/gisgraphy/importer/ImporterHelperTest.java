@@ -441,6 +441,20 @@ public class ImporterHelperTest {
 	  		
 	  	}
 	    
+	    @Test
+	  	public void testPopulateAlternateNames_name_1() {
+	      	String RawAlternateNames="name:de===truc___name_1===Expressway Drive South";
+	  		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
+	  		OpenStreetMap street = new OpenStreetMap();
+	  		street.setName("trucstrasse");
+	  		street = importer.populateAlternateNames(street, RawAlternateNames);
+	  		Assert.assertEquals(2, street.getAlternateNames().size());
+	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"truc"));
+	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Expressway Drive South"));
+	     		
+	  		
+	  	}
+	    
 	    
 	    @Test
 	   	public void testPopulateAlternateNames_Compound_WithDuplicate_notSameName() {

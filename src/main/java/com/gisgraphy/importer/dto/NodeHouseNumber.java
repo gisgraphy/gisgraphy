@@ -37,6 +37,18 @@ public class NodeHouseNumber {
 	
 	
 
+	public NodeHouseNumber(Point location, String houseNumber, String name,
+			String streetName, String city, String zipCode, String suburb) {
+		super();
+		this.location = location;
+		this.houseNumber = houseNumber;
+		this.name = name;
+		this.streetName = streetName;
+		this.city = city;
+		this.zipCode = zipCode;
+		this.suburb = suburb;
+	}
+
 	public NodeHouseNumber() {
 		super();
 	}

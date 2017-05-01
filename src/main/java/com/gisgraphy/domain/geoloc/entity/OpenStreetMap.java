@@ -147,7 +147,7 @@ public class OpenStreetMap {
     
     private String streetRef;
     
-private GISSource source;
+    private GISSource source;
 
     
    

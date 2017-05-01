@@ -957,6 +957,12 @@
 				add the possibility to call a hook url when the import is done
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				set max results allowed to 50 for fulltext query
+			</action>
+			
+			
+			
 			</release>
 			
 	</body>

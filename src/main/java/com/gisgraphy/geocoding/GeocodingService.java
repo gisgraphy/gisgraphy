@@ -328,7 +328,7 @@ public class GeocodingService implements IGeocodingService {
 					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
 					logger.error("alternativeGermanAddress= "+alternativeGermanAddress);
 					alternativeGermanAddress = replaceGermanSynonyms(alternativeGermanAddress);*/
-					newAddress = StringHelper.expandStreetSynonyms(newAddress, null);
+					newAddress = StringHelper.expandStreetType(newAddress, null);
 					logger.error("new rawAddress with synonyms ="+newAddress);
 					//logger.error("new alternative with synonyms ="+alternativeGermanAddress);
 					
