@@ -961,6 +961,13 @@
 				set max results allowed to 50 for fulltext query
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				better ordinal management
+			</action>
+			<action dev="David Masclet" type="add">
+				add openaddresses importer
+			</action>
+			
 			
 			
 			</release>

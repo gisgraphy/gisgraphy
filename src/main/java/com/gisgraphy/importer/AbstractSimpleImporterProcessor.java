@@ -346,21 +346,21 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
     }
     
 
-	private final String getInput(String data) {
-		if (getImportKey()!=null && getImportKey()!=0){
-			StringBuffer result = new StringBuffer();
-			for (char c : data.toCharArray()) {
-				int unicodeValue = (int) c;
-				Character.toString(c);
-				String s = Character.toString((char) (unicodeValue - getImportKey()));
-				result.append(s);
-			}
-			return result.toString();
-	    }else {
-	    	return data;
-	    }
-		
-	}
+    protected final String getInput(String data) {
+    	if (getImportKey()!=null && getImportKey()!=0){
+    		byte[] newb = new byte[data.getBytes().length];
+    		int cnt = 0;
+    		for (Byte b : data.getBytes()){
+    			int c2 = (int)b;
+    			c2 = c2 -getImportKey();
+    			byte b2 = ((byte) c2);
+    			newb[cnt++]=b2;
+    		}
+    		return new String(newb);
+    	}else {
+    		return data;
+    	}
+    }
 
 	Integer getImportKey() {
 		return importerConfig.getKey();

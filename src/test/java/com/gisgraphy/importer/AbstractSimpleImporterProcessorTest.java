@@ -72,5 +72,59 @@ public class AbstractSimpleImporterProcessorTest {
 		String[] fields5 = {" "};
 		Assert.assertTrue(importerProcessor.isEmptyField(fields5, 0, false));
 	}
+	
+	@Test
+	public void testGetInput(){
+		AbstractSimpleImporterProcessor importerProcessor = new AbstractSimpleImporterProcessor() {
+			
+			public List<NameValueDTO<Integer>> rollback() {
+				return null;
+			}
+			
+			@Override
+			protected boolean shouldIgnoreFirstLine() {
+				return false;
+			}
+			
+			@Override
+			protected boolean shouldIgnoreComments() {
+				return false;
+			}
+			
+			@Override
+			protected void setCommitFlushMode() {
+				
+			}
+			
+			@Override
+			protected void processData(String line) throws ImporterException {
+				
+			}
+			
+			@Override
+			protected int getNumberOfColumns() {
+				return 0;
+			}
+			
+			@Override
+			protected File[] getFiles() {
+				return null;
+			}
+			
+			@Override
+			protected void flushAndClear() {
+				
+			}
+			
+			@Override
+			Integer getImportKey() {
+				return 10;
+			}
+		};
+		
+		Assert.assertEquals("Alte Hellersdorfer Straße", importerProcessor.getInput("Kv~o*Rovvo|}ny|po|*]~|kͩo"));//Kv~o*Rovvo|}ny|po|*]~|kͩo
+		
+	}
+	
 
 }

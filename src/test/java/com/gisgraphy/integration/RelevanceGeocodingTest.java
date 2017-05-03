@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-@Ignore
+//@Ignore
 public class RelevanceGeocodingTest {
 
 	private static final long[] MAGDEBURGERSTRASSE = new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,91146628};
@@ -63,7 +63,7 @@ public class RelevanceGeocodingTest {
 	public final static String OUTPUT_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output.csv";
 	public final static String OUTPUT_FAIL_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output_fail.csv";
 
-	private static final boolean houseNumber = false;
+	private static final boolean houseNumber = true;
 	
 	IRestClient restClient = new RestClient();
 	
@@ -78,7 +78,8 @@ public class RelevanceGeocodingTest {
 	List<String> countryTest = new ArrayList<String>(){
 		{
 			add("FR");
-			add("DE");
+			//add("DE");
+			add("US");
 		}
 	};
 	

@@ -25,6 +25,7 @@ package com.gisgraphy.importer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.hibernate.FlushMode;
@@ -38,7 +39,6 @@ import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
-import com.gisgraphy.domain.repository.IdGenerator;
 import com.gisgraphy.domain.repository.IhouseNumberDao;
 import com.gisgraphy.domain.valueobject.GISSource;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
@@ -88,7 +88,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	private static final Pattern ALL_ZERO = Pattern.compile("^0+$");
 	private static final Pattern NOT_VALID_LABEL = Pattern.compile("\\b(NULL|UNDEFINED|UNAVAILABLE)\\b",Pattern.CASE_INSENSITIVE);
 
-	private static final int MAX_NAME_SIZE = 250;
+	public static final int MAX_NAME_SIZE = 250;
 	
 	
 	
@@ -105,14 +105,14 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	
 	protected boolean isUnWantedHouseNumber(String houseNumber){
 		if (houseNumber!=null){
-			return NOT_VALID_LABEL.matcher(houseNumber).matches() || isZeroHouseNumber(houseNumber);
+			return isUnWantedStreetName(houseNumber) || isZeroHouseNumber(houseNumber);
 		}
 		return true;
 		
 	}
-	protected boolean isUnWantedStreetName(String houseNumber){
-		if (houseNumber!=null){
-			return NOT_VALID_LABEL.matcher(houseNumber).find();
+	protected boolean isUnWantedStreetName(String streetname){
+		if (streetname!=null){
+			return NOT_VALID_LABEL.matcher(streetname).find() || streetname.trim().equals("");
 		}
 		return true;
 		
@@ -167,6 +167,8 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	private OpenStreetMap lastStreet=null;
 	
 	private Point lastPoint=null;
+	
+	private Pattern COUNTRY_EXTRACTION_PATTERN=Pattern.compile("/(..)/");
 
 	/*
 	 * (non-Javadoc)
@@ -199,6 +201,10 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		} catch (NumberFormatException e) {
 			logger.error("can not get location for "+line);
 			return;
+		}
+		String countrycode =null;
+		if (fields.length>=10 && isEmptyField(fields, 10, false)){
+			countrycode= extractCountrycode(fields[10]);
 		}
 		
 		String streetname = null;
@@ -261,18 +267,27 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 
 	}
 
+	protected String extractCountrycode(String string) {
+		if (string !=null){
+			Matcher m = COUNTRY_EXTRACTION_PATTERN.matcher(string);
+			if (m.find()){
+				return m.group(1).toUpperCase();
+			}
+		}
+		return null;
+	}
+
 	protected String cleanupStreetName(String streetName){
 		if (streetName!=null){
-			streetName.replaceFirst("^0+(?!$)", "");
 			if (streetName.length()>MAX_NAME_SIZE){
 				streetName = streetName.substring(0, MAX_NAME_SIZE);
 			}
+			return streetName.trim().replaceAll("[\\s']+", " ").replaceFirst("^0+(?!$)", "").trim();
 		}
-		//todo expand streetname
 		return streetName;
 	}
 
-	private boolean isAllRequiredFieldspresent(String[] fields) {
+	protected boolean isAllRequiredFieldspresent(String[] fields) {
 		if (isEmptyField(fields, 0, false)
 			||	isEmptyField(fields, 1, false)
 			||	isEmptyField(fields, 2, false)

@@ -236,6 +236,10 @@ public class StringHelper {
 			//split the strings
 			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;]");
 			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一]");
+			
+			if (Math.abs(actualSplited.length -expectedSplited.length) >=2){
+				return false;
+			}
 
 			//first we check if actual has more long words than expected
 			//saint jean is not saint jean de luz, but 'la petite maison' is ok for 'petite maison'
@@ -310,7 +314,7 @@ public class StringHelper {
 				expected=expandStreetDirections(expected);
 			}
 			return (isSameStreetName_intern(expected,actual) || 
-					(actual.replaceAll("[^0-9]", "").equals(expected.replaceAll("[^0-9]", "")) && levenstein.execute(normalize(actual).replaceAll("\\s", ""), normalize(expected).replaceAll("\\s", ""))<2)
+					(actual.replaceAll("[^0-9]", "").equals(expected.replaceAll("[^0-9]", "")) && levenstein.execute(normalize(actual).replaceAll("\\s-", ""), normalize(expected).replaceAll("\\s-", ""))<2)
 					);
 		}
 		return false;
@@ -478,10 +482,9 @@ public class StringHelper {
 				hasPoint=true;
 			}
 			if (firstWord !=null ){
-					firstWord = firstWord.toLowerCase();
 					if (FR_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
 						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, FR_STREET_TYPE_MAP.get(firstWord));
+						return street.replaceFirst(toReplace, FR_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
 					}
 			}
 			}
@@ -495,10 +498,9 @@ public class StringHelper {
 				hasPoint=true;
 			}
 			if (firstWord !=null ){
-					firstWord = firstWord.toLowerCase();
 					if (SP_STREETTYPE_MAP.get(firstWord.toLowerCase())!=null){
 						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, SP_STREETTYPE_MAP.get(firstWord));
+						return street.replaceFirst(toReplace, SP_STREETTYPE_MAP.get(firstWord.toLowerCase()));
 					}
 			}
 			}
@@ -512,10 +514,9 @@ public class StringHelper {
 				hasPoint=true;
 			}
 			if (firstWord !=null ){
-					firstWord = firstWord.toLowerCase();
 					if (IT_STREETTYPE_MAP.get(firstWord.toLowerCase())!=null){
 						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, IT_STREETTYPE_MAP.get(firstWord));
+						return street.replaceFirst(toReplace, IT_STREETTYPE_MAP.get(firstWord.toLowerCase()));
 					}
 			}
 			}
@@ -529,10 +530,9 @@ public class StringHelper {
 				hasPoint=true;
 			}
 			if (lastword !=null) {
-				lastword = lastword.toLowerCase();
-				 if (US_STREET_TYPE_MAP.get(lastword)!=null){
+				 if (US_STREET_TYPE_MAP.get(lastword.toLowerCase())!=null){
 					 String toReplace = hasPoint?lastword+".":lastword;
-					return street.replaceFirst(toReplace, US_STREET_TYPE_MAP.get(lastword));
+					return street.replaceFirst(toReplace, US_STREET_TYPE_MAP.get(lastword.toLowerCase()));
 			}
 			}
 			}
@@ -545,10 +545,9 @@ public class StringHelper {
 					hasPoint=true;
 				}
 				if (firstWord !=null ){
-						firstWord = firstWord.toLowerCase();
 						if (NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
 							String toReplace = hasPoint?firstWord+".":firstWord;
-							return street.replaceFirst(toReplace, NUMBERED_STREET_TYPE_MAP.get(firstWord));
+							return street.replaceFirst(toReplace, NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
 						}
 				}
 				}
@@ -600,7 +599,7 @@ public class StringHelper {
 		{
 			put("sr","state route");
     		put("Hwy","route");
-			put("PTH","Perimeter Highway");
+			put("pth","Perimeter Highway");
     		put("ss","Strada Statale");
 		}
 		
@@ -616,26 +615,31 @@ public class StringHelper {
 			put("ave","avenue");
     		put("bd","boulevard");
     		put("blvd","boulevard");
-    		put("ALY","ALLEY");
-    		put("ANX","ANEX");
-    		put("ARC","ARCADE");
-    		put("BCH","beach");
+    		put("aly","alley");
+    		put("anx","anex");
+    		put("arc","arcade");
+    		put("bch","beach");
     		put("boul","boulevard");
     		put("boulv","boulevard");
-    		put("brdg","BRIDGE");
+    		put("brdg","bridge");
     		put("dr","drive");
     		put("drs","drives");
-    		put("highwy","HIGHWAY");
-    		put("hiway","HIGHWAY");
-    		put("hiwy","HIGHWAY");
-    		put("hway","HIGHWAY");
-    		put("hwy","HIGHWAY");
+    		put("highwy","highway");
+    		put("hiway","highway");
+    		put("hiwy","highway");
+    		put("hway","highway");
+    		put("hwy","highway");
     		put("pl","place");
     		put("rd","road");
     		put("st","street");
     		put("str","street");
     		put("tunl","tunnel");
     		put("tunnl","tunnel");
+    		put("trail","trail");
+    		put("ct","court");
+    		put("cir","circle");
+    		put("dr","drive");
+    		put("ln","lane");
     		
 		}
 	};

@@ -2421,6 +2421,9 @@ public class GeocodingServiceTest {
     public void findHouseNumber(){
     	GeocodingService geocodingService = new GeocodingService();
     	
+    	Assert.assertEquals("9", geocodingService.findHouseNumber("9 avenue de l'opera paris",null).getHouseNumber());
+    	Assert.assertEquals("avenue de l'opera paris", geocodingService.findHouseNumber("9 avenue de l'opera paris",null).getAddressWithoutHouseNumber());
+    	
     	//ordinal without suffix
     	Assert.assertEquals(null, geocodingService.findHouseNumber("Straße des 17 Juni",null));
     	Assert.assertEquals(null, geocodingService.findHouseNumber("Straße des 17. Juni","DE"));
@@ -2479,6 +2482,10 @@ public class GeocodingServiceTest {
     	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 ter, rue de la gare 59000 lille",null).getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 ter, rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
+    	
+
+    	
+    	
     	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 bis rue de la gare 59000 lille",null).getHouseNumber());
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 bis rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());

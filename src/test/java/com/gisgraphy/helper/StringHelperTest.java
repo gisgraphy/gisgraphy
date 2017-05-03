@@ -207,6 +207,8 @@ public class StringHelperTest {
     	
     	Assert.assertTrue(StringHelper.isSameName("Stauffenbergstraße", "Stauffenberg straße"));
     	
+    	Assert.assertFalse(StringHelper.isSameName("pas de calais", "calais",2));
+    	
     	
     }
     
@@ -236,6 +238,8 @@ public class StringHelperTest {
     	
     	Assert.assertTrue("synonyms in expected",StringHelper.isSameStreetName("st omer","saint omer",null));
     	Assert.assertTrue("synonyms in actual",StringHelper.isSameStreetName("saint omer","st omer",null));
+    	//-
+    	Assert.assertTrue("synonyms in actual",StringHelper.isSameStreetName("foo baar street","foo-baar-street",null));
     	
     	
     	
@@ -264,6 +268,7 @@ public class StringHelperTest {
     	Assert.assertTrue(StringHelper.isSameStreetName("235st av", "235st avenue","US"));
     	Assert.assertTrue(StringHelper.isSameStreetName("235st av", "235st avenue","US"));
     	Assert.assertTrue(StringHelper.isSameStreetName("Thrift Street W", "Thrift Street West","US"));
+    	Assert.assertTrue(StringHelper.isSameStreetName("W Wind Ct", "West Wind Court","US"));
     	Assert.assertTrue(StringHelper.isSameStreetName("St Johns Drive", "Saint John's Drive","US"));
     	Assert.assertTrue(StringHelper.isSameStreetName("Expressway Drive South", "Expressway Drive S","US"));
     	Assert.assertTrue(StringHelper.isSameStreetName("State Route 104", "sr 104","US"));
@@ -397,6 +402,7 @@ public class StringHelperTest {
     	//us
     	Assert.assertEquals("foo avenue",StringHelper.expandStreetType("foo ave", "US"));
     	Assert.assertEquals("foo avenue",StringHelper.expandStreetType("foo av.", "US"));
+    	Assert.assertEquals("foo court",StringHelper.expandStreetType("foo Ct", "US"));
     	
     	//two 
     	//Assert.assertEquals("foo trucstraße foo trucstraße",service.replaceGermanSynonyms("foo trucStr. foo trucStr."));
