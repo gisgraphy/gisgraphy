@@ -238,7 +238,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			if (cityToRemoveObj!=null){
 				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove the city / citySubdivision "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId()+" in the datastore");
 				 population=cityToRemoveObj.getPopulation();
-				 elevation=cityToRemoveObj.getPopulation();
+				 elevation=cityToRemoveObj.getElevation();
 				 gtopo30 = cityToRemoveObj.getGtopo30();
 				 timezone=cityToRemoveObj.getTimezone();
 				 asciiName=cityToRemoveObj.getAsciiName();
@@ -247,7 +247,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 		//create the poi
 		place = createNewPoi(name, countrycode, location, adminCentreLocation);
-		setGeonamesFields(place,population,elevation,gtopo30,timezone,asciiName);
+		setGeonamesFields(place,0,elevation,gtopo30,timezone,asciiName);
 	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12],countrycode,fields[7])){// the feature to import is a subdivision
 		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
 		if (nearestCity != null ){
@@ -282,7 +282,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 					if (cityToRemove!=null){
 						logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id()+" in the datastore");
 						 population=cityToRemove.getPopulation();
-						 elevation=cityToRemove.getPopulation();
+						 elevation=cityToRemove.getElevation();
 						 gtopo30 = cityToRemove.getGtopo30();
 						 timezone=cityToRemove.getTimezone();
 						 asciiName=cityToRemove.getAsciiName();
@@ -293,12 +293,12 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				}
 				// and create a citysubdivision
 				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
-				setGeonamesFields(place,population,elevation,gtopo30,timezone,asciiName);
+				setGeonamesFields(place,0,elevation,gtopo30,timezone,asciiName);
 				
 			}
 			else {
 				place = createNewCitySubdivision(name,countrycode,location,adminCentreLocation);
-				setGeonamesFields(place,population,elevation,gtopo30,timezone,asciiName);
+				setGeonamesFields(place,0,elevation,gtopo30,timezone,asciiName);
 			}
 			
 		} else {
