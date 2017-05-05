@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-//@Ignore
+@Ignore
 public class RelevanceGeocodingTest {
 
 	private static final long[] MAGDEBURGERSTRASSE = new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,91146628};
@@ -83,10 +83,23 @@ public class RelevanceGeocodingTest {
 		}
 	};
 	
+	//us
 	
 	
 	
-	
+	@Test
+	public void washington() throws InterruptedException, IOException{
+		if (countryTest.contains("US")|| countryTest.contains("ALL")){
+			String rawAddress = "washington";
+			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "US");
+			Assert.assertNotNull(addressResultsDto);
+			//state/city
+			isAllIdsPresentInResults(new long[]{165479,5396194L},addressResultsDto.getResult(), rawAddress);
+			//first result should be city ?
+			isFirstCorrectById(5396194,addressResultsDto.getResult(), rawAddress);
+		}
+			
+	}
 
 	
 	
@@ -98,6 +111,7 @@ public class RelevanceGeocodingTest {
 // \__,_|\__,_|_| |_| |_|
 //       
 	 
+	
 	
 	@Test
 	public void adm2() throws InterruptedException, IOException{

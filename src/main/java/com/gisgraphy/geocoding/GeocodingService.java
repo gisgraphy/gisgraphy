@@ -917,7 +917,10 @@ public class GeocodingService implements IGeocodingService {
 					continue;
 				}
 				address.setScore(solrResponseDto.getScore());
-				//address.setName(solrResponseDto.getName());
+				if (!solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
+					address.setName(solrResponseDto.getName());
+				}
+				
 				if (solrResponseDto.getLat_admin_centre()!=null && solrResponseDto.getLng_admin_centre()!=null){
 					address.setLat(solrResponseDto.getLat_admin_centre());
 					address.setLng(solrResponseDto.getLng_admin_centre());

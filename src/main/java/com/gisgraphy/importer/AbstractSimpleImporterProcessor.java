@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -348,19 +349,35 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 
     protected final String getInput(String data) {
     	if (getImportKey()!=null && getImportKey()!=0){
-    		byte[] newb = new byte[data.getBytes().length];
-    		int cnt = 0;
-    		for (Byte b : data.getBytes()){
-    			int c2 = (int)b;
-    			c2 = c2 -getImportKey();
-    			byte b2 = ((byte) c2);
-    			newb[cnt++]=b2;
-    		}
-    		return new String(newb);
-    	}else {
-    		return data;
-    	}
+    	StringBuffer result = new StringBuffer();
+		for (char c : data.toCharArray()) {
+			int unicodeValue = (int) c;
+			Character.toString(c);
+			String s = Character.toString((char) (unicodeValue -10));
+			result.append(s);
+		}
+		return result.toString();
+    } return null;
     }
+    /*
+     protected final String getInput(String data) {
+  /* 
+        	        	 byte b2 = ((byte) ( (int)ch-getImportKey()));
+    	        	 int key=10;
+    	        	if (((int)ch-key) >260){
+    	        		logger.error("there is one special char for line "+data);
+    	        	}
+    	        	 //System.out.println(cnt+1+":"+ch+"/"+Integer.toHexString(ch-key)+"/"+b2+"/"+((int)ch-key));
+    	        	 newb[cnt++]=b2;
+    	       // }
+    	    }
+    	 String result = new String(newb,Charset.forName("UTF-8")).trim();
+    	 
+    	 return result;
+    	 }  else {
+    		 return data;
+    	 }
+    }*/
 
 	Integer getImportKey() {
 		return importerConfig.getKey();

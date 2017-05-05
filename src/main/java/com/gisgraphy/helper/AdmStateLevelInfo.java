@@ -198,6 +198,35 @@ public class AdmStateLevelInfo {
 	
 	}
 	
+	
+	public static boolean isCitySubdivisionLevel(String countryCode, String level){
+		try {
+			return isCitySubdivisionLevel(countryCode, Integer.parseInt(level));
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	
+	}
+	
+	public static boolean isCitySubdivisionLevel(String countryCode,
+			int level) {
+		if (countryCode != null){
+			List<Integer> levels = cityLevels.get(countryCode.toUpperCase());
+			Integer maxLevel = 0;
+			if (levels!=null){
+					for (Integer l : levels){
+						if (l>maxLevel){
+							maxLevel = l;
+						}
+					}
+					return level >maxLevel;
+			} else {
+				return level > DEFAULT_CITY_LEVEL;
+			}
+	}
+	return level > DEFAULT_CITY_LEVEL;
+	}
+
 	public static boolean isCityLevel(String countryCode, int level){
 		if (countryCode != null){
 				List<Integer> levels = cityLevels.get(countryCode.toUpperCase());

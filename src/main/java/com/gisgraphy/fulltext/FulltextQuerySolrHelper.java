@@ -119,7 +119,7 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		//getConfigInFile();
+		getConfigInFile();
 		/*logger.error("all words : "+NESTED_QUERY_TEMPLATE);
 		logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
 		boolean spellchecker = true;
@@ -251,7 +251,7 @@ public class FulltextQuerySolrHelper {
 			List<String> streetTypes = smartStreetDetection.getStreetTypes(query.getQuery());
 			if ((!isStreetQuery(query) && streetTypes.size()==1)){
 				bqField=STREET_BOOST_QUERY;
-			} else if (query.getPlaceTypes()==null){
+			} else if (query.getPlaceTypes()==null || isAdministrative(query.getPlaceTypes())){
 				bqField=CITY_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
 			}
 			
@@ -294,7 +294,7 @@ public class FulltextQuerySolrHelper {
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
 			String querySolr = querybuffer.toString();
-			//logger.error("querysolr="+querySolr);
+			logger.error("querysolr="+querySolr);
 			String queryAsStr = querySolr;
 			
 			parameters.set(Constants.QUERY_PARAMETER, queryAsStr);
@@ -344,8 +344,8 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
-				//CITY_BOOST_QUERY=in.readLine();
-				ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
+				CITY_BOOST_QUERY=in.readLine();
+				//ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
 				
 
 	                in.close();

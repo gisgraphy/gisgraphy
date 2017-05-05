@@ -225,31 +225,40 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	String timezone=null;
 	String asciiName=null;
 	if (isPoi(fields[12],countrycode, fields[7])) {//the feature to import is a poi
-		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
-		if (poiToremove!=null && poiToremove.getOpenstreetmap_id()==null && ! poiToremove.isMunicipality()){// we only remove geonames one
-			//we found a geonames city or subdivision that is not a municipality, we remove it
-			GisFeature cityToRemoveObj = null;
-			if (poiToremove.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
-				cityToRemoveObj = cityDao.getByFeatureId(poiToremove.getFeature_id());
-				
-			}else if (poiToremove.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){
-				 cityToRemoveObj = citySubdivisionDao.getByFeatureId(poiToremove.getFeature_id());
-			}
-			if (cityToRemoveObj!=null){
-				logger.error("'"+name+"'/'"+fields[1]+"' is a poi we remove the city / citySubdivision "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId()+" in the datastore");
-				 population=cityToRemoveObj.getPopulation();
-				 elevation=cityToRemoveObj.getElevation();
-				 gtopo30 = cityToRemoveObj.getGtopo30();
-				 timezone=cityToRemoveObj.getTimezone();
-				 asciiName=cityToRemoveObj.getAsciiName();
-				gisFeatureDao.remove(cityToRemoveObj);
-			}
+		SolrResponseDto  poiToremove = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape, null);
+		if (poiToremove!=null){
+			//we found a Geonames city or subdivision that is not a municipality
+				GisFeature cityToRemoveObj = null;
+				if (poiToremove.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
+					cityToRemoveObj = cityDao.getByFeatureId(poiToremove.getFeature_id());
+					
+				}else if (poiToremove.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){
+					 cityToRemoveObj = citySubdivisionDao.getByFeatureId(poiToremove.getFeature_id());
+				}
+				if (cityToRemoveObj!=null){
+					population=cityToRemoveObj.getPopulation();
+					elevation=cityToRemoveObj.getElevation();
+					gtopo30 = cityToRemoveObj.getGtopo30();
+					timezone=cityToRemoveObj.getTimezone();
+					asciiName=cityToRemoveObj.getAsciiName();
+					if((cityToRemoveObj.getPopulation()==null || (cityToRemoveObj.getPopulation()!=null && cityToRemoveObj.getPopulation()==0))){ //there is no population, we delete it
+						logger.error("'"+name+"'/'"+fields[1]+"'changetype : is a poi we remove the city / citySubdivision "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId()+" in the datastore");
+						gisFeatureDao.remove(cityToRemoveObj);
+						//create the poi
+						place = createNewPoi(name, countrycode, location, adminCentreLocation);
+						setGeonamesFields(place,0,elevation,gtopo30,timezone,asciiName);
+					} else { //there is some population we choose to keep it as city or subdivision
+						logger.error("'"+name+"'/'"+fields[1]+"' : is a poi but due to population "+cityToRemoveObj.getPopulation()+" we won't remove the city / citySubdivision "+cityToRemoveObj.getName()+","+cityToRemoveObj.getFeatureId()+" in the datastore");
+						place=cityToRemoveObj;
+					}
+				} else {
+					place = createNewPoi(name, countrycode, location, adminCentreLocation);
+				}
+		} else {
+			place = createNewPoi(name, countrycode, location, adminCentreLocation);
 		}
-		//create the poi
-		place = createNewPoi(name, countrycode, location, adminCentreLocation);
-		setGeonamesFields(place,0,elevation,gtopo30,timezone,asciiName);
-	} else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12],countrycode,fields[7])){// the feature to import is a subdivision
-		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape);
+	}else if (StringUtil.containsDigit(name) || isACitySubdivision(fields[12],countrycode,fields[7])){// the feature to import is a subdivision
+		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode,Constants.CITY_AND_CITYSUBDIVISION_PLACETYPE, shape, CitySubdivision.class);
 		if (nearestCity != null ){
 			if (nearestCity.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())){// we found a subdivision, we will update it
 				place = citySubdivisionDao.getByFeatureId(nearestCity.getFeature_id());
@@ -280,7 +289,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 					//osm consider the place as a suburb, but geonames consider it as a city,we delete the geonames one
 					City cityToRemove = cityDao.getByFeatureId(nearestCity.getFeature_id());
 					if (cityToRemove!=null){
-						logger.error("'"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id()+" in the datastore");
+						logger.error("changetype : '"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id()+" in the datastore");
 						 population=cityToRemove.getPopulation();
 						 elevation=cityToRemove.getElevation();
 						 gtopo30 = cityToRemove.getGtopo30();
@@ -307,7 +316,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 		
 	}  else { //the feature to import is a city
-		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE, shape);
+		SolrResponseDto  nearestCity = getNearestByPlaceType(location, name, countrycode, Constants.ONLY_CITY_PLACETYPE, shape, null);
 		if (nearestCity != null ){
 			place = cityDao.getByFeatureId(nearestCity.getFeature_id());
 			if (place==null){
@@ -498,7 +507,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				|| "suburb".equalsIgnoreCase(placeType)
 				|| "city_block".equalsIgnoreCase(placeType)
 				|| "borough".equalsIgnoreCase(placeType)||
-				(admLevel!=null &&!AdmStateLevelInfo.isCityLevel(countryCode, admLevel))
+				(AdmStateLevelInfo.isCitySubdivisionLevel(countryCode, admLevel))
 				) {
 			return true;
 		}
@@ -592,7 +601,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	
 	
 
-	protected SolrResponseDto getNearestByPlaceType(Point location, String name,String countryCode,Class[] placetypes, Geometry shape) {
+	protected SolrResponseDto getNearestByPlaceType(Point location, String name,String countryCode,Class[] placetypes, Geometry shape, Class target) {
 		if (location ==null || name==null || "".equals(name.trim())){
 			return null;
 		}
@@ -612,8 +621,69 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 			query.limitToCountryCode(countryCode);
 		}
 		FulltextResultsDto results = fullTextSearchEngine.executeQuery(query);
-		if (results != null){
-			for (SolrResponseDto solrResponseDto : results.getResults()) {
+		
+		
+		if (results != null && results.getResults()!=null && results.getResults().size()>0){
+			if (placetypes.length == 1 || (target != null && target==GisFeature.class) || target==null){
+				//we search for city or sub only only or (we search for a poi) or we don't care about the placetype to merge=> we don't care about the placetype found, first one not updated is OK
+				if (results.getResults()!=null && results.getResults().size()>0){
+					for (SolrResponseDto solrResponseDto : results.getResults()) {
+						if (solrResponseDto!=null){
+						if (isSame(solrResponseDto,name,shape)){
+							if (solrResponseDto.getOpenstreetmap_id()!=null){
+								//we already got a place that has been updated for this name, dont search more; it is not a place to delete
+								return null;
+							} else {
+								if (!solrResponseDto.isMunicipality()){
+									//we have a place that has not been updated yet and that is not a municipality
+									return solrResponseDto;
+								}
+							}
+						}}
+					}
+						
+				}
+			} else { //we got two placetype to search
+				if (target != null){// if we search for a sub, && target==CitySubdivision.class
+					SolrResponseDto first = results.getResults().get(0);
+					if (first!=null){
+						if (first.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){// if first is a city (updated or not)
+							//remove first
+							SolrResponseDto filtered = getFirstResultNotUpdatedByPlaceType(results.getResults(),name,shape,target);
+							if (filtered==null){//if no sub after that are not updated
+									if (first.getOpenstreetmap_id()==null){	//if city not updated => only one city not updated
+										//we are in the case when geonames consider a place as city but it is not : delete the city and return null, so we will create a new sub
+										//warning we can delete the city, it won't be updated later because there is no sub found, just a city it is probably a placetype problems (PPL is too global)
+										return first;
+									} else {//if city updated=>only one city that is already updated
+										return null;
+									}
+							} else {//if sub after that that are not updated
+								if (first.getOpenstreetmap_id()!=null){//if the first city is updated=>got a city updated and then a sub that is not
+									//return first sub that is not already updated, that's the one to merge
+									return filtered;
+								} else {//if the first city is not updated and we got a sub not updated too
+									//for now just log, we don't want to delete the city maybe it will be updtaed later
+									logger.error("ambiguous : first is city "+first.getName()+"/"+first.getFeature_id()+" then we got a sub "+ filtered.getName()+"/"+filtered.getFeature_id());
+									return filtered;
+									//??????????????????????????????????=>we got a city and a sub that are not updated
+									//we should return the city and return the sub
+									//should we update the city? filter on shape ?
+								}
+							}
+						}
+						else if (first.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName()) && first.getOpenstreetmap_id()==null){//if first is a sub not updated
+							return first;//we got a sub that is not yet updated, it is the one to merge
+						}
+					}
+				}
+			}
+			
+		}	
+		return null;	
+			
+			
+		/*	for (SolrResponseDto solrResponseDto : results.getResults()) {
 				if (solrResponseDto!=null 
 						){
 					if (solrResponseDto.getOpenstreetmap_id()!= null){
@@ -649,12 +719,58 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				} else {
 					return null;
 				}
+			}*/
+		
+		
+	}
+	
+	
+	private SolrResponseDto getFirstResultNotUpdatedByPlaceType(
+			List<SolrResponseDto> results, String name, Geometry shape,
+			Class target) {
+		if (results!=null){
+			for (SolrResponseDto dto : results){
+				if (dto!=null){
+					if (dto.getOpenstreetmap_id()==null && dto.getPlacetype().equalsIgnoreCase(target.getSimpleName())){
+						return dto;
+					}
+				}
 			}
 		}
 		return null;
 	}
-	
-	
+
+	protected boolean isSame(SolrResponseDto solrResponseDto,
+			String name, Geometry shape) {
+		if (solrResponseDto!=null){
+		String name2 = solrResponseDto.getName();
+		//score is important for case when we search Munchen and city name is Munich
+		if (name !=null && name2!=null && StringHelper.isSameName(name, name2) || solrResponseDto.getScore() > MIN_SCORE || StringHelper.isSameAlternateNames(name,solrResponseDto.getName_alternates())){
+			if (shape!=null && shape.isValid()){
+				//we should verify
+				if (solrResponseDto.getLng()!=null && solrResponseDto.getLat()!=null){
+					boolean isInShape = false;
+					try {
+						Point point = GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat());
+						isInShape = shape.contains(point);
+					} catch (Exception e) {
+						logger.error("can not determine if city is in shape for "+name+" in "+solrResponseDto.getFeature_id()+" :  "+e.getMessage());
+					}
+					if (isInShape){
+						return true;
+					}
+				} else {
+					logger.error("no GPS coordinate for "+solrResponseDto);
+				} 
+			} else {
+				//if the name is the same, and there is no shape
+				return true;
+			}
+		}
+		}
+		return false;
+	}
+
 	protected GisFeature populateAdmNames(GisFeature gisFeature, int currentLevel, List<AdmDTO> admdtos){
 		
 		return ImporterHelper.populateAdmNames(gisFeature, currentLevel, admdtos);

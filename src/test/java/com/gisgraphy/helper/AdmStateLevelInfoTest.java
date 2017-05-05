@@ -71,6 +71,7 @@ public class AdmStateLevelInfoTest {
 		Assert.assertTrue(AdmStateLevelInfo.isCityLevel(null, "8"));
 		Assert.assertFalse(AdmStateLevelInfo.isCityLevel(null, ""));
 		Assert.assertFalse(AdmStateLevelInfo.isCityLevel(null, null));
+		Assert.assertFalse(AdmStateLevelInfo.isCityLevel("US", ""));
 	
 	}
 	
@@ -86,6 +87,37 @@ public class AdmStateLevelInfoTest {
 		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("LV", 8));
 		Assert.assertTrue(AdmStateLevelInfo.isCityLevel("LV", 9));
 		Assert.assertFalse(AdmStateLevelInfo.isCityLevel("LV", 10));
+	}
+	
+	
+	@Test
+	public void testIsCitySubdivisionLevelString(){
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("", "8"));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel(null, "8"));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel(null, ""));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel(null, null));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("US", ""));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("US", null));
+	
+	}
+	
+	@Test
+	public void testIsCitySubdivisionLevel(){
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("", 8));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("ZZ", 8));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel(null, 8));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("FR", 8));
+		
+		Assert.assertTrue(AdmStateLevelInfo.isCitySubdivisionLevel("", 9));
+		Assert.assertTrue(AdmStateLevelInfo.isCitySubdivisionLevel("ZZ", 9));
+		Assert.assertTrue(AdmStateLevelInfo.isCitySubdivisionLevel(null, 9));
+		Assert.assertTrue(AdmStateLevelInfo.isCitySubdivisionLevel("FR", 9));
+		
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("LV", 6));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("LV", 7));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("LV", 8));
+		Assert.assertFalse(AdmStateLevelInfo.isCitySubdivisionLevel("LV", 9));
+		Assert.assertTrue(AdmStateLevelInfo.isCitySubdivisionLevel("LV", 10));
 	}
 	
 
