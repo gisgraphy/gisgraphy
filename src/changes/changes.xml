@@ -964,8 +964,13 @@
 			<action dev="David Masclet" type="update">
 				better ordinal management
 			</action>
+			
 			<action dev="David Masclet" type="add">
 				add openaddresses importer
+			</action>
+			
+			<action dev="David Masclet" type="add">
+				allow the import of other countries when the import is already done
 			</action>
 			
 			
