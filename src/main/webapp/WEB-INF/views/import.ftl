@@ -136,6 +136,17 @@ goToStep(${step});
 				<#else>
 					<span class="ok"><@s.text name="global.exists"/></span>
 				</#if><br/><br/>
+				
+				<span class="labeloption"><@s.text name="import.openaddresses.directory"/> : </span>
+				<#if !OpenAddressesDownloadDirectoryAccessible>
+					<span class="ko"><@s.text name="global.not.exists"/></span>
+					<div class="tip redtip">
+						<@s.text name="import.directory.not.accesible"><@s.param>OpenAddresses</@s.param><@s.param>${importerConfig.getOpenAddressesDir()}</@s.param></@s.text> 
+					</div>
+				<#else>
+					<span class="ok"><@s.text name="global.exists"/></span>
+				</#if><br/><br/>
+				
 				<span class="labeloption"><@s.text name="global.fulltext.engine"/> : </span>
 				<#if !fulltextSearchEngineAlive>
 					<span class="ko"><@s.text name="global.not.reachable"/></span>
@@ -204,6 +215,7 @@ goToStep(${step});
 							<!--<@s.checkbox value="%{geonamesImporterEnabled}" name="geonamesImporterEnabled" id="disableGeonames" theme="simple"/><@s.text name="import.geonames"/>--> 
 						</div>
 					<br/>
+					
 					<@s.text name="import.dataset.status"><@s.param>Openstreetmap</@s.param></@s.text> :&nbsp;
 					<@s.if test="OpenStreetMapImporterEnabled">
 						<span class="ok"><@s.text name="import.enabled"/></span><br/><br/>
@@ -216,6 +228,26 @@ goToStep(${step});
 							 <!--<@s.checkbox value="%{openStreetMapImporterEnabled}" name="openStreetMapImporterEnabled" id="disableOpenstreetmap" theme="simple" onclick="checkHousenumber()"/> <@s.text name="import.openstreetmap"/>-->
 					</div>
 					<br/>
+
+
+
+					<@s.text name="import.dataset.status"><@s.param>OpenAddresses</@s.param></@s.text> :&nbsp;
+					<@s.if test="openAddressesImporterEnabled">
+						<span class="ok"><@s.text name="import.enabled"/></span><br/><br/>
+					</@s.if>
+					<@s.else>
+					<span class="ko"><@s.text name="import.disabled"/></span><br/><br/>
+					</@s.else>
+					<div style="margin-left: 100px;" >
+							<@s.text name="import.openaddresses"/> : <@s.radio name="openAddressesImporterEnabled" value="%{openAddressesImporterEnabled}" list="%{#@java.util.LinkedHashMap@{'true' : getText('global.yes'), 'false': getText('global.no')}}" id="disableOpenaddresses" theme="simple" />
+							 <!--<@s.checkbox value="%{openStreetMapImporterEnabled}" name="openStreetMapImporterEnabled" id="disableOpenstreetmap" theme="simple" onclick="checkHousenumber()"/> <@s.text name="import.openstreetmap"/>-->
+					</div>
+					<br/>
+					
+									
+					
+					
+					
 					<@s.text name="import.dataset.status"><@s.param><@s.text name="global.housenumbers"/></@s.param></@s.text> &nbsp;:&nbsp;
 					<@s.if test="housenumberImporterEnabled">
 						<span class="ok"><@s.text name="import.enabled"/></span><br/><br/>
@@ -255,7 +287,7 @@ goToStep(${step});
 <@s.text name="import.country.explanation"/>.<br/>
 <@s.radio name="importallcountries" list="%{#@java.util.LinkedHashMap@{'true' : getText('import.all.countries'), 'false': getText('import.select.country')}}" onclick="enableList(this.value,'countriesList');" theme="simple" value="true"/>
 <br/><br/>
-<select name="countryCodes" id="countriesList" multiple="true" size="7" disabled="true">
+<select name="countryCodes" id="countriesList" multiple="true" size="15" disabled="true">
     <option value="AD">Andorra</option>
     
     <option value="AF">Afghanistan</option>
@@ -533,7 +565,7 @@ goToStep(${step});
     <option value="ZM">Zambia</option>
     <option value="ZW">Zimbabwe</option>
 </select>
-<br/><@s.text name="global.useshifttoselectmore"/> <br/><br/><br/><br/>
+<br/><@s.text name="global.useshifttoselectmore"/> <br/>
 
 				<div class="navigationtoolbar">
 <span class="prev"><input type="button" onclick="goToStep(4);" value="<@s.text name="global.prev.step" />" class="gotostep"/></span><span class="next"><input type="button"  onclick="goToStep(6);" value="<@s.text name="global.next.step" />" class="gotostep"/></span></div>
@@ -546,8 +578,8 @@ goToStep(${step});
 				<p>
 <@s.text name="featureclasscode.explanation"/><br/><br/>
 <@s.radio name="importallplacetype" list="%{#@java.util.LinkedHashMap@{'true' : getText('import.all.placetype'), 'false': getText('import.select.placetype')}}" onclick="enableList(this.value,'placetypesList');" theme="simple" value="true"/><br/><br/>
-</span><@s.select listKey="toString()" id="placetypesList" listValue="toString()" name="placetypes" list="placetypesList" multiple="true" size="7"  theme="simple" disabled="true"/>
-<br/><@s.text name="global.useshifttoselectmore"/> <br/><br/><br/>
+</span><@s.select listKey="toString()" id="placetypesList" listValue="toString()" name="placetypes" list="placetypesList" multiple="true" size="15"  theme="simple" disabled="true"/>
+<br/><@s.text name="global.useshifttoselectmore"/> <br/><br/>
 				<div class="navigationtoolbar">
 <span class="prev"><input type="button" onclick="goToStep(5);" value="<@s.text name="global.prev.step" />" class="gotostep "/></span><span class="next"><input type="button"  onclick="goToStep(7);" value="<@s.text name="global.next.step" />" class="gotostep"/></span></div>
 </p>
@@ -570,6 +602,18 @@ goToStep(${step});
 					<@s.checkbox value="%{RetrieveFileEnable}" name="RetrieveFileEnable" id="RetrieveFileEnable" theme="simple"/> <@s.text name="import.options.retrievefiles"/>
 				<br/><@s.text name="import.options.retrievefiles.explanations"/>
 				</div>
+				<br/>
+
+
+				<div style="margin-left: 20px;" >
+					<@s.text name="import.options.key"/> : <@s.textfield name="importKey" size="10" theme="simple" id="importkey" value="${importKey}" />
+				<br/><@s.text name="import.options.key.explanations"/>
+				</div>
+
+
+
+
+
 			<div class="navigationtoolbar">	
 <span class="prev"><input type="button" onclick="goToStep(6);" value="<@s.text name="global.prev.step" />" class="gotostep"/></span><span class="next"><input type="button"  onclick="goToStep(8);" value="<@s.text name="global.next.step" />" class="gotostep"/></span>
 </p>

@@ -70,6 +70,11 @@ public class ResetImportAction extends ActionSupport {
      * view of page that gives information after the reset
      */
     public static String RESET = "reset";
+    
+    /**
+     * view of page for default
+     */
+    public static String IMPORT = "notdone";
 
     /**
      * view of page that gives information after the reset
@@ -120,6 +125,11 @@ public class ResetImportAction extends ActionSupport {
 	    return ASK;
 	}
 
+    }
+    
+    public String markAsNotDone(){
+    	importerManager.markAsNotDone();
+    	return IMPORT;
     }
 
     public boolean isConfirmed() {

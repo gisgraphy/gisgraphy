@@ -159,7 +159,7 @@ public abstract class AbstractFileRetriever implements IImporterProcessor {
      * return an array of file that are to be decompressed
      * @throws IOException
      */
-    public abstract File[] getFilesToDecompress() throws IOException ;
+    public abstract File[] getFilesToProcess() throws IOException ;
 
     /** 
      * @return The directory where the file should be downloaded

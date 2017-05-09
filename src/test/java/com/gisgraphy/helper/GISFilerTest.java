@@ -40,7 +40,7 @@ public class GISFilerTest {
 
     @Before
     public void setup(){
-	tempDir = FileHelper.createTempDir("targzip"+System.currentTimeMillis());
+	tempDir = FileHelper.createTempDir("gisgzip"+System.currentTimeMillis());
     }
     
     @After
@@ -52,21 +52,21 @@ public class GISFilerTest {
     @Test
     public void untarGzipForGzipExtension() throws IOException{
 	GISFiler untar = new GISFiler("./data/tests/gis/test.tar.gz",tempDir);
-	untar.decompress();
+	untar.process();
 	Assert.assertTrue("",new File(tempDir+File.separator+"tarfilegzip.txt").exists());
     }
     
     @Test
     public void untarGzipForGZExtension() throws IOException{
 	GISFiler untar = new GISFiler("./data/tests/gis/test.tar.gzip",tempDir);
-	untar.decompress();
+	untar.process();
 	Assert.assertTrue("",new File(tempDir+File.separator+"tarfilegzip.txt").exists());
     }
     
     @Test
     public void manageGis() throws IOException{
-	GISFiler untar = new GISFiler("./data/tests/gis/test.gis",tempDir);
-	untar.decompress();
+	GISFiler gisFiler = new GISFiler("./data/tests/gis/test.gis",tempDir);
+	gisFiler.process();
 	Assert.assertTrue("",new File(tempDir+File.separator+"testgis").exists());
     }
     
@@ -75,13 +75,13 @@ public class GISFilerTest {
     @Test (expected=RuntimeException.class)
     public void untarForUnknowCompression() throws IOException{
 	GISFiler untar = new GISFiler("./data/tests/gis/test.tar.unknowext",tempDir);
-	untar.decompress();
+	untar.process();
     }
     
     @Test
     public void untarForNotCompressed() throws IOException{
 	GISFiler untar = new GISFiler("./data/tests/gis/test.tar",tempDir);
-	untar.decompress();
+	untar.process();
 	Assert.assertTrue("",new File(tempDir+File.separator+"tarwocompression.txt").exists());
     }
     

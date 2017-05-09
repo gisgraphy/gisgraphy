@@ -23,7 +23,14 @@
 						<@s.form action="${resetImportResetURL}" method="get" id="reset">
 							<@s.submit onclick="$('wait').show();$('doCancelButton').disable();$('reset').submit();" title="%{getText('import.reset.button')}" value="%{getText('import.reset.button')}" theme="simple" id="doCancelButton" />
 						</@s.form>
-					</#if> 
+					</#if>
+			<@s.text name="import.reset.notdone.explanation"/>
+			<@s.url id="notDoneImportResetURL" action="resetimport" method="markAsNotDone"/>
+			<@s.form action="${notDoneImportResetURL}" method="get" id="notdoneform">
+							<@s.submit onclick="$('notdoneform').submit();" title="%{getText('import.reset.button')}" value="%{getText('import.reset.button')}" theme="simple" id="doCancelButton" />
+						</@s.form>
+
+
 				</div>
 			 <div class="clear"><br/></div><br/><br/>
 			 <div id="wait" style="border: 1px solid silver; padding: 5px; background: #ffd; text-align: center;margin-left:auto;margin-right:auto;display:none;"><br/><img src="/images/loading.gif" width=20px /> <@s.text name="import.reset.inprogress"/><br/></div>

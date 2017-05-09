@@ -278,6 +278,15 @@ public class ImporterManager implements IImporterManager {
 	return warningAndErrorMessage;
 
     }
+    
+    public void markAsNotDone(){
+    	setAlreadyDone(false);
+ 	    for (IImporterProcessor importer :importers){
+ 		importer.resetStatus();
+ 	    }
+ 	    importerStatusListDao.delete();
+ 	    this.inProgress = false;
+    }
 
    /**
      * 

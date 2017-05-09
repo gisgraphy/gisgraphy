@@ -36,7 +36,7 @@ import com.gisgraphy.helper.GISFiler;
 
 
 /**
- * Retrieve The Geonames files from a server
+ * Retrieve The openstreetmap files from a server
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
@@ -44,10 +44,10 @@ public class OpenStreetMapFileRetriever extends AbstractFileRetriever {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(OpenStreetMapFileRetriever.class);
 
-    private GISFiler untar;
+    private GISFiler gisFiler;
     
-    public String getcurrentExtractedFileNameIntoArchive(){
-	return untar == null? null : untar.getCurrentFileNameIntoArchiveExtracted();
+    public String getCurrentFileNameProcessed(){
+	return gisFiler == null? null : gisFiler.getCurrentFileNameIntoArchive();
     }
    
     /* (non-Javadoc)
@@ -69,14 +69,14 @@ public class OpenStreetMapFileRetriever extends AbstractFileRetriever {
      * @see com.gisgraphy.domain.geoloc.importer.AbstractFileRetriever#decompressFiles()
      */
     public void decompressFiles() throws IOException {
-	File[] filesToUntar = getFilesToDecompress();
+	File[] files = getFilesToProcess();
 	File destDirectory = new File(getDownloadDirectory());
-	for (int i = 0; i < filesToUntar.length; i++) {
+	for (int i = 0; i < files.length; i++) {
 	    try {
-			untar = new GISFiler(filesToUntar[i].getAbsolutePath(),destDirectory);
-			untar.decompress();
+			gisFiler = new GISFiler(files[i].getAbsolutePath(),destDirectory);
+			gisFiler.process();
 		} catch (Exception e) {
-			logger.error(filesToUntar[i].getAbsolutePath()+" is not a valid tar file");
+			logger.error(files[i].getAbsolutePath()+" is not a valid gis file");
 		}
 	}
 
@@ -107,8 +107,8 @@ public class OpenStreetMapFileRetriever extends AbstractFileRetriever {
     }
 
     @Override
-    public File[] getFilesToDecompress() throws IOException {
-	return ImporterHelper.listTarFiles(getDownloadDirectory());
+    public File[] getFilesToProcess() throws IOException {
+	return ImporterHelper.listGisFiles(getDownloadDirectory());
     }
 
     @Override

@@ -305,7 +305,7 @@ public class ImporterHelper {
      * @return all the zip files present in the specified directory or an empty
      *         array if there is no file
      */
-    public static File[] listTarFiles(String directoryPath) {
+    public static File[] listGisFiles(String directoryPath) {
 
 	File dir = new File(directoryPath);
 

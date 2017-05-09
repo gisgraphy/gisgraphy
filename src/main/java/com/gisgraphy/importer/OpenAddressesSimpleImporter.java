@@ -147,10 +147,11 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	 * @see
 	 * com.gisgraphy.domain.geoloc.importer.AbstractImporterProcessor#getFiles()
 	 */
-	@Override
-	protected File[] getFiles() {
-		return new File[0];
-	}
+	  @Override
+	    protected File[] getFiles() {
+	    	return ImporterHelper.listCountryFilesToImport(importerConfig.getOpenAddressesDir());
+	    }
+
 
 	/*
 	 * (non-Javadoc)
@@ -430,7 +431,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	 */
 	@Override
 	protected boolean shouldIgnoreComments() {
-		return false;
+		return true;
 	}
 
 	/*

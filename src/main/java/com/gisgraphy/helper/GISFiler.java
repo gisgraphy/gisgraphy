@@ -64,8 +64,8 @@ public class GISFiler {
      * @param dest
      */
     public GISFiler(String gisFileName, File dest) {
-	this.gisFileName = gisFileName;
-	this.dest = dest;
+    	this.gisFileName = gisFileName;
+    	this.dest = dest;
     }
 
     private InputStream getDecompressedInputStream(final String name, final InputStream istream) throws IOException {
@@ -122,36 +122,7 @@ public class GISFiler {
     }
 
     
-    
-    /**
-     * Ungzip an input file into an output file.
-     * <p>
-     * The output file is created in the output folder, having the same name
-     * as the input file, minus the '.gz' extension. 
-     * 
-     * @param inputFile     the input .gz file
-     * @param outputDir     the output directory file. 
-     * @throws IOException 
-     * @throws FileNotFoundException
-     *  
-     * @return  The {@File} with the ungzipped content.
-     */
-    private  File unGzip(final File inputFile, final File outputDir) throws FileNotFoundException, IOException {
 
-    	logger.info(String.format("Ungzipping %s to dir %s.", inputFile.getAbsolutePath(), outputDir.getAbsolutePath()));
-
-        final File outputFile = new File(outputDir, inputFile.getName().substring(0, inputFile.getName().length() - 3));
-
-        final GZIPInputStream in = new GZIPInputStream(new FileInputStream(inputFile));
-        final FileOutputStream out = new FileOutputStream(outputFile);
-
-        IOUtils.copy(in, out);
-
-        in.close();
-        out.close();
-
-        return outputFile;
-    }
     
     private  InputStream unBzip(final File inputFile, final File outputDir) throws FileNotFoundException, IOException {
 
@@ -171,7 +142,7 @@ public class GISFiler {
         return in;
     }
     
-    public void decompress() throws IOException {
+    public void process() throws IOException {
     	
     	try {
     		InputStream inputStream = getDecompressedInputStream(gisFileName, new FileInputStream(new File(gisFileName)));
@@ -182,7 +153,7 @@ public class GISFiler {
     }
 
   
-    public String getCurrentFileNameIntoArchiveExtracted() {
+    public String getCurrentFileNameIntoArchive() {
 	return currentFileNameIntoArchiveExtracted;
     }
 }

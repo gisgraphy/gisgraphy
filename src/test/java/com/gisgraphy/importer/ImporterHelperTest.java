@@ -320,8 +320,8 @@ public class ImporterHelperTest {
 	}
 
 	@Test
-	public void listTarFilesShouldNotReturnNullIfThereIsNoFile() {
-		Assert.assertNotNull(ImporterHelper.listZipFiles(""));
+	public void listGisFilesShouldNotReturnNullIfThereIsNoFile() {
+		Assert.assertNotNull(ImporterHelper.listGisFiles(""));
 	}
 
 	@Test

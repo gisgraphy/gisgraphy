@@ -72,7 +72,7 @@ public class GeonamesZipCodeFileRetriever extends AbstractFileRetriever {
      * ()
      */
     public void decompressFiles() throws IOException  {
-	File[] filesToUnZip = getFilesToDecompress();
+	File[] filesToUnZip = getFilesToProcess();
 	for (int i = 0; i < filesToUnZip.length; i++) {
 	    ImporterHelper.unzipFile(filesToUnZip[i]);
 	}
@@ -106,7 +106,7 @@ public class GeonamesZipCodeFileRetriever extends AbstractFileRetriever {
     }
 
     @Override
-    public File[] getFilesToDecompress() throws IOException {
+    public File[] getFilesToProcess() throws IOException {
 	return ImporterHelper.listZipFiles(getDownloadDirectory());
     }
 

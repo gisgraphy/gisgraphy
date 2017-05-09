@@ -501,6 +501,9 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	}
 
 	protected boolean isACitySubdivision(String placeType,String countryCode ,String admLevel) {
+		if (placeType.equalsIgnoreCase("city") || placeType.equalsIgnoreCase("village") || placeType.equalsIgnoreCase("town") || placeType.equalsIgnoreCase("hamlet")){
+			return false;
+		}
 		if ("neighbourhood".equalsIgnoreCase(placeType)
 				|| "quarter".equalsIgnoreCase(placeType)
 				|| "isolated_dwelling".equalsIgnoreCase(placeType)

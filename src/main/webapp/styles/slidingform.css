@@ -3,7 +3,7 @@
     text-align:center;
     width:880px;
     position:relative;
-    height:100%;
+    height:540px;
 float:left;
  -moz-box-shadow:0px 0px 3px #aaa;
     -webkit-box-shadow:0px 0px 3px #aaa;
@@ -26,6 +26,7 @@ margin-bottom:20px;
     border:2px solid #fff;
     background-color:#e8ecef;
     width:710px;
+    height: 500px;
     overflow:hidden;
 margin-bottom:20px;
 text-align :left;
@@ -36,14 +37,14 @@ font-size:12px;;
 }
 #steps{
     width:685px;
-	height:420px;
+	height:490px;
     overflow:hidden;
 
 }
 .step{
     float:left;
     width:685px;
-    height:397px;
+    height:480px;
 }
 .step p {
 font-size:1em;
@@ -240,7 +241,7 @@ vertical-align:middle;
 
 
 .optionscontainer{
-height:200px;
+height:280px;
 width:97%;
 overflow:auto;
 padding-top:5px;

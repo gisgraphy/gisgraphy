@@ -91,5 +91,7 @@ public interface IImporterManager {
     public String getHookURL() ;
     
     public void setHookURL(String hookURL) ;
+    
+    public void markAsNotDone();
 
 }

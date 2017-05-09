@@ -93,6 +93,18 @@ public class ImporterConfigTest {
 		importerConfig.setQuattroshapesDir(filePath);
 		assertFalse(importerConfig.isQuattroshapesDirectoryAccessible());
 	}
+	
+	@Test
+	public void isOpenAddressesDirectoryAccessible() {
+		ImporterConfig importerConfig = new ImporterConfig();
+		importerConfig.setOpenAddressesDir(accessiblePath);
+		assertTrue(importerConfig.isOpenAddressesDirectoryAccessible());
+
+		importerConfig.setOpenAddressesDir(pathNotAccessible);
+		assertFalse(importerConfig.isOpenAddressesDirectoryAccessible());
+		importerConfig.setOpenAddressesDir(filePath);
+		assertFalse(importerConfig.isOpenAddressesDirectoryAccessible());
+	}
 
 	@Test
 	public void setOpenStreetMapImporterShouldDisableHouseNumber() {
@@ -185,6 +197,15 @@ public class ImporterConfigTest {
 	}
 	
 	@Test
+	public void setOpenAdressesDirShouldAddFileSeparatorIfItDoesnTEndsWithFileSeparator() {
+		String openAdressesDir = "Test";
+		ImporterConfig importerConfig = new ImporterConfig();
+		importerConfig.setOpenAddressesDir(openAdressesDir);
+		Assert.assertTrue("setOpenAddressesDir should add File separator", importerConfig.getOpenAddressesDir().endsWith(File.separator));
+		Assert.assertEquals(openAdressesDir + File.separator, importerConfig.getOpenAddressesDir());
+	}
+	
+	@Test
 	public void setQuattroshapesDirShouldAddFileSeparatorIfItDoesnTEndsWithFileSeparator() {
 		String quattroshapes = "Test";
 		ImporterConfig importerConfig = new ImporterConfig();
@@ -242,6 +263,12 @@ public class ImporterConfigTest {
 	}
 
 	@Test
+	public void isOpenAddressesImporterShouldBeTrueByDefault() {
+		ImporterConfig importerConfig = new ImporterConfig();
+		Assert.assertTrue("OpenAddresses importer should be enabled by default ", importerConfig.isOpenaddressesImporterEnabled());
+	}
+	
+	@Test
 	public void isOpenstreetmapImporterShouldBeTrueByDefault() {
 		ImporterConfig importerConfig = new ImporterConfig();
 		Assert.assertTrue("OpenStreetMap importer should be enabled by default ", importerConfig.isOpenstreetmapImporterEnabled());
@@ -263,6 +290,10 @@ public class ImporterConfigTest {
 		importerConfig.setOpenStreetMapDir(pathNotAccessible);
 		Assert.assertFalse("when openstreetmap dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
 		importerConfig.setOpenStreetMapDir(accessiblePath);
+		//test with wrong Openaddresses dir
+		importerConfig.setOpenAddressesDir(pathNotAccessible);
+		Assert.assertFalse("when openaddresses dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
+		importerConfig.setOpenAddressesDir(accessiblePath);
 		//test with wrong Openstreetmap house number dir
 		importerConfig.setOpenStreetMapHouseNumberDir(pathNotAccessible);
 		Assert.assertFalse("when openstreetmap house number dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
@@ -275,7 +306,6 @@ public class ImporterConfigTest {
 		importerConfig.setOpenStreetMapPoisDir(pathNotAccessible);
 		Assert.assertFalse("when openstreetmap Poi dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
 		importerConfig.setOpenStreetMapPoisDir(accessiblePath);
-		
 		//test with wrong quattroshapesDir
 		importerConfig.setQuattroshapesDir(pathNotAccessible);
 		Assert.assertFalse("when QuattroshapesDir dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
@@ -294,11 +324,13 @@ public class ImporterConfigTest {
 		importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
+		importerConfig.setOpenAddressesFilesToDownload(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
 		
 		String baseUrl = GISGRAPHY_DOWNLOAD_SERVER2;
 		importerConfig.setGeonamesDownloadURL("http://download.geonames.org/export/dump/");
 		importerConfig.setOpenstreetMapDownloadURL(baseUrl+"/streets/");
+		importerConfig.setOpenAddressesDownloadURL(baseUrl+"/openaddresses/");
 		importerConfig.setOpenstreetMapCitiesDownloadURL(baseUrl+"/cities/");
 		importerConfig.setOpenstreetMapAdmDownloadURL(baseUrl+"/adms/");
 		importerConfig.setOpenstreetMapPoisDownloadURL(baseUrl+"/pois/");

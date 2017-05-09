@@ -107,6 +107,8 @@ public class ImporterConfig {
 
     public final static String OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
+    public final static String OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
+    
     public final static String OPENSTREETMAP_HOUSENUMBER_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
     public final static String OPENSTREETMAP_CITIES_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
@@ -170,6 +172,8 @@ public class ImporterConfig {
 
     private String openStreetMapDir;
     
+    private String openAddressesDir;
+    
     private String quattroshapesDir;
     
     private String openStreetMapHouseNumberDir;
@@ -183,6 +187,8 @@ public class ImporterConfig {
     private String geonamesZipCodeDir;
 
     private String openstreetMapDownloadURL;
+    
+    private String openAddressesDownloadURL;
     
     private String quattroshapesDownloadURL;
     
@@ -204,6 +210,8 @@ public class ImporterConfig {
 
     private String openStreetMapFilesToDownload = "";
     
+    private String openAddressesFilesToDownload = "";
+    
     private String quattroshapesFilesToDownload = "";
     
     private String openStreetMapHouseNumberFilesToDownload = "";
@@ -217,6 +225,8 @@ public class ImporterConfig {
     private boolean geonamesImporterEnabled = true;
 
     private boolean openstreetmapImporterEnabled = true;
+    
+    private boolean openAddressesImporterEnabled = true;
     
     private boolean quattroshapesImporterEnabled = true;
     
@@ -490,6 +500,8 @@ public class ImporterConfig {
     	return openstreetmapImporterEnabled;
     }
     
+    
+   
   
     
     /**
@@ -516,6 +528,10 @@ public class ImporterConfig {
 	}
 	logger.debug("set openstreetMapDownloadURL to " + this.openstreetMapDownloadURL);
     }
+    
+    
+    
+      
    
     /**
      * @return The option
@@ -543,6 +559,8 @@ public class ImporterConfig {
 	logger.debug("set openStreetMapDir to " + this.openStreetMapDir);
     }
     
+    
+ 
     /**
      * @return true if the directory with the file to import exists and is
      *         accessible
@@ -551,6 +569,8 @@ public class ImporterConfig {
     	return isDirectoryAccessible(getOpenStreetMapDir());
     }
     
+  
+    
     /**
      * @return The option
      * @see #setOpenStreetMapFilesToDownload(String)
@@ -558,6 +578,8 @@ public class ImporterConfig {
     public String getOpenStreetMapFilesToDownload() {
     	return this.openStreetMapFilesToDownload;
     }
+    
+   
     
     /**
      * The list of the Openstreetmap files to be download from the
@@ -579,6 +601,9 @@ public class ImporterConfig {
 	}
     }
     
+    
+   
+    
    
     /**
      * @return A list of string with the files to be download, processed from
@@ -587,6 +612,151 @@ public class ImporterConfig {
     public List<String> getOpenStreetMapDownloadFilesListFromOption() {
     	return splitSemiColmunStringToList(openStreetMapFilesToDownload);
     }
+   
+    
+    
+    
+    /*
+	                           	  _     _       
+  ___  _ __   ___ _ __   __ _  __| | __| |_ __ ___  ___ ___  ___  ___ 
+ / _ \| '_ \ / _ \ '_ \ / _` |/ _` |/ _` | '__/ _ \/ __/ __|/ _ \/ __|
+| (_) | |_) |  __/ | | | (_| | (_| | (_| | | |  __/\__ \__ \  __/\__ \
+ \___/| .__/ \___|_| |_|\__,_|\__,_|\__,_|_|  \___||___/___/\___||___/
+      |_|                                                             
+
+     */
+    
+   
+   
+    
+    
+    /**
+     * @param openAddressesImporterEnabled
+     *            enable or disable openaddresses importer
+     */
+    @Required
+    public void setOpenAddressesImporterEnabled(boolean openAddressesImporterEnabled) {
+    	this.openAddressesImporterEnabled = openAddressesImporterEnabled;
+    }
+    
+    /**
+     * @return true if the importer should process the import of Openaddresses
+     *         data
+     */
+    public boolean isOpenaddressesImporterEnabled() {
+    	return openAddressesImporterEnabled;
+    }
+    
+  
+    
+      
+    
+    
+    /**
+     * @return The option
+     * @see #setOpenAddressesMapDir(String)
+     */
+    public String getOpenaddressesDownloadURL() {
+    	return openAddressesDownloadURL;
+    }
+    
+    /**
+     * The HTTP URL of the directory Where openaddresses files are to be
+     * download from
+     * 
+     * @param openstreetMapDownloadURL
+     *            The option
+     */
+    @Required
+    public void setOpenAddressesDownloadURL(String openAddressDownloadURL) {
+	if (!openAddressDownloadURL.endsWith("/")) {
+	    this.openAddressesDownloadURL = openAddressDownloadURL + "/";
+	} else {
+	    this.openAddressesDownloadURL = openAddressDownloadURL;
+	}
+	logger.debug("set openaddressesDownloadURL to " + this.openAddressesDownloadURL);
+    }
+    
+   
+   
+    
+    
+    /**
+     * @return The option
+     * @see #setOpenAddressesMapDir(String)
+     */
+    public String getOpenAddressesDir() {
+    	return this.openAddressesDir;
+    }
+    
+    /**
+     * The directory where the openaddresses files will be retrieved and
+     * processed. It must ends with / or \ according to the System
+     * 
+     * @param importerOpenStreetMapDir
+     *            the option
+     */
+    @Required
+    public void setOpenAddressesDir(String importerOpenAddressesDir) {
+	if (!importerOpenAddressesDir.endsWith(File.separator)) {
+	    logger.debug(openAddressesDir + " does not end with " + File.separator);
+	    this.openAddressesDir = importerOpenAddressesDir + File.separator;
+	} else {
+	    this.openAddressesDir = importerOpenAddressesDir;
+	}
+	logger.debug("set openAddressesDirr to " + this.openAddressesDir);
+    }
+    
+   
+    /**
+     * @return true if the directory with the file to import exists and is
+     *         accessible
+     */
+    public boolean isOpenAddressesDirectoryAccessible() {
+    	return isDirectoryAccessible(getOpenAddressesDir());
+    }
+    
+  
+    
+    /**
+     * @return The option
+     */
+    public String getOpenAddressesFilesToDownload() {
+    	return this.openAddressesFilesToDownload;
+    }
+    
+  
+    
+    /**
+     * The list of the Openstreetmap files to be download from the
+     * {@link #openstreetMapDownloadURL}. the several files will be separated by
+     * {@link #OPTION_SEPARATOR}. if null or empty, will be set to {
+     * {@link #OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD}
+     * 
+     * @param openStreetMapFilesToDownload
+     *            The openstreetmap files to download to set
+     */
+    @Required
+    public void setOpenAddressesFilesToDownload(String openAddressesFilesToDownload) {
+	if (openAddressesFilesToDownload == null || openAddressesFilesToDownload.trim().equals("")) {
+	    logger.warn("the option openAddressesFilesToDownload is not set and will be set to his default value : " + OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
+	    this.openAddressesFilesToDownload = OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD;
+	} else {
+	    this.openAddressesFilesToDownload = openAddressesFilesToDownload;
+	    logger.info("openAddressesFilesToDownload=" + this.openAddressesFilesToDownload);
+	}
+    }
+    
+   
+   
+    /**
+     * @return A list of string with the files to be download, processed from
+     *         {@link #openStreetMapFilesToDownload}
+     */
+    public List<String> getOpenAddressesDownloadFilesListFromOption() {
+    	return splitSemiColmunStringToList(openAddressesFilesToDownload);
+    }
+    
     
     
    /*
@@ -1710,7 +1880,7 @@ public class ImporterConfig {
      * @return true if the config is Ok to process the import
      */
     public boolean isConfigCorrectForImport() {
-    	boolean firstcondition =  isRegexpCorrects() && isGeonamesDownloadDirectoryAccessible() && isOpenStreetMapDownloadDirectoryAccessible() && isOpenStreetMapHouseNumberDownloadDirectoryAccessible()
+    	boolean firstcondition =  isRegexpCorrects() && isGeonamesDownloadDirectoryAccessible() && isOpenStreetMapDownloadDirectoryAccessible() && isOpenAddressesDirectoryAccessible() && isOpenStreetMapHouseNumberDownloadDirectoryAccessible()
     			&& isOpenStreetMapCitiesDirectoryAccessible() && isOpenStreetMapPoisDirectoryAccessible() && isQuattroshapesDirectoryAccessible();
     		if (isRetrieveFiles()){
     			return firstcondition && isAllFilesDownloadables();

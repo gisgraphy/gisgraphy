@@ -221,6 +221,7 @@
             <result name="reset" type="freemarker">/WEB-INF/views/resetimport.ftl</result>
              <result name="ask" type="freemarker">/WEB-INF/views/resetimportconfirm.ftl</result>
              <result name="impossible" type="freemarker">/WEB-INF/views/resetimportimpossible.ftl</result>
+		 <result name="notdone" type="freemarker">/WEB-INF/views/notdone.ftl</result>	
         </action>
    		
    

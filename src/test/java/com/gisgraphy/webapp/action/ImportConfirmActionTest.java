@@ -163,6 +163,7 @@ public class ImportConfirmActionTest {
     	action.setImportallcountries(true);
     	 action.setConfig();
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenAddressesFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapAdmFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapCitiesFilesToDownload());
@@ -178,6 +179,7 @@ public class ImportConfirmActionTest {
     	action.setImportallcountries(false);
     	action.setConfig();
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenAddressesFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapCitiesFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapAdmFilesToDownload());
@@ -199,6 +201,7 @@ public class ImportConfirmActionTest {
     	action.setCountryCodes(countryCodes);
     	action.setConfig();
     	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapFilesToDownload());
+    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenAddressesFilesToDownload());
     	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
     	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapCitiesFilesToDownload());
     	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapAdmFilesToDownload());

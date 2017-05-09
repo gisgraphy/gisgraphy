@@ -145,6 +145,7 @@ public class ImportConfirmAction extends ActionSupport {
 	protected void setConfig() {
 		if (importallcountries) {
 			importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
+			importerConfig.setOpenAddressesFilesToDownload(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapHouseNumberFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
@@ -167,6 +168,7 @@ public class ImportConfirmAction extends ActionSupport {
 					openstreetmapCountryFileListAsString = openstreetmapCountryFileListAsString.substring(0, openstreetmapCountryFileListAsString.length() - 1);
 				}
 				String geonamesFileList = geonamesCountryFileList.toString();
+				importerConfig.setOpenAddressesFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapHouseNumberFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapCitiesFilesToDownload(openstreetmapCountryFileListAsString);
@@ -177,6 +179,7 @@ public class ImportConfirmAction extends ActionSupport {
 			} else {
 				logger.info("Import all countries is false but no country list recieved,set list to default");
 				importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
+				importerConfig.setOpenAddressesFilesToDownload(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapHouseNumberFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
@@ -213,6 +216,20 @@ public class ImportConfirmAction extends ActionSupport {
 		logger.info(numberOfProcessors + " processor(s) has been detected");
 		return numberOfProcessors;
 	}
+	
+	public Integer getImportKey(){
+		return importerConfig.getKey();
+	}
+	
+	public void setImportKey(String key){
+		Integer keyint;
+		try {
+			keyint = Integer.parseInt(key);
+			importerConfig.setKey(keyint);
+		} catch (NumberFormatException e) {
+			logger.error("import key "+key+ " is not a number, set it to 0 ");
+		}
+	}
 
 	/**
 	 * @return the importerConfig
@@ -235,6 +252,14 @@ public class ImportConfirmAction extends ActionSupport {
 	 */
 	public boolean isOpenStreetMapDownloadDirectoryAccessible() {
 		return importerConfig.isOpenStreetMapDownloadDirectoryAccessible();
+	}
+	
+	/**
+	 * @return true if the directory with the file to import exists and is
+	 *         accessible
+	 */
+	public boolean isOpenAddressesDownloadDirectoryAccessible() {
+		return importerConfig.isOpenAddressesDirectoryAccessible();
 	}
 
 	/**
@@ -285,6 +310,20 @@ public class ImportConfirmAction extends ActionSupport {
 	 */
 	public void setOpenStreetMapImporterEnabled(boolean openStreetMapImporter) {
 		importerConfig.setOpenstreetmapImporterEnabled(openStreetMapImporter);
+	}
+	
+	/**
+	 * @return true if he openStreetMap importer is enabled
+	 */
+	public boolean isOpenAddressesImporterEnabled() {
+		return importerConfig.isOpenaddressesImporterEnabled();
+	}
+
+	/**
+	 * Enable / Disable OpenStreetMap importer
+	 */
+	public void setOpenAddressesImporterEnabled(boolean openStreetMapImporter) {
+		importerConfig.setOpenAddressesImporterEnabled(openStreetMapImporter);
 	}
 	
 
