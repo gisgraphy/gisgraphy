@@ -5,14 +5,12 @@ import net.sf.jstester.util.Assert;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 
-import com.gisgraphy.helper.StringHelper;
-
 public class OpenAddressesSimpleImporterTest {
 
 	@Test
 	public void extractCountrycode() {
 		OpenAddressesSimpleImporter importer = new OpenAddressesSimpleImporter();
-		Assert.assertEquals("AR", importer.extractCountrycode("./ar/ba/buenos_aires:d9728f782bae5457"));
+		Assert.assertEquals("AR", importer.extractCountrycode("ar:d9728f782bae5457"));
 		Assert.assertEquals(null, importer.extractCountrycode("d9728f782bae5457"));
 		Assert.assertEquals(null, importer.extractCountrycode(""));
 		Assert.assertEquals(null, importer.extractCountrycode(null));

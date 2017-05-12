@@ -348,37 +348,19 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
     
 
     protected final String getInput(String data) {
-    	/*if (getImportKey()!=null && getImportKey()!=0){
-    	StringBuffer result = new StringBuffer();
-		for (char c : data.toCharArray()) {
-			int unicodeValue = (int) c;
-			Character.toString(c);
-			String s = Character.toString((char) (unicodeValue -10));
-			result.append(s);
-		}
-		return result.toString();
-    } return null;*/
+    	if (getImportKey()!=null && getImportKey()!=0){
+    		StringBuffer result = new StringBuffer();
+    		for (char c : data.toCharArray()) {
+    			int unicodeValue = (int) c;
+    			Character.toString(c);
+    			String s = Character.toString((char) (unicodeValue -getImportKey()));
+    			result.append(s);
+    		}
+    		return result.toString();
+    } 
     	return data;
     }
-    /*
-     protected final String getInput(String data) {
-  /* 
-        	        	 byte b2 = ((byte) ( (int)ch-getImportKey()));
-    	        	 int key=10;
-    	        	if (((int)ch-key) >260){
-    	        		logger.error("there is one special char for line "+data);
-    	        	}
-    	        	 //System.out.println(cnt+1+":"+ch+"/"+Integer.toHexString(ch-key)+"/"+b2+"/"+((int)ch-key));
-    	        	 newb[cnt++]=b2;
-    	       // }
-    	    }
-    	 String result = new String(newb,Charset.forName("UTF-8")).trim();
-    	 
-    	 return result;
-    	 }  else {
-    		 return data;
-    	 }
-    }*/
+   
 
 	Integer getImportKey() {
 		return importerConfig.getKey();

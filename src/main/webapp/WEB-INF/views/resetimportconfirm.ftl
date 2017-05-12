@@ -27,7 +27,7 @@
 			<@s.text name="import.reset.notdone.explanation"/>
 			<@s.url id="notDoneImportResetURL" action="resetimport" method="markAsNotDone"/>
 			<@s.form action="${notDoneImportResetURL}" method="get" id="notdoneform">
-							<@s.submit onclick="$('notdoneform').submit();" title="%{getText('import.reset.button')}" value="%{getText('import.reset.button')}" theme="simple" id="doCancelButton" />
+							<@s.submit onclick="$('notdoneform').submit();" title="%{getText('import.notdone')}" value="%{getText('import.notdone')}" theme="simple" id="doCancelButton" />
 						</@s.form>
 
 

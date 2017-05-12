@@ -86,11 +86,11 @@ public class ImporterHelper {
      */
     public static final String GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING = "[A-Z][A-Z](.txt)";
 
-    public static final String OPENSTREETMAP_US_FILE_ACCEPT_REGEX_STRING = "(US.)[0-9]+(.txt)";
+    public static final String OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING = "[A-Z][A-Z](.dat|.txt)";
     
     public static final String QUATTROSHAPES_FILE_ACCEPT_REGEX_STRING = "(localities.txt)";
 
-    public static final String SPLITED_FILE_ACCEPT_REGEX_STRING = "[A-Z][A-Z](.)[0-9]+(.txt)";
+    public static final String SPLITED_FILE_ACCEPT_REGEX_STRING = "[A-Z][A-Z](.)[0-9]+(.txt|.dat)";
     
     //2 letter but not us, it is managed by SPLITED_OPENSTREETMAP_US_FILE_ACCEPT_REGEX_STRING
     public static final String SPLITED_OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING = "((?!(?:US))[A-Z][A-Z])(.)[0-9]+(.txt)";
@@ -173,7 +173,7 @@ public class ImporterHelper {
     public static FileFilter countryFileFilter = new FileFilter() {
 	public boolean accept(File file) {
 	    Pattern patternGeonames = Pattern.compile(GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING);
-	    Pattern patternOpenStreetMapUS = Pattern.compile(OPENSTREETMAP_US_FILE_ACCEPT_REGEX_STRING);
+	    Pattern patternOpenStreetMapUS = Pattern.compile(OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING);
 	    Pattern patternQuattroshapes = Pattern.compile(QUATTROSHAPES_FILE_ACCEPT_REGEX_STRING);
 
 	    return (file.isFile() && file.exists()) && !EXCLUDED_README_FILENAME.equals(file.getName())
@@ -795,7 +795,7 @@ public class ImporterHelper {
 						if (name!=null  && !"".equals(name) && name.length()<OpenStreetMap.MAX_ALTERNATENAME_SIZE){
 							if (street.getName()==null){
 								street.setName(name);
-								if (lang.equals("de") && decompounder.getSate(name)!=state.NOT_APPLICABLE){
+								if (lang.equals("de") && decompounder.isDecompoudName(name)){
 									String otherFormat = decompounder.getOtherFormat(name);
 									alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
 									if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
@@ -809,7 +809,7 @@ public class ImporterHelper {
 								if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
 									street.addAlternateName(alternateNameToAdd);
 								}
-									if (lang.equals("de") && decompounder.getSate(name)!=state.NOT_APPLICABLE){
+									if (lang.equals("de") && decompounder.isDecompoudName(name)){
 										String otherFormat = decompounder.getOtherFormat(name);
 										alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
 										if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
@@ -828,7 +828,7 @@ public class ImporterHelper {
 					
 			}	
 		}
-		if (street.getName()!=null && street.getCountryCode()!=null && street.getCountryCode().equals("DE") && decompounder.getSate(street.getName())!=state.NOT_APPLICABLE){
+		if (street.getName()!=null && street.getCountryCode()!=null && street.getCountryCode().equals("DE") && decompounder.isDecompoudName(street.getName())){
 						AlternateOsmName alternateNameOtherFormat = new AlternateOsmName(decompounder.getOtherFormat(street.getName()),"DE",AlternateNameSource.OPENSTREETMAP);
 						if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameOtherFormat)){
 							street.addAlternateName(alternateNameOtherFormat);

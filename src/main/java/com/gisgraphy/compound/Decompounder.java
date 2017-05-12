@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
  */
 public class Decompounder {
 	private Pattern p;
-	private Pattern concatenatePattern;
+	private static Pattern concatenatePattern;
 	public enum state {CONCATENATE, SEPARATE, NOT_APPLICABLE};
 	Pattern ENDING_POINT = Pattern.compile("\\.$");
 	
@@ -208,6 +208,14 @@ public class Decompounder {
 	public static boolean isDecompoudCountryCode(String countryCode){
 		if (countryCode!=null){
 		return DECOMPOUND_COUNTRIES.contains(countryCode.toUpperCase());
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isDecompoudName(String name){
+		if (name!=null){
+			return getSate(name)!=state.NOT_APPLICABLE;
 		} else {
 			return false;
 		}

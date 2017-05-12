@@ -169,7 +169,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	
 	private Point lastPoint=null;
 	
-	private Pattern COUNTRY_EXTRACTION_PATTERN=Pattern.compile("/(..)/");
+	private Pattern COUNTRY_EXTRACTION_PATTERN=Pattern.compile("(..):");
 
 	/*
 	 * (non-Javadoc)

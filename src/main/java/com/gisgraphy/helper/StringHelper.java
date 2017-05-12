@@ -211,7 +211,7 @@ public class StringHelper {
 	public static boolean isSameName(String expected, String actual){
 		
 		if (actual!=null && expected!=null){
-			if (decompounder.getSate(actual)!=state.NOT_APPLICABLE){
+			if (decompounder.isDecompoudName(actual)){
 				return isSameName(expected, actual, MISSING_WORD_TOLERANCE) || isSameName(expected, decompounder.getOtherFormat(actual), MISSING_WORD_TOLERANCE);
 			}
 			else {
