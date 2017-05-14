@@ -174,4 +174,7 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
      */
     public String getShapeAsWKTByGId(final Long gid);
     
+    public List<OpenStreetMap> getNearestsFrom(
+			final Point point,final boolean onlyroad,final boolean filterEmptyName, final double distance) ;
+    
 }

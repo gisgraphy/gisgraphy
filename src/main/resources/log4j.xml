@@ -11,6 +11,7 @@
 
 	<appender name="RollingFileImporter" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="./logs/gisgraphy-importer.log" />
+		<param name="maxBackupIndex" value="10" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
 				value="[%p] [%c] [%d{dd MMM yyyy HH:mm:ss,SSS}] (%t,%x) : %m%n" />
@@ -19,6 +20,7 @@
 
 	<appender name="RollingFileGisgraphy" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="./logs/gisgraphy.log" />
+		<param name="maxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
 				value="[%p] [%c] [%d{dd MMM yyyy HH:mm:ss,SSS}] (%t,%x) : %m%n" />
@@ -27,6 +29,7 @@
 
 	<appender name="RollingFileService" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="./logs/gisgraphy-services.log" />
+		<param name="maxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
 				value="%p [%t] [%d{dd MMM yyyy HH:mm:ss,SSS}] %c{1}.%M(%L) | %m%n" />
@@ -35,6 +38,7 @@
 
 	<appender name="RollingFileServlet" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="./logs/gisgraphy-servlet.log" />
+		<param name="maxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%p [%t] [%d{dd MMM yyyy HH:mm:ss,SSS}] | %m%n" />
 		</layout>
@@ -43,6 +47,7 @@
 
 	<appender name="RollingFileRepository" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="./logs/gisgraphy-repository.log" />
+		<param name="maxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="[%p] [%d] [%c] (%t,%x) : %m%n" />
 		</layout>
@@ -50,6 +55,7 @@
 	
 	<appender name="RollingFileExtra" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="./logs/ws-billing.log" />
+		<param name="maxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
 				value="[%p] [%c] [%d{dd MMM yyyy HH:mm:ss,SSS}] (%t,%x) : %m%n" />

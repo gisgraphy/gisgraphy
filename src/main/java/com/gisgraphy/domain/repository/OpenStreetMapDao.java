@@ -570,7 +570,21 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 		if (point==null){
 			return null;
 		}
-		return (OpenStreetMap) this.getHibernateTemplate().execute(
+		List<OpenStreetMap> results = getNearestsFrom(point, onlyroad, filterEmptyName, distance);
+		if (results!=null && results.size()>0){
+			return results.get(0);
+		} else {
+			return null;
+		}
+	}
+	
+	
+	public List<OpenStreetMap> getNearestsFrom(
+			final Point point,final boolean onlyroad,final boolean filterEmptyName, final double distance) {
+		if (point==null){
+			return null;
+		}
+		return (List<OpenStreetMap>) this.getHibernateTemplate().execute(
 				new HibernateCallback() {
 
 					public Object doInHibernate(Session session)
@@ -606,10 +620,9 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						.append(")")
 						.toString();
 						criteria.addOrder(new NativeSQLOrder(distanceCondition));
-						criteria = criteria.setMaxResults(1);
 						criteria.setCacheable(true);
 						// List<Object[]> queryResults =testCriteria.list();
-						OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
+						List<OpenStreetMap> openStreetMap = (List<OpenStreetMap>)criteria.list();
 
 						return openStreetMap;
 
@@ -622,66 +635,19 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 	
 	public OpenStreetMap getNearestFromByName(
 			final Point point,final double distance, final String  name) {
-		
 		if (name ==null){
 			return  getNearestFrom(point, distance);
 		}
-		
-		
-		return (OpenStreetMap) this.getHibernateTemplate().execute(
-				new HibernateCallback() {
-
-					public Object doInHibernate(Session session)
-							throws PersistenceException {
-
-						Criteria criteria = session
-								.createCriteria(OpenStreetMap.class);
-
-						if (point!=null){
-							//An intersect restriction will probably have better performances and use the index than a distance restriction 
-							Polygon polygonBox = GeolocHelper.createPolygonBox(point.getX(), point.getY(), distance);
-							criteria = criteria.add(new IntersectsRestriction(OpenStreetMap.SHAPE_COLUMN_NAME, polygonBox));
-						}
-						if (name!=null && !"".equals(name.trim()) ){
-							criteria = criteria.add(Restrictions.isNotNull("name"));
-						}
-
-						String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
-						String distanceCondition = new StringBuffer()
-						.append(DISTANCE_SPHERE_FUNCTION)
-						.append("(")
-						.append(pointAsString)
-						.append(",")
-						.append(SpatialProjection.ST_CLOSEST_POINT)
-						.append("(")
-						.append("this_.").append(OpenStreetMap.SHAPE_COLUMN_NAME)
-						.append(",")
-						.append(pointAsString)
-						.append(")")
-						.append(")")
-						.toString();
-						criteria.addOrder(new NativeSQLOrder(distanceCondition));
-						if (name==null || "".equals(name.trim())){
-							criteria = criteria.setMaxResults(1);
-							return criteria.uniqueResult();
-						} 
-						criteria = criteria.setMaxResults(20);
-
-						List<OpenStreetMap> openStreetMaps = (List<OpenStreetMap>)criteria.list();
-						
-						if (openStreetMaps!=null && openStreetMaps.size()>0){
-							for (OpenStreetMap openstreetmap:openStreetMaps){
-								if (StringHelper.isSameStreetName(name, openstreetmap)){
-									return openstreetmap;
-								}
-
-							}
-						}
-						return null;
-
+		List<OpenStreetMap> results = getNearestsFrom(point, false, true, distance);
+		if (results!=null && results.size()>0){
+				for (OpenStreetMap openstreetmap:results){
+					if (StringHelper.isSameStreetName(name, openstreetmap)){
+						return openstreetmap;
 					}
-				});
 
+				}
+		} 
+			return null;
 	}
 
 

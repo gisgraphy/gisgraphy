@@ -258,6 +258,8 @@ public class StringHelperTest {
     	
     	Assert.assertTrue(StringHelper.isSameStreetName("Stauffenbergstraße", "Stauffenberg straße","DE"));
     	Assert.assertTrue(StringHelper.isSameStreetName("Stauffenberg straße", "Stauffenbergstraße","DE"));
+    	Assert.assertTrue(StringHelper.isSameStreetName("Stauffenberg straße", "Stauffenbergstrasse","DE"));
+    	Assert.assertTrue(StringHelper.isSameStreetName("Stauffenberg strasse", "Stauffenbergstraße","DE"));
     	
     	Assert.assertTrue(StringHelper.isSameStreetName("Phillips Street", "Philips Street",null));
     	Assert.assertTrue(StringHelper.isSameStreetName("Hilands Court", "Hiland Court",null));
@@ -404,10 +406,74 @@ public class StringHelperTest {
     	Assert.assertEquals("foo avenue",StringHelper.expandStreetType("foo av.", "US"));
     	Assert.assertEquals("foo court",StringHelper.expandStreetType("foo Ct", "US"));
     	
-    	//two 
-    	//Assert.assertEquals("foo trucstraße foo trucstraße",service.replaceGermanSynonyms("foo trucStr. foo trucStr."));
+    }
+    
+    
+    @Test
+    public void testRemoveStreetType(){
     	
-    //	Assert.assertEquals("foo truc str",service.replaceGermanSynonyms("foo truc Str."));
+    	//no str
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("foo", null));
+    	
+    	//one without point
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", null));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStrasse", null));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("truc Strasse", null));
+    //	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str"));
+    	
+    	//one with point
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr.", null));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStrasse.", null));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("truc Strasse.", null));
+    //	Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str."));
+    	
+    	//one without point + other word
+    	Assert.assertEquals("foo truc",StringHelper.removeStreetType("foo trucStr", null));
+    	Assert.assertEquals("foo truc",StringHelper.removeStreetType("foo trucStrasse", null));
+    	Assert.assertEquals("foo truc",StringHelper.removeStreetType("foo truc Strasse", null));
+    //	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str"));
+    	
+    	//one with point + other word
+    	Assert.assertEquals("foo truc",StringHelper.removeStreetType("foo trucStr.", null));
+    	Assert.assertEquals("foo truc",StringHelper.removeStreetType("foo trucStrasse.", null));
+    	Assert.assertEquals("foo truc",StringHelper.removeStreetType("foo truc Strasse.", null));
+    //	Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str."));
+    	
+    	
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", "DE"));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", "AT"));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", "CH"));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", "NL"));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", "DK"));
+    	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", "MD"));
+    	
+    	
+    	//for FR
+    	Assert.assertEquals("de la vallée",StringHelper.removeStreetType("r de la vallée", "FR"));
+    	Assert.assertEquals("de la vallée",StringHelper.removeStreetType("r. de la vallée", "FR"));
+    	Assert.assertEquals("de la vallée",StringHelper.removeStreetType("r de la vallée", "CA"));
+    	Assert.assertEquals("de la vallée",StringHelper.removeStreetType("r. de la vallée", "FR"));
+    	Assert.assertEquals("de la vallée",StringHelper.removeStreetType("rue de la vallée", "FR"));
+    	
+    	//sp
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("c foo", "ES"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("calle foo", "ES"));
+    	Assert.assertEquals("card foo",StringHelper.removeStreetType("card foo", "ES"));
+    	
+    	//it
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("c foo", "IT"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("calle foo", "IT"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("v foo", "IT"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("via foo", "IT"));
+    	Assert.assertEquals("card foo",StringHelper.removeStreetType("card foo", "IT"));
+    	
+    	//us
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("foo ave", "US"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("foo av.", "US"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("foo Ct", "US"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("foo avenue", "US"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("foo Court", "US"));
+    	
     }
     
     

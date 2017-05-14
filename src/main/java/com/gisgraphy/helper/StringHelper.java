@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -298,7 +299,7 @@ public class StringHelper {
 	
 	private static List<String> FR_COUNTRIES = new ArrayList<String>(){{
 		add("CA");add("FR");add("BE");add("CH");add("RE");add("GP");add("MF");add("MP");add("DZ");add("MA");add("SD");add("CD");add("CM");add("SN");add("PM");}};
-	private static List<String> EN_COUNTRIES = new ArrayList<String>(){{add("US");add("CA");add("CN");add("ID");add("IN");add("AU");add("SG");add("HK");add("IR");add("DK");add("FI");add("SA");add("VI");add("FK");add("GI");add("GL");add("FO");add("AS");add("IM");add("UM");add("GB");add("UK");add("PR");add("JE");add("SH");add("GS");add("GG");}};
+	private static List<String> EN_COUNTRIES = new ArrayList<String>(){{add("US");add("CA");add("CN");add("ID");add("IN");add("AU");add("SG");add("HK");add("IR");add("FI");add("SA");add("VI");add("FK");add("GI");add("GL");add("FO");add("AS");add("IM");add("UM");add("GB");add("UK");add("PR");add("JE");add("SH");add("GS");add("GG");}};
     private static List<String> SP_COUNTRIES = new ArrayList<String>(){{add("AR");add("ES");add("MX");add("CO");add("PA");}};
 	private static List<String> IT_COUNTRIES = new ArrayList<String>(){{add("IT");add("SM");add("VA");}};
 	
@@ -498,9 +499,9 @@ public class StringHelper {
 				hasPoint=true;
 			}
 			if (firstWord !=null ){
-					if (SP_STREETTYPE_MAP.get(firstWord.toLowerCase())!=null){
+					if (SP_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
 						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, SP_STREETTYPE_MAP.get(firstWord.toLowerCase()));
+						return street.replaceFirst(toReplace, SP_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
 					}
 			}
 			}
@@ -514,14 +515,14 @@ public class StringHelper {
 				hasPoint=true;
 			}
 			if (firstWord !=null ){
-					if (IT_STREETTYPE_MAP.get(firstWord.toLowerCase())!=null){
+					if (IT_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
 						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, IT_STREETTYPE_MAP.get(firstWord.toLowerCase()));
+						return street.replaceFirst(toReplace, IT_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
 					}
 			}
 			}
 		}
-		else if  (countryCode != null && (countryCode.equalsIgnoreCase("US") || countryCode.equalsIgnoreCase("CA"))){
+		else if  (countryCode != null && (EN_COUNTRIES.contains(countryCode.toUpperCase()))){
 			//last word
 			if (street.indexOf(' ')>0){
 			String lastword = street.substring(street.lastIndexOf(" ")+1);
@@ -579,6 +580,7 @@ public class StringHelper {
 		return s;
 	}
 	
+	//always put in lowercase
 	private static final Map<String, String> FR_STREET_TYPE_MAP = new HashMap<String, String>(){
 		{
 			put("r","rue");
@@ -587,26 +589,27 @@ public class StringHelper {
     		put("bd","boulevard");
     		put("blvd","boulevard");
     		put("chem","chemin");
-    		put("departementale","route départementale");
-    		put("rte departementale","route départementale");
-    		put("gr","grande randonnée");
+    		put("departementale","route departementale");
+    		put("rte departementale","route departementale");
+    		put("gr","grande randonnee");
 		}
 		
 		
 	};
-	
+	//always put in lowercase
 	private static final Map<String, String> NUMBERED_STREET_TYPE_MAP = new HashMap<String, String>(){
 		{
 			put("sr","state route");
-    		put("Hwy","route");
-			put("pth","Perimeter Highway");
-    		put("ss","Strada Statale");
+    		put("hwy","route");
+			put("pth","perimeter highway");
+    		put("ss","strada statale");
 		}
 		
 		
 	};
 	
 	//only frequent commonly used
+	//always put in lowercase
 	private static final Map<String, String> US_STREET_TYPE_MAP = new HashMap<String, String>(){
 		{
 			put("r","rue");
@@ -644,7 +647,8 @@ public class StringHelper {
 		}
 	};
 	
-    public static final Map<String,String> SP_STREETTYPE_MAP = new HashMap<String,String>(){{
+	//always put in lowercase
+    public static final Map<String,String> SP_STREET_TYPE_MAP = new HashMap<String,String>(){{
         put("alam","alameda");
         put("angta","angosta");
         
@@ -716,10 +720,164 @@ public class StringHelper {
     }
     };
     
-    public static final Map<String,String> IT_STREETTYPE_MAP = new HashMap<String,String>(){{
+    public static final Map<String,String> IT_STREET_TYPE_MAP = new HashMap<String,String>(){{
     	 put("v","via");
     	 put("c","calle");
      }};
+     
+     public static final Collection<String> IT_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(IT_STREET_TYPE_MAP);
+     public static final Collection<String> EN_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(US_STREET_TYPE_MAP);
+     public static final Collection<String> FR_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(FR_STREET_TYPE_MAP);
+     public static final Collection<String> SP_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(SP_STREET_TYPE_MAP);
+     public static final Collection<String> DE_STREETTYPE_LIST_AFTER_NORMALIZATION=new ArrayList<String>(){
+    	 {
+    		 add("strassen");
+    		 add("strasse");
+    		   add("straße");
+    		   add("straßen");
+    		   add("str");
+    		   add("allee");
+    		   add("alleen");
+    		   add("all");
+    		   add("platz");
+    		   add("fleck");//place
+    		   add("Platze");
+    		   add("pl");
+    		   add("gewerbegebiet");//ZI
+    		   add("gg");
+    		   add("damm");
+    		   add("damme");
+    		   add("res");
+    		   add("chausee");
+    		   add("chee");
+    		   add("brucke");//pont
+    		   add("br");
+    		   add("gasse");//ruelle
+    		   add("gassen");//ruelle
+    		   add("pfad");//sentier, chemin
+    		   add("weg");
+    		   add("landstraße");
+    		   add("landstraßen");
+    		   add("pfad");
+    		   add("pfade");
+    		   add("ring");
+    		   add("steig");
+    		   add("steige");
+    		   add("ufer");
+    		   add("landstr");
+    		   add("park");
+    		   add("autobahn");
+    		   add("platz");
+    		    add("platze");
+    		    add("stræde");
+    		    add("staede");
+    		    add("strada");
+    		    add("straat");
+    	 }
+     };
+     
+     
+     public static String removeStreetType(String street,String countryCode){
+    	 if (street==null){
+ 			return null;
+ 		}
+ 		street= street.trim();
+ 		boolean hasPoint = false;
+ 		if (countryCode != null && FR_COUNTRIES.contains(countryCode.toUpperCase())){
+ 			if (street.indexOf(' ')>0){
+ 			String firstWord = street.substring(0, street.indexOf(' '));
+ 			
+ 			if (firstWord.indexOf(".")>0){
+ 				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
+ 				hasPoint=true;
+ 			}
+ 			if (firstWord !=null ){
+ 					if (FR_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(firstWord.toLowerCase())){
+ 						String toReplace = hasPoint?firstWord+".":firstWord;
+ 						return street.replaceFirst(toReplace, "").trim();
+ 					}
+ 			}
+ 			}
+ 		}
+ 		if (countryCode != null && SP_COUNTRIES.contains(countryCode.toUpperCase())){
+ 			if (street.indexOf(' ')>0){
+ 			String firstWord = street.substring(0, street.indexOf(' '));
+ 			
+ 			if (firstWord.indexOf(".")>0){
+ 				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
+ 				hasPoint=true;
+ 			}
+ 			if (firstWord !=null ){
+ 					if (SP_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(firstWord.toLowerCase())){
+ 						String toReplace = hasPoint?firstWord+".":firstWord;
+ 						return street.replaceFirst(toReplace, "").trim();
+ 					}
+ 			}
+ 			}
+ 		}
+ 		if (countryCode != null && IT_COUNTRIES.contains(countryCode.toUpperCase())){
+ 			if (street.indexOf(' ')>0){
+ 			String firstWord = street.substring(0, street.indexOf(' '));
+ 			
+ 			if (firstWord.indexOf(".")>0){
+ 				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
+ 				hasPoint=true;
+ 			}
+ 			if (firstWord !=null ){
+ 					if (IT_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(firstWord.toLowerCase())){
+ 						String toReplace = hasPoint?firstWord+".":firstWord;
+ 						return street.replaceFirst(toReplace, "").trim();
+ 					}
+ 			}
+ 			}
+ 		}
+ 		else if  (countryCode != null &&  EN_COUNTRIES.contains(countryCode.toUpperCase())){
+ 			//last word
+ 			if (street.indexOf(' ')>0){
+ 			String lastword = street.substring(street.lastIndexOf(" ")+1);
+ 			if (lastword.indexOf(".")>0){
+ 				lastword = lastword.substring(0, lastword.indexOf('.'));
+ 				hasPoint=true;
+ 			}
+ 			if (lastword !=null) {
+ 				 if (EN_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(lastword.toLowerCase())){
+ 					 String toReplace = hasPoint?lastword+".":lastword;
+ 					return street.replaceFirst(toReplace, "").trim();
+ 			}
+ 			}
+ 			}
+ 		} 
+ 		else if((countryCode!=null && (Decompounder.isDecompoudCountryCode(countryCode)||  "BE".equalsIgnoreCase(countryCode))) || decompounder.getSate(street)!=state.NOT_APPLICABLE){
+ 			if (street.indexOf(' ')>0){
+ 				String lastword = street.substring(street.lastIndexOf(" ")+1);
+ 				if (lastword.indexOf(".")>0){
+ 					lastword = lastword.substring(0, lastword.indexOf('.'));
+ 					hasPoint=true;
+ 				}
+ 				if (lastword !=null) {
+ 					if (DE_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(lastword.toLowerCase())){
+ 						String toReplace = hasPoint?lastword+".":lastword;
+ 						return street.replaceFirst(toReplace, "").trim();
+ 					}
+ 				}
+ 			}
+ 			street = decompounder.getOtherFormat(street);
+ 			if (street.indexOf(' ')>0){
+ 				String lastword = street.substring(street.lastIndexOf(" ")+1);
+ 				if (lastword.indexOf(".")>0){
+ 					lastword = lastword.substring(0, lastword.indexOf('.'));
+ 					hasPoint=true;
+ 				}
+ 				if (lastword !=null) {
+ 					if (DE_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(lastword.toLowerCase())){
+ 						String toReplace = hasPoint?lastword+".":lastword;
+ 						return street.replaceFirst(toReplace, "").trim();
+ 					}
+ 				}
+ 			}
+ 		}
+ 		return street;
+     }
 	
 	public static boolean isSameStreetName(String name,OpenStreetMap openstreetmap){
 		if (name!=null && openstreetmap!=null){
@@ -740,6 +898,16 @@ public class StringHelper {
 		return false;
 	}
 	
+	private static Collection<String> getlistOfNormalizedStreetType(
+			Map<String, String> map) {
+		Collection<String> results =  new ArrayList<String>(map.values());
+				Collection<String> keySet = map.keySet();
+				for (String s : map.keySet()){
+					results.add(s);
+				}
+				return results;
+	}
+
 	public static String prepareQuery(String rawAddress) {
 		if (rawAddress == null){
 			return rawAddress;
