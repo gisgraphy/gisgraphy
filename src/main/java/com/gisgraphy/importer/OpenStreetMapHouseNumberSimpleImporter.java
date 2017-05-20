@@ -52,7 +52,10 @@ import com.gisgraphy.fulltext.FulltextQuery;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
+import com.gisgraphy.helper.DistancePointDto;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.OrthogonalProjection;
+import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.importer.dto.AddressInclusion;
 import com.gisgraphy.importer.dto.AssociatedStreetHouseNumber;
 import com.gisgraphy.importer.dto.AssociatedStreetMember;
@@ -60,7 +63,9 @@ import com.gisgraphy.importer.dto.InterpolationHouseNumber;
 import com.gisgraphy.importer.dto.InterpolationMember;
 import com.gisgraphy.importer.dto.InterpolationType;
 import com.gisgraphy.importer.dto.NodeHouseNumber;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * Import the street from an (pre-processed) openStreet map data file .
@@ -70,7 +75,11 @@ import com.vividsolutions.jts.geom.Point;
 public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImporterProcessor {
 
 
+	private static final int ACCEPTABLE_DISTANCE_HOUSE_TO_STREET = 250;
+
 	public static final long DEFAULT_SEARCH_DISTANCE = 1000L;
+	
+	public static final long SHORT_SEARCH_DISTANCE = 250L;
 	
 	//the fulltext has to be greater than the db one since the fulltext use boundingbox nd midle point (db use cross and can be lower)
 	public static final long DEFAULT_FULLTEXT_SEARCH_DISTANCE = 5000L;
@@ -95,6 +104,8 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	
 	protected final static Output MEDIUM_OUTPUT = Output.withDefaultFormat().withStyle(OutputStyle.MEDIUM);
 	
+	private OrthogonalProjection orthogonalProjection = new OrthogonalProjection();
+	
 	long cummulative_db_time = 0;
 	long cummulative_fulltext_time = 0;
 	
@@ -113,8 +124,6 @@ public class OpenStreetMapHouseNumberSimpleImporter extends AbstractSimpleImport
 	 */
 	@Override
 	protected void flushAndClear() {
-		//openStreetMapDao.flushAndClear();
-		//houseNumberDao.flushAndClear();
 
 	}
 
@@ -782,21 +791,30 @@ ___W___house"} SHAPE"
 			logger.error("findNearestStreet :location is null");
 			return null;
 		}
+		List<OpenStreetMap> osmsFromDb = openStreetMapDao.getNearestsFrom(location, true, true, DEFAULT_SEARCH_DISTANCE);;
 		if (streetName==null || "".equals(streetName.trim()) || "\"\"".equals(streetName.trim()) || "-".equals(streetName.trim()) || "---".equals(streetName.trim()) || "--".equals(streetName.trim())){
 				//logger.error("findNearestStreet : no streetname, we search by location "+location);
-				OpenStreetMap osm =	openStreetMapDao.getNearestFrom(location,DEFAULT_SEARCH_DISTANCE);
+			if (osmsFromDb!=null && osmsFromDb.size()>0){
+				return osmsFromDb.get(0);
+			} else {
+				//name is null and no street found=>return null;
+				return null;
+			}
+				//OpenStreetMap osm =	openStreetMapDao.getNearestFrom(location,DEFAULT_SEARCH_DISTANCE);
 				//logger.error("findNearestStreet :getNearestFrom return "+osm);
 				
-				return osm;
+				//return osm;
 		}
-		//OpenStreetMap osmDB=null;
-		OpenStreetMap osmDB =	openStreetMapDao.getNearestFromByName(location, DEFAULT_SEARCH_DISTANCE, streetName);
-		if (osmDB !=null){
-			return osmDB;
-		}
-		
-		
-		
+		//name is not null=> first iterate to find a street with the same name 
+		if (osmsFromDb!=null && osmsFromDb.size()>0){
+			for (OpenStreetMap openstreetmap:osmsFromDb){
+				if (StringHelper.isSameStreetName(streetName, openstreetmap)){
+					return openstreetmap;
+				}
+
+			}
+		}	
+		//name is not null but iterate on name fail=>try by fulltext
 		FulltextQuery query;
 		try {
 			query = new FulltextQuery(streetName, Pagination.paginateWithMaxResults(50).from(1).to(50), MEDIUM_OUTPUT, 
@@ -851,7 +869,49 @@ ___W___house"} SHAPE"
 				 osmDB =	openStreetMapDao.getNearestFromByName(location, DEFAULT_SEARCH_DISTANCE, streetName);
 			}
 		}*/
+		if (osm == null){
+			//the fulltext search fails too, we search the nearests street in a short radius
+			//accept street that have the same name without streettype in a shortest radius
+
+			//if not found return the nearest one if the second is not too far (is so,it is ambiguous) or name without strettype is the same
+			if (osmsFromDb!=null){
+				if (osmsFromDb.size()==0){
+					return null;
+				}
+				else if (osmsFromDb.size()>=1){
+					OpenStreetMap nearest = osmsFromDb.get(0);
+					if (nearest != null && nearest.getShape()!=null){
+						DistancePointDto pointOnNearest = orthogonalProjection.getPointOnLine(nearest.getShape(), location);
+						if (pointOnNearest != null  && pointOnNearest.getDistance()!=null && pointOnNearest.getDistance()!=0 && pointOnNearest.getDistance()<ACCEPTABLE_DISTANCE_HOUSE_TO_STREET){
+							if (osmsFromDb.size()==1){// only one result that is close to street
+								return nearest;
+							} else { //more than one result
+								OpenStreetMap second = osmsFromDb.get(1);
+								if (second != null && second.getShape()!=null){
+									DistancePointDto secondPointOnNearest = orthogonalProjection.getPointOnLine(second.getShape(), location);
+									if (secondPointOnNearest != null && secondPointOnNearest.getDistance()!=null && secondPointOnNearest.getDistance()!=0 && areTooCloseDistance(pointOnNearest.getDistance(),secondPointOnNearest.getDistance())){
+										return nearest;
+									}
+								}
+							}
+						}
+					} 
+				} 
+			}
+			return null;
+		}
 		return osm;
+	}
+	
+
+	protected boolean areTooCloseDistance(Double distance, Double distance2) {
+		if (distance!=null && distance2!=null ){
+			double min = Math.min(distance, distance2);
+			if( min!=0 &&  Math.abs(distance-distance2)/min >= 0.5){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	protected OpenStreetMap getNearestByIds(List<SolrResponseDto> results,Point point,String streetname) {
