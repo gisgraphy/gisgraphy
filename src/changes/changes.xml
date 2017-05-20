@@ -973,6 +973,10 @@
 				allow the import of other countries when the import is already done
 			</action>
 			
+			<action dev="David Masclet" type="add">
+				do simple map matching on openaddressImporter to set name of streets that have no name in osm and one in oa
+			</action>
+			
 			
 			
 			</release>

@@ -33,7 +33,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
-import com.gisgraphy.geocoding.GeocodingService;
 import com.gisgraphy.test.GisgraphyTestHelper;
 
 public class StringHelperTest {
@@ -179,6 +178,11 @@ public class StringHelperTest {
     @Test
     public void isSameNameTest(){
     	
+    	Assert.assertTrue("synonyms in expected case sensitive",StringHelper.isSameName("st omer","Saint omer"));
+    	Assert.assertTrue("synonyms in actual case sensitive",StringHelper.isSameName("Saint omer","st omer"));
+    	Assert.assertTrue("synonyms in expected",StringHelper.isSameName("st omer","saint omer"));
+    	Assert.assertTrue("synonyms in actual",StringHelper.isSameName("saint omer","st omer"));
+    	
     	Assert.assertFalse("different",StringHelper.isSameName("Finkenhof","Bildhauerhof"));
     	Assert.assertFalse("more words",StringHelper.isSameName("Le Breuil","Le Breuil-Mingot"));
     	Assert.assertFalse("more words",StringHelper.isSameName("Morgon","Villié-Morgon"));
@@ -196,11 +200,8 @@ public class StringHelperTest {
     	Assert.assertFalse(StringHelper.isSameName("normandie","avr"));
     	Assert.assertFalse(StringHelper.isSameName("paris","paris 07"));
     	
-    	Assert.assertTrue("synonyms in expected",StringHelper.isSameName("st omer","saint omer"));
-    	Assert.assertTrue("synonyms in actual",StringHelper.isSameName("saint omer","st omer"));
+    
     	
-    	Assert.assertTrue("synonyms in expected case sensitive",StringHelper.isSameName("st omer","Saint omer"));
-    	Assert.assertTrue("synonyms in actual case sensitive",StringHelper.isSameName("Saint omer","st omer"));
     	
     	Assert.assertFalse(StringHelper.isSameName("Les Chézeaux","Les grand Chézeaux"));
     	Assert.assertFalse("less long word but different",StringHelper.isSameName("route pepere","pepere"));
@@ -212,10 +213,13 @@ public class StringHelperTest {
     	
     }
     
+ 
+    
     @Test
     public void isSameStreetNameTest(){
-    	
+    			
     	Assert.assertFalse(StringHelper.isSameStreetName("24812", "Rájec",null));
+    	Assert.assertFalse(StringHelper.isSameStreetName("toto", null,null));
     	Assert.assertTrue(StringHelper.isSameStreetName("Untere Hauptstr.", "Untere Hauptstraße","DE"));
     	//Assert.assertTrue("synonyms of street",StringHelper.isSameStreetName("omer street","omer st",null));
     
@@ -274,6 +278,9 @@ public class StringHelperTest {
     	Assert.assertTrue(StringHelper.isSameStreetName("St Johns Drive", "Saint John's Drive","US"));
     	Assert.assertTrue(StringHelper.isSameStreetName("Expressway Drive South", "Expressway Drive S","US"));
     	Assert.assertTrue(StringHelper.isSameStreetName("State Route 104", "sr 104","US"));
+    	
+    	Assert.assertTrue(StringHelper.isSameStreetName("AVENIDA ABRAO ANACHE", "Avenida Abrão Anache","BR"));
+    	
 
     	//Assert.assertTrue(StringHelper.isSameStreetName("Bodanyi Court", "Bodanyi Place",null));
     	//Assert.assertTrue(StringHelper.isSameStreetName("Comac Street", "Comac loop",null));
@@ -396,6 +403,10 @@ public class StringHelperTest {
     	Assert.assertEquals("calle foo",StringHelper.expandStreetType("c foo", "ES"));
     	Assert.assertEquals("card foo",StringHelper.expandStreetType("card foo", "ES"));
     	
+    	//pt
+    	Assert.assertEquals("rua foo",StringHelper.expandStreetType("r foo", "PT"));
+    	Assert.assertEquals("avenida foo",StringHelper.expandStreetType("ave foo", "BR"));
+    	
     	//it
     	Assert.assertEquals("calle foo",StringHelper.expandStreetType("c foo", "IT"));
     	Assert.assertEquals("via foo",StringHelper.expandStreetType("v foo", "IT"));
@@ -459,6 +470,10 @@ public class StringHelperTest {
     	Assert.assertEquals("foo",StringHelper.removeStreetType("c foo", "ES"));
     	Assert.assertEquals("foo",StringHelper.removeStreetType("calle foo", "ES"));
     	Assert.assertEquals("card foo",StringHelper.removeStreetType("card foo", "ES"));
+    	
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("r foo", "PT"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("ave foo", "BR"));
+    	Assert.assertEquals("foo",StringHelper.removeStreetType("avenida foo", "BR"));
     	
     	//it
     	Assert.assertEquals("foo",StringHelper.removeStreetType("c foo", "IT"));

@@ -220,6 +220,7 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 	String input;
 	try {
 	    input = (this.in).readLine();
+	    input = getInput(input);
 	} catch (IOException e1) {
 	    throw new ImporterException("can not read line ", e1);
 	}
@@ -231,7 +232,7 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 		    hasConsumedFirstLine = true;
 		} else {
 		    try {
-			this.processData(getInput(input));
+			this.processData(input);
 		    } catch (MissingRequiredFieldException mrfe) {
 			if (this.importerConfig.isMissingRequiredFieldThrows()) {
 			    logger.error("A requrired field is missing "

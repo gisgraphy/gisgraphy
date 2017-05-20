@@ -983,6 +983,23 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 	}
 	
+	@Test
+	public void testAreTooClosedDistance(){
+		
+		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter();
+		
+		Assert.assertTrue(importer.areTooCloseDistance(250D, 250D));
+		Assert.assertTrue(importer.areTooCloseDistance(250D, 260D));
+		Assert.assertTrue(importer.areTooCloseDistance(250D, 374D));
+		Assert.assertFalse(importer.areTooCloseDistance(250D, 375D));
+		Assert.assertFalse(importer.areTooCloseDistance(250D, 376D));
+		
+		Assert.assertTrue(importer.areTooCloseDistance(null, null));
+		Assert.assertTrue(importer.areTooCloseDistance(null, 1D));
+		Assert.assertTrue(importer.areTooCloseDistance(1D, null));
+		
+	}
+	
 	
 
 }

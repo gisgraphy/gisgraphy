@@ -100,6 +100,9 @@ public class LevenshteinAlgorithm {
    * string and the specified target string.
    */
   public int execute(String source, String target) {
+	  if (source==null || target==null){
+		  return -1;
+	  }
     if (source.length() == 0) {
       return target.length() * insertCost;
     }

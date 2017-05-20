@@ -1,0 +1,7 @@
+rue|r
+route|r
+avenue|av
+boulevard|bd|blvd
+chemin|chem
+route departementale|departementale|rte departementale
+grande randonnee|gr

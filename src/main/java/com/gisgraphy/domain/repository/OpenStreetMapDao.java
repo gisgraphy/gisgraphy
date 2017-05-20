@@ -506,6 +506,49 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 					}
 				});
 	}
+	
+	
+	public OpenStreetMap getNearestByGIds(final Point point,final List<Long> ids) {
+		if (ids==null || ids.size()==0){
+			return null;
+		}
+		return (OpenStreetMap) this.getHibernateTemplate().execute(
+				new HibernateCallback() {
+
+					public Object doInHibernate(Session session)
+							throws PersistenceException {
+
+						Criteria criteria = session
+								.createCriteria(OpenStreetMap.class);
+
+						criteria.add(new DistanceRestriction(point,DEFAULT_DISTANCE,true));
+						criteria.add(Restrictions.in("gid", ids));
+
+						String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
+						String distanceCondition = new StringBuffer()
+						.append(DISTANCE_SPHERE_FUNCTION)
+						.append("(")
+						.append(pointAsString)
+						.append(",")
+						.append(SpatialProjection.ST_CLOSEST_POINT)
+						.append("(")
+						.append("this_.").append(OpenStreetMap.SHAPE_COLUMN_NAME)
+						.append(",")
+						.append(pointAsString)
+						.append(")")
+						.append(")")
+						.toString();
+						criteria.addOrder(new NativeSQLOrder(distanceCondition));
+						criteria = criteria.setMaxResults(1);
+						//criteria.setCacheable(true);
+						// List<Object[]> queryResults =testCriteria.list();
+						OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
+
+						return openStreetMap;
+
+					}
+				});
+	}
 
 
 

@@ -123,6 +123,13 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
     public OpenStreetMap getNearestByosmIds(final Point point, final List<Long> ids) ;
     
     /**
+     * @param point the point to search around
+     * @param ids the openstreetmap ids of streets we want to restrict search
+     * @return the nearest street of all the streets with the ids specified, for the given point 
+     */
+    public OpenStreetMap getNearestByGIds(final Point point, final List<Long> ids) ;
+    
+    /**
      * @return the highest openstreetMapId 
      */
     public long getMaxOpenstreetMapId();

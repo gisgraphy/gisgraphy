@@ -165,6 +165,57 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 		Assert.assertNull(actual);
 	  
   }
+  
+  
+  @Test
+  public void testGetNearestByGIds(){
+	  LineString shape = GeolocHelper.createLineString("LINESTRING (6.9416088 50.9154239,6.9410001 50.99999)");
+	    shape.setSRID(SRID.WGS84_SRID.getSRID());
+	    Long id1= 10L;		
+	    Long id2=20L;
+		OpenStreetMap streetOSM = GisgraphyTestHelper.createOpenStreetMapForPeterMartinStreet();
+		streetOSM.setShape(shape);
+		streetOSM.setGid(1L);
+		streetOSM.setOpenstreetmapId(id1);
+		openStreetMapDao.save(streetOSM);
+		assertNotNull(openStreetMapDao.get(streetOSM.getId()));
+		
+		//we create a multilineString a little bit closest to the first one 
+		OpenStreetMap streetOSM2 = new OpenStreetMap();
+		LineString shape2 = GeolocHelper.createLineString("LINESTRING (6.9416088 50.9154239,6.9410001 50.9154734)");
+		shape2.setSRID(SRID.WGS84_SRID.getSRID());
+		
+		
+		streetOSM2.setShape(shape2);
+		streetOSM2.setOpenstreetmapId(id2);
+		streetOSM2.setGid(2L);
+		//Simulate middle point
+		streetOSM2.setLocation(GeolocHelper.createPoint(6.94130445F , 50.91544865F));
+		streetOSM2.setOneWay(false);
+		streetOSM2.setStreetType(StreetType.FOOTWAY);
+		streetOSM2.setName("John Kenedy");
+		StringHelper.updateOpenStreetMapEntityForIndexation(streetOSM2);
+		openStreetMapDao.save(streetOSM2);
+		assertNotNull(openStreetMapDao.get(streetOSM2.getId()));
+		
+		ArrayList<Long> ids = new ArrayList<Long>();
+		ids.add(1L);
+		ids.add(2L);
+		
+		Point searchPoint = GeolocHelper.createPoint(6.9412748F, 50.9155829F);
+		OpenStreetMap actual = openStreetMapDao.getNearestByGIds(searchPoint,ids);
+		Assert.assertEquals(id2, actual.getOpenstreetmapId());
+		
+		//no ids found
+		actual = openStreetMapDao.getNearestByosmIds(searchPoint,new ArrayList<Long>());
+		Assert.assertNull(actual);
+		
+		ArrayList<Long> fakeIds = new ArrayList<Long>();
+		fakeIds.add(333L);
+		actual = openStreetMapDao.getNearestByosmIds(searchPoint,fakeIds);
+		Assert.assertNull(actual);
+	  
+  }
  
     @Test
     public void testCountEstimate(){

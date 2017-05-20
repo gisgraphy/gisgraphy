@@ -67,7 +67,6 @@ public class OrthogonalProjection {
 					 bx = bx*scale + p2.x;
 			         by = by*scale + p2.y;
 				}
-		System.out.println("bx="+bx+" by="+by);
 		return geomFact.createPoint(new Coordinate(bx, by));
 				
 		/*function algo( v, u, p ){
@@ -122,7 +121,6 @@ public class OrthogonalProjection {
 					 bx = bx*scale + p2.x;
 			         by = by*scale + p2.y;
 				}
-		System.out.println("bx="+bx+" by="+by);
 		return geomFact.createPoint(new Coordinate(bx, by));
 				
 		/*function algo( v, u, p ){
@@ -153,27 +151,6 @@ public class OrthogonalProjection {
 		
 	}
 	
-	public static void main(String[] args) {
-		OrthogonalProjection orth = new OrthogonalProjection();
-		Point p1 = geomFact.createPoint(new Coordinate(170, 150));
-		Point p2 = geomFact.createPoint(new Coordinate(210, 170));
-		Point p = geomFact.createPoint(new Coordinate(150, 250));
-	//	orth.projects(p1, p2, p);
-		//[50,50],[170,150],[210,170],[250,170],[290,160],[330,140],[410,100],[550,50],[750,30]
-		Coordinate[] coordinates = new Coordinate[]{new Coordinate(50,50),new Coordinate(170,150),new Coordinate(210,170),new Coordinate(250,170),new Coordinate(290,160)};
-		LineString line = geomFact.createLineString(coordinates);
-		DistancePointDto orthpoPoint = orth.getPointOnLine(line, p);
-		System.out.println(orthpoPoint);
-		
-		coordinates = new Coordinate[]{new Coordinate(-0.5800364, 44.841225),new Coordinate(2.3514992, 48.8566101)};
-		 line = geomFact.createLineString(coordinates);
-		 p= geomFact.createPoint(new Coordinate(0.340196, 46.5802596));
-		 orthpoPoint = orth.getPointOnLine(line, p);
-		 System.out.println(orthpoPoint);
-		 Point pd1 = GeolocHelper.createPoint(0.5681100788863813, 46.413865040236196);
-		 Point pd2 = GeolocHelper.createPoint(46.5802596,0.340196 );
-		 System.out.println(GeolocHelper.distance(pd1, p));
-		 
-	}
+	
 
 }

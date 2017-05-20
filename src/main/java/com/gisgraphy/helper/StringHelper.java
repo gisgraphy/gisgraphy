@@ -39,10 +39,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gisgraphy.addressparser.StreetTypeOrder;
 import com.gisgraphy.compound.Decompounder;
 import com.gisgraphy.compound.Decompounder.state;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
+import com.gisgraphy.helper.synonyms.SynonymsFinder;
+import com.gisgraphy.helper.synonyms.SynonymsManager;
 
 /**
  * Provide some usefull method to compute string for autocompletion and fulltextsearch
@@ -60,6 +63,8 @@ public class StringHelper {
 	protected static final int MISSING_WORD_TOLERANCE = 1;
 	
 	private static final Pattern ORDINAL_PATTERN = Pattern.compile("(\\d+)\\s?(?:rd|st|nd|th)?\\b");
+	
+	private static SynonymsManager synonymsManager = SynonymsManager.getInstance();
 	
 	protected static final Pattern SYNONYMS_PATTERN= Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
 	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
@@ -302,6 +307,35 @@ public class StringHelper {
 	private static List<String> EN_COUNTRIES = new ArrayList<String>(){{add("US");add("CA");add("CN");add("ID");add("IN");add("AU");add("SG");add("HK");add("IR");add("FI");add("SA");add("VI");add("FK");add("GI");add("GL");add("FO");add("AS");add("IM");add("UM");add("GB");add("UK");add("PR");add("JE");add("SH");add("GS");add("GG");}};
     private static List<String> SP_COUNTRIES = new ArrayList<String>(){{add("AR");add("ES");add("MX");add("CO");add("PA");}};
 	private static List<String> IT_COUNTRIES = new ArrayList<String>(){{add("IT");add("SM");add("VA");}};
+	private static List<String> PT_COUNTRIES = new ArrayList<String>(){{add("PT");add("BR");}};
+	
+	public static Language getLanguageFromCountryCode(String countryCode){
+		if (countryCode==null){
+			return null;
+		}
+		countryCode = countryCode.toUpperCase();
+		if (countryCode.equals("CA")){
+			return Language.EN_FR;
+		}
+		if (EN_COUNTRIES.contains(countryCode.toUpperCase())){
+			return Language.EN;
+		} else if (FR_COUNTRIES.contains(countryCode.toUpperCase())){
+			return Language.FR;
+		}
+		 else if (SP_COUNTRIES.contains(countryCode.toUpperCase())){
+				return Language.ES;
+			}
+		 else if (IT_COUNTRIES.contains(countryCode.toUpperCase())){
+				return Language.IT;
+			}
+		 else if (PT_COUNTRIES.contains(countryCode.toUpperCase())){
+				return Language.PT;
+			}
+		 else {
+			 return null;
+		 }
+		
+	}
 	
 	
 	public static boolean isSameStreetName(String expected, String actual, String countrycode){
@@ -314,12 +348,53 @@ public class StringHelper {
 				actual=expandStreetDirections(actual);
 				expected=expandStreetDirections(expected);
 			}
-			return (isSameStreetName_intern(expected,actual) || 
+			boolean same = (isSameStreetName_intern(expected,actual) || 
 					(actual.replaceAll("[^0-9]", "").equals(expected.replaceAll("[^0-9]", "")) && levenstein.execute(normalize(actual).replaceAll("\\s-", ""), normalize(expected).replaceAll("\\s-", ""))<2)
 					);
+			if (same){
+				return true;
+			} else if (countrycode!=null){
+				expected=StringHelper.removeStreetType(expected, countrycode);
+				actual=StringHelper.removeStreetType(actual, countrycode);
+				SynonymsFinder.logger.error(SynonymsFinder.findSynomnymsInSentence(expected, actual, countrycode)+" for "+expected+"|"+actual);
+				return (isSameStreetName_intern(expected,actual) || levenstein.execute(normalize(actual).replaceAll("\\s-", ""), normalize(expected).replaceAll("\\s-", ""))<2);
+						
+			}
 		}
 		return false;
 	}
+	
+	public static final List<List<String>> mySynonyms = new ArrayList<List<String>>(){{
+		List<String> l1 = new ArrayList<String>(){{
+			add("doctor");
+			add("dr");
+		}
+		};
+		List<String> l2 = new ArrayList<String>(){{
+			add("drive");
+			add("dr");
+			add("drv");
+		}
+		};
+		List<String> l3 = new ArrayList<String>(){{
+			add("saint");
+			add("st");
+			add("santa");
+		}
+		};
+		List<String> l4 = new ArrayList<String>(){{
+			add("street");
+			add("st");
+		}
+		};
+		add(l1);
+		add(l2);
+		add(l3);
+		add(l4);
+	};
+	};
+	
+	private static SynonymsFinder synonymsFinder = new SynonymsFinder(mySynonyms);
 	
 	private static boolean isSameStreetName_intern(String expected, String actual){
 		int tolerance = 0;
@@ -339,11 +414,8 @@ public class StringHelper {
 					if (word!=null){
 						actualSplitedLong.add(normalize(word));
 					}
-				}  else if (word.equals("st")){
-					Matcher m =SYNONYMS_PATTERN.matcher(expected);
-					if (m.find() && m.groupCount()>=1){
-						actualSplitedLong.add(m.group(1).toLowerCase());
-					}
+				}  else if (synonymsFinder.hasSynonyms(word)){
+						actualSplitedLong.add(normalize(word));
 				} else if (StringUtils.isNumeric(word)){
 					actualSplitedLong.add(normalize(word));
 				}
@@ -354,12 +426,9 @@ public class StringHelper {
 					if (word!=null){
 						expectedSplitedLong.add(normalize(word));
 					}
-				} else if (word.equals("st")){
-					Matcher m =SYNONYMS_PATTERN.matcher(actual);
-					if (m.find()&&m.groupCount()>=1){
-						expectedSplitedLong.add(m.group(1).toLowerCase());
-					}
-				}
+				} else if (synonymsFinder.hasSynonyms(word)){
+					expectedSplitedLong.add(normalize(word));
+			}
 			}
 			if (actualSplitedLong.size() > expectedSplitedLong.size() ){
 				return false;
@@ -369,6 +438,7 @@ public class StringHelper {
 			}
 			//same number of word but are they the same ?
 			int countMissing = 0;
+			List<String> missingWordsInActual = new ArrayList<String>();
 			for (String word :actualSplitedLong){
 				Matcher matcher1 = ORDINAL_PATTERN.matcher(word);
 				if (matcher1.find()){
@@ -387,7 +457,19 @@ public class StringHelper {
 				}else {
 				if(!expectedSplitedLong.contains(word)){
 					countMissing++;
+					missingWordsInActual.add(word);
+					System.out.println("missing "+word+" in "+expected);
 				}
+				for (String missingWord:missingWordsInActual){
+					//check if there is a synonyms in expected
+					if (synonymsFinder.isWordHasASynonymIn(missingWord, expectedSplitedLong)){
+						countMissing--;
+					}
+					System.out.println(missingWord);
+				}
+				
+				
+				
 				if (expectedSplitedLong.size() == actualSplitedLong.size() &&  (expectedSplitedLong.size()==1 || expectedSplitedLong.size()==2)  && countMissing >0){
 					//if one or two words, every words should be present
 					return false;
@@ -401,6 +483,9 @@ public class StringHelper {
 		}
 		return false;
 	}
+	
+
+
 
 	public static boolean isSameAlternateNames(String name, List<String> name_alternates) {
 		if (name_alternates!=null && name !=null){
@@ -460,6 +545,7 @@ public class StringHelper {
 		return street;
 	}
 	
+	 
 	
 	/**
 	 * correct the street type according the countrycode. e.g : 
@@ -474,85 +560,74 @@ public class StringHelper {
 		}
 		street= street.trim();
 		boolean hasPoint = false;
-		if (countryCode != null && FR_COUNTRIES.contains(countryCode.toUpperCase())){
-			if (street.indexOf(' ')>0){
-			String firstWord = street.substring(0, street.indexOf(' '));
-			
-			if (firstWord.indexOf(".")>0){
-				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
-				hasPoint=true;
-			}
-			if (firstWord !=null ){
-					if (FR_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
-						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, FR_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
+		if (countryCode != null ){
+			Language languageFromCountry = getLanguageFromCountryCode(countryCode);
+			if (languageFromCountry!=null){
+				List<Language> languages = new ArrayList<Language>();
+				if (languageFromCountry.toString().contains("_")){
+					for(String l:languageFromCountry.toString().split("_")){
+						languages.add(Language.valueOf(l));
 					}
-			}
-			}
-		}
-		if (countryCode != null && SP_COUNTRIES.contains(countryCode.toUpperCase())){
-			if (street.indexOf(' ')>0){
-			String firstWord = street.substring(0, street.indexOf(' '));
-			
-			if (firstWord.indexOf(".")>0){
-				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
-				hasPoint=true;
-			}
-			if (firstWord !=null ){
-					if (SP_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
-						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, SP_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
-					}
-			}
-			}
-		}
-		if (countryCode != null && IT_COUNTRIES.contains(countryCode.toUpperCase())){
-			if (street.indexOf(' ')>0){
-			String firstWord = street.substring(0, street.indexOf(' '));
-			
-			if (firstWord.indexOf(".")>0){
-				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
-				hasPoint=true;
-			}
-			if (firstWord !=null ){
-					if (IT_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
-						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, IT_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
-					}
-			}
-			}
-		}
-		else if  (countryCode != null && (EN_COUNTRIES.contains(countryCode.toUpperCase()))){
-			//last word
-			if (street.indexOf(' ')>0){
-			String lastword = street.substring(street.lastIndexOf(" ")+1);
-			if (lastword.indexOf(".")>0){
-				lastword = lastword.substring(0, lastword.indexOf('.'));
-				hasPoint=true;
-			}
-			if (lastword !=null) {
-				 if (US_STREET_TYPE_MAP.get(lastword.toLowerCase())!=null){
-					 String toReplace = hasPoint?lastword+".":lastword;
-					return street.replaceFirst(toReplace, US_STREET_TYPE_MAP.get(lastword.toLowerCase()));
-			}
-			}
-			}
-			//numbered road
-			if (street.indexOf(' ')>0){
-				String firstWord = street.substring(0, street.indexOf(' '));
-				hasPoint = false;
-				if (firstWord.indexOf(".")>0){
-					firstWord = firstWord.substring(0, firstWord.indexOf('.'));
-					hasPoint=true;
+				} else {
+					languages.add(languageFromCountry);
 				}
-				if (firstWord !=null ){
-						if (NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
-							String toReplace = hasPoint?firstWord+".":firstWord;
-							return street.replaceFirst(toReplace, NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
+				
+				for (Language languageFromCountryCode: languages){
+				String word;
+				StreetTypeOrder streetTypeOrder = languageFromCountryCode.getStreetTypeOrder();
+				if (streetTypeOrder==StreetTypeOrder.typeThenName || streetTypeOrder==StreetTypeOrder.unknow){
+					SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
+					
+					if (street.indexOf(' ')>0){
+						word = street.substring(0, street.indexOf(' '));
+
+						if (word.indexOf(".")>0){
+							word = word.substring(0, word.indexOf('.'));
+							hasPoint=true;
 						}
+						if (word !=null && sf !=null){
+							String newWord = sf.normalizeSynonyms(word);
+							if (sf.hasSynonyms(word.toLowerCase())){
+								String toReplace = hasPoint?word+".":word;
+								return street.replaceFirst(toReplace,newWord);
+							}
+						}
+					}
 				}
+				if (streetTypeOrder==StreetTypeOrder.nameThenType || streetTypeOrder==StreetTypeOrder.unknow){ 
+					SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
+					word = street.substring(street.lastIndexOf(" ")+1);
+					if (word.indexOf(".")>0){
+						word = word.substring(0, word.indexOf('.'));
+						hasPoint=true;
+					}
+					if (word !=null && sf !=null) {
+						String newWord = sf.normalizeSynonyms(word);
+						if (sf.hasSynonyms(word.toLowerCase())){
+							String toReplace = hasPoint?word+".":word;
+							return street.replaceFirst(toReplace, newWord);
+						}
+					}
 				}
-		} 
+			}
+			}
+		
+		}
+		//numbered road
+		if (street.indexOf(' ')>0){
+			String firstWord = street.substring(0, street.indexOf(' '));
+			hasPoint = false;
+			if (firstWord.indexOf(".")>0){
+				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
+				hasPoint=true;
+			}
+			if (firstWord !=null ){
+					if (NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
+						String toReplace = hasPoint?firstWord+".":firstWord;
+						return street.replaceFirst(toReplace, NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
+					}
+			}
+		}
 		StringBuffer sb = new StringBuffer();
 		Matcher m = GERMAN_SYNONYM_PATTEN.matcher(street);
 		  while (m.find()) {
@@ -576,26 +651,10 @@ public class StringHelper {
 		}
 		m.appendTail(sb);
 		String s = sb.toString();
-	//	s= s.replaceAll(" stra(?:(?:ss)|(?:ß))e", "strasse");
 		return s;
 	}
 	
-	//always put in lowercase
-	private static final Map<String, String> FR_STREET_TYPE_MAP = new HashMap<String, String>(){
-		{
-			put("r","rue");
-    		put("rte","route");
-			put("av","avenue");
-    		put("bd","boulevard");
-    		put("blvd","boulevard");
-    		put("chem","chemin");
-    		put("departementale","route departementale");
-    		put("rte departementale","route departementale");
-    		put("gr","grande randonnee");
-		}
-		
-		
-	};
+
 	//always put in lowercase
 	private static final Map<String, String> NUMBERED_STREET_TYPE_MAP = new HashMap<String, String>(){
 		{
@@ -608,127 +667,9 @@ public class StringHelper {
 		
 	};
 	
-	//only frequent commonly used
-	//always put in lowercase
-	private static final Map<String, String> US_STREET_TYPE_MAP = new HashMap<String, String>(){
-		{
-			put("r","rue");
-    		put("rte","route");
-			put("av","avenue");
-			put("ave","avenue");
-    		put("bd","boulevard");
-    		put("blvd","boulevard");
-    		put("aly","alley");
-    		put("anx","anex");
-    		put("arc","arcade");
-    		put("bch","beach");
-    		put("boul","boulevard");
-    		put("boulv","boulevard");
-    		put("brdg","bridge");
-    		put("dr","drive");
-    		put("drs","drives");
-    		put("highwy","highway");
-    		put("hiway","highway");
-    		put("hiwy","highway");
-    		put("hway","highway");
-    		put("hwy","highway");
-    		put("pl","place");
-    		put("rd","road");
-    		put("st","street");
-    		put("str","street");
-    		put("tunl","tunnel");
-    		put("tunnl","tunnel");
-    		put("trail","trail");
-    		put("ct","court");
-    		put("cir","circle");
-    		put("dr","drive");
-    		put("ln","lane");
-    		
-		}
-	};
-	
-	//always put in lowercase
-    public static final Map<String,String> SP_STREET_TYPE_MAP = new HashMap<String,String>(){{
-        put("alam","alameda");
-        put("angta","angosta");
-        
-        put("auto","autopista");
-        put("autov","autovia");
-        
-        put("av","avenida");
-        put("ave","avenida");
-        put("avd","avenida");
-        put("avda","avenida");
-        put("avinguda","avenida");
-        
-        put("bulev","bulevar");
-        
-        put("c","calle");
-        
-        put("ch","camino hondo");
-        put("cn","camino nuevo");
-        put("cv","camino viejo");
-        put("callecillas","callecilla");
-        put("callecitas","callecita");
-        
-        put("callezonas","callezona");
-        put("callezotas","callezota");
-        
-        put("ccvcn","circunvalacion");
-        put("cint","carretera interestatal");
-        put("carretera de circunvalacion","circunvalacion");// deviation
-        put("cjla","calleja");
-        put("cjon","callejon");
-        put("cl","calle");
-        put("cllja","calleja");
-        put("cllon","callejon");
-        put("cllzo","callizo");
-        put("cllza","calliza");
-        put("cmno","camino");
-        put("cro","carrero");
-        put("cra","carrera");//
-        put("cr","carrera");//
-        put("crr","carrera");//
-        put("cro","carrer");
-        put("crril","Carril");
-        put("ctra","carretera");
-        put("ctrin","Carreterín");
-        put("czada","calzada");
-        put("diag","diagonal");
-        put("err","errepidea");
-        put("etorb","etorbidea");
-        put("gv","gran vía");
-        put("gta","glorieta");
-        put("pasaje","passatge");
-        put("psaje","passatge");
-        put("ptge","passatge");
-        put("passeig","passatge");
-        put("pg","passatge");
-        put("pl","plaça");
-        put("plza","plaza");
-        put("pza","plaza");
-        put("pnte","puente");
-        put("pto","puerto");
-        put("rbla","rambla");
-        put("sedra","sendaera");
-        put("send","sendaera");
-        put("sendera","sendaera");
-        put("trans","tránsito");
-        put("trval","transversal");
-        put("trva","tranvia");
-        put("v","via");
-    }
-    };
-    
-    public static final Map<String,String> IT_STREET_TYPE_MAP = new HashMap<String,String>(){{
-    	 put("v","via");
-    	 put("c","calle");
-     }};
      
-     public static final Collection<String> IT_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(IT_STREET_TYPE_MAP);
-     public static final Collection<String> EN_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(US_STREET_TYPE_MAP);
-     public static final Collection<String> FR_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(FR_STREET_TYPE_MAP);
-     public static final Collection<String> SP_STREETTYPE_LIST_AFTER_NORMALIZATION=getlistOfNormalizedStreetType(SP_STREET_TYPE_MAP);
+   
+     
      public static final Collection<String> DE_STREETTYPE_LIST_AFTER_NORMALIZATION=new ArrayList<String>(){
     	 {
     		 add("strassen");
@@ -778,76 +719,62 @@ public class StringHelper {
      
      
      public static String removeStreetType(String street,String countryCode){
-    	 if (street==null){
- 			return null;
- 		}
  		street= street.trim();
  		boolean hasPoint = false;
- 		if (countryCode != null && FR_COUNTRIES.contains(countryCode.toUpperCase())){
- 			if (street.indexOf(' ')>0){
- 			String firstWord = street.substring(0, street.indexOf(' '));
- 			
- 			if (firstWord.indexOf(".")>0){
- 				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
- 				hasPoint=true;
- 			}
- 			if (firstWord !=null ){
- 					if (FR_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(firstWord.toLowerCase())){
- 						String toReplace = hasPoint?firstWord+".":firstWord;
- 						return street.replaceFirst(toReplace, "").trim();
+ 		if (countryCode != null ){
+ 			Language languageFromCountry = getLanguageFromCountryCode(countryCode);
+ 			if (languageFromCountry!=null){
+ 				List<Language> languages = new ArrayList<Language>();
+ 				if (languageFromCountry.toString().contains("_")){
+ 					for(String l:languageFromCountry.toString().split("_")){
+ 						languages.add(Language.valueOf(l));
  					}
- 			}
- 			}
- 		}
- 		if (countryCode != null && SP_COUNTRIES.contains(countryCode.toUpperCase())){
- 			if (street.indexOf(' ')>0){
- 			String firstWord = street.substring(0, street.indexOf(' '));
- 			
- 			if (firstWord.indexOf(".")>0){
- 				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
- 				hasPoint=true;
- 			}
- 			if (firstWord !=null ){
- 					if (SP_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(firstWord.toLowerCase())){
- 						String toReplace = hasPoint?firstWord+".":firstWord;
- 						return street.replaceFirst(toReplace, "").trim();
+ 				} else {
+ 					languages.add(languageFromCountry);
+ 				}
+ 				
+ 				for (Language languageFromCountryCode: languages){
+ 				String word;
+ 				StreetTypeOrder streetTypeOrder = languageFromCountryCode.getStreetTypeOrder();
+ 				if (streetTypeOrder==StreetTypeOrder.typeThenName || streetTypeOrder==StreetTypeOrder.unknow){
+ 					SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
+ 					
+ 					if (street.indexOf(' ')>0){
+ 						word = street.substring(0, street.indexOf(' '));
+
+ 						if (word.indexOf(".")>0){
+ 							word = word.substring(0, word.indexOf('.'));
+ 							hasPoint=true;
+ 						}
+ 						if (word !=null && sf !=null){
+ 						//	String newWord = sf.normalizeSynonyms(word);
+ 							if (sf.hasSynonyms(word.toLowerCase())){
+ 								String toReplace = hasPoint?word+".":word;
+ 								return street.replaceFirst(toReplace,"").trim();
+ 							}
+ 						}
  					}
- 			}
- 			}
- 		}
- 		if (countryCode != null && IT_COUNTRIES.contains(countryCode.toUpperCase())){
- 			if (street.indexOf(' ')>0){
- 			String firstWord = street.substring(0, street.indexOf(' '));
- 			
- 			if (firstWord.indexOf(".")>0){
- 				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
- 				hasPoint=true;
- 			}
- 			if (firstWord !=null ){
- 					if (IT_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(firstWord.toLowerCase())){
- 						String toReplace = hasPoint?firstWord+".":firstWord;
- 						return street.replaceFirst(toReplace, "").trim();
+ 				}
+ 				if (streetTypeOrder==StreetTypeOrder.nameThenType || streetTypeOrder==StreetTypeOrder.unknow){ 
+ 					SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
+ 					word = street.substring(street.lastIndexOf(" ")+1);
+ 					if (word.indexOf(".")>0){
+ 						word = word.substring(0, word.indexOf('.'));
+ 						hasPoint=true;
  					}
+ 					if (word !=null && sf !=null) {
+ 						//String newWord = sf.normalizeSynonyms(word);
+ 						if (sf.hasSynonyms(word.toLowerCase())){
+ 							String toReplace = hasPoint?word+".":word;
+ 							return street.replaceFirst(toReplace, "").trim();
+ 						}
+ 					}
+ 				}
  			}
  			}
+ 		
  		}
- 		else if  (countryCode != null &&  EN_COUNTRIES.contains(countryCode.toUpperCase())){
- 			//last word
- 			if (street.indexOf(' ')>0){
- 			String lastword = street.substring(street.lastIndexOf(" ")+1);
- 			if (lastword.indexOf(".")>0){
- 				lastword = lastword.substring(0, lastword.indexOf('.'));
- 				hasPoint=true;
- 			}
- 			if (lastword !=null) {
- 				 if (EN_STREETTYPE_LIST_AFTER_NORMALIZATION.contains(lastword.toLowerCase())){
- 					 String toReplace = hasPoint?lastword+".":lastword;
- 					return street.replaceFirst(toReplace, "").trim();
- 			}
- 			}
- 			}
- 		} 
- 		else if((countryCode!=null && (Decompounder.isDecompoudCountryCode(countryCode)||  "BE".equalsIgnoreCase(countryCode))) || decompounder.getSate(street)!=state.NOT_APPLICABLE){
+ 		if((countryCode!=null && (Decompounder.isDecompoudCountryCode(countryCode)||  "BE".equalsIgnoreCase(countryCode))) || decompounder.getSate(street)!=state.NOT_APPLICABLE){
  			if (street.indexOf(' ')>0){
  				String lastword = street.substring(street.lastIndexOf(" ")+1);
  				if (lastword.indexOf(".")>0){
@@ -898,16 +825,6 @@ public class StringHelper {
 		return false;
 	}
 	
-	private static Collection<String> getlistOfNormalizedStreetType(
-			Map<String, String> map) {
-		Collection<String> results =  new ArrayList<String>(map.values());
-				Collection<String> keySet = map.keySet();
-				for (String s : map.keySet()){
-					results.add(s);
-				}
-				return results;
-	}
-
 	public static String prepareQuery(String rawAddress) {
 		if (rawAddress == null){
 			return rawAddress;

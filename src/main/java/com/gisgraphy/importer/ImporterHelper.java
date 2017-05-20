@@ -84,13 +84,14 @@ public class ImporterHelper {
     /**
      * The regexp that every country file dump matches
      */
-    public static final String GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING = "[A-Z][A-Z](.txt)";
+    public static final String GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING = "[A-Za-z][A-Za-z](.txt)";
 
-    public static final String OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING = "[A-Z][A-Z](.dat|.txt)";
+    public static final String OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING = "[A-Za-z][A-Za-z](.txt|.dat)";
+    
     
     public static final String QUATTROSHAPES_FILE_ACCEPT_REGEX_STRING = "(localities.txt)";
 
-    public static final String SPLITED_FILE_ACCEPT_REGEX_STRING = "[A-Z][A-Z](.)[0-9]+(.txt|.dat)";
+    public static final String SPLITED_FILE_ACCEPT_REGEX_STRING = "[A-Za-z][A-Za-z](.)[0-9]+(.txt|.dat)";
     
     //2 letter but not us, it is managed by SPLITED_OPENSTREETMAP_US_FILE_ACCEPT_REGEX_STRING
     public static final String SPLITED_OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING = "((?!(?:US))[A-Z][A-Z])(.)[0-9]+(.txt)";
@@ -172,9 +173,9 @@ public class ImporterHelper {
 
     public static FileFilter countryFileFilter = new FileFilter() {
 	public boolean accept(File file) {
-	    Pattern patternGeonames = Pattern.compile(GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING);
-	    Pattern patternOpenStreetMapUS = Pattern.compile(OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING);
-	    Pattern patternQuattroshapes = Pattern.compile(QUATTROSHAPES_FILE_ACCEPT_REGEX_STRING);
+	    Pattern patternGeonames = Pattern.compile(GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING,Pattern.CASE_INSENSITIVE);
+	    Pattern patternOpenStreetMapUS = Pattern.compile(OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING,Pattern.CASE_INSENSITIVE);
+	    Pattern patternQuattroshapes = Pattern.compile(QUATTROSHAPES_FILE_ACCEPT_REGEX_STRING,Pattern.CASE_INSENSITIVE);
 
 	    return (file.isFile() && file.exists()) && !EXCLUDED_README_FILENAME.equals(file.getName())
 		    && ( patternGeonames.matcher(file.getName()).matches() || ALLCOUTRY_FILENAME.equals(file.getName()) || patternOpenStreetMapUS.matcher(file.getName()).matches() || patternQuattroshapes.matcher(file.getName()).matches());

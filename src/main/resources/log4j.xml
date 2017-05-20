@@ -11,7 +11,7 @@
 
 	<appender name="RollingFileImporter" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="./logs/gisgraphy-importer.log" />
-		<param name="maxBackupIndex" value="10" />
+		<param name="maxBackupIndex" value="50" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
 				value="[%p] [%c] [%d{dd MMM yyyy HH:mm:ss,SSS}] (%t,%x) : %m%n" />

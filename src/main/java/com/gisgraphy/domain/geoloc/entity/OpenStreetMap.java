@@ -742,7 +742,7 @@ public class OpenStreetMap {
      * @return the shape
      */
     @Type(type = "org.hibernatespatial.GeometryUserType")
-    @Column(nullable = false)
+    @Column(nullable = true)
     public LineString getShape() {
 	return shape;
     }
@@ -1092,6 +1092,9 @@ public class OpenStreetMap {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("OpenStreetMap [");
+		if (gid != null)
+			builder.append("gid=").append(gid)
+			.append(", ");
 		if (openstreetmapId != null)
 			builder.append("openstreetmapId=").append(openstreetmapId)
 					.append(", ");
