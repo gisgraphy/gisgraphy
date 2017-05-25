@@ -32,6 +32,7 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -46,6 +47,7 @@ import org.springframework.util.Assert;
 import com.gisgraphy.GisgraphyException;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.Street;
 import com.gisgraphy.domain.geoloc.entity.event.EventManager;
@@ -218,6 +220,12 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						qry.setParameter(0, gid);
 
 						OpenStreetMap result = (OpenStreetMap) qry.uniqueResult();
+						if (result!=null ){
+							result.addHouseNumber(null);
+							if (result.getHouseNumbers()!=null){
+								int size = result.getHouseNumbers().size();
+							}
+						}
 						return result;
 					}
 				});
@@ -544,8 +552,8 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						// List<Object[]> queryResults =testCriteria.list();
 						OpenStreetMap openStreetMap = (OpenStreetMap)criteria.uniqueResult();
 
+						
 						return openStreetMap;
-
 					}
 				});
 	}
@@ -647,6 +655,7 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						if (filterEmptyName){
 							criteria = criteria.add(Restrictions.isNotNull("name"));
 						}
+						//criteria.setFetchMode("houseNumbers", FetchMode.JOIN);
 
 						String pointAsString = "ST_GeometryFromText('POINT("+point.getX()+" "+point.getY()+")',"+SRID.WGS84_SRID.getSRID()+")";
 						String distanceCondition = new StringBuffer()
@@ -665,9 +674,19 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 						criteria.addOrder(new NativeSQLOrder(distanceCondition));
 						criteria.setCacheable(true);
 						// List<Object[]> queryResults =testCriteria.list();
-						List<OpenStreetMap> openStreetMap = (List<OpenStreetMap>)criteria.list();
-
-						return openStreetMap;
+						List<OpenStreetMap> openStreetMaps = (List<OpenStreetMap>)criteria.list();
+						/*if (openStreetMaps!=null){
+							for (OpenStreetMap o : openStreetMaps){
+								if (o!=null){
+									for (HouseNumber hn : o.getHouseNumbers()){
+										if (hn!=null){
+											hn.getId();
+										}
+									}
+								}
+							}
+						}*/
+						return openStreetMaps;
 
 					}
 				});
