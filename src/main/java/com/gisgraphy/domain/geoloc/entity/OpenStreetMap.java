@@ -1101,7 +1101,7 @@ public class OpenStreetMap {
 		if (name != null)
 			builder.append("name=").append(name).append(", ");
 		if (location != null)
-			builder.append("location=").append(location);
+			builder.append("location=(").append(location.getY()).append(" ").append(location.getX()).append(")");
 		builder.append("]");
 		return builder.toString();
 	}

@@ -62,6 +62,8 @@ public class StringHelper {
 	
 	protected static final int MISSING_WORD_TOLERANCE = 1;
 	
+	protected static Pattern CITY_PATTERN = Pattern.compile("city of|city$", Pattern.CASE_INSENSITIVE);
+	
 	private static final Pattern ORDINAL_PATTERN = Pattern.compile("(\\d+)\\s?(?:rd|st|nd|th)?\\b");
 	
 	private static SynonymsManager synonymsManager = SynonymsManager.getInstance();
@@ -87,8 +89,18 @@ public class StringHelper {
 	 * @return the transformed String or null if the original String is null
 	 */
 	public static final String normalize(String originalString) {
-		return originalString == null ? null : EncodingHelper.removeAccents(originalString.trim()).toLowerCase().replace("-", " ").replace(".", " ").replace("\"", " ").replace("'", " ").replace(';', ' ');
+		String norm = originalString == null ? null : EncodingHelper.removeAccents(originalString.trim()).toLowerCase();
+				return removePunctuation(norm);
 
+	}
+
+	public static String removePunctuation(String norm) {
+		if (norm != null) {
+			return norm.replace("-", " ").replace(".", " ").replace("\"", " ")
+					.replace("'", " ").replace(';', ' ').replaceAll("\\s+", " ");
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -158,7 +170,7 @@ public class StringHelper {
 	 * @return the same openstreetmap entity with the {@link OpenStreetMap#FULLTEXTSEARCH_COLUMN_NAME}
 	 */
 	public static OpenStreetMap updateOpenStreetMapEntityForIndexation(OpenStreetMap openStreetMap) {
-		if (openStreetMap.getName() != null) {
+		if (openStreetMap != null  && openStreetMap.getName() != null) {
 			openStreetMap.setTextSearchName(StringHelper.normalize(openStreetMap.getName()));
 		}
 		return openStreetMap;
@@ -217,11 +229,11 @@ public class StringHelper {
 	public static boolean isSameName(String expected, String actual){
 		
 		if (actual!=null && expected!=null){
-			if (decompounder.isDecompoudName(actual)){
+			if (decompounder.isDecompoundName(actual)){
 				return isSameName(expected, actual, MISSING_WORD_TOLERANCE) || isSameName(expected, decompounder.getOtherFormat(actual), MISSING_WORD_TOLERANCE);
 			}
 			else {
-				return isSameStreetName_intern(expected,actual);
+				return isSameName(expected,actual,MISSING_WORD_TOLERANCE);
 			}
 		}
 		return false;
@@ -236,12 +248,30 @@ public class StringHelper {
 	 */
 	public static boolean isSameName(String expected, String actual,int tolerance){
 		if (actual!=null && expected!=null){
+			//remove some words
+			
+			Matcher matcherCity = CITY_PATTERN.matcher(actual);
+			StringBuffer sb = new StringBuffer();
+			if (matcherCity.find()){
+				matcherCity.appendReplacement(sb, "");
+				matcherCity.appendTail(sb);
+				actual = sb.toString().trim();
+			}
+			
+			matcherCity = CITY_PATTERN.matcher(expected);
+			sb = new StringBuffer();
+			if (matcherCity.find()){
+				matcherCity.appendReplacement(sb, "");
+				matcherCity.appendTail(sb);
+				expected = sb.toString();
+			}
 			if (actual.equalsIgnoreCase(expected)){ //shortcut
 				return true;
 			}
+			
 			//split the strings
-			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;]");
-			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一]");
+			String[] actualSplited = StringHelper.removePunctuation(actual).split("[,\\s\\-\\–\\一;//]");
+			String[] expectedSplited = StringHelper.removePunctuation(expected).split("[,\\s\\-\\–\\一//]");
 			
 			if (Math.abs(actualSplited.length -expectedSplited.length) >=2){
 				return false;
@@ -354,9 +384,8 @@ public class StringHelper {
 			if (same){
 				return true;
 			} else if (countrycode!=null){
-				expected=StringHelper.removeStreetType(expected, countrycode);
-				actual=StringHelper.removeStreetType(actual, countrycode);
-				SynonymsFinder.logger.error(SynonymsFinder.findSynomnymsInSentence(expected, actual, countrycode)+" for "+expected+"|"+actual);
+				actual = removeStreetType(actual, countrycode);
+				expected = removeStreetType(expected, countrycode);
 				return (isSameStreetName_intern(expected,actual) || levenstein.execute(normalize(actual).replaceAll("\\s-", ""), normalize(expected).replaceAll("\\s-", ""))<2);
 						
 			}
@@ -403,9 +432,11 @@ public class StringHelper {
 				return true;
 			}
 			//split the strings
-			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;]");
-			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一]");
+			String[] actualSplited = StringHelper.removePunctuation(actual).split("[,\\s\\-\\–\\一;//]");
+			String[] expectedSplited =  StringHelper.removePunctuation(expected).split("[,\\s\\-\\–\\一//]");
 
+			
+			
 			//first we check if actual has more long words than expected
 			//saint jean is not saint jean de luz, but 'la petite maison' is ok for 'petite maison'
 			List<String> actualSplitedLong = new ArrayList<String>();
@@ -428,14 +459,19 @@ public class StringHelper {
 					}
 				} else if (synonymsFinder.hasSynonyms(word)){
 					expectedSplitedLong.add(normalize(word));
+			}else if (StringUtils.isNumeric(word)){
+				expectedSplitedLong.add(normalize(word));
 			}
 			}
-			if (actualSplitedLong.size() > expectedSplitedLong.size() ){
+			if ((actualSplitedLong.size()>=4 && expectedSplitedLong.size()>=3) || expectedSplitedLong.size()>=4 && actualSplitedLong.size()>=3){
+				tolerance=1;
+			}
+			if (Math.abs(actualSplitedLong.size() - expectedSplitedLong.size()) >tolerance){
 				return false;
 			}
-			if (actualSplitedLong.size() < expectedSplitedLong.size() ){
+			/*if (actualSplitedLong.size() - expectedSplitedLong.size()<tolerance ){
 				return false;
-			}
+			}*/
 			//same number of word but are they the same ?
 			int countMissing = 0;
 			List<String> missingWordsInActual = new ArrayList<String>();
@@ -454,7 +490,7 @@ public class StringHelper {
 					if (!foundOrdinal){
 						countMissing++;
 					}
-				}else {
+				} else {
 				if(!expectedSplitedLong.contains(word)){
 					countMissing++;
 					missingWordsInActual.add(word);
@@ -468,7 +504,7 @@ public class StringHelper {
 					System.out.println(missingWord);
 				}
 				
-				
+				}
 				
 				if (expectedSplitedLong.size() == actualSplitedLong.size() &&  (expectedSplitedLong.size()==1 || expectedSplitedLong.size()==2)  && countMissing >0){
 					//if one or two words, every words should be present
@@ -477,7 +513,7 @@ public class StringHelper {
 					return false;
 				}
 				}
-			}
+			
 
 			return true;
 		}
@@ -719,6 +755,9 @@ public class StringHelper {
      
      
      public static String removeStreetType(String street,String countryCode){
+    	 if (street==null){
+    		 return null;
+    	 }
  		street= street.trim();
  		boolean hasPoint = false;
  		if (countryCode != null ){

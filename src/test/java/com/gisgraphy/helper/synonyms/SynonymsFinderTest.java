@@ -153,6 +153,9 @@ public class SynonymsFinderTest {
 
 		dtos  =	SynonymsFinder.findSynomnymsInSentence("foo bar", "nada niet","br");
 		Assert.assertEquals(0, dtos.size());
+		
+		dtos  =	SynonymsFinder.findSynomnymsInSentence("", "foo","br");
+		Assert.assertEquals(0, dtos.size());
 
 
 
@@ -215,6 +218,11 @@ public class SynonymsFinderTest {
 		Assert.assertTrue(synonymsFinder.isWordHasASynonymIn("drive", wordsOfSentence));
 		Assert.assertTrue(synonymsFinder.isWordHasASynonymIn("doctor", wordsOfSentence));
 		Assert.assertFalse(synonymsFinder.isWordHasASynonymIn("bar", wordsOfSentence));
+	}
+	
+	@Test
+	public void findSynonymsInSentence(){
+		//TODO
 	}
 
 

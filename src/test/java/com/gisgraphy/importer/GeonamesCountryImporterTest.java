@@ -27,10 +27,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.easymock.EasyMock;
 import org.junit.Test;
 
+import com.gisgraphy.domain.repository.CountryDao;
 import com.gisgraphy.domain.repository.ICountryDao;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 
@@ -52,8 +52,15 @@ public class GeonamesCountryImporterTest {
     @Test
     public void shouldBeSkipShouldReturnCorrectValue(){
 	GeonamesCountryImporter geonamesCountryImporter = new GeonamesCountryImporter();
+	CountryDao countryDao = EasyMock.createMock(CountryDao.class);
+	EasyMock.expect(countryDao.count()).andReturn(10L);
+	EasyMock.expect(countryDao.count()).andReturn(0L);
+	EasyMock.replay(countryDao);
 	
-	Assert.assertFalse("country importer should never be skiped",geonamesCountryImporter.shouldBeSkipped());
+	geonamesCountryImporter.setCountryDao(countryDao);
+	
+	Assert.assertTrue("country importer should be skiped if there is some country imported",geonamesCountryImporter.shouldBeSkipped());
+	Assert.assertFalse("country importer should be skiped if there is some country imported",geonamesCountryImporter.shouldBeSkipped());
 	
 		
     }

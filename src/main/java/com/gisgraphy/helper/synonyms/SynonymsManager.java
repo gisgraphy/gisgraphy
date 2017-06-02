@@ -22,7 +22,7 @@ public class SynonymsManager {
 		for (Language language : Language.values()){
 			try {
 				String lang = language.toString();
-				SynonymsFinder sf = new SynonymsFinder(lang.toLowerCase()+FILENAME_SUFFIX);
+				SynonymsFinder sf = new SynonymsFinder("synonyms/"+lang.toLowerCase()+FILENAME_SUFFIX);
 				logger.info("loading synonyms for "+lang);
 				synonymsFinders.put(lang.toUpperCase(), sf);
 			} catch (Exception e) {

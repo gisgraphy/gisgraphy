@@ -796,7 +796,7 @@ public class ImporterHelper {
 						if (name!=null  && !"".equals(name) && name.length()<OpenStreetMap.MAX_ALTERNATENAME_SIZE){
 							if (street.getName()==null){
 								street.setName(name);
-								if (lang.equals("de") && decompounder.isDecompoudName(name)){
+								if (lang.equals("de") && decompounder.isDecompoundName(name)){
 									String otherFormat = decompounder.getOtherFormat(name);
 									alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
 									if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
@@ -810,7 +810,7 @@ public class ImporterHelper {
 								if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
 									street.addAlternateName(alternateNameToAdd);
 								}
-									if (lang.equals("de") && decompounder.isDecompoudName(name)){
+									if (lang.equals("de") && decompounder.isDecompoundName(name)){
 										String otherFormat = decompounder.getOtherFormat(name);
 										alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
 										if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
@@ -829,7 +829,7 @@ public class ImporterHelper {
 					
 			}	
 		}
-		if (street.getName()!=null && street.getCountryCode()!=null && street.getCountryCode().equals("DE") && decompounder.isDecompoudName(street.getName())){
+		if (street.getName()!=null && street.getCountryCode()!=null && street.getCountryCode().equals("DE") && decompounder.isDecompoundName(street.getName())){
 						AlternateOsmName alternateNameOtherFormat = new AlternateOsmName(decompounder.getOtherFormat(street.getName()),"DE",AlternateNameSource.OPENSTREETMAP);
 						if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameOtherFormat)){
 							street.addAlternateName(alternateNameOtherFormat);

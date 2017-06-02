@@ -2,3 +2,4 @@ rua|r
 avenida|av|ave|ava
 transversal|transv
 rodovia|rod|rvia|rdvia
+travessa|tv|trav|trv

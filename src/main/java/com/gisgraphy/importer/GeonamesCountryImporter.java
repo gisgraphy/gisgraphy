@@ -173,8 +173,7 @@ public class GeonamesCountryImporter extends AbstractSimpleImporterProcessor {
      */
     @Override
     public boolean shouldBeSkipped() {
-    	//should never be skiped
-    	return false;
+    	return countryDao.count()>0;
     }
 
     /*

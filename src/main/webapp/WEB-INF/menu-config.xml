@@ -23,6 +23,7 @@
             <Item name="FlushCache" title="menu.flushCache" page="/admin/flushCache.html"/>-->
             <Item name="stats" title="stats.title" page="/admin/stats.html"/>
         </Menu>
+         <Menu name="Premium" title="premium" description="Premium Menu" roles="ROLE_ADMIN,ROLE_USER" width="120" page="https://premium.gisgraphy.com"/>
         <Menu name="Logout" title="user.logout" page="/logout.jsp" roles="ROLE_ADMIN,ROLE_USER"/>
     </Menus>
 </MenuConfig>

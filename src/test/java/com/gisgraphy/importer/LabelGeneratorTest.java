@@ -64,6 +64,7 @@ public void testGenerateLabel_GisFeature_nameAndIsInEquals(){
 }
 
 
+
 @Test
 public void testGenerateLabel_osm(){
 	OpenStreetMap osm = new OpenStreetMap();
@@ -74,6 +75,12 @@ public void testGenerateLabel_osm(){
 	
 	osm.setIsIn("isIn");
 	Assert.assertEquals("name, isIn", generator.generateLabel(osm));
+	
+}
+@Test
+public void testGenerateLabel_nullosm(){
+	OpenStreetMap osm = null;
+	Assert.assertNull(generator.generateLabel(osm));
 	
 }
 
@@ -114,6 +121,12 @@ public void testGenerateLabel_Adm(){
 		String actual =  generator.generatePostal(address);
 		System.out.println(actual);
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA), actual);
+	}
+	
+	@Test
+	public void generatePostal_NullAddress(){
+		Address address = null;
+		generator.generatePostal(address);
 	}
 	
 	@Test
@@ -163,6 +176,12 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(formater.getEnvelopeAddress(generator.buildAddressFromOpenstreetMap(streetOSM), DisplayMode.COMMA), postal);
 		postal  =generator.generatePostal(streetOSM2);
 		Assert.assertEquals(formater.getEnvelopeAddress(generator.buildAddressFromOpenstreetMap(streetOSM2), DisplayMode.COMMA), postal);
+	}
+	
+	@Test
+	public void generatePostal_nullOpenstreetmap(){
+		OpenStreetMap street =null;
+		generator.generatePostal(street);
 	}
 	
 	@Test
@@ -330,6 +349,27 @@ public void testGenerateLabel_Adm(){
 		Assert.assertTrue(labels.contains("alternateName"));
 		Assert.assertTrue(labels.contains("alternateName2"));
 	
+	}
+	
+	@Test
+	public void generateLabels_nullStreet() {
+		OpenStreetMap street = null;
+		Set<String> labels = generator.generateLabels(street);
+		Assert.assertEquals(0, labels.size());
+	}
+	
+	@Test
+	public void generateLabels_nullCity() {
+		City city = null;
+		Set<String> labels = generator.generateLabels(city);
+		Assert.assertEquals(0, labels.size());
+	}
+	
+	@Test
+	public void generateLabels_nullAdm() {
+		Adm adm = null;
+		Set<String> labels = generator.generateLabels(adm);
+		Assert.assertEquals(0, labels.size());
 	}
 	
 	@Test
@@ -593,6 +633,14 @@ public void testGenerateLabel_Adm(){
 		String fullyQualifiedName = generator.getFullyQualifiedName(city,false);
 		System.out.println(fullyQualifiedName);
 		Assert.assertEquals(1, countNumberOfOccurence(fullyQualifiedName,"adm1Name"));
+	}
+	
+	
+	
+	@Test
+	public void testGetFullyQualifiedNameFeature_null() {
+		City city = null;
+		generator.getFullyQualifiedName(city,false);
 	}
 	
 	@Test
@@ -887,6 +935,12 @@ public void testGenerateLabel_Adm(){
 	    }
 	    
 	    @Test
+	    public void testGetFullyQualifiedNameOsm_null() {
+	    	OpenStreetMap osm = null;
+	    	generator.getFullyQualifiedName(osm, false);
+	    }
+	    
+	    @Test
 	    public void testGetFullyQualifiedNameOsm_oneZip() {
 		OpenStreetMap osm = createOsmMock("name");
 		EasyMock.expect(osm.getZipCode()).andStubReturn("zip");
@@ -983,6 +1037,12 @@ public void testGenerateLabel_Adm(){
 	    	Assert.assertEquals(null, generator.getCountry(""));
 	    	Assert.assertEquals(null, generator.getCountry("XX"));
 	    	Assert.assertEquals(null, generator.getCountry(null));
+	    }
+	    
+	    @Test
+		public void getFullyQualifiedNameAddressNull(){
+			Address address= new Address();
+			generator.getFullyQualifiedName(address);
 	    }
 	    
 	    @Test

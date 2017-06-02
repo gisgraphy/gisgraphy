@@ -100,8 +100,7 @@ public class GeonamesLanguageImporter extends AbstractSimpleImporterProcessor {
      */
     @Override
     public boolean shouldBeSkipped() {
-    	//should never be skiped
-    	return false;
+    	return languageDao.count()>0;
     }
     
     @Override

@@ -179,6 +179,14 @@
 		<property name="municipalityDetector" ref="municipalityDetector" />
 	</bean>
 	
+	<bean id="openStreetMapImporterHelper" class="com.gisgraphy.importer.OpenStreetMapImporterHelper"
+	parent="abstractSimpleImporterProcessor">
+		<property name="openStreetMapDao" ref= "openStreetMapDao" />
+		<property name="importerConfig" ref="importerConfig" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+		<property name="municipalityDetector" ref="municipalityDetector" />
+	</bean>
+	
 	<bean id="openAddressesImporter" class="com.gisgraphy.importer.OpenAddressesSimpleImporter"
 	parent="abstractSimpleImporterProcessor">
 		<property name="openStreetMapDao" ref= "openStreetMapDao" />

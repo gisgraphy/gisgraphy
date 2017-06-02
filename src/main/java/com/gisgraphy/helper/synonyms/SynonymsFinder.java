@@ -246,8 +246,8 @@ public class SynonymsFinder {
 				return synonymsDtos;
 			}
 			//split the strings
-			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;]");
-			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一]");
+			String[] actualSplited = actual.split("[,\\s\\-\\–\\一;//]");
+			String[] expectedSplited = expected.split("[,\\s\\-\\–\\一//]");
 			List<String> actualList = new ArrayList<String>();
 			List<String> expectedList = new ArrayList<String>();
 			
@@ -280,7 +280,7 @@ public class SynonymsFinder {
 			
 			if (expectedMissing.size()!= 0 && expectedMissing.size()==actualMissing.size() && atLeastOneWordEquals){
 				for (int i=0;i<expectedMissing.size();i++){
-					if (expectedMissing.get(i).substring(0, 1).equals(actualMissing.get(i).substring(0, 1))){ //at least first lettre should be the same
+					if (actualMissing.get(i).length() >=1 && expectedMissing.get(i).length()>=1 && expectedMissing.get(i).substring(0, 1).equals(actualMissing.get(i).substring(0, 1))){ //at least first lettre should be the same
 				SynonymsDto dto = new SynonymsDto(expectedMissing.get(i), actualMissing.get(i),countrycode);
 				synonymsDtos.add(dto);
 					}

@@ -290,7 +290,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 					City cityToRemove = cityDao.getByFeatureId(nearestCity.getFeature_id());
 					if (cityToRemove!=null){
 						logger.error("changetype : '"+name+"'/'"+fields[1]+"' is a subdivision we remove  the city "+nearestCity.getName()+","+nearestCity.getFeature_id()+" in the datastore");
-						 population=cityToRemove.getPopulation();
+						// population=cityToRemove.getPopulation();
 						 elevation=cityToRemove.getElevation();
 						 gtopo30 = cityToRemove.getGtopo30();
 						 timezone=cityToRemove.getTimezone();
@@ -352,7 +352,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 	}
 	//populate new fields
 	//population
-	if(!isEmptyField(fields, 8, false)){
+	if(!isEmptyField(fields, 8, false) && !(place instanceof CitySubdivision)){
 		try {
 			String populationStr = fields[8];
 			population = parsePopulation(populationStr);

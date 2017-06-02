@@ -27,11 +27,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.easymock.EasyMock;
 import org.junit.Test;
 
+import com.gisgraphy.domain.repository.CountryDao;
 import com.gisgraphy.domain.repository.ILanguageDao;
+import com.gisgraphy.domain.repository.LanguageDao;
 import com.gisgraphy.domain.valueobject.NameValueDTO;
 
 public class GeonamesLanguageImporterTest {
@@ -52,7 +53,15 @@ public class GeonamesLanguageImporterTest {
     @Test
     public void shouldBeSkipShouldReturnCorrectValue(){
 	GeonamesLanguageImporter geonamesLanguageImporter = new GeonamesLanguageImporter();
-	Assert.assertFalse(geonamesLanguageImporter.shouldBeSkipped());
+	LanguageDao languagesDao = EasyMock.createMock(LanguageDao.class);
+	EasyMock.expect(languagesDao.count()).andReturn(10L);
+	EasyMock.expect(languagesDao.count()).andReturn(0L);
+	EasyMock.replay(languagesDao);
+	
+	geonamesLanguageImporter.setLanguageDao(languagesDao);
+	
+	Assert.assertTrue("country importer should be skiped if there is some country imported",geonamesLanguageImporter.shouldBeSkipped());
+	Assert.assertFalse("country importer should be skiped if there is some country imported",geonamesLanguageImporter.shouldBeSkipped());
 		
     }
 

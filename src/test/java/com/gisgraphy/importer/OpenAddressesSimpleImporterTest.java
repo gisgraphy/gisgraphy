@@ -1,8 +1,8 @@
 package com.gisgraphy.importer;
 
-import net.sf.jstester.util.Assert;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class OpenAddressesSimpleImporterTest {
@@ -67,6 +67,7 @@ public class OpenAddressesSimpleImporterTest {
 	public void isUnWantedHouseNumber(){
 		OpenAddressesSimpleImporter importer = new OpenAddressesSimpleImporter();
 		Assert.assertTrue(importer.isUnWantedHouseNumber("0"));
+		Assert.assertTrue(importer.isUnWantedHouseNumber("SN"));
 	}
 	
 	@Test
@@ -90,6 +91,24 @@ public class OpenAddressesSimpleImporterTest {
 		Assert.assertEquals(null, importer.cleanNumber(" 000000000000000000 "));
 		Assert.assertEquals(null, importer.cleanNumber("000000000000000000"));
 		Assert.assertEquals("3", importer.cleanNumber("0003"));
+		
+		Assert.assertEquals("3", importer.cleanNumber("#0003"));
+		Assert.assertEquals("3", importer.cleanNumber("#3"));
+
 	}
 
+	@Test
+	public void correctLines(){
+		OpenAddressesSimpleImporter importer = new OpenAddressesSimpleImporter();
+		Assert.assertEquals(null,importer.correctLine(null));
+		String line="-54.6119061,-20.5140889,000819,\"AVENIDA JOANA D,ARC\",TEMPLO,,,,,,br:6b1a081120273836";
+		Assert.assertEquals("-54.6119061,-20.5140889,000819,AVENIDA JOANA D ARC,TEMPLO,,,,,,br:6b1a081120273836",importer.correctLine(line));
+		line="-54.6119061,-20.5140889,000819,AVENIDA JOANA D ARC\",TEMPLO,,,,,,br:6b1a081120273836";
+		Assert.assertEquals("-54.6119061,-20.5140889,000819,AVENIDA JOANA D ARC\",TEMPLO,,,,,,br:6b1a081120273836",importer.correctLine(line));
+		
+		line="-54.6119061,-20.5140889,000819,\"AVENIDA JOANA D,ARC\",TEMPLO,\"bb,ff\",,,,,br:6b1a081120273836";
+		org.junit.Assert.assertEquals("-54.6119061,-20.5140889,000819,AVENIDA JOANA D ARC,TEMPLO,bb ff,,,,,br:6b1a081120273836",importer.correctLine(line));
+		
+	}
+	
 }

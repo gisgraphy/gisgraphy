@@ -213,7 +213,7 @@ public class Decompounder {
 		}
 	}
 	
-	public boolean isDecompoudName(String name){
+	public boolean isDecompoundName(String name){
 		if (name!=null){
 			return getSate(name)!=state.NOT_APPLICABLE;
 		} else {

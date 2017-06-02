@@ -349,7 +349,7 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
     
 
     protected final String getInput(String data) {
-    	if (getImportKey()!=null && getImportKey()!=0){
+    	if (getImportKey()!=null && getImportKey()!=0 && data!=null){
     		StringBuffer result = new StringBuffer();
     		for (char c : data.toCharArray()) {
     			int unicodeValue = (int) c;

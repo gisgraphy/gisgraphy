@@ -710,6 +710,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
 				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				Assert.assertEquals("adm should be set",adm, city.getAdm());
+				Assert.assertEquals("population for citysubdivision should be 0",0, city.getPopulation().intValue());
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
 				Assert.assertTrue("alternate labels are empty and shouldn't be", city.getAlternateLabels().size()!=0);

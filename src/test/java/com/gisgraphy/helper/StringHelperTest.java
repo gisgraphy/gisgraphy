@@ -200,6 +200,14 @@ public class StringHelperTest {
     	Assert.assertFalse(StringHelper.isSameName("normandie","avr"));
     	Assert.assertFalse(StringHelper.isSameName("paris","paris 07"));
     	
+    	Assert.assertTrue("With some punct added",StringHelper.isSameName("AVENIDA DR JOAO ROSA PIRES","AVENIDA DR. JOAO ROSA PIRES"));
+    	
+    	Assert.assertTrue("with city of",StringHelper.isSameName("city of edinbourg","edinbourg"));
+    	Assert.assertTrue("with city of",StringHelper.isSameName("edinbourg","city of edinbourg"));
+    	
+    	Assert.assertTrue("with city",StringHelper.isSameName("new york city","new york"));
+    	Assert.assertTrue("with city",StringHelper.isSameName("new york","new york city"));
+    	
     
     	
     	
@@ -213,6 +221,13 @@ public class StringHelperTest {
     	
     }
     
+    @Test
+    public void removePunctuation(){
+    	Assert.assertEquals("", StringHelper.removePunctuation(""));
+    	Assert.assertEquals(null, StringHelper.removePunctuation(null));
+    	Assert.assertEquals(" dr kawashima", StringHelper.removePunctuation(" dr. kawashima"));
+    	
+    }
  
     
     @Test
@@ -245,6 +260,13 @@ public class StringHelperTest {
     	//-
     	Assert.assertTrue("synonyms in actual",StringHelper.isSameStreetName("foo baar street","foo-baar-street",null));
     	
+    	Assert.assertTrue("With some punct added",StringHelper.isSameStreetName("AVENIDA DR JOAO ROSA PIRES","AVENIDA DR. JOAO ROSA PIRES",null));
+    	
+    	Assert.assertTrue(StringHelper.isSameStreetName("rua COMANDANTE JOSE SOARES COUTINHO","Rua Commandante José Soares","BR"));
+    	
+    	Assert.assertFalse(StringHelper.isSameStreetName("BR-262","avenida RIO BARDAUNI","BR")); 
+    	
+    	
     	
     	
     	Assert.assertTrue("synonyms in expected case sensitive",StringHelper.isSameStreetName("st omer","Saint omer",null));
@@ -255,6 +277,7 @@ public class StringHelperTest {
     	
     
     	Assert.assertTrue(StringHelper.isSameStreetName("EAST 236st STREET", "EAST 236 STREET","US"));
+    	Assert.assertTrue(StringHelper.isSameStreetName("EAST 236 STREET", "EAST 236st STREET","US"));
     	Assert.assertFalse(StringHelper.isSameStreetName("east 235st STREET", "EAST 236 STREET",null));
     	
     	Assert.assertFalse(StringHelper.isSameStreetName("235st STREET", "236st STREET",null));
@@ -280,6 +303,19 @@ public class StringHelperTest {
     	Assert.assertTrue(StringHelper.isSameStreetName("State Route 104", "sr 104","US"));
     	
     	Assert.assertTrue(StringHelper.isSameStreetName("AVENIDA ABRAO ANACHE", "Avenida Abrão Anache","BR"));
+    	Assert.assertTrue(StringHelper.isSameStreetName("Rua Arabutã", "avenida ARABUTA","BR"));
+    	
+    	
+    	Assert.assertFalse(StringHelper.isSameStreetName("VILA ZAMBERLAM","ERS-342 / RS-342","BR"));
+    	
+    	Assert.assertFalse(StringHelper.isSameStreetName("rua BRASILIA","rua 12","BR"));
+    	Assert.assertFalse(StringHelper.isSameStreetName("avenida RIO BARDAUNI","BR-262","BR"));
+    	
+    	
+    	
+    	
+    	
+    	
     	
 
     	//Assert.assertTrue(StringHelper.isSameStreetName("Bodanyi Court", "Bodanyi Place",null));
@@ -425,6 +461,7 @@ public class StringHelperTest {
     	
     	//no str
     	Assert.assertEquals("foo",StringHelper.removeStreetType("foo", null));
+    	Assert.assertEquals(null,StringHelper.removeStreetType(null, null));
     	
     	//one without point
     	Assert.assertEquals("truc",StringHelper.removeStreetType("trucStr", null));

@@ -134,6 +134,8 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     protected int getNumberOfColumns() {
     	return 10;
     }
+    
+    private long currentId = 0;
 
     /* (non-Javadoc)
      * @see com.gisgraphy.domain.geoloc.importer.AbstractImporterProcessor#processData(java.lang.String)
@@ -156,17 +158,18 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	checkNumberOfColumn(fields);
 	OpenStreetMap street = new OpenStreetMap();
 	street.setSource(GISSource.OSM);
-	
 	// set id
 	if (!isEmptyField(fields, 0, false)) {
 	    Long openstreetmapId= null;
 	    try {
 		openstreetmapId = new Long(fields[0].trim());
+		currentId = openstreetmapId;
 	    } catch (NumberFormatException e) {
 		logger.warn("can not get openstreetmap id for "+fields[0]);
 	    }
 	    street.setOpenstreetmapId(openstreetmapId);
 	}
+	//logger.error("will process openstreetmapId="+currentId );
 	
 	// set name
 	if (!isEmptyField(fields, 1, false)) {
@@ -180,7 +183,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 		Point location = (Point) GeolocHelper.convertFromHEXEWKBToGeometry(fields[2]);
 		street.setLocation(location);
 	    } catch (RuntimeException e) {
-	    	logger.warn("can not parse location for "+fields[1]+" : "+e);
+	    	logger.warn(currentId+" can not parse location for "+fields[1]+" : "+e);
 	    	return;
 	    }
 	}
@@ -216,7 +219,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 		type = StreetType.valueOf(fields[8].toUpperCase());
 		street.setStreetType(type);
 	    } catch (Exception e) {
-		logger.warn("can not determine streetType for "+fields[0]+"/"+fields[8]+" : "+e);
+		logger.warn(currentId+" can not determine streetType for "+fields[0]+"/"+fields[8]+" : "+e);
 		street.setStreetType(StreetType.UNCLASSIFIED);
 	    }
 	    
@@ -229,7 +232,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 		oneWay  = fields[9].equals("t");
 		street.setOneWay(oneWay);
 	    } catch (Exception e) {
-		logger.warn("can not determine oneway for "+fields[1]+"/"+fields[9]+" : "+e);
+		logger.warn(currentId+" can not determine oneway for "+fields[1]+"/"+fields[9]+" : "+e);
 	    }
 	    
 	}
@@ -238,7 +241,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	    try {
 	    	street.setShape((LineString)GeolocHelper.convertFromHEXEWKBToGeometry(fields[10]));
 	    } catch (RuntimeException e) {
-		logger.warn("can not parse shape for "+fields[0]+"/"+fields[10] +" : "+e);
+		logger.warn(currentId+" can not parse shape for "+fields[0]+"/"+fields[10] +" : "+e);
 		return;
 	    }
 	}
@@ -254,7 +257,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 			Integer lanes = Integer.parseInt(fields[12]);
 			street.setLanes(lanes);
 		} catch (NumberFormatException e) {
-			logger.warn("can not parse lanes for "+fields[0]+"/"+fields[12] +" : "+e);
+			logger.warn(currentId+" can not parse lanes for "+fields[0]+"/"+fields[12] +" : "+e);
 		}
   
 	}
@@ -315,10 +318,12 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	try {
 		openStreetMapDao.save(street);
 	} catch (ConstraintViolationException e) {
-		logger.error("Can not save "+dumpFields(fields)+"(ConstraintViolationException) we continue anyway but you should consider this",e);
+		logger.error(currentId+" Can not save "+dumpFields(fields)+"(ConstraintViolationException) we continue anyway but you should consider this",e);
 	}catch (Exception e) {
-		logger.error("Can not save "+dumpFields(fields)+" we continue anyway but you should consider this",e);
+		logger.error(currentId+" Can not save "+dumpFields(fields)+" we continue anyway but you should consider this",e);
 	}
+	//logger.error("finish process of openstreetmapId="+currentId );
+
 
     }
     
@@ -354,7 +359,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 			return azimuth.intValue();
 			
 		} catch (NumberFormatException e) {
-			logger.warn("can not parse azimuth "+azimutStr +" : "+e);
+			logger.warn(currentId+" can not parse azimuth "+azimutStr +" : "+e);
 			return null;
 		}
 	}
@@ -704,6 +709,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     @Override
     //TODO test
     protected void tearDown() {
+    	logger.error("start teardown");
     	super.tearDown();
     	FullTextSearchEngine.disableLogging=false;
     	GeolocSearchEngine.disableLogging=false;
@@ -718,6 +724,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     	} finally{
         	this.statusMessage=savedMessage;
         }
+    	logger.error("end teardown");
     }
     
     /**
