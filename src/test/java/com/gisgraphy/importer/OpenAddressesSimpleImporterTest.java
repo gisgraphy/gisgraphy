@@ -81,7 +81,7 @@ public class OpenAddressesSimpleImporterTest {
 		Assert.assertTrue(importer.isUnWantedStreetName(""));
 		Assert.assertTrue(importer.isUnWantedStreetName(" "));
 		Assert.assertTrue(importer.isUnWantedStreetName(null));
-		Assert.assertTrue(importer.isUnWantedStreetName("nr"));
+		Assert.assertFalse(importer.isUnWantedStreetName("nr"));
 		Assert.assertFalse(importer.isUnWantedStreetName("foo"));
 	}
 	

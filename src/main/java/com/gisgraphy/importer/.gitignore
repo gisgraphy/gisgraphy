@@ -13,3 +13,5 @@
 /OpenStreetMapImporterTask.java
 /OpenStreetMapPoisAdvancedImporter.java
 /OpenStreetMapPoisImporterTask.java
+/OpenAddressesAdvancedImporter.java
+/OpenAddressesImporterTask.java
