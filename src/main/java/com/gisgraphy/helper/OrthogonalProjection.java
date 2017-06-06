@@ -1,5 +1,6 @@
 package com.gisgraphy.helper;
 
+import com.gisgraphy.domain.valueobject.SRID;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -67,7 +68,11 @@ public class OrthogonalProjection {
 					 bx = bx*scale + p2.x;
 			         by = by*scale + p2.y;
 				}
-		return geomFact.createPoint(new Coordinate(bx, by));
+		Point result =  geomFact.createPoint(new Coordinate(bx, by));
+		if (result!=null){
+			result.setSRID(SRID.WGS84_SRID.getSRID());
+		}
+		return result;
 				
 		/*function algo( v, u, p ){
 
@@ -121,7 +126,11 @@ public class OrthogonalProjection {
 					 bx = bx*scale + p2.x;
 			         by = by*scale + p2.y;
 				}
-		return geomFact.createPoint(new Coordinate(bx, by));
+		Point result = geomFact.createPoint(new Coordinate(bx, by));
+		if (result!=null){
+			result.setSRID(SRID.WGS84_SRID.getSRID());
+		}
+		return result;
 				
 		/*function algo( v, u, p ){
 

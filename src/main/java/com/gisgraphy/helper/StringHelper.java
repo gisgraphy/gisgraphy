@@ -45,7 +45,7 @@ import com.gisgraphy.compound.Decompounder.state;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.helper.synonyms.SynonymsFinder;
-import com.gisgraphy.helper.synonyms.SynonymsManager;
+import com.gisgraphy.helper.synonyms.StreetTypeSynonymsManager;
 
 /**
  * Provide some usefull method to compute string for autocompletion and fulltextsearch
@@ -66,7 +66,7 @@ public class StringHelper {
 	
 	private static final Pattern ORDINAL_PATTERN = Pattern.compile("(\\d+)\\s?(?:rd|st|nd|th)?\\b");
 	
-	private static SynonymsManager synonymsManager = SynonymsManager.getInstance();
+	private static StreetTypeSynonymsManager synonymsManager = StreetTypeSynonymsManager.getInstance();
 	
 	protected static final Pattern SYNONYMS_PATTERN= Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
 	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
@@ -494,14 +494,14 @@ public class StringHelper {
 				if(!expectedSplitedLong.contains(word)){
 					countMissing++;
 					missingWordsInActual.add(word);
-					System.out.println("missing "+word+" in "+expected);
+					//System.out.println("missing "+word+" in "+expected);
 				}
 				for (String missingWord:missingWordsInActual){
 					//check if there is a synonyms in expected
 					if (synonymsFinder.isWordHasASynonymIn(missingWord, expectedSplitedLong)){
 						countMissing--;
 					}
-					System.out.println(missingWord);
+					//System.out.println(missingWord);
 				}
 				
 				}

@@ -3,18 +3,18 @@ package com.gisgraphy.helper.synonyms;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SynonymsManagerTest {
+public class StreetTypeSynonymsManagerTest {
 
 	@Test
 	public void init() {
-		Assert.assertNotNull(SynonymsManager.getInstance()); 
+		Assert.assertNotNull(StreetTypeSynonymsManager.getInstance()); 
 	}
 	
 	
 
 	@Test
 	public void getSynonymsFinderFromLanguage(){
-		SynonymsManager sm =  SynonymsManager.getInstance();
+		StreetTypeSynonymsManager sm =  StreetTypeSynonymsManager.getInstance();
 		Assert.assertNull(sm.getSynonymsFinderFromLanguage(""));
 		Assert.assertNull(sm.getSynonymsFinderFromLanguage(" "));
 		Assert.assertNull(sm.getSynonymsFinderFromLanguage("foo"));

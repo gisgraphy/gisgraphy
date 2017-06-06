@@ -68,6 +68,8 @@ public class OpenAddressesSimpleImporterTest {
 		OpenAddressesSimpleImporter importer = new OpenAddressesSimpleImporter();
 		Assert.assertTrue(importer.isUnWantedHouseNumber("0"));
 		Assert.assertTrue(importer.isUnWantedHouseNumber("SN"));
+		Assert.assertFalse(importer.isUnWantedHouseNumber("2 SN"));
+		Assert.assertFalse(importer.isUnWantedHouseNumber("3"));
 	}
 	
 	@Test
@@ -108,6 +110,10 @@ public class OpenAddressesSimpleImporterTest {
 		
 		line="-54.6119061,-20.5140889,000819,\"AVENIDA JOANA D,ARC\",TEMPLO,\"bb,ff\",,,,,br:6b1a081120273836";
 		org.junit.Assert.assertEquals("-54.6119061,-20.5140889,000819,AVENIDA JOANA D ARC,TEMPLO,bb ff,,,,,br:6b1a081120273836",importer.correctLine(line));
+		
+		//two comma
+		 line="-51.9438429,-23.416729,20,RUA  BENJAMIN CONSTANT,\"LOJA 4,3,2,1\",Maringá,,PR,87020-060,,br:94cc7e00b7d822cd";
+		Assert.assertEquals("-51.9438429,-23.416729,20,RUA  BENJAMIN CONSTANT,LOJA 4 3 2 1,Maringá,,PR,87020-060,,br:94cc7e00b7d822cd",importer.correctLine(line));
 		
 	}
 	

@@ -8,17 +8,17 @@ import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.helper.Language;
 
-public class SynonymsManager {
+public class StreetTypeSynonymsManager {
 	
-	public static final Logger logger = LoggerFactory.getLogger(SynonymsManager.class);
+	public static final Logger logger = LoggerFactory.getLogger(StreetTypeSynonymsManager.class);
 
-	private static SynonymsManager instance = new SynonymsManager();
+	private static StreetTypeSynonymsManager instance = new StreetTypeSynonymsManager();
 	
 	private  Map<String,SynonymsFinder> synonymsFinders = new HashMap<String, SynonymsFinder>();
 	
 	 private static final String FILENAME_SUFFIX = "_street_types.txt";
 	
-	private SynonymsManager() {
+	private StreetTypeSynonymsManager() {
 		for (Language language : Language.values()){
 			try {
 				String lang = language.toString();
@@ -32,7 +32,7 @@ public class SynonymsManager {
 		
 	}
 	
-	public static SynonymsManager getInstance(){
+	public static StreetTypeSynonymsManager getInstance(){
 		return instance ;
 	}
 	
