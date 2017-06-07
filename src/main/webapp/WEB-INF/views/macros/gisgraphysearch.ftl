@@ -391,14 +391,14 @@ doAjaxSearch = function(formName){
 <script type="text/javascript" >
 toggleAddressForm = function(structured){
 	if (structured){
-		$("postalcheckbox").hide();
+		//$("postalcheckbox").hide();
 		$("unstructuredaddressfields").hide();
 		$("address").disable();
 		$("structuredaddressfields").show();
 		$("unstructuredbutton").setStyle({border:' 0px solid #000000'});
 		$("structuredbutton").setStyle({border: '2px solid #000000'});
 	} else {
-		$("postalcheckbox").show();
+		//$("postalcheckbox").show();
 		$("unstructuredaddressfields").show();
 		$("structuredaddressfields").hide();
 		$("address").enable();
@@ -433,9 +433,7 @@ toggleAddressForm = function(structured){
 	</div>
 </div>
 		<br/>
-		<span id="postalcheckbox"><#if url.contains('geocod') && !structured>
-			<div style="padding-left:120px;"><@s.checkbox name="postal" fieldValue="true" label="search.geocoding.postal.mode" theme="simple"/><@s.text name="search.geocoding.postal.mode"/></div></span>
-		</#if>
+		
 		<br/>
 		<b><@s.text name="search.select.country"/> <#if url.contains('geocod')>(<@s.text name="search.optional"/>)</#if> :</b> </span>
 <#if !url.contains('geocod')>
