@@ -97,8 +97,17 @@ public class DisplayStreetAction extends ActionSupport implements GoogleMapApiKe
 		if (result == null) {
 			return "";
 		} else {
-			return !StringUtils.isEmpty(result.getName()) ? result.getName()
-					:getText(GLOBAL_STREET_NONAME);
+			String prefered = "";
+			if (!StringUtils.isEmpty(result.getLabel())){
+				prefered = result.getLabel();
+			}else if (!StringUtils.isEmpty(result.getName())){
+				prefered = result.getName();
+			} else if (!StringUtils.isEmpty(result.getStreetRef())){
+				prefered = result.getStreetRef();
+			} else {
+				prefered = getText(GLOBAL_STREET_NONAME);
+			}
+			return prefered;
 		}
 	}
 

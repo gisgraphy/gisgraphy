@@ -29,14 +29,37 @@
 						<br/>
 						<@s.text name="global.longitude"/> : <#if lng??>${lng}<#else>${result.location.x?c}</#if>
 						<br/>
-						<@s.text name="global.length"/> : ${result.length} m(s); 
+						<@s.text name="global.length"/> : ${result.length} m(s)
+<br/>
+<#if result.lanes??><@s.text name="global.lanes"/> : ${result.lanes}<br/><br/></#if>
+<#if result.toll??><@s.text name="global.toll"/> : ${result.toll}<br/></#if>
+<#if result.surface??><@s.text name="global.surface"/> : ${result.surface}<br/></#if>
+
+<#if result.maxSpeed??><br/><br/><@s.text name="global.maxspeed"/> : ${result.maxSpeed}<br/></#if>
+<#if result.maxSpeedBackward??><@s.text name="global.maxspeedbackward"/> : ${result.maxSpeedBackward}<br/></#if>
+<#if result.speedMode??><@s.text name="global.speedmode"/> : ${result.speedMode}<br/><br/></#if>
+<#if result.azimuthStart??><@s.text name="global.azimuthstart"/> : ${result.azimuthStart} °<br/></#if>
+<#if result.azimuthEnd??><@s.text name="global.azimuthend"/> : ${result.azimuthEnd} °<br/></#if>
 						<br/>
-						<#if result.isIn??><@s.text name="global.is.in"/> : ${result.isIn};<br/></#if>
-					        <#if result.isInPlace??><@s.text name="global.is.inplace"/> : ${result.isInPlace};<br/></#if>
-					        <#if result.isInAdm??><@s.text name="global.is.inadm"/> : ${result.isInAdm};<br/></#if>
-					        <#if result.isInZip??><@s.text name="global.is.inzip"/> : ${result.isInZip};<br/></#if>
-						<br/>
-						<#if result.openstreetmapId??><@s.text name="global.openstreetmapId"/> : ${result.openstreetmapId?c};<br/></#if>
+<#if result.label??><@s.text name="global.label"/> : ${result.label}<br/></#if>
+						<#if result.fullyQualifiedName??><@s.text name="global.fullyQualifiedName"/> : ${result.fullyQualifiedName}<br/></#if>
+<#if result.labelPostal??><@s.text name="global.labelpostal"/> : ${result.labelPostal}<br/></#if>
+						<#if result.streetRef??><@s.text name="ref"/> : ${result.streetRef}<br/></#if>
+<br/>
+						<#if result.isIn??><@s.text name="global.is.in"/> : ${result.isIn}<br/></#if>
+						<#if result.zipCode??><@s.text name="global.zipcode"/> : ${result.zipCode}<br/></#if>
+					        <#if result.isInZip??><@s.text name="global.is.inzip"/> : ${result.isInZip}<br/></#if>
+					        <#if result.isInPlace??><@s.text name="global.is.inplace"/> : ${result.isInPlace}<br/></#if>
+					        <#if result.isInAdm??><@s.text name="global.is.inadm"/> : ${result.isInAdm}<br/></#if>
+<br/>
+<#if result.adm1Name??><@s.text name="global.adm1name"/> : ${result.adm1Name}<br/></#if>
+<#if result.adm2Name??><@s.text name="global.adm2name"/> : ${result.adm2Name}<br/></#if>
+<#if result.adm3Name??><@s.text name="global.adm3name"/> : ${result.adm3Name}<br/></#if>
+<#if result.adm4Name??><@s.text name="global.adm4name"/> : ${result.adm4Name}<br/></#if>
+<#if result.adm5Name??><@s.text name="global.adm5name"/> : ${result.adm5Name}<br/></#if>
+<br/>
+						<#if result.source??><@s.text name="source"/> : ${result.source}<br/></#if>
+						<#if result.openstreetmapId??><@s.text name="global.openstreetmapId"/> : ${result.openstreetmapId?c}<br/></#if>
 						<br/>
 						<#if result.streetType??><@s.text name="search.type.of.street"/> : <@s.text name="${result.streetType}"/><br/></#if>
 						<#if result.one_way?? && result.length??>
@@ -52,7 +75,7 @@
 							<@s.text name="address.houseNumber"/> : 
 							<#list result.houseNumbers as house>
 							${house.number},
-							</#list>;
+							</#list>
 							<br/><br/>
 						</#if>
 						 <#if result.alternateNames?? && result.alternateNames.size()!=  0>
@@ -81,6 +104,11 @@
 
 						displayMap(commadot('<#if lat??>${lat}<#else>${result.location.y?c}</#if>'),commadot('<#if lng??>${lng}<#else>${result.location.x?c}</#if>'),"<strong>${preferedName}</strong><br/>Lat :<#if lat??>${lat}<#else>${result.location.y?c}</#if><br/>long:<#if lng??>${lng}<#else>${result.location.x?c}</#if>");
 						//viewStreetPanorama(commadot('${result.location.y}'),commadot('${result.location.x}'));
+						<#if shape??>
+						var shapelayer = omnivore.wkt.parse('${shape}')
+ 						 .addTo(map);
+ 							map.fitBounds(shapelayer.getBounds());
+						</#if>
 						</script>
 						</div>
 					</div>
