@@ -190,8 +190,6 @@ doAjaxSearch = function(formName){
 			</div>
 			<#if fulltextResponseDTO.results.size()!=0>
 			<br/>
-			<@s.url id="showAllOnMapsURL" value="fulltext/fulltextsearch" includeParams="all" forceAddSchemeHostAndPort="true" escapeAmp="false" />			
-			&nbsp;&nbsp;<a href="http://maps.google.fr/maps?q=${showAllOnMapsURL?url('UTF-8')}%26format%3DATOM" target="_blank"><img src="/images/showonmaps.png" width="32px" alt="map" class="imgAlign"/> <@s.text name="search.viewResultsOnMap"/></a>
 				<#list fulltextResponseDTO.results as result>
 	 			<div class="bodyResults">
 					<div class="flag" >
@@ -225,7 +223,7 @@ doAjaxSearch = function(formName){
 					<#if result.openstreetmap_id??><@s.text name="global.openstreetmapId"/> : ${result.openstreetmap_id?c};<br/></#if>
 					<#if result.population??><@s.text name="global.population"/> : ${result.population};<br/></#if>
 					<#if result.elevation??><@s.text name="global.elevation"/> : ${result.elevation} m<br/></#if>
-					<#if result.one_way?? && result.length??>
+					<#if result.one_way??>
 							<#if result.one_way>
 								<@s.text name="street.oneway"/>
 							<#else>
@@ -325,8 +323,7 @@ doAjaxSearch = function(formName){
 				 <@s.text name="search.requestTime"/> ${geolocResponseDTO.QTime/1000}  <@s.text name="search.secondUnit"/>. </div>
 				<#if geolocResponseDTO.result.size()!=0>
 				<br/>
-				<@s.url id="showAllOnMapsURL" value="geoloc/geolocsearch" includeParams="all" forceAddSchemeHostAndPort="true" escapeAmp="false" />			
-			&nbsp;&nbsp;<a href="http://maps.google.fr/maps?q=${showAllOnMapsURL?url('UTF-8')}%26format%3DATOM" target="_blank"><img src="/images/map_go.png" alt="map"/> <@s.text name="search.viewResultsOnMap"/></a>
+				
 					<#list geolocResponseDTO.result as result>
 	 				<div class="bodyResults">
 						<div class="flag" >
@@ -653,6 +650,7 @@ toggleAddressForm = function(structured){
 						  						<@s.param name="gid" value="${result.id?c}" />
 												<@s.param name="lat" value="${result.lat?c}" />
 												<@s.param name="lng" value="${result.lng?c}" />
+												<@s.param name="housenumber" value="${result.houseNumber}" />
 						 					</@s.url>
 										<#else>
 											<@s.url id="displayURL" action="displaystreet" includeParams="none" namespace="/public" >
@@ -667,7 +665,7 @@ toggleAddressForm = function(structured){
 
 <#if result.streetName??>${result.streetName?cap_first}<#else><@s.text name="global.street.noname" /></#if><#if result.houseNumber??> ${result.houseNumber}</#if><#if result.city??>, ${result.city}</#if><#if result.id?? && result.id!=0 ></a></#if>  
 											<#else>
-											<#if result.houseNumber??>${result.houseNumber} </#if><#if result.streetName??>${result.streetName?cap_first}<#else><@s.text name="global.street.noname" /></#if><#if result.city??>, ${result.city}</#if><#if result.id?? && result.id!=0 ></a></#if>  
+											<#if result.formatedPostal??>${result.formatedPostal} </#if><#if result.id?? && result.id!=0 ></a></#if>  
 											</#if>
 											<#else>
 												<@s.text name="user.address.address" />
@@ -689,6 +687,7 @@ toggleAddressForm = function(structured){
 
 						<div class="summary">
 							<#if result.confidence?? ><li><@s.text name="address.confidence"/> : ${result.confidence}</li></#if>
+							<#if result.formatedFull??><li><@s.text name="global.formatedFull"/> : ${result.formatedFull}</li></#if>
 							<#if result.lat??><li><@s.text name="global.latitude"/> : ${result.lat?c}</li></#if>
 							<#if result.lng??><li><@s.text name="global.longitude"/> : ${result.lng?c}</li></#if>
 							<#if result.name??><li><@s.text name="global.name"/> : ${result.name}</li></#if>
@@ -703,6 +702,11 @@ toggleAddressForm = function(structured){
 							<#if result.city??><li><@s.text name="global.city"/> :  ${result.city}</li></#if>
 							<#if result.zipCode??><li><@s.text name="global.zipCode"/> :  ${result.zipCode}</li></#if>
 							<#if result.state?? ><li><@s.text name="address.state"/> : ${result.state}</li></#if>
+							<#if result.adm1Name??><li><@s.text name="global.adm1name"/> : ${result.adm1Name}<br/></li></#if>
+							<#if result.adm2Name??><li><@s.text name="global.adm2name"/> : ${result.adm2Name}<br/></li></#if>
+							<#if result.adm3Name??><li><@s.text name="global.adm3name"/> : ${result.adm3Name}<br/></li></#if>
+							<#if result.adm4Name??><li><@s.text name="global.adm4name"/> : ${result.adm4Name}<br/></li></#if>
+							<#if result.adm5Name??><li><@s.text name="global.adm5name"/> : ${result.adm5Name}<br/></li></#if>
 							<#if result.prefecture?? ><li><@s.text name="address.prefecture"/> : ${result.prefecture}</li></#if>
 							<#if result.district?? ><li><@s.text name="address.district"/> : ${result.district}</li></#if>
 							<#if result.quarter?? ><li><@s.text name="address.quarter"/> : ${result.quarter}</li></#if>
@@ -758,8 +762,7 @@ toggleAddressForm = function(structured){
 				 <@s.text name="search.requestTime"/> ${streetResponseDTO.QTime/1000}  <@s.text name="search.secondUnit"/>. </div>
 				<#if streetResponseDTO.result.size()!=0>
 				<br/>
-				<@s.url id="showAllOnMapsURL" value="/street/streetsearch" includeParams="all" forceAddSchemeHostAndPort="true" escapeAmp="false" />			
-			&nbsp;&nbsp;<a href="http://maps.google.fr/maps?q=${showAllOnMapsURL?url('UTF-8')}%26format%3DATOM" target="_blank"><img src="/images/map_go.png" alt="map"/> <@s.text name="search.viewResultsOnMap"/></a>
+				
 					<#list streetResponseDTO.result as result>
 	 				<div class="bodyResults">
 					
@@ -986,7 +989,7 @@ toggleAddressForm = function(structured){
 				     		map = L.map('leafletmap').setView([lat, lng], ${zoom});
 					}
 					var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-					var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+					var osmAttrib='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://www.gisgraphy.com/attributions.html">attributions</a> | geocoding by <a href="http://www.gisgraphy.com">Gisgraphy</a>';
 					var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 20, attribution: osmAttrib});
 					map.addLayer(osm);
 					

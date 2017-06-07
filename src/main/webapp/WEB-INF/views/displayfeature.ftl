@@ -27,9 +27,9 @@
 					
 					<div class="separator"><hr/></div>
 					<@gisgraphysearch.leafletMap width="500" heigth="500" 
-						googleMapAPIKey='' CSSClass="leafletmap" zoom=11 />
+						googleMapAPIKey='' CSSClass="leafletmap" zoom=18 />
 					<#if result.google_map_url?? && result.openstreetmap_map_url??><img src="images/world_link.png" alt="Maps links " />&nbsp;<a href="${result.google_map_url}" class="greenlink" target="gisgraphyMap"><@s.text name="global.viewOnGoogleMap"/></a> | <a href="${result.openstreetmap_map_url}" class="greenlink" target="gisgraphyMap"><@s.text name="global.viewOnOpenStreetmapMap"/></a> | </#if>
-					  <@s.url id="proximitySearchUrl" action="ajaxgeolocsearch!search" forceAddSchemeHostAndPort="true" includeParams="none" >
+					  <@s.url id="proximitySearchUrl" action="ajaxgeolocsearch!search" forceAddSchemeHostAndPort="false" includeParams="none" >
 			  			<@s.param name="lat" value="${result.lat?c}" />
 			  			<@s.param name="lng" value="${result.lng?c}" />
 			 		</@s.url>
@@ -40,8 +40,17 @@
 					<li><@s.text name="global.longitude"/> : ${result.lng?c}</li>
 					<li><@s.text name="global.placetype"/> : ${result.placetype}</li>
 					<#if result.feature_class?? && result.feature_code??><li><@s.text name="global.typeDescription"/> : <@s.text name="${result.feature_class}_${result.feature_code}"/></li></#if>
+fullyQualifiedName
 					<li><@s.text name="global.name"/> : ${result.name}</li>
+					
+					<#if result.label_postal??><li><@s.text name="global.labelpostal"/> : ${result.label_postal}</li></#if>
+					<#if result.fully_qualified_name??><li><@s.text name="global.fullyQualifiedName"/> : ${result.fully_qualified_name}</li></#if>
 					<li><@s.text name="global.FeatureId"/> : ${result.feature_id?c}</li>
+					<#if result.is_in??><@s.text name="global.is.in"/> : ${result.is_in}<br/></#if>
+					<#if result.is_in_place??><@s.text name="global.is.inplace"/> : ${result.is_in_place}<br/></#if>
+					<#if result.is_in_adm??><@s.text name="global.is.inadm"/> : ${result.is_in_adm}<br/></#if>
+					<#if result.is_in_zip??  && result.is_in_zip.size()!=0 ><@s.text name="global.is.inzip"/> : ${result.is_in_zip}<br/></#if>
+					<#if result.zipcode??><@s.text name="global.zipCode"/> : ${result.zipcode}<br/></#if>
 					<#if result.openstreetmap_id??><@s.text name="global.openstreetmapId"/> : ${result.openstreetmap_id?c};<br/></#if>
 					<#if result.amenity??><@s.text name="global.amenity"/> : ${result.amenity};<br/></#if>
 					<#if result.feature_class?? && result.feature_code??><li><@s.text name="global.FeatureClass"/> : ${result.feature_class}</li>
@@ -68,17 +77,36 @@
 					<#if result.postal_code_mask??><li><@s.text name="global.postal_code_mask"/> : ${result.postal_code_mask}</li></#if>
 					<#if result.postal_code_regex??><li><@s.text name="global.postal_code_regex"/> : ${result.postal_code_regex}</li></#if>
 					<#if result.phone_prefix??><li><@s.text name="global.phone_prefix"/> : ${result.phone_prefix}</li></#if>
-					<#if result.spoken_languages??><li><@s.text name="global.spoken_languages"/> : ${result.spoken_languages}</li></#if>
+					<#if result.spoken_languages?? && result.spoken_languages.size()!=0 ><li><@s.text name="global.spoken_languages"/> : ${result.spoken_languages}</li></#if>
 					<#if result.tld??><li><@s.text name="global.tld"/> : ${result.tld}</li></#if>
 					<#if result.capital_name??><li><@s.text name="global.capital_name"/> : ${result.capital_name}</li></#if>
 					<#if result.area??><li><@s.text name="global.area"/> : ${result.area} km²</li></#if>
 					<#if result.level??><li><@s.text name="global.level"/> : ${result.level}</li></#if>
-					<#if result.street_type??><li><@s.text name="${result.street_type}" /></li></#if>
+					<#if result.street_type??><li><@s.text name="global.streettype"/><@s.text name="${result.street_type}" /></li></#if>
+					<#if result.street_ref??><li><@s.text name="global.streetref"/><@s.text name="${result.street_ref}" /></li></#if>
+					<#if result.one_way??>
+							<#if result.one_way>
+								<@s.text name="street.oneway"/>
+							<#else>
+								<img src="/images/twoway.png" class="imgAlign" alt="<@s.text name="global.street.way"/>"/>
+								<@s.text name="street.twoway"/>
+							</#if>
+						<br/><br/>
+					</#if>
+					<#if result.lanes??><li><@s.text name="global.lanes"/> : ${result.lanes}</li></#if>
+						<#if result.toll??><li><@s.text name="global.toll"/> : ${result.toll}</li></#if>
+						<#if result.surface??><li><@s.text name="global.surface"/> : ${result.surface}</li></#if>
+						<#if result.max_speed??><li><@s.text name="global.maxspeed"/> : ${result.max_speed}</li></#if>
+						<#if result.max_speed_backward??><li><@s.text name="global.maxspeedbackward"/> : ${result.max_speed_backward}</li></#if>
+						<#if result.speed_mode??><li><@s.text name="global.speedmode"/> : ${result.speed_mode}</li></#if>
+						<#if result.azimuth_tart??><li><@s.text name="global.azimuthstart"/> : ${result.azimuth_tart} °</li></#if>
+						<#if result.azimuth_end??><li><@s.text name="global.azimuthend"/> : ${result.azimuth_end} °</li></#if>
 					</ul>
 					<br/>
-
-					<@s.text name="global.alternateNames"/> :
 					<br/>
+<br/><br/><br/>
+					<br/>
+					<@s.text name="global.alternateNames"/> :
 					<p class="quote">
 					<@s.iterator value="result.name_alternates" status="name_wo_lang_status" id="name_alternate">
 							${name_alternate} <@s.if test="!#name_wo_lang_status.last"> - </@s.if> 

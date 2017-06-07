@@ -87,6 +87,10 @@ public class DisplayStreetAction extends ActionSupport implements GoogleMapApiKe
 	private String lat;
 
 	private String lng;
+	
+	private String housenumber;
+
+	
 
 	public static final String ERROR = "error";
 
@@ -255,6 +259,21 @@ public class DisplayStreetAction extends ActionSupport implements GoogleMapApiKe
 
 	public void setLng(String lng) {
 		this.lng = lng;
+	}
+	
+	/**
+	 * @return the housenumber
+	 */
+	public String getHousenumber() {
+		return housenumber;
+	}
+
+
+	/**
+	 * @param housenumber the housenumber to set
+	 */
+	public void setHousenumber(String housenumber) {
+		this.housenumber = housenumber;
 	}
 
 
