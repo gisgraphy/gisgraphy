@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import sun.net.www.http.Hurryable;
+
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
@@ -85,6 +87,10 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	private static final String HASH_RESTART = null;
 
 	private static final Pattern CORRECT_LINE_PATTERN = Pattern.compile(",\"([^\"]+)\",");
+	
+	private static Pattern CASA_PATTERN = Pattern.compile(".*casa\\s*([0-9]{1,3}).*",Pattern.CASE_INSENSITIVE);
+
+	private Pattern COUNTRY_EXTRACTION_PATTERN=Pattern.compile("(..):");
 
 	//the fulltext has to be greater than the db one since the fulltext use boundingbox nd midle point (db use cross and can be lower)
 	public static final long DEFAULT_FULLTEXT_SEARCH_DISTANCE = 5000L;
@@ -92,7 +98,16 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	protected static final long DEFAULT_SEARCH_DISTANCE = 1000L;
 
 	protected static final Logger logger = LoggerFactory.getLogger(OpenAddressesSimpleImporter.class);
+	
+	protected String lastStreetName=null;
+	protected Point lastPoint = null;
+	
+	protected OpenStreetMap lastCreatedStreet;
 
+	protected String lasthash="?";
+	protected String currentHash="?";
+
+	protected boolean notYetThere = true;
 
 	protected final static Output MEDIUM_OUTPUT = Output.withDefaultFormat().withStyle(OutputStyle.MEDIUM);
 
@@ -170,17 +185,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		return 11;
 	}
 
-	protected String lastStreetName=null;
-	protected Point lastPoint = null;
-
-	protected String lasthash="?";
-	protected String currentHash="?";
-
-	protected boolean notYetThere = true;
-
-
-	private Pattern COUNTRY_EXTRACTION_PATTERN=Pattern.compile("(..):");
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -205,12 +210,17 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 			logger.error("some fields are not present for line "+line);
 			return;
 		};
-
-		if (isUnWantedHouseNumber(fields[2])){
-			logger.warn("invalid house number '"+fields[2]+"'for line "+line);
-			return;
+		String cleanedNumber = cleanNumber(fields[2]);
+		String housename = null;
+		if (!isEmptyField(fields,4, false)){
+			housename=fields[4].trim();
 		}
-		String cleanedNumber= cleanNumber(fields[2]);
+		if (isUnWantedHouseNumber(fields[2])){
+			logger.warn("invalid house number '"+fields[2]+"' for line "+line);
+			if (housename!=null && cleanedNumber ==null){
+				cleanedNumber = cleanNumber(extractCasaNumber(housename));
+			}
+		} 
 		if (cleanedNumber==null){
 			return;
 		}
@@ -228,6 +238,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 			lasthash = currentHash;
 			currentHash = fields[10];
 		}
+		
 		//by specifying hash restart we allow to re run this importer from the line where the hash is equals to hash restart
 		if (HASH_RESTART==null){
 			notYetThere=false;
@@ -261,19 +272,38 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 			}
 		} else {
 			street= createStreet(fields);
-			openStreetMapDao.save(street);
+			if (street!=null && street.getId()==null){
+				logger.debug("lastCreatedStreet need to be saved "+lastCreatedStreet);
+				openStreetMapDao.save(street);
+			}else {
+				logger.debug("lastCreatedStreet is already saved : ignoring save");
+			}
 		}
 		if (!isEmptyField(fields, 8, false)){
 			street.setZipCode(fields[8]);
 		} 
-
+		openStreetMapDao.save(street);
+		street.setCountryCode(countryCode);
 		HouseNumber hn = new HouseNumber(cleanedNumber,location);
+		hn.setName(housename);
 		hn.setSource(GISSource.OPENADDRESSES);
 		street.addHouseNumber(hn);
 		houseNumberDao.save(hn);
 
+		logger.debug(currentHash+ " : have save "+hn);
+		
 		lastPoint= location;
 		lastStreetName = streetName;
+	}
+
+	protected String extractCasaNumber(String housename) {
+		if (housename!=null){
+		Matcher m = CASA_PATTERN.matcher(housename);
+		if (m.find()){
+			return  m.group(1);
+		}
+		}
+		return null;
 	}
 
 	protected String correctStreetName(String streetName,String countryCode){
@@ -285,13 +315,28 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		}
 		return null;
 	}
+	
+	public boolean isSameSearch(String streetName, Point location) {
+		return StringHelper.isSameName(lastStreetName, streetName) && lastPoint!=null && location!=null && GeolocHelper.distance(location, lastPoint)<DEFAULT_SEARCH_DISTANCE;
+	}
+
+	
+	public boolean isSameStreet(String streetName, Point location,OpenStreetMap lastStreet) {
+		if (lastStreet!=null){
+		boolean same = StringHelper.isSameName(lastStreet.getName(), streetName) && lastStreet.getLocation()!=null && location!=null && GeolocHelper.distance(location, lastStreet.getLocation())<DEFAULT_SEARCH_DISTANCE;
+			logger.debug("check same street "+same +" for "+streetName+" "+location+" "+lastStreet);
+			return same;
+		} else {
+			return false;
+		}
+	}
 
 
 	protected OpenStreetMap createStreet(String[] fields) {
 		if (fields!=null && fields.length==getNumberOfColumns() ){
 
 
-			logger.error("will create street for "+dumpFields(fields));
+			logger.debug("will create street for "+dumpFields(fields));
 			OpenStreetMap street = new OpenStreetMap();
 			Point location;
 			try {
@@ -303,8 +348,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 			String countryCode =null;
 			if (fields.length>=10 && !isEmptyField(fields, 10, false)){
 				countryCode= extractCountrycode(fields[10]);
-				lasthash = currentHash;
-				currentHash = fields[10];
+				street.setCountryCode(countryCode);
 			}
 			street.setGid(idGenerator.getNextGId());
 			street.setSource(GISSource.OPENADDRESSES);
@@ -317,27 +361,37 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 				StringHelper.updateOpenStreetMapEntityForIndexation(street);
 			}
 			street.setLocation(location);
-			/*if (!isEmptyField(fields,5, false)){
+			
+			if (isSameStreet(streetName, location,lastCreatedStreet)){
+				logger.debug(currentHash+ " lastCreatedStreet is the same "+streetName+" around "+location+" : "+lastCreatedStreet);
+				return lastCreatedStreet;
+			} else {
+				logger.debug(currentHash+ " lastCreatedStreet is not the same for "+streetName+" around "+location+" : "+lastCreatedStreet);
+			}
+			openStreetMapImporterHelper.setIsInFields(street);
+			//fallback on fields if not filled
+			if (!isEmptyField(fields,5, false) && street.getIsIn()==null){
 			street.setIsIn(fields[5]);
 		}
-		if (!isEmptyField(fields,6, false)){
+		if (!isEmptyField(fields,6, false) && street.getIsInPlace()==null){
 			street.setIsInPlace(fields[6]);
 		}
-		if (!isEmptyField(fields,7, false)){
+		if (!isEmptyField(fields,7, false) && street.getIsInAdm()==null){
 			street.setIsInAdm(fields[7]);
 		}
-		street.setCountryCode(countryCode);
 		if (!isEmptyField(fields,8, false)){
 			street.addIsInZip(fields[8]);
 			street.setZipCode(fields[8]);
-		}*/
-			openStreetMapImporterHelper.setIsInFields(street);
+		}
+		street.setCountryCode(countryCode);
 			if (street.getName() !=null){
 				street.setAlternateLabels(labelGenerator.generateLabels(street));
 				street.setLabel(labelGenerator.generateLabel(street));
 				street.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(street, false));
 				street.setLabelPostal(labelGenerator.generatePostal(street));
 			}
+			logger.debug("lastCreatedStreet="+lastCreatedStreet);
+			lastCreatedStreet =street;
 			return street;
 		} else {
 			return null;
@@ -484,7 +538,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 			//logger.warn("findNearestStreet : getNearestByIds returns "+osm+" for "+streetName);
 		}
 		if (resultsSize==0){
-			return createStreet(fields);
+			return null;
 		}
 
 		return osm;
@@ -526,7 +580,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	 */
 	@Override
 	public boolean shouldBeSkipped() {
-		return importerConfig.isOpenaddressesImporterEnabled();
+		return !importerConfig.isOpenaddressesImporterEnabled();
 	}
 
 	/*

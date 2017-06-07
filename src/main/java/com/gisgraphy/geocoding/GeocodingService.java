@@ -929,10 +929,9 @@ public class GeocodingService implements IGeocodingService {
 					address.setLng(solrResponseDto.getLng());
 				}
 				if (solrResponseDto.getOpenstreetmap_id()!=null){
-					address.setId(solrResponseDto.getOpenstreetmap_id());
-				} else {
-					address.setId(solrResponseDto.getFeature_id());
+					address.setSourceId(solrResponseDto.getOpenstreetmap_id());
 				}
+				address.setId(solrResponseDto.getFeature_id());
 				String countryCode = solrResponseDto.getCountry_code();
 				address.setCountryCode(countryCode);
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Adm.class.getSimpleName())) {

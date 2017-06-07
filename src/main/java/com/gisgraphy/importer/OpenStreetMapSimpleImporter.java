@@ -118,6 +118,28 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
         idGenerator.sync();
     }
     
+    @Override
+    //TODO test
+    protected void tearDown() {
+    	logger.error("start teardown");
+    	super.tearDown();
+    	FullTextSearchEngine.disableLogging=false;
+    	GeolocSearchEngine.disableLogging=false;
+    	 String savedMessage = this.statusMessage;
+     	try {
+     		this.statusMessage = internationalisationService.getString("import.message.createIndex");
+     		openStreetMapDao.createSpatialIndexes();
+     		//this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
+     		//solRSynchroniser.optimize();
+     	} catch (Exception e) {
+     		logger.error("an error occured during spatial index creation, we ignore it but you have to manually run it to have good performances : "+e.getMessage(),e);
+     	} finally{
+         	this.statusMessage=savedMessage;
+         }
+    	logger.error("end teardown");
+    }
+    
+    
 
     /* (non-Javadoc)
      * @see com.gisgraphy.domain.geoloc.importer.AbstractImporterProcessor#getFiles()
@@ -706,27 +728,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
     
    
     
-    @Override
-    //TODO test
-    protected void tearDown() {
-    	logger.error("start teardown");
-    	super.tearDown();
-    	FullTextSearchEngine.disableLogging=false;
-    	GeolocSearchEngine.disableLogging=false;
-    	String savedMessage = this.statusMessage;
-    	try {
-    		this.statusMessage = internationalisationService.getString("import.message.createIndex");
-    		openStreetMapDao.createSpatialIndexes();
-    		this.statusMessage = internationalisationService.getString("import.fulltext.optimize");
-    		//solRSynchroniser.optimize();
-    	} catch (Exception e) {
-    		logger.error("an error occured during spatial index creation, we ignore it but you have to manually run it to have good performances : "+e.getMessage(),e);
-    	} finally{
-        	this.statusMessage=savedMessage;
-        }
-    	logger.error("end teardown");
-    }
-    
+   
     /**
      * overidded because alternatenames can be null so number of fields can differ
      * 

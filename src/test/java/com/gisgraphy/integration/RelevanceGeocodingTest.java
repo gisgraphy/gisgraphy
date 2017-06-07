@@ -2355,8 +2355,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 	private boolean isFirstCorrectById(long expectedOpenstreetmapId,List<Address> actual, String rawAddress){
 		if(actual.size()>0 && actual.get(0)!=null){
 			Address address = actual.get(0);
-			if (expectedOpenstreetmapId != address.getId()){
-				Assert.fail(rawAddress +": expected "+expectedOpenstreetmapId+ " but was " +address.getId()+" / "+address);
+			if (address.getSourceId() != null && expectedOpenstreetmapId != address.getSourceId()){
+				Assert.fail(rawAddress +": expected "+expectedOpenstreetmapId+ " but was " +address.getSourceId()+" / "+address);
 				return false;
 			} 
 			return true;
@@ -2392,8 +2392,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			for(Address address: actual){
-				if (address!=null){
-					ids.add(address.getId());
+				if (address!=null && address.getSourceId()!=null){
+					ids.add(address.getSourceId());
 				}
 			}
 			
@@ -2413,8 +2413,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			for(Address address: actual){
-				if (address!=null){
-					ids.add(address.getId());
+				if (address!=null && address.getSourceId()!=null){
+					ids.add(address.getSourceId());
 				}
 			}
 			
@@ -2429,7 +2429,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		return true;
 	}
 	
-	private boolean isFulltextCorrectByIds(Long[] expectedOpenstreetmapIds,List<SolrResponseDto> actual, String rawAddress){
+	private boolean isFulltextCorrectByOSMIds(Long[] expectedOpenstreetmapIds,List<SolrResponseDto> actual, String rawAddress){
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			for(SolrResponseDto address: actual){
@@ -2461,7 +2461,9 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			Address address = actual.get(0);
-			ids.add(address.getId());
+			if (address.getSourceId()!=null){
+				ids.add(address.getSourceId());
+			}
 			
 			for (long expectedOpenstreetmapId:expectedOpenstreetmapIds){
 				if (ids.contains(expectedOpenstreetmapId)){
@@ -2493,8 +2495,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 	}
 	
 	private boolean isFirstCorrectByIds(long[] expectedOpenstreetmapIds,List<Address> actual, String rawAddress){
-		if(actual.size()>0 && actual.get(0)!=null){
-			Long actualId = actual.get(0).getId(); 
+		if(actual.size()>0 && actual.get(0)!=null && actual.get(0).getSourceId()!=null){
+			Long actualId = actual.get(0).getSourceId(); 
 			
 			for (long expectedOpenstreetmapId:expectedOpenstreetmapIds){
 				if (actualId==expectedOpenstreetmapId){

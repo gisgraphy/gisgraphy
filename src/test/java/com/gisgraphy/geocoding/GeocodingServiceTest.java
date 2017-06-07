@@ -1515,7 +1515,8 @@ public class GeocodingServiceTest {
 	Address address = addressResultsDto.getResult().get(0);
 	Assert.assertEquals("latitude is not correct", street.getLat_admin_centre(), address.getLat());
 	Assert.assertEquals("longitude is not correct", street.getLng_admin_centre(), address.getLng());
-	Assert.assertEquals("id is not correct and should be osm one", street.getOpenstreetmap_id(), address.getId());
+	Assert.assertEquals("sourceid is not correct and should be osm one", street.getOpenstreetmap_id(), address.getSourceId());
+	Assert.assertEquals("id is not correct and should be osm one", street.getFeature_id(), address.getId());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STREET, address.getGeocodingLevel());
 	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
 	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
@@ -1612,7 +1613,8 @@ public class GeocodingServiceTest {
 	Address address = addressResultsDto.getResult().get(0);
 	Assert.assertEquals("latitude is not correct, it should be the house number one", 5D, address.getLat(),0.001);
 	Assert.assertEquals("longitude is not correct, it should be the house number one", 4D, address.getLng(),0.001);
-	Assert.assertEquals("id is not correct and should be osm one", street.getOpenstreetmap_id(), address.getId());
+	Assert.assertEquals("sourceid is not correct and should be osm one", street.getOpenstreetmap_id(), address.getSourceId());
+	Assert.assertEquals("id is not correct and should be osm one", street.getFeature_id(), address.getId());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.HOUSE_NUMBER, address.getGeocodingLevel());
 	Assert.assertEquals("street name is not correct", street.getName(), address.getStreetName());
 	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
@@ -1657,8 +1659,11 @@ public class GeocodingServiceTest {
 	Assert.assertEquals(2, addressResultsDto.getResult().size());
 	Address address1 = addressResultsDto.getResult().get(0);
 	Address address2 = addressResultsDto.getResult().get(1);
-	Assert.assertEquals("id is not correct for address 1", street.getOpenstreetmap_id(), address1.getId());
-	Assert.assertEquals("id is not correct for address 2", city.getOpenstreetmap_id(), address2.getId());
+	Assert.assertEquals("id is not correct for address 1", street.getFeature_id(), address1.getId());
+	Assert.assertEquals("id is not correct for address 2", city.getFeature_id(), address2.getId());
+	
+	Assert.assertEquals("source id is not correct for address 1", street.getOpenstreetmap_id(), address1.getSourceId());
+	Assert.assertEquals("source id is not correct for address 2", city.getOpenstreetmap_id(), address2.getSourceId());
 	
 	
     }
@@ -1678,7 +1683,8 @@ public class GeocodingServiceTest {
 	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("id is not correct", city.getOpenstreetmap_id(), address.getId());
+	Assert.assertEquals("id is not correct", city.getFeature_id(), address.getId());
+	Assert.assertEquals("id is not correct", city.getOpenstreetmap_id(), address.getSourceId());
 	Assert.assertEquals("latitude is not correct, admin centre should be prefered", city.getLat_admin_centre(), address.getLat());
 	Assert.assertEquals("longitude is not correct, admin centre should be prefered", city.getLng_admin_centre(), address.getLng());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY, address.getGeocodingLevel());
@@ -1708,7 +1714,8 @@ public class GeocodingServiceTest {
 	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	Address address = addressResultsDto.getResult().get(0);
-	Assert.assertEquals("id is not correct", citySubdivision.getOpenstreetmap_id(), address.getId());
+	Assert.assertEquals("sourceid is not correct and should be osm one", citySubdivision.getOpenstreetmap_id(), address.getSourceId());
+	Assert.assertEquals("id is not correct and should be osm one", citySubdivision.getFeature_id(), address.getId());
 	Assert.assertEquals("latitude is not correct, admin centre should be prefered", citySubdivision.getLat_admin_centre(), address.getLat());
 	Assert.assertEquals("longitude is not correct, admin centre should be prefered", citySubdivision.getLng_admin_centre(), address.getLng());
 	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.CITY_SUBDIVISION, address.getGeocodingLevel());
@@ -1738,7 +1745,8 @@ public class GeocodingServiceTest {
     	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
     	Assert.assertEquals(1, addressResultsDto.getResult().size());
     	Address address = addressResultsDto.getResult().get(0);
-    	Assert.assertEquals("id is not correct", adm.getOpenstreetmap_id(), address.getId());
+    	Assert.assertEquals("id is not correct", adm.getFeature_id(), address.getId());
+    	Assert.assertEquals("source id is not correct", adm.getOpenstreetmap_id(), address.getSourceId());
     	Assert.assertEquals("latitude is not correct, admin centre should be prefered", adm.getLat_admin_centre(), address.getLat());
     	Assert.assertEquals("longitude is not correct, admin centre should be prefered", adm.getLng_admin_centre(), address.getLng());
     	Assert.assertEquals("geocoding level is not correct", GeocodingLevels.STATE, address.getGeocodingLevel());

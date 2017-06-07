@@ -263,7 +263,7 @@ public class BasicAddressFormater {
 				//will be managed in a separate part
 			}
 			else if (c == '1'){
-				part = joinAndSkipNulls(" ",address.getHouseNumber(), address.getHouseNumberInfo());
+				part = joinAndSkipNulls(" ",address.getName(), address.getHouseNumber(), address.getHouseNumberInfo());
 				if (!"".equals(part) && current_item !=1  && lineIsNotEmpty){
 					part=sep+" "+part;
 				}

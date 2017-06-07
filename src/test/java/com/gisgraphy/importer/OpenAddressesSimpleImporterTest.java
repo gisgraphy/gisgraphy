@@ -117,4 +117,20 @@ public class OpenAddressesSimpleImporterTest {
 		
 	}
 	
+	@Test
+	public void extractCasaNumber(){
+		OpenAddressesSimpleImporter importer = new OpenAddressesSimpleImporter();
+		Assert.assertEquals(null,importer.extractCasaNumber(null));
+		Assert.assertEquals(null,importer.extractCasaNumber("foo"));
+		
+		Assert.assertEquals("3",importer.extractCasaNumber("casa3"));
+		Assert.assertEquals("3",importer.extractCasaNumber("casa 3"));
+		
+		Assert.assertEquals("32",importer.extractCasaNumber("casa  32"));
+		
+		Assert.assertEquals("32",importer.extractCasaNumber("CASA  32"));
+		
+		Assert.assertEquals("32",importer.extractCasaNumber(" lot 4 CASA  32"));
+	}
+	
 }

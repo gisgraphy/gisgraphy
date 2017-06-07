@@ -6,12 +6,12 @@
     <Menus>
         <Menu name="MainMenu" title="mainMenu.title" page="/mainMenu.html" roles="ROLE_ADMIN,ROLE_USER"/>
         <Menu name="UserMenu" title="menu.user" description="User Menu" page="/editProfile.html" roles="ROLE_ADMIN,ROLE_USER"/>
-         <Menu name="ImportMenu" title="import.import" description="Import Menu" roles="ROLE_ADMIN" width="120" page="/admin/users.html">
+         <Menu name="ImportMenu" title="import.import" description="Import Menu" roles="ROLE_ADMIN" width="120px" page="/admin/users.html">
          	<Item name="runImporter" title="menu.admin.import" page="/admin/importconfirm.html"/>
          	<Item name="statusImporter" title="menu.admin.import.status" page="/admin/import!status.html"/>
          	<Item name="resetImport" title="import.reset" page="/admin/resetimport.html"/>
         </Menu>
-        <Menu name="AdminMenu" title="menu.admin" description="Admin Menu" roles="ROLE_ADMIN" width="120" page="/admin/users.html">
+        <Menu name="AdminMenu" title="menu.admin" description="Admin Menu" roles="ROLE_ADMIN" width="140px" page="/admin/users.html">
          	<Item name="runImporter" title="menu.admin.import" page="/admin/importconfirm.html"/>
          	<Item name="statusImporter" title="menu.admin.import.status" page="/admin/import!status.html"/>
          	<Item name="resetImport" title="import.reset" page="/admin/resetimport.html"/>
@@ -23,7 +23,12 @@
             <Item name="FlushCache" title="menu.flushCache" page="/admin/flushCache.html"/>-->
             <Item name="stats" title="stats.title" page="/admin/stats.html"/>
         </Menu>
-         <Menu name="Premium" title="premium" description="Premium Menu" roles="ROLE_ADMIN,ROLE_USER" width="120" page="https://premium.gisgraphy.com"/>
+         <Menu name="PremiumMenu" title="premium services" description="Premium Menu" roles="ROLE_ADMIN,ROLE_USER" width="200px;color:#FF0000" location="https://premium.gisgraphy.com">
+		<Item name="webservices" title="Premium webservices" location="https://premium.gisgraphy.com/products#sla"/>
+         	<Item name="dump" title="Gisgraphy dump" location="https://premium.gisgraphy.com/products#dump"/>
+		<Item name="osmdata" title="Openstreetmap data Extraction" location="https://premium.gisgraphy.com/products#data"/>
+		<Item name="consulting" title="Consulting" location="https://premium.gisgraphy.com/products#consulting"/>
+	</Menu>
         <Menu name="Logout" title="user.logout" page="/logout.jsp" roles="ROLE_ADMIN,ROLE_USER"/>
     </Menus>
 </MenuConfig>

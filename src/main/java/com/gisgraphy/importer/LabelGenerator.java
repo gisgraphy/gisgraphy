@@ -742,7 +742,8 @@ public class LabelGenerator {
 		}
 		address.setGeocodingLevel(GeocodingLevels.STREET);//We set it and don't calculate it cause if streetname is null
 
-		address.setId(openStreetMap.getOpenstreetmapId());
+		address.setId(openStreetMap.getGid());
+		address.setSourceId(openStreetMap.getOpenstreetmapId());
 
 		address.setStreetRef(openStreetMap.getStreetRef());
 
@@ -860,8 +861,8 @@ public class LabelGenerator {
 		address.setFormatedFull(getFullyQualifiedName(address));
 		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
 
-		Long id= (city.getOpenstreetmapId()==null?city.getFeatureId():city.getOpenstreetmapId());
-		address.setId(id);
+		address.setId(city.getFeatureId());
+		address.setSourceId(city.getOpenstreetmapId());
 		return address;
 	}
 

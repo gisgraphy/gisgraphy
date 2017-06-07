@@ -108,9 +108,11 @@
                 top: 22px;
             }
                 ul#primary-nav ul li {
-                    border: 1px solid silver;
-                    border-bottom: 0;
+                    border-bottom: 1px solid silver;
+                   /* border-bottom: 0;
+		    border-top: 1px solid silver;*/
                     font-size: 1em;
+		    width:100%;
                 }
                     ul#primary-nav ul li ul {
                         margin-left: 149px;

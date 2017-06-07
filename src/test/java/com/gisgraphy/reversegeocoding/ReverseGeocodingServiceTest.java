@@ -126,7 +126,7 @@ public class ReverseGeocodingServiceTest {
 		EasyMock.replay(addressHelper);*/
 		
 		EasyMock.expect(openStreetMapDao.getNearestRoadFrom(searchPoint,DEFAULT_STREET_RADIUS)).andReturn(null);
-		EasyMock.expect(openStreetMapDao.getNearestFrom(searchPoint)).andReturn(osm);
+		EasyMock.expect(openStreetMapDao.getNearestFrom(searchPoint,DEFAULT_STREET_RADIUS)).andReturn(osm);
 		EasyMock.replay(openStreetMapDao);
 		
 		reverseGeocodingService.openStreetMapDao =openStreetMapDao;
@@ -172,7 +172,7 @@ public class ReverseGeocodingServiceTest {
 		
 		
 		EasyMock.expect(openStreetMapDao.getNearestRoadFrom(searchPoint,DEFAULT_STREET_RADIUS)).andReturn(null);
-		EasyMock.expect(openStreetMapDao.getNearestFrom(searchPoint)).andReturn(null);
+		EasyMock.expect(openStreetMapDao.getNearestFrom(searchPoint,DEFAULT_STREET_RADIUS)).andReturn(null);
 		EasyMock.replay(openStreetMapDao);
 		
 		reverseGeocodingService.openStreetMapDao =openStreetMapDao;
@@ -217,7 +217,7 @@ public class ReverseGeocodingServiceTest {
 		EasyMock.replay(cityDao);
 		
 		EasyMock.expect(openStreetMapDao.getNearestRoadFrom(searchPoint,DEFAULT_STREET_RADIUS)).andReturn(null);
-		EasyMock.expect(openStreetMapDao.getNearestFrom(searchPoint)).andReturn(null);
+		EasyMock.expect(openStreetMapDao.getNearestFrom(searchPoint,DEFAULT_STREET_RADIUS)).andReturn(null);
 		EasyMock.replay(openStreetMapDao);
 		
 		reverseGeocodingService.openStreetMapDao =openStreetMapDao;

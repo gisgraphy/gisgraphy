@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
  */
 public class Decompounder {
 	private Pattern p;
-	private static Pattern concatenatePattern;
+	private Pattern concatenatePattern;
 	public enum state {CONCATENATE, SEPARATE, NOT_APPLICABLE};
 	Pattern ENDING_POINT = Pattern.compile("\\.$");
 	
@@ -124,9 +124,9 @@ public class Decompounder {
 	
 	public String getOtherFormat(String str){
 		state state = getSate(str);
-		if (state==state.CONCATENATE){
+		if (state==com.gisgraphy.compound.Decompounder.state.CONCATENATE){
 			return separate(str);
-		} else if (state == state.SEPARATE){
+		} else if (state == com.gisgraphy.compound.Decompounder.state.SEPARATE){
 			return concatenate(str);
 		} else {
 			return str;

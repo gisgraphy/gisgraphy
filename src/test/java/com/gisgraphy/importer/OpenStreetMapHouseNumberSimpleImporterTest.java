@@ -164,7 +164,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 			line = "I	168365171	1796478450___0___0101000020E61000009A023EE4525350C0959C137B682F38C0_________"
 					+"1796453793___2___0101000020E610000038691A144D5350C023ADE75A6A2F38C0___600___ba_r___"
 			  +"1366275082___1___0101000020E610000068661CD94B5350C0B055270C6F2F38C0______foo___"
-			 +"1796453794___3___0101000020E6100000F38F6390605350C028A6666A6D2F38C0___698___	sname	even	";
+			 +"1796453794___3___0101000020E6100000F38F6390605350C028A6666A6D2F38C0___698___	sname	even	00	";
 			interpolation = importer.parseInterpolationHouseNumber(line);
 			Assert.assertNotNull("address inclusion is empty",interpolation);
 			Assert.assertEquals(4,interpolation.getMembers().size());
@@ -392,14 +392,14 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
 		SolrResponseDto solrResponseDto = EasyMock.createMock(SolrResponseDto.class);
 		long openstreetmapId = 233L;
-		EasyMock.expect(solrResponseDto.getOpenstreetmap_id()).andStubReturn(openstreetmapId);
+		EasyMock.expect(solrResponseDto.getFeature_id()).andStubReturn(openstreetmapId);
 		EasyMock.replay(solrResponseDto);
 		results.add(solrResponseDto);
 		
 		
 		SolrResponseDto solrResponseDto2 = EasyMock.createMock(SolrResponseDto.class);
 		long openstreetmapId2 = 344L;
-		EasyMock.expect(solrResponseDto2.getOpenstreetmap_id()).andStubReturn(openstreetmapId2);
+		EasyMock.expect(solrResponseDto2.getFeature_id()).andStubReturn(openstreetmapId2);
 		EasyMock.replay(solrResponseDto2);
 		results.add(solrResponseDto2);
 		
@@ -422,7 +422,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(openstreetmapId);
 		ids.add(openstreetmapId2);
-		EasyMock.expect(osmDaoMock.getNearestByosmIds(point, ids )).andStubReturn(osm);
+		EasyMock.expect(osmDaoMock.getNearestByGIds(point, ids )).andStubReturn(osm);
 		EasyMock.expect(osmDaoMock.save(osm)).andReturn(osm);
 		EasyMock.replay(osmDaoMock);
 		

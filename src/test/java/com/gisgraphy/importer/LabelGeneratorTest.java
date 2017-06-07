@@ -26,7 +26,9 @@ import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.geoloc.entity.Restaurant;
 import com.gisgraphy.domain.geoloc.entity.ZipCode;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
+import com.gisgraphy.helper.DistancePointDto;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.OrthogonalProjection;
 import com.gisgraphy.reversegeocoding.HouseNumberDistance;
 import com.gisgraphy.test.GisgraphyTestHelper;
 import com.vividsolutions.jts.geom.Point;
@@ -1312,7 +1314,8 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
 		
 		Assert.assertEquals(osm.isOneWay(), address.isOneWay());
-		Assert.assertEquals(osm.getOpenstreetmapId(), address.getId());
+		Assert.assertEquals(osm.getOpenstreetmapId(), address.getSourceId());
+		Assert.assertEquals(osm.getGid(), address.getId());
 		Assert.assertEquals("streettype in osm (service,...) is not the streettype in an address",null, address.getStreetType());
 		Assert.assertEquals(osm.getLength(), address.getLength());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
@@ -1395,7 +1398,9 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
 		
 		//
-		Assert.assertEquals(GeolocHelper.distance(point, osm.getLocation()), address.getDistance().doubleValue(),0.01);
+		OrthogonalProjection orthogonalProjection = new OrthogonalProjection();
+		DistancePointDto dtp = orthogonalProjection.getPointOnLine(osm.getShape(), point);
+		Assert.assertEquals(dtp.getDistance(), address.getDistance().doubleValue(),0.01);
 		
 		
 		
@@ -1478,7 +1483,9 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(GeocodingLevels.CITY, address.getGeocodingLevel());
 		Assert.assertEquals(city.getLatitude(), address.getLat());
 		Assert.assertEquals(city.getLongitude(), address.getLng());
-		Assert.assertEquals(city.getOpenstreetmapId(), address.getId());
+		Assert.assertEquals(city.getOpenstreetmapId(), address.getSourceId());
+		Assert.assertEquals(city.getFeatureId(), address.getId());
+		
 		Assert.assertEquals(generator.getFullyQualifiedName(address), address.getFormatedFull());
 		Assert.assertEquals(formater.getEnvelopeAddress(address, DisplayMode.COMMA),address.getFormatedPostal());
 		
