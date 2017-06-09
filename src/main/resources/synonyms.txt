@@ -723,3 +723,69 @@ sint=>st,sint
 
 #
 State Rte,sr,State Route
+
+1er,Premier
+1ere,Première
+2e,Deuxième
+3e,Troisième
+4e,Quatrième
+5e,Cinquième
+6e,Sixième
+7e,Septième
+8e,Huitième
+9e,Neuvième
+10e,Dixième
+11e,Onzième
+12e,Douzième
+13e,Treizième
+14e,Quatorzième
+15e,Quinzième
+16e,Seizième
+17e,Dix-septième
+18e,Dix-huitième
+19e,Dix-neuvième
+20e,Vingtième
+Abb,Abbaye
+Agl,Agglomération
+All,Allée
+App,Appartement
+Arr,Arrondissement
+Bat,Batîment
+BP,Boîte Postale
+Ctre,Centre
+Ccal,Centre Commercial
+Ch,Chaussée
+Ch,Chemin
+Crs,Cours
+Crx,Croix
+Dr,Docteur
+Esc,Escalier
+Espl,Esplanade
+Etg,Etage
+Fbg,Faubourg
+Hte,Haute
+Hop,Hôpital
+Imm,Immeuble
+Ld,Lieu-dit
+Lot,Lotissement
+Mme,Madame
+Mlle,Mademoiselle
+Me,Maître
+Mal,Maréchal
+Mte,Montée
+Pl,Place
+Pnt,Pointe
+Pte,Porte
+Prom,Promenade
+Res,Résidence
+Rpt,Rond-Point
+Rte,Route
+RN,Route Nationale
+R,Rue
+Rlle,Ruelle
+Stes,Saintes
+Sq,Square
+Univ,Université
+Vve,Veuve
+Vlge,Village
+Za,Zone d'activité
