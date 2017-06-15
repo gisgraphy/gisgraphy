@@ -208,7 +208,6 @@ public class StringHelperTest {
     	Assert.assertTrue("with city",StringHelper.isSameName("new york city","new york"));
     	Assert.assertTrue("with city",StringHelper.isSameName("new york","new york city"));
     	
-    
     	
     	
     	Assert.assertFalse(StringHelper.isSameName("Les Chézeaux","Les grand Chézeaux"));
@@ -217,6 +216,7 @@ public class StringHelperTest {
     	Assert.assertTrue(StringHelper.isSameName("Stauffenbergstraße", "Stauffenberg straße"));
     	
     	Assert.assertFalse(StringHelper.isSameName("pas de calais", "calais",2));
+    	
     	
     	
     }

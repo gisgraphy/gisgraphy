@@ -184,4 +184,6 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
     public List<OpenStreetMap> getNearestsFrom(
 			final Point point,final boolean onlyroad,final boolean filterEmptyName, final double distance) ;
     
+    public long countByCountryCode(String countryCode);
+    
 }

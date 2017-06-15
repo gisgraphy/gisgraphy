@@ -22,6 +22,10 @@
  *******************************************************************************/
 package com.gisgraphy.domain.repository;
 
+import java.sql.SQLException;
+
+import org.hibernate.HibernateException;
+
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 
 /**
@@ -30,6 +34,16 @@ import com.gisgraphy.domain.geoloc.entity.HouseNumber;
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
 public interface IhouseNumberDao extends IDao<HouseNumber, Long> {
+	
+	/**
+     * @return the number of element in the Datastore
+     * @param countryCode the iso-3166-2 countrycode
+     * @throws HibernateException
+     *                 if thrown by the Hibernate API
+     * @throws SQLException
+     *                 if thrown by JDBC API
+     */
+	 public long countByCountryCode(String countryCode);
 
   
 

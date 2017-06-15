@@ -65,6 +65,10 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 
 	@Autowired
  IOpenStreetMapDao openStreetMapDao;
+	
+	@Autowired
+ HouseNumberDao houseNumberDao;
+    
     
  @Test
  public void testCouldNotSaveNonUniqueGID(){
@@ -883,6 +887,24 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     @Autowired
     public void setOpenStreetMapDao(IOpenStreetMapDao openStreetMapDao) {
         this.openStreetMapDao = openStreetMapDao;
+    }
+    
+    @Test
+    public void testCountByCountryCode(){
+    	HouseNumber houseNumber = GisgraphyTestHelper.createHouseNumber();
+    	OpenStreetMap street = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+    	street.setCountryCode("US");
+    	street = openStreetMapDao.save(street);
+    	//houseNumber.setStreet(street);
+    	street.addHouseNumber(houseNumber);
+    	houseNumberDao.save(houseNumber);
+    	street = openStreetMapDao.save(street);
+    	
+    	Assert.assertNotNull(houseNumber.getId());
+    	Assert.assertEquals(1,openStreetMapDao.countByCountryCode("US"));
+    	Assert.assertEquals(1,openStreetMapDao.countByCountryCode("us"));
+    	Assert.assertEquals(0,openStreetMapDao.countByCountryCode("foo"));
+    	
     }
     
 }

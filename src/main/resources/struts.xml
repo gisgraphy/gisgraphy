@@ -192,6 +192,11 @@
          <action name="donate" >
              <result name="success" type="freemarker">/WEB-INF/views/donate.ftl</result>
         </action>
+        
+         <action name="statsdatabycountry" class="com.gisgraphy.webapp.action.StatsDataAction">
+           <result name="success" type="freemarker">/WEB-INF/views/statsdatabycountry.ftl</result>
+        </action>
+        
    </package>
 
     <!-- Actions in this package will be prefixed with /admin/ -->

@@ -403,6 +403,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 			return null;
 		}else {
 
+			line = line.replaceAll("[$]", "");
 			Matcher m = CORRECT_LINE_PATTERN.matcher(line);
 			StringBuffer sb = new StringBuffer();
 			while(m.find()){

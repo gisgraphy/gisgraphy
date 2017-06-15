@@ -95,4 +95,25 @@ public class HouseNumberDaoTest extends AbstractIntegrationHttpSolrTestCase {
     	HouseNumber retrieved = houseNumberDao.get(houseNumber.getId());
     	Assert.assertNotNull(retrieved);
     }
+    
+    
+    @Test
+    public void testCountByCountryCode(){
+    	HouseNumber houseNumber = GisgraphyTestHelper.createHouseNumber();
+    	OpenStreetMap street = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+    	street.setCountryCode("US");
+    	street = openStreetMapDao.save(street);
+    	//houseNumber.setStreet(street);
+    	street.addHouseNumber(houseNumber);
+    	houseNumberDao.save(houseNumber);
+    	//street = openStreetMapDao.save(street);
+    	
+    	Assert.assertNotNull(houseNumber.getId());
+    	openStreetMapDao.flushAndClear();
+    	houseNumberDao.flushAndClear();
+    	Assert.assertEquals(1,houseNumberDao.countByCountryCode("US"));
+    	Assert.assertEquals(1,houseNumberDao.countByCountryCode("us"));
+    	Assert.assertEquals(0,houseNumberDao.countByCountryCode("foo"));
+    	
+    }
 }

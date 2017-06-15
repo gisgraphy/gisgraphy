@@ -70,6 +70,7 @@ public class DecompoudTest {
 		}
 	}
 	
+		
 	@Test
 	public void testSeparate(){
 	List<String> words = new ArrayList<String>(){ 

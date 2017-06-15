@@ -25,7 +25,10 @@
  */
 package com.gisgraphy.domain.repository;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import org.hibernate.HibernateException;
 
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.valueobject.GisFeatureDistance;
@@ -250,4 +253,13 @@ public interface IGisDao<T> extends IDao<T, java.lang.Long> {
      * @return the shape as wkt or null;
      */
     public String getShapeAsWKTByFeatureId(Long featureId);
+    
+    /**
+     * @return the number of element in the Datastore
+     * @throws HibernateException
+     *                 if thrown by the Hibernate API
+     * @throws SQLException
+     *                 if thrown by JDBC API
+     */
+    public long countByCountryCode(String countryCode);
 }

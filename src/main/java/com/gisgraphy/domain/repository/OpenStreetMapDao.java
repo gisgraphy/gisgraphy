@@ -711,6 +711,25 @@ public class OpenStreetMapDao extends GenericDao<OpenStreetMap, Long> implements
 		} 
 			return null;
 	}
+	
+	public long countByCountryCode(final String countryCode) {
+		if (countryCode!=null){
+			return ((Long) this.getHibernateTemplate().execute(
+					new HibernateCallback() {
+
+					    public Object doInHibernate(Session session)
+						    throws PersistenceException {
+						String queryString = "select count(*) from "
+							+ persistentClass.getSimpleName()+ " where countrycode='"+countryCode.toUpperCase()+"'";
+
+						Query qry = session.createQuery(queryString);
+						Long result = (Long) qry.uniqueResult();
+						return result;
+					    }
+					})).longValue();
+		}
+		return 0;
+	}
 
 
 

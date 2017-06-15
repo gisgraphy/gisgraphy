@@ -10,6 +10,7 @@
         <pattern>/struts/dojo/*</pattern> 
         <pattern>/resources/*</pattern>
  		<pattern>/*!searchpopup.html*</pattern>
+ 		<pattern>/*!*json.html*</pattern>
     </excludes>
      <decorator name="ui" page="ui.jsp">
      	<pattern>/public/*</pattern>

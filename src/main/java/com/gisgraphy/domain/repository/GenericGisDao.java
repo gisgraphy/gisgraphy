@@ -22,6 +22,7 @@
  *******************************************************************************/
 package com.gisgraphy.domain.repository;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -784,6 +785,26 @@ public class GenericGisDao<T extends GisFeature> extends
 					return (String) qry.uniqueResult();
 				    }
 				});
+	}
+
+	@Override
+	public long countByCountryCode(final String countryCode) {
+		if (countryCode!=null){
+			return ((Long) this.getHibernateTemplate().execute(
+					new HibernateCallback() {
+
+					    public Object doInHibernate(Session session)
+						    throws PersistenceException {
+						String queryString = "select count(*) from "
+							+ persistentClass.getSimpleName()+ " where countrycode='"+countryCode.toUpperCase()+"'";
+
+						Query qry = session.createQuery(queryString);
+						Long result = (Long) qry.uniqueResult();
+						return result;
+					    }
+					})).longValue();
+		}
+		return 0;
 	}
     
 

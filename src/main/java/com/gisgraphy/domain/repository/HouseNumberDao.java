@@ -22,6 +22,11 @@
  *******************************************************************************/
 package com.gisgraphy.domain.repository;
 
+import javax.persistence.PersistenceException;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Repository;
 
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
@@ -41,6 +46,28 @@ public class HouseNumberDao extends GenericDao<HouseNumber, Long> implements
     public HouseNumberDao() {
 	super(HouseNumber.class);
     }
+    
+    
+    
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	public long countByCountryCode(final String countryCode) {
+		if (countryCode!=null){
+			return ((Long) this.getHibernateTemplate().execute(
+					new HibernateCallback() {
+
+					    public Object doInHibernate(Session session)
+						    throws PersistenceException {
+						String queryString = "select count(*) from "
+							+ persistentClass.getSimpleName()+ " h inner join Openstreetmap o on o.id=h.street where o.countrycode='"+countryCode.toUpperCase()+"'";//
+
+						Query qry = session.createSQLQuery(queryString);
+						Long result =  ((Number)qry.uniqueResult()).longValue();
+						return result;
+					    }
+					})).longValue();
+		}
+		return 0;
+	}
 
 
 }

@@ -115,6 +115,9 @@ public class OpenAddressesSimpleImporterTest {
 		 line="-51.9438429,-23.416729,20,RUA  BENJAMIN CONSTANT,\"LOJA 4,3,2,1\",Maringá,,PR,87020-060,,br:94cc7e00b7d822cd";
 		Assert.assertEquals("-51.9438429,-23.416729,20,RUA  BENJAMIN CONSTANT,LOJA 4 3 2 1,Maringá,,PR,87020-060,,br:94cc7e00b7d822cd",importer.correctLine(line));
 		
+		 line="')$+.)-)',\"+($*++*/*)\",'\"I[[b[dX_dZ[hijhWÕ[\"\"8[hb_d\"\"\"'(+++\"\"Z[0W/'YY.+W+'Z+/\\/+";
+			importer.correctLine(line);//should not throws when $
+		
 	}
 	
 	@Test
