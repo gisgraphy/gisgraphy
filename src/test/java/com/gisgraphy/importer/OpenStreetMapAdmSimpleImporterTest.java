@@ -90,6 +90,10 @@ LabelGenerator generator = LabelGenerator.getInstance();
 		Assert.assertEquals(1,importer.calculateAdmLevel("US",4));
 		Assert.assertEquals(2,importer.calculateAdmLevel("US",6));
 		Assert.assertEquals(1,importer.calculateAdmLevel("FR",7));
+		
+		//misc
+		Assert.assertEquals(1,importer.calculateAdmLevel("DE",4));
+		Assert.assertEquals(2,importer.calculateAdmLevel("DE",5));
 	}
 
 	@Test

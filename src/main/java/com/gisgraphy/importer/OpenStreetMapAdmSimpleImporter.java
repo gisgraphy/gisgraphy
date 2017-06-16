@@ -308,6 +308,7 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 		if (calculatedLevel>5){
 			return 5;
 		}
+		currentOsmlevel = adminLevel;
 		return calculatedLevel;
 	}
 
