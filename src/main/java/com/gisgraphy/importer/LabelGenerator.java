@@ -25,7 +25,7 @@ import com.gisgraphy.helper.DistancePointDto;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.OrthogonalProjection;
 import com.gisgraphy.helper.StateAbbreviator;
-import com.gisgraphy.helper.countryInfo;
+import com.gisgraphy.helper.CountryInfo;
 import com.gisgraphy.reversegeocoding.HouseNumberDistance;
 import com.vividsolutions.jts.geom.Point;
 
@@ -503,7 +503,7 @@ public class LabelGenerator {
 			sb.append(" (").append(address.getZipCode()).append("), ");
 		} 
 		if (address.getCountryCode()!=null){
-			String countryName = countryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase());
+			String countryName = CountryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase());
 			if (countryName!=null){
 				sb.append(countryName);
 				//.append(", ");

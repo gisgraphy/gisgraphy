@@ -32,7 +32,7 @@ import java.util.HashMap;
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  * 
  */
-public class countryInfo {
+public class CountryInfo {
 
 	 public static HashMap<String, String> countryLookupMap = new HashMap<String, String>(){
 		 {

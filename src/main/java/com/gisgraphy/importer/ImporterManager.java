@@ -42,6 +42,7 @@ import com.gisgraphy.domain.valueobject.ImporterStatusDto;
 import com.gisgraphy.fulltext.IsolrClient;
 import com.gisgraphy.helper.FileHelper;
 import com.gisgraphy.service.impl.StatsUsageServiceImpl;
+import com.gisgraphy.stats.IStatsDataManager;
 
 /**
  * Do the importing stuff
@@ -56,6 +57,9 @@ public class ImporterManager implements IImporterManager {
 
     @Autowired
     IGisDao<? extends GisFeature>[] iDaos;
+    
+    @Autowired
+    public IStatsDataManager statsDataManager;
 
     private long startTime = 0;
 
@@ -141,6 +145,11 @@ public class ImporterManager implements IImporterManager {
 			this.importerStatusListDao.saveOrUpdate(ComputeStatusDtoList());
 		} catch (RuntimeException e) {
 			logger.error("Can not save statusDtoList : " + e.getMessage(),e);
+		}
+		try {
+			statsDataManager.exportAllInJson();
+		} catch (Exception e1) {
+			logger.error("Can not export statistics : " + e1.getMessage(),e1);
 		}
 		try {
 			this.endTime = System.currentTimeMillis();

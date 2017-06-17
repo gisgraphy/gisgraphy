@@ -123,7 +123,7 @@ public class AdmStateLevelInfoTest {
 
 	@Test
 	public void testIsCityLevelDoesnTOverlapADM(){
-		for (String country: countryInfo.countryLookupMap.keySet()){
+		for (String country: CountryInfo.countryLookupMap.keySet()){
 			int[] levels = new int[]{1,2,3,4,5,6,7,8,9,11};
 			for (int level: levels){
 				if (AdmStateLevelInfo.isCityLevel(country, level) && AdmStateLevelInfo.shouldBeImportedAsAdm(country, level)){

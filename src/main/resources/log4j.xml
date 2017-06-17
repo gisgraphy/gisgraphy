@@ -157,6 +157,11 @@
 		<appender-ref ref="RollingFileImporter" />
 	</logger>
 	
+	<logger name="com.gisgraphy.webapp.action.StatsDataManager">
+		<level value="INFO" />
+		<appender-ref ref="RollingFileImporter" />
+	</logger>
+	
 	<logger name="com.gisgraphy.billing.web.BillingFilter">
 		<level value="DEBUG" />
 		<appender-ref ref="RollingFileExtra" />

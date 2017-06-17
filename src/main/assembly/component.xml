@@ -138,6 +138,13 @@
 			</includes>
 		</fileSet>
 		<fileSet>
+			<directory>data/export</directory>
+			<outputDirectory>data/export</outputDirectory>
+			<includes>
+				<include>**</include>
+			</includes>
+		</fileSet>
+		<fileSet>
 			<directory>target/${pom.name}-${pom.version}</directory>
 			<outputDirectory>webapps/ROOT</outputDirectory>
 			<includes>

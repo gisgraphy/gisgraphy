@@ -34,7 +34,7 @@ import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.helper.GeolocHelper;
-import com.gisgraphy.helper.countryInfo;
+import com.gisgraphy.helper.CountryInfo;
 import com.gisgraphy.importer.LabelGenerator;
 import com.vividsolutions.jts.geom.Point;
 
