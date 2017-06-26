@@ -60,6 +60,8 @@ import com.gisgraphy.serializer.common.OutputFormat;
  */
 public class FulltextQuerySolrHelper {
 	
+
+
 	protected static String ALL_ADM1_NAME_ALL_ADM2_NAME = " all_adm1_name^0.2 all_adm2_name^0.2 ";
 
 	public static final Float MIN_SCORE = 15F;
@@ -88,6 +90,9 @@ public class FulltextQuerySolrHelper {
 	protected static  String NESTED_QUERY_TEMPLATE = "_query_:\"{!edismax qf='name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
+	protected static  String SUGGEST_QUERY_TEMPLATE = "_query_:\"{!edismax qf='suggest_in^0.5 suggest_name^0.55 zipcode^0.2 name^0.01' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\"";
+	protected static final String SUGGEST_FQ = "placetype:city placetype:adm placetype:street";
+	protected static final String SUGGEST_FL = "name,zipcode,country_code,adm1_name,is_in,feature_id,lat,lng,score,house_numbers";
 	
 	protected static String CITY_BOOST_QUERY="placetype:city^800 placetype:adm^600";
 	protected static String STREET_BOOST_QUERY="placetype:street^150";
@@ -155,9 +160,9 @@ public class FulltextQuerySolrHelper {
 		}
 
 		//set field list
-		/*if (query.isSuggest()){
-			// parameters.set(Constants.FL_PARAMETER,"");//we took the one by default
-		} else*/
+		if (query.isSuggest()){
+			 parameters.set(Constants.FL_PARAMETER,SUGGEST_FL);
+		} else
 			if (query.getOutputFormat() == OutputFormat.ATOM
 				|| query.getOutputFormat() == OutputFormat.GEORSS) {
 			// force Medium style if ATOM or Geo RSS
@@ -178,32 +183,28 @@ public class FulltextQuerySolrHelper {
 					//we do a bounding box
 					parameters.add(Constants.FQ_PARAMETER, FQ_LOCATION);
 					parameters.add(Constants.DISTANCE_PARAMETER,radius/1000+"");
+					logger.error("restrict to bbox with radius="+radius/1000);
 				} /*else if(query.getRadius() == 0){
 					parameters.add(Constants.DISTANCE_PARAMETER,MAX_RADIUS+"");
 				}  */
 		}
+		
+		//countrycode fq
 		if (query.getCountryCode()!=null && !"".equals(query.getCountryCode().trim())){
 			parameters.add(Constants.FQ_PARAMETER, String.format(FQ_COUNTRYCODE,query.getCountryCode().toUpperCase()));
 		}
 		
-		if (query.getPlaceTypes() != null && containsOtherThingsThanNull(query.getPlaceTypes())) {
-			StringBuffer sb = new StringBuffer();
-			sb.append("(");
-			boolean firstAppend=false;
-			for (int i=0;i< query.getPlaceTypes().length;i++){
-				if (query.getPlaceTypes()[i] != null){
-					if (firstAppend){
-						sb.append(" OR ");
-					}
-					sb.append(query.getPlaceTypes()[i].getSimpleName());
-					firstAppend=true;
-				}
-			}
-			sb.append(")");
-			parameters.add(Constants.FQ_PARAMETER, FQ_PLACETYPE+sb.toString());
+		//placetype fq
+		setFQPlacetype(query, parameters);
+		
+		//boost field
+		String bfField = "";
+		if (query.getPoint() != null ) {//promote nearest if  point is specified
+			bfField = BF_NEAREST;
+			logger.error("boost nearest on");
+		} else {
+			bfField=BF_POPULATION;
 		}
-		
-		
 		
 		boolean isNumericQuery = isNumericQuery(query.getQuery());
 		StringBuffer querybuffer ;
@@ -226,17 +227,21 @@ public class FulltextQuerySolrHelper {
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
 		} else if (query.isSuggest()){
-			List<String> streetTypes = smartStreetDetection.getStreetTypes(query.getQuery());
-			if (!isStreetQuery(query) && streetTypes.size()==1){//only if there is no pacetype=street
-			//	parameters.set(Constants.BQ_PARAMETER, STREET_BOOST_QUERY);
-				parameters.add(Constants.FQ_PARAMETER, FullTextFields.PLACETYPE.getValue()+":("+Street.class.getSimpleName()+")");
-			}
-			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.suggest
+			
+			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
-			parameters.set(Constants.QUERY_PARAMETER, query.getQuery());
-			if(query.getPoint()!=null){
-				parameters.set(Constants.BF_PARAMETER, BF_NEAREST);
+			if (query.getPoint() != null ) {//promote nearest if  point is specified
+				bfField = BF_NEAREST;
+				logger.error("boost nearest on");
+			} else {
+				bfField=""; //population is already boost by bq
 			}
+			String querySolr = String.format(SUGGEST_QUERY_TEMPLATE,bfField,query.getQuery());
+			parameters.set(Constants.QUERY_PARAMETER, querySolr);
+			logger.error("querysolr="+querySolr);
+			/*if(query.getPoint()!=null){
+				parameters.set(Constants.BF_PARAMETER, BF_NEAREST);
+			}*/
 		} else if (isNumericQuery(query.getQuery())) {
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
@@ -251,16 +256,11 @@ public class FulltextQuerySolrHelper {
 			List<String> streetTypes = smartStreetDetection.getStreetTypes(query.getQuery());
 			if ((!isStreetQuery(query) && streetTypes.size()==1)){
 				bqField=STREET_BOOST_QUERY;
-			} else if (query.getPlaceTypes()==null || isAdministrative(query.getPlaceTypes())){
+			} else if (query.getPlaceTypes()==null || query.getPlaceTypes().length==0 || isAdministrative(query.getPlaceTypes())){
 				bqField=CITY_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
 			}
 			
-			String bfField = "";
-			if (query.getPoint() != null ) {//promote nearest if  point is specified
-				bfField = BF_NEAREST;
-			} else {
-				bfField=BF_POPULATION;
-			}
+			
 			String queryString;
 			if (query.isFuzzy()){
 				if (streetTypes!=null && streetTypes.size()==1){
@@ -312,6 +312,31 @@ public class FulltextQuerySolrHelper {
 		}
 
 		return parameters;
+	}
+
+	public static void setFQPlacetype(FulltextQuery query,
+			ModifiableSolrParams parameters) {
+		if (query.isSuggest() && (query.getPlaceTypes() == null || query.getPlaceTypes().length==0)){
+			logger.error("fq placetype default = "+SUGGEST_FQ);
+			parameters.add(Constants.FQ_PARAMETER, SUGGEST_FQ);
+		}
+		else if (query.getPlaceTypes() != null && containsOtherThingsThanNull(query.getPlaceTypes())) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("(");
+			boolean firstAppend=false;
+			for (int i=0;i< query.getPlaceTypes().length;i++){
+				if (query.getPlaceTypes()[i] != null){
+					if (firstAppend){
+						sb.append(" OR ");
+					}
+					sb.append(query.getPlaceTypes()[i].getSimpleName());
+					firstAppend=true;
+				}
+			}
+			sb.append(")");
+			parameters.add(Constants.FQ_PARAMETER, FQ_PLACETYPE+sb.toString());
+			logger.error("fq placetype = "+FQ_PLACETYPE+sb.toString());
+		}
 	}
 	
 	protected static boolean isAdministrative(Class[] array){

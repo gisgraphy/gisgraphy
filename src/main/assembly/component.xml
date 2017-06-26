@@ -42,7 +42,7 @@
 			<outputDirectory>sql/</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>target/hibernate3/sql</directory>
+			<directory>target/sql</directory>
 			<outputDirectory>sql/</outputDirectory>
 		</fileSet>
 		<!-- SolR config files -->

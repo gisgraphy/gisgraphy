@@ -91,7 +91,7 @@ public class StatsDataManager implements IStatsDataManager{
 
 	
 	@Override
-	public void exportAllInJson() {
+	public void exportEachCountriesInJson() {
 		String directoryName= "./data/export/stats/";
 		 File directory = new File(directoryName);
 		    if (! directory.exists()){
@@ -117,6 +117,31 @@ public class StatsDataManager implements IStatsDataManager{
 				       logger.error("can not write stats feeds for "+country+" : "+e.getMessage());
 				    }
 			}
+	}
+	
+	@Override
+	public void exportAllInJson() {
+		String directoryName= "./data/export/stats/";
+		 File directory = new File(directoryName);
+		    if (! directory.exists()){
+		        directory.mkdir();
+		    }
+				String json = getAllInJson(true);
+				 File file = new File(directoryName + "/" + "all.json");
+				    try{
+				        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+				        BufferedWriter bw = new BufferedWriter(fw);
+				        bw.write(json);
+				        bw.close();
+				    }
+				    catch (IOException e){
+				       logger.error("can not write stats feeds for all countries : "+e.getMessage());
+				    }
+	}
+	@Override
+	public void exportStats(){
+		exportAllInJson();
+		exportEachCountriesInJson();
 	}
 
 	public String getAllInJson(boolean refresh) {

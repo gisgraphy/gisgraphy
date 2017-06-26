@@ -14,8 +14,9 @@ public class StatsDataManagerTest extends AbstractIntegrationHttpSolrTestCase{
 	
 	
 	@Test
-	public void test() {
-		statsDataManager.exportAllInJson();
+	public void exportStats() {
+		statsDataManager.exportStats();
 	}
+	
 
 }

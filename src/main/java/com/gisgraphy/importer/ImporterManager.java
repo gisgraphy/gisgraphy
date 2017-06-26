@@ -147,7 +147,7 @@ public class ImporterManager implements IImporterManager {
 			logger.error("Can not save statusDtoList : " + e.getMessage(),e);
 		}
 		try {
-			statsDataManager.exportAllInJson();
+			statsDataManager.exportStats();
 		} catch (Exception e1) {
 			logger.error("Can not export statistics : " + e1.getMessage(),e1);
 		}
