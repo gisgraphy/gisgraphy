@@ -146,7 +146,7 @@ decompound after lower because words of dictionary are in lower, unpunct
 				<filter class="com.gisgraphy.compound.solr.DecompoundTokenFilterFactory"
                               dictionary="compound.txt" />
                  <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-				<filter class="solr.EdgeNGramFilterFactory" maxGramSize="20" minGramSize="1"/>
+				<filter class="solr.EdgeNGramFilterFactory" maxGramSize="30" minGramSize="1"/>
 				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
 			</analyzer>
 			<analyzer type="query">
@@ -157,7 +157,7 @@ decompound after lower because words of dictionary are in lower, unpunct
 				<filter class="com.gisgraphy.compound.solr.DecompoundTokenFilterFactory"
                               dictionary="compound.txt" />
 				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
-				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{20})(.*)?" replacement="$1" replace="all"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{30})(.*)?" replacement="$1" replace="all"/>
 			</analyzer>
 		</fieldType>
     
