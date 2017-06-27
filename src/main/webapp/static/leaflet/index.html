@@ -49,11 +49,11 @@
         var gisgraphyGeocoder = new L.Control.gisgraphygeocoder({
             ELEMENT_ID: "gisgraphy-leaflet",
             apiKey: 456
-	   , userLat:50.4485,
-		userLng:3.1964,
-	locationBias:true,
-	zindex:2,
-	radius:00000,withMenu:false,withHelp:false
+	  /*   ,userLat:50.4485,
+		    userLng:3.1964,
+	        locationBias:true,
+	        zindex:2,*/
+	        radius:0,withMenu:false,withHelp:false
         });
         map.addControl(gisgraphyGeocoder);
         gisgraphyGeocoder.initAutoCompletion();
