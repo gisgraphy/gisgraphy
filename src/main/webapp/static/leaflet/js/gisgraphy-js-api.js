@@ -1314,7 +1314,8 @@ function convertToLatLong(str) {
     return obj;
 }
 
-num_pattern = /(((?:(?:\b\d{1,3}))\b(?:[\s,;]+)(?!(?:st\b|th\b|rd\b|nd\b))(?=\w+))|\s(?:\b\d{1,3}$))/i;
+//num_pattern = /(((?:(?:\b\d{1,3}))\b(?:[\s,;]+)(?!(?:st\b|th\b|rd\b|nd\b))(?=\w+))|\s(?:\b\d{1,3}$))/i;
+num_pattern = /((((?:\b\d{1,4}[\-\–\一]\d{1,4}))\b(?:[\s,\.;]+)(?!(?:st\b|th\b|rd\b|nd\b|street\b|avenue\b|de\b|Januar\b|janvier\b|enero\b|Gennaio\b|Februar\b|Febbraio\b|f[ée]vrier\b|febrero\b|M[aä]rz\b|mars\b|marzo\b|A[pvb]ril[e]?\b|Mai\b|mayo\b|maggio\b|juni[o]?\b|juin\b|Giugno\ß|juli[o]?\b|juillet\b|Luglio\b|august\b|ao[uû]t\b|agosto\b|September\b|sept[i]?embre\b|Settembre\b|o[ckt]tober\b|o[tc]t[ou]bre\b|november\b|nov[i]?embre\b|de[cz]ember\b|d[ie]ec[i]embre\b|dicembre\b))(?=\w+))|(?:^\b\d{1,4}(?:[\s,\.;]?(?:[a-d]\b[\s,\.;])?)\b)(?:[\s,\.;]?(?:bis|ter)?)(?:[\s,\.;]|,)(?!(?:st\b|th\b|rd\b|nd\b|street\b$|avenue\b$|de\b|Januar\b|janvier\b|enero\b|Gennaio\b|Februar\b|Febbraio\b|f[ée]vrier\b|febrero\b|M[aä]rz\b|mars\b|marzo\b|A[pvb]ril[e]?\b|Mai\b|mayo\b|maggio\b|juni[o]?\b|juin\b|Giugno\ß|juli[o]?\b|juillet\b|Luglio\b|august\b|ao[uû]t\b|agosto\b|September\b|sept[i]?embre\b|Settembre\b|o[ckt]tober\b|o[tc]t[ou]bre\b|november\b|nov[i]?embre\b|de[cz]ember\b|d[ie]ec[i]embre\b|dicembre\b))|(((?:\b\d{1,4}(?:[\s,\.;]?(?:[a-d]\b)?)))\b(?:[\s,\.;]+)(?!(?:st\b|th\b|rd\b|nd\b|street\b|avenue\b|de\b|Januar\b|janvier\b|enero\b|Gennaio\b|Februar\b|Febbraio\b|f[ée]vrier\b|febrero\b|M[aä]rz\b|mars\b|marzo\b|A[pvb]ril[e]?\b|Mai\b|mayo\b|maggio\b|juni[o]?\b|juin\b|Giugno\ß|juli[o]?\b|juillet\b|Luglio\b|august\b|ao[uû]t\b|agosto\b|September\b|sept[i]?embre\b|Settembre\b|o[ckt]tober\b|o[tc]t[ou]bre\b|november\b|nov[i]?embre\b|de[cz]ember\b|d[ie]ec[i]embre\b|dicembre\b))(?=\w+))|[\s,\.;]?(?:\b\d{1,4}[\s,\.;]?(?:[a-d])?\b$))/i;
 var num_p = new RegExp(num_pattern);
 
 function extractHouseNumber(str) {
