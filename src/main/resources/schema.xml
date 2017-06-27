@@ -143,9 +143,10 @@ decompound after lower because words of dictionary are in lower, unpunct
 				<tokenizer class="solr.StandardTokenizerFactory"/>
 				<filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="0"/>
 				<filter class="solr.LowerCaseFilterFactory"/>
+				 <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
 				<filter class="com.gisgraphy.compound.solr.DecompoundTokenFilterFactory"
                               dictionary="compound.txt" />
-                 <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                 		<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
 				<filter class="solr.EdgeNGramFilterFactory" maxGramSize="30" minGramSize="1"/>
 				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
 			</analyzer>
@@ -154,8 +155,10 @@ decompound after lower because words of dictionary are in lower, unpunct
 				<tokenizer class="solr.StandardTokenizerFactory"/>
 				<filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="0"/>
 				<filter class="solr.LowerCaseFilterFactory"/>
-				<filter class="com.gisgraphy.compound.solr.DecompoundTokenFilterFactory"
-                              dictionary="compound.txt" />
+				 <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+				<filter class="com.gisgraphy.compound.solr.DecompoundTokenFilterFactory"  dictionary="compound.txt" />
+				<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                             
 				<filter class="solr.PatternReplaceFilterFactory" pattern="([^\w\d\*æøåÆØÅ ])" replacement="" replace="all"/>
 				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{30})(.*)?" replacement="$1" replace="all"/>
 			</analyzer>

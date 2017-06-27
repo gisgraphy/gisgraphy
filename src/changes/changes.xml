@@ -981,6 +981,10 @@
 				js API, add the abbility to promote nearest, fix bug 'we can not add two searchbox'
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				suggest : ignore some short words (stopword)
+			</action>
+			
 			
 			
 			</release>
