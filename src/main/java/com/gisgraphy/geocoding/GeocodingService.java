@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import sun.security.action.GetLongAction;
+
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.AddressQuery;
 import com.gisgraphy.addressparser.AddressResultsDto;
@@ -90,6 +92,13 @@ import com.vividsolutions.jts.geom.Point;
  */
 @Service
 public class GeocodingService implements IGeocodingService {
+	private static final String HN_REGEXP = "((("
+			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
+			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,\\.;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b$|avenue\\b$|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))"
+			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
+			+ "|\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
+			+")";
+
 	private static final String FUZZY_ACTIVE = "fuzzy:active";
 	//private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 	
@@ -120,12 +129,7 @@ public class GeocodingService implements IGeocodingService {
 	public final static Pagination TEN_RESULT_PAGINATION = Pagination.paginate().from(0).to(10);
 	public final static SolrResponseDtoDistanceComparator comparator = new SolrResponseDtoDistanceComparator();
 	//public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((((?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?))");
-	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((("
-			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
-			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,\\.;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b$|avenue\\b$|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))"
-			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
-			+ "|\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
-			+")",
+	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile(HN_REGEXP,
 			Pattern.CASE_INSENSITIVE);
 	//
 	//
@@ -906,6 +910,7 @@ public class GeocodingService implements IGeocodingService {
 			}
 			String lastName=null;
 			String lastIsin=null;
+			Point lastLocation=null;
 			boolean sameStreet = false;
 			boolean housenumberFound =false;
 			int count=0;
@@ -959,9 +964,13 @@ public class GeocodingService implements IGeocodingService {
 				}
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
 					String streetName = solrResponseDto.getName();
-					String isIn = solrResponseDto.getFully_qualified_name();
+					String isIn = solrResponseDto.getIs_in();
+					Point curLoc = GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat());
+					if (solrResponseDto.getIs_in_place()!=null){
+						 isIn = isIn +" "+ solrResponseDto.getIs_in();
+					}
 					if (!isEmptyString(streetName)){ 
-						if(streetName.equals(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin)){
+						if(streetName.equalsIgnoreCase(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin) && lastLocation!=null && !(GeolocHelper.distance(lastLocation, curLoc)>12000)){
 							sameStreet=true;//probably the same street
 							if (housenumberFound){
 								continue;
@@ -1070,6 +1079,7 @@ public class GeocodingService implements IGeocodingService {
 			  }
 					lastName=streetName;
 					lastIsin = isIn;
+					lastLocation=curLoc;
 				} else if (solrResponseDto.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
 					address.setCity(solrResponseDto.getName());
 					//populateAddressFromCity(solrResponseDto, address);

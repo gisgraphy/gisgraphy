@@ -2455,6 +2455,8 @@ public class GeocodingServiceTest {
     	
     	
     	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13 berlin",null).getHouseNumber());
+    	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13, berlin",null).getHouseNumber());
+    	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13 ,berlin",null).getHouseNumber());
     	
     	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13a berlin",null).getHouseNumber());
     	Assert.assertEquals("Lottumstraße, berlin", geocodingService.findHouseNumber("Lottumstraße, 13a berlin",null).getAddressWithoutHouseNumber());
