@@ -12,6 +12,7 @@ L.Control.gisgraphygeocoder = L.Control.extend({
         container.id = this.options.ELEMENT_ID || "gisgraphy-leaflet";
         this.autocomplete = new gisgraphyAutocomplete(this.options);
         container.appendChild(this.autocomplete._formNode[0]);
+	
         var o = container
         L.DomEvent.disableClickPropagation(container);
         return container;
@@ -22,6 +23,9 @@ L.Control.gisgraphygeocoder = L.Control.extend({
         if (this.autocomplete) {
             this.autocomplete.initAutoCompletion();
         }
+	if (this.options.zindex){
+		$("#"+this.options.ELEMENT_ID).css('z-index', this.options.zindex);
+	}
     },
     onRemove: function(map) {},
 

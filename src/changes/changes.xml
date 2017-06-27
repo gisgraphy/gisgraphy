@@ -977,6 +977,10 @@
 				do simple map matching on openaddressImporter to set name of streets that have no name in osm and one in oa
 			</action>
 			
+			<action dev="David Masclet" type="update">
+				js API, add the abbility to promote nearest, fix bug 'we can not add two searchbox'
+			</action>
+			
 			
 			
 			</release>

@@ -8,6 +8,7 @@
 .tt-dropdown-menu,
 .gist {
   text-align: left;
+z-index:1000;
 }
 
 .typeahead,
@@ -129,7 +130,7 @@ color:#999;
   cursor:pointer;
 }
 
-#gisgraphy-leaflet .searchbutton {
+.gisgraphy-leaflet .searchbutton {
 width: 26px;
 height: 28px;
 background-image: url(../img/search.png);
@@ -141,7 +142,8 @@ float: right;
 cursor: pointer;
 padding:1px;
 }
-#gisgraphy-leaflet .help{
+
+.gisgraphy-leaflet .help{
 margin-left:8px;
 margin-right:8px;
 cursor:help;
@@ -153,7 +155,7 @@ background-color : #FFF;
 margin-right:160px;
 }
 
-#gisgraphy-leaflet .resultBox {
+.gisgraphy-leaflet .resultBox {
 font-size:11px;
 width: 340px;
 height: auto;
@@ -169,33 +171,33 @@ background-color : #FFF;
 
 }
 
-#gisgraphy-leaflet .tools {
+.gisgraphy-leaflet .tools {
 background-color : #FFF;
 }
 
 
-#gisgraphy-leaflet {
-/*margin:auto auto;*/
+.gisgraphy-leaflet {
+margin:auto auto;
 width:437px;
-padding:10px;
+padding-left:10px;
 padding-right:30px;
 font-size:9px;
 }
 
-#gisgraphy-leaflet .placetypes{
+.gisgraphy-leaflet .placetypes{
 /*display:none;*/
 width:130px;
 font-size:10px;
 margin-left:10px;
 }
 
-#gisgraphy-leaflet .languages {
+.gisgraphy-leaflet .languages {
 
 }
 
-#gisgraphy-leaflet .searchbox{
-width:390px;
-background-color : #FFF;
+.gisgraphy-leaflet .searchbox{
+width:390px !important;
+background-color : #FFF !important;
 }
 
 
@@ -216,7 +218,7 @@ background-repeat: no-repeat;
 /*background-color:#FF0000;*/
 background-image: url(../img/loading.gif);
 }
-#gisgraphy-leaflet .help{
+.gisgraphy-leaflet .help{
 margin-left:8px;
 margin-right:8px;
 cursor:help;

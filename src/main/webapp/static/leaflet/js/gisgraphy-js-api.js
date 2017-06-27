@@ -4,6 +4,7 @@ autocompleteGisgraphy = [];
 
 currentRequests = {};
 
+
 defaultAjax = {
     beforeSend: function(request) {
         if (currentRequests["geocoding"]) {
@@ -24,6 +25,7 @@ defaultAjax = {
         }
         // ......
 };
+
 
 function detectLanguage() {
     var lang = (navigator.language) ? navigator.language : navigator.userLanguage;
@@ -112,12 +114,14 @@ DEFAULT_LANGUAGE = detectLanguage();
 
         //user options
         this.geocoding;
+	this.geocoding2;
+	this.sources;
         this.instanceCounter = 0;
         this.autocompleteGisgraphyCounter = autocompleteGisgraphyCounter + '';
         this.ELEMENT_ID = o.ELEMENT_ID;
         this.currentLanguage = (o.currentLanguage || DEFAULT_LANGUAGE).toUpperCase();
         this.allowPoiSelection = o.allowPoiSelection || true;
-        this.allowMagicSentence = o.allowMagicSentence || true;
+        this.allowMagicSentence = o.allowMagicSentence || false;
         this.allowLanguageSelection = o.allowLanguageSelection || true;
         this.fulltextURL = o.fulltextURL || '/fulltext/suggest';
         this.reversegeocodingUrl = o.reversegeocodingUrl || '/reversegeocoding/search';
@@ -133,6 +137,7 @@ DEFAULT_LANGUAGE = detectLanguage();
         this.inputSearchNodeID = o.inputSearchNodeID || this.ELEMENT_ID + '-inputSearch';
         this.searchButtonNodeID = o.searchButtonNodeID || this.ELEMENT_ID + '-searchButton';
         this.resultBoxNodeID = o.resultBoxNodeID || this.ELEMENT_ID + '-resultBox';
+	this.radius= o.radius || 0 ;
 
         this._formNode = undefined;
         this._toolsNode = undefined;
@@ -161,11 +166,12 @@ DEFAULT_LANGUAGE = detectLanguage();
         this.result = undefined;
         this._detectPosition = o.detectPosition || detectPosition
         this._fillPosition = $.proxy(fillPosition, this);
-        this.userLat = undefined; //50.455; //undefined;
-        this.userLng = undefined; //3.204; //undefined;
+        this.userLat = o.userLat || undefined; //50.455; //undefined;
+        this.userLng = o.userLng || undefined; //3.204; //undefined;
         this.allowUserPositionDetection = o.allowUserPositionDetection || true;
         this.locationBias = o.locationBias || false;
-        this.withHelp = o.withHelp || true;
+        this.withHelp = o.withHelp || false;
+	this.withMenu = o.thisMenu || false;
         this.displayHelp = displayHelp;
         this.initUI();
 
@@ -173,7 +179,7 @@ DEFAULT_LANGUAGE = detectLanguage();
             datumTokenizer: Bloodhound.tokenizers.obj.nonword('name'),
             queryTokenizer: Bloodhound.tokenizers.nonword,
             limit: this.limit,
-            local: this.getLocalSuggestionsArray(DEFAULT_LANGUAGE),
+           // local: this.getLocalSuggestionsArray(DEFAULT_LANGUAGE),
             remote: {
                 url: this.fulltextURL + '?suggest=true&allwordsrequired=false&q=%QUERY',
                 replace: this.replace,
@@ -228,6 +234,127 @@ DEFAULT_LANGUAGE = detectLanguage();
                 rateLimitWait: 130
             }
         });
+
+
+
+if (this.locationBias){
+var currentRequests2 = {};
+var defaultAjax2 = {
+    beforeSend: function(request) {
+        if (currentRequests2["geocoding"]) {
+            try {
+                currentRequests2["geocoding"].abort();
+                console.log('aborting');
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        currentRequests2["geocoding"] = request;
+
+    },
+    complete: function(xhr) {
+            currentRequests2["geocoding"] = null;
+
+        }
+        // ......
+};
+
+
+
+function replace2() {
+            if (this.enableReverseGeocoding) {
+                var latLong = convertToLatLong($('#' + this.inputSearchNodeID).val());
+                if (latLong) {
+                    return this.reversegeocodingUrl + "?format=json&lat=" + latLong.lat + "&lng=" + latLong.long;
+                }
+            }
+            var fulltextUrlWithParam = this.fulltextURL + '?format=json&suggest=true&allwordsrequired=false&style=long'
+          /*  if (this.userLat && this.userLng & this.locationBias) {
+                fulltextUrlWithParam = fulltextUrlWithParam + "&lat=" + this.userLat + "&lng=" + this.userLng +"&radius=0" ;
+            }*/
+            if (!$('#' + this.placetypeNodeID).val()) {
+                fulltextUrlWithParam = fulltextUrlWithParam + '&placetype=city&placetype=adm&placetype=street';
+            } else {
+                fulltextUrlWithParam = fulltextUrlWithParam +'&placetype='+$('#' + this.placetypeNodeID).val();
+            }
+	    if (this.sources.length>1){
+		    fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=7";
+	    } else {
+	            fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=20";
+	    }
+            fulltextUrlWithParam = fulltextUrlWithParam + "&q=" + replaceHouseNumber($('#' + this.inputSearchNodeID).val());
+            if (this.apiKey != undefined) {
+                fulltextUrlWithParam = fulltextUrlWithParam + '&apikey=' + this.apiKey;
+            }
+	    
+
+            return fulltextUrlWithParam;
+        };
+
+ this.replace2 = $.proxy(replace2, this);
+
+this.geocoding2 = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.nonword('name'),
+            queryTokenizer: Bloodhound.tokenizers.nonword,
+            limit: this.limit,
+           // local: this.getLocalSuggestionsArray(DEFAULT_LANGUAGE),
+            remote: {
+                url: this.fulltextURL + '?toto&suggest=true&allwordsrequired=false&q=%QUERY',
+                replace: this.replace2,
+                ajax: defaultAjax2,
+                filter: function(d, e) {
+                    var names = [];
+                    var docMap = {};
+                    var seen = {};
+                    if (d && d.response && d.response['docs']) {
+                        $.each(d.response['docs'], function(key, value) {
+                            if (value.name) {
+                                var keyMap = value.feature_id;
+                                if (value.is_in && value.is_in.length >= 0) {
+                                    var keyMap = value.name + value.is_in;
+                                }
+                                if (!docMap.hasOwnProperty(keyMap)) {
+                                    docMap[keyMap] = value;
+                                } else {
+                                    if (value.house_numbers && docMap[keyMap]) {
+                                        if (!docMap[keyMap].house_numbers || docMap[keyMap].house_numbers.length == 0) {
+                                            docMap[keyMap].house_numbers = [];
+                                        }
+                                        docMap[keyMap].house_numbers = docMap[keyMap].house_numbers.concat(value.house_numbers);
+                                    }
+                                }
+                            }
+                        });
+                        $.each(d.response['docs'], function(key, value) {
+                            var found = false;
+                            if (value.feature_id) {
+                                $.each(docMap, function(keyMap, valueMap) {
+                                    if (found == true) {
+                                        return
+                                    }
+                                    if (valueMap.feature_id == value.feature_id) {
+                                        names.push(valueMap);
+                                        found = true;
+
+                                    }
+                                });
+                            }
+                        });
+                        /* $.each(docMap, function(key, value) {
+				names.push(value)
+			});*/
+                    } else if (d && d.result && d.result[0]) {
+                        names.push(convertAddressToDatum(d.result[0]));
+                    }
+                    return names;
+
+                },
+                rateLimitWait: 130
+            }
+        });
+this.geocoding2.initialize();
+}
 
 
         if (this.allowUserPositionDetection) {
@@ -304,8 +431,11 @@ DEFAULT_LANGUAGE = detectLanguage();
             this._resultBoxNode = $('<div>').attr('id', this.resultBoxNodeID).addClass('resultBox').appendTo(this._formNode);
             if (this.withHelp == true) {
                 this.displayHelp();
-            }
+            } else {
+		this._resultBoxNode.hide();
+	    }
         };
+
 
         function displayHelp() {
             var el = this._resultBoxNode;
@@ -333,7 +463,7 @@ DEFAULT_LANGUAGE = detectLanguage();
             }
             var fulltextUrlWithParam = this.fulltextURL + '?format=json&suggest=true&allwordsrequired=false&style=long'
             if (this.userLat && this.userLng & this.locationBias) {
-                fulltextUrlWithParam = fulltextUrlWithParam + "&lat=" + this.userLat + "&lng=" + this.userLng + "&radius=0";
+                fulltextUrlWithParam = fulltextUrlWithParam + "&lat=" + this.userLat + "&lng=" + this.userLng +"&radius="+this.radius ;
             }
             if (!$('#' + this.placetypeNodeID).val()) {
                 fulltextUrlWithParam = fulltextUrlWithParam + '&placetype=city&placetype=adm&placetype=street';
@@ -341,14 +471,22 @@ DEFAULT_LANGUAGE = detectLanguage();
                 fulltextUrlWithParam = fulltextUrlWithParam +'&placetype='+$('#' + this.placetypeNodeID).val();
             }
 
-            fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=20";
+          if (this.sources.length>1){
+            fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=5";
+} else {
+ fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=20";
+}
+   
             fulltextUrlWithParam = fulltextUrlWithParam + "&q=" + replaceHouseNumber($('#' + this.inputSearchNodeID).val());
             if (this.apiKey != undefined) {
                 fulltextUrlWithParam = fulltextUrlWithParam + '&apikey=' + this.apiKey;
             }
+	    
 
             return fulltextUrlWithParam;
         };
+
+ 	
 
         function doGeocoding() {
             if (!$('#' + this.inputSearchNodeID).val()) {
@@ -635,40 +773,8 @@ DEFAULT_LANGUAGE = detectLanguage();
             return pois;
         }
 
-        function initUI() {
-            this._formNode = $('<form>').attr('id', this.formNodeID).attr('action', this.geocodingUrl); //.appendTo('#'+this.ELEMENT_ID);
-            this._toolsNode = $('<div>').attr('id', this.toolsNodeID).addClass('tools').appendTo(this._formNode);
-            if (this.withHelp) {
-                $("<img>").attr('alt', 'help').attr('src', './img/help.png').attr('onclick', 'autocompleteGisgraphy[' + autocompleteGisgraphyCounter + '].displayHelp();').addClass('help').appendTo(this._toolsNode);
-            }
-            if (this.allowLanguageSelection) {
-                this.BuildLanguageSelector(DEFAULT_LANGUAGE);
-            }
-            if (this.allowPoiSelection) {
-                this.buildPlaceTypeDropBox(DEFAULT_LANGUAGE, this.placetypeNodeID);
-            }
-            this.buildSearchBox();
-            if ($('#' + this.ELEMENT_ID).length > 0) {
-                this._formNode.appendTo($('#' + this.ELEMENT_ID));
-            }
-            if (this.userLat != undefined && this.userLng != 'undefined' && typeof map != 'undefined') {
-                map.panTo(new L.LatLng(this.userLat, this.userLng));
 
-            }
-        }
-
-
-
-        function initAutoCompletion() {
-            if ($('#' + this.ELEMENT_ID).length == 0) {
-                return;
-            }
-            this.geocoding.initialize();
-            $('#' + this.inputSearchNodeID).typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 1
-            }, {
+this.sources=[{
                 name: this.ELEMENT_ID + '',
                 displayKey: function(obj) {
                     if (obj && obj['country_code'] && obj['country_code'].length == 2 && $.inArray(obj['country_code'], NAME_HOUSE_COUNTRYCODE) >= 0) {
@@ -721,11 +827,123 @@ DEFAULT_LANGUAGE = detectLanguage();
                 // is compatible with the typeahead jQuery plugin
                 source: this.geocoding.ttAdapter(),
                 templates: {
-                    empty: Handlebars.compile('<div class="empty-message">{{l10n "nosuggestion" currentLanguage}}</div>'),
+                    empty: this.locationBias? '': Handlebars.compile('<div class="empty-message">{{l10n "nosuggestion" currentLanguage}}</div>'),
                     suggestion: Handlebars.compile('{{#if name}}<p>{{#if country_code}}<img src="img/{{country_code}}.png" alt={{country_code}} class="flag-autocomplete"/>{{/if}}{{#if_number_after country_code }}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong> {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}}{{#if houseNumber}}{{houseNumber}}</span>{{/if}}{{else}} {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}} {{#if houseNumber}}{{houseNumber}}</span>{{/if}}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong>{{/if_number_after}}{{#if is_in}}<span class="isin-autocomplete">, {{#if_eq is_in_zip.length 1}} {{is_in_zip}}{{/if_eq}} {{is_in}}</span> {{else}}{{#if adm1_name}}<span class="isin-autocomplete">, {{adm1_name}}</span>{{/if}}{{/if}}</p>{{/if}}'),
-                    footer: '<div class="footer">powered by <a href="http://www.gisgraphy.com/">Gisgraphy.com</a></div>'
+                    footer: this.locationBias?'':'<div class="footer">powered by <a href="http://www.gisgraphy.com/">Gisgraphy.com</a></div>'
                 }
-            });
+            }]
+
+;
+	if (this.locationBias){
+	this.sources.push(
+
+	{
+		        name: this.ELEMENT_ID + '2',
+		        displayKey: function(obj) {
+		            if (obj && obj['country_code'] && obj['country_code'].length == 2 && $.inArray(obj['country_code'], NAME_HOUSE_COUNTRYCODE) >= 0) {
+		                var addressFormated = obj['name'];
+		                var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
+		                if (housenumber && housenumber.length > 0) {
+		                    addressFormated += ' ' + housenumber;
+		                }
+		                if (obj['is_in'] || obj['is_in_place']) {
+		                    if (obj['is_in_place']) {
+		                        addressFormated += ', ' + obj['is_in_place'];
+		                    }
+		                    var zip = '';
+		                    if (obj['is_in_zip'] && obj['is_in_zip'].length == 1) {
+		                        addressFormated += ', ' + obj['is_in_zip'][0] + ' ';
+		                    }
+		                    if (obj['is_in']) {
+		                        addressFormated += ', ' + obj['is_in'];
+		                    }
+		                }
+		                return addressFormated;
+
+		            } else {
+		                var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
+		                if (housenumber && housenumber.length > 0) {
+		                    housenumber = housenumber + ', ';
+		                }
+		                var is_in = '';
+		                if (obj['is_in'] || obj['is_in_place']) {
+		                    if (obj['is_in_place']) {
+		                        is_in += ', ' + obj['is_in_place'];
+		                    }
+		                    var zip = '';
+		                    if (obj['is_in_zip'] && obj['is_in_zip'].length == 1) {
+		                        is_in += ', ' + obj['is_in_zip'][0];
+		                    }
+		                    if (obj['is_in']) {
+		                        is_in += ', ' + obj['is_in'];
+		                    }
+		                    /*else if (obj['adm1_name']){
+		                    					is_in=obj['adm1_name'];
+		                    					}*/
+		                    return housenumber + '' + obj['name'] + is_in;
+		                } else {
+		                    return housenumber + '' + obj['name'];
+		                }
+		            }
+		        },
+		        // `ttAdapter` wraps the suggestion engine in an adapter that
+		        // is compatible with the typeahead jQuery plugin
+		        source: this.geocoding2.ttAdapter(),
+		        templates: {
+		            empty: Handlebars.compile('<div class="empty-message">{{l10n "nosuggestion" currentLanguage}}</div>'),
+		            suggestion: Handlebars.compile('{{#if name}}<p>{{#if country_code}}<img src="img/{{country_code}}.png" alt={{country_code}} class="flag-autocomplete"/>{{/if}}{{#if_number_after country_code }}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong> {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}}{{#if houseNumber}}{{houseNumber}}</span>{{/if}}{{else}} {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}} {{#if houseNumber}}{{houseNumber}}</span>{{/if}}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong>{{/if_number_after}}{{#if is_in}}<span class="isin-autocomplete">, {{#if_eq is_in_zip.length 1}} {{is_in_zip}}{{/if_eq}} {{is_in}}</span> {{else}}{{#if adm1_name}}<span class="isin-autocomplete">, {{adm1_name}}</span>{{/if}}{{/if}}</p>{{/if}}'),
+		            footer: '<div class="footer">powered by <a href="http://www.gisgraphy.com/">Gisgraphy.com</a></div>'
+		        }
+		    }
+
+
+
+
+
+	);
+	}
+	
+        function initUI() {
+	    initUI
+            this._formNode = $('<form>').attr('id', this.formNodeID).attr('action', this.geocodingUrl).addClass("gisgraphy-leaflet"); //.appendTo('#'+this.ELEMENT_ID);
+	    if (this.withMenu){
+		    this._toolsNode = $('<div>').attr('id', this.toolsNodeID).addClass('tools').appendTo(this._formNode);
+		    if (this.withHelp) {
+		        $("<img>").attr('alt', 'help').attr('src', './img/help.png').attr('onclick', 'autocompleteGisgraphy[' + autocompleteGisgraphyCounter + '].displayHelp();').addClass('help').appendTo(this._toolsNode);
+		    }
+		    if (this.allowLanguageSelection) {
+		        this.BuildLanguageSelector(DEFAULT_LANGUAGE);
+		    }
+		    if (this.allowPoiSelection) {
+		        this.buildPlaceTypeDropBox(DEFAULT_LANGUAGE, this.placetypeNodeID);
+		    }
+		}
+            this.buildSearchBox();
+            if ($('#' + this.ELEMENT_ID).length > 0) {
+                this._formNode.appendTo($('#' + this.ELEMENT_ID));
+            }
+            if (this.userLat != undefined && this.userLng != 'undefined' && typeof map != 'undefined') {
+                map.panTo(new L.LatLng(this.userLat, this.userLng));
+
+            }
+        }
+
+
+
+        function initAutoCompletion() {
+            if ($('#' + this.ELEMENT_ID).length == 0) {
+                return;
+            }
+            this.geocoding.initialize();
+	    
+            $('#' + this.inputSearchNodeID).typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            }, this.sources
+);
+	  $('input.typeahead').parent().css('position', 'relative');
+$('input.typeahead').parent().css('z-index', 3000);
 
             $('input.typeahead').keypress(
                 //$('#gisgraphy-leaflet-form').on('submit',
@@ -910,9 +1128,9 @@ DEFAULT_LANGUAGE = detectLanguage();
                     this.buildPlaceTypeDropBox(lang, this.placetypeNodeID);
                     this.pois = buildPoisArray(lang);
                 }
-                this.geocoding.clear();
-                this.geocoding.local = this.getLocalSuggestionsArray(lang);
-                this.geocoding.initialize(true);
+                this.geocoding2.clear();
+                this.geocoding2.local = this.getLocalSuggestionsArray(lang);
+                this.geocoding2.initialize(true);
                 $('#' + this.inputSearchNodeID).focus();
                 $('#' + this.inputSearchNodeID).attr('placeholder', translation['placeholder'][lang])
 
