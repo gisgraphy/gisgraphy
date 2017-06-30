@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.repository.AdmDao;
 import com.gisgraphy.domain.repository.CityDao;
@@ -60,6 +61,16 @@ public class StatsDataManager implements IStatsDataManager{
 
 
 
+
+	private static final String ADMS_LABEL = "Adms";
+
+	private static final String POIS_ALL_LABEL = "Pois:all";
+
+	private static final String CITIES_LABEL = "Cities";
+
+	private static final String ADDRESSES_LABEL = "Addresses";
+
+	private static final String STREETS_LABEL = "Streets";
 
 	private static Logger logger = LoggerFactory
 			.getLogger(StatsDataManager.class);
@@ -89,66 +100,95 @@ public class StatsDataManager implements IStatsDataManager{
 
 	String statsAsJson = "{}";
 
-	
+	String EXPORT_DIRECTORY= "./data/export/stats/";
+
+
 	@Override
 	public void exportEachCountriesInJson() {
-		String directoryName= "./data/export/stats/";
-		 File directory = new File(directoryName);
-		    if (! directory.exists()){
-		        directory.mkdir();
-		    }
+		File directory = new File(EXPORT_DIRECTORY);
+		if (! directory.exists()){
+			directory.mkdir();
+		}
 
-		    
-		    Set<String> countries = CountryInfo.countryLookupMap.keySet();
-			int counter = 0;
-			for (String country: countries){
-				counter++;
-				logger.info("stats "+counter+"/"+countries.size());
-				List<StatsDataDTO> countryStats = processCountryCode(country);
-				String json = UniversalSerializer.getInstance().writeToString(countryStats, OutputFormat.JSON);
-				 File file = new File(directoryName + "/" + country+".json");
-				    try{
-				        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-				        BufferedWriter bw = new BufferedWriter(fw);
-				        bw.write(json);
-				        bw.close();
-				    }
-				    catch (IOException e){
-				       logger.error("can not write stats feeds for "+country+" : "+e.getMessage());
-				    }
+
+		Set<String> countries = CountryInfo.countryLookupMap.keySet();
+		int counter = 0;
+		for (String country: countries){
+			counter++;
+			logger.info("stats "+counter+"/"+countries.size());
+			List<StatsDataDTO> countryStats = processCountryCode(country);
+			String json = UniversalSerializer.getInstance().writeToString(countryStats, OutputFormat.JSON);
+			File file = new File(EXPORT_DIRECTORY + "/" + country+".json");
+			try{
+				FileWriter fw = new FileWriter(file.getAbsoluteFile());
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(json);
+				bw.close();
 			}
+			catch (IOException e){
+				logger.error("can not write stats feeds for "+country+" : "+e.getMessage());
+			}
+		}
 	}
-	
+
 	@Override
 	public void exportAllInJson() {
-		String directoryName= "./data/export/stats/";
-		 File directory = new File(directoryName);
-		    if (! directory.exists()){
-		        directory.mkdir();
-		    }
-				String json = getAllInJson(true);
-				 File file = new File(directoryName + "/" + "all.json");
-				    try{
-				        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-				        BufferedWriter bw = new BufferedWriter(fw);
-				        bw.write(json);
-				        bw.close();
-				    }
-				    catch (IOException e){
-				       logger.error("can not write stats feeds for all countries : "+e.getMessage());
-				    }
+		File directory = new File(EXPORT_DIRECTORY);
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		String json = getAllInJson(true);
+		File file = new File(EXPORT_DIRECTORY + "/" + "all.json");
+		try{
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(json);
+			bw.close();
+		}
+		catch (IOException e){
+			logger.error("can not write stats feeds for all countries : "+e.getMessage());
+		}
 	}
+
+	@Override
+	public void exportAllSummaryInJson() {
+
+		File directory = new File(EXPORT_DIRECTORY);
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		List<StatsDataDTO> stats  = getAllSummary(true);
+		String json = UniversalSerializer.getInstance().writeToString(stats, OutputFormat.JSON);
+		File file = new File(EXPORT_DIRECTORY + "/" + "all_summary.json");
+		try{
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(json);
+			bw.close();
+		}
+		catch (IOException e){
+			logger.error("can not write stats feeds for all countries : "+e.getMessage());
+		}
+	}
+
+
 	@Override
 	public void exportStats(){
 		exportAllInJson();
 		exportEachCountriesInJson();
+		exportAllSummaryInJson();
 	}
 
 	public String getAllInJson(boolean refresh) {
+		getAll(refresh);
+		statsAsJson = UniversalSerializer.getInstance().writeToString(statsByCountry, OutputFormat.JSON);
+		return statsAsJson;
+	}
+
+	private Map<String, List<StatsDataDTO>> getAll(boolean refresh) {
 		if (statsByCountry!=null && !statsByCountry.isEmpty() && !refresh){
 			logger.info("stats are alredy processed and in cache");
-			statsAsJson = UniversalSerializer.getInstance().writeToString(statsByCountry, OutputFormat.JSON);
-			return statsAsJson;
+			return statsByCountry;
 		}
 		Map<String, List<StatsDataDTO>> localStatsByCountry = new HashMap<String, List<StatsDataDTO>>();
 		Set<String> countries = CountryInfo.countryLookupMap.keySet();
@@ -160,8 +200,43 @@ public class StatsDataManager implements IStatsDataManager{
 			localStatsByCountry.put(country, countryStats);
 		}
 		statsByCountry = localStatsByCountry;
-		statsAsJson = UniversalSerializer.getInstance().writeToString(statsByCountry, OutputFormat.JSON);
-		return statsAsJson;
+		return statsByCountry;
+	}
+
+	@Override
+	public List<StatsDataDTO> getAllSummary(boolean refresh) {
+		statsByCountry = getAll(refresh);
+		long streets = 0;
+		long cities = 0;
+		long pois = 0;
+		long addresses = 0;
+		long adms = 0;
+		for (String country:statsByCountry.keySet()){
+			List<StatsDataDTO> dtos = statsByCountry.get(country);
+			if (dtos != null){
+				for(StatsDataDTO stat : dtos){
+					if (stat.getLabel().equals(STREETS_LABEL)){
+						streets = streets+stat.getStat();
+					} else if(stat.getLabel().equals(CITIES_LABEL)){
+						cities =cities+stat.getStat();
+					} else if(stat.getLabel().equals(ADDRESSES_LABEL)){
+						addresses =addresses+stat.getStat();
+					}  else if (stat.getLabel().equals(ADMS_LABEL)){
+						adms =adms+stat.getStat();
+					}  else if (stat.getLabel().equals(POIS_ALL_LABEL)){
+						pois =pois+stat.getStat();
+					} 
+				}
+			}
+		}
+		List<StatsDataDTO> stats = new ArrayList<StatsDataDTO>();
+		stats.add(new StatsDataDTO(ADDRESSES_LABEL,addresses));
+		stats.add(new StatsDataDTO(STREETS_LABEL,streets));
+		stats.add(new StatsDataDTO(CITIES_LABEL,cities));
+		stats.add(new StatsDataDTO(ADMS_LABEL,adms));
+		stats.add(new StatsDataDTO(POIS_ALL_LABEL,pois));
+
+		return stats;
 	}
 
 
@@ -193,33 +268,36 @@ public class StatsDataManager implements IStatsDataManager{
 		logger.info("process stats for country "+country);
 		long streets = openStreetMapDao.countByCountryCode(country);
 		logger.info("counting stats for streets : "+ streets);
-		countryStats.add(new StatsDataDTO("Streets", streets));
+		countryStats.add(new StatsDataDTO(STREETS_LABEL, streets));
 
 		long houses = houseNumberDao.countByCountryCode(country);
 		logger.info("counting stats for houses : "+ houses);
-		countryStats.add(new StatsDataDTO("Addresses", houses));
+		countryStats.add(new StatsDataDTO(ADDRESSES_LABEL, houses));
 
 		long cities = cityDao.countByCountryCode(country);
 		logger.info("counting stats for cities : "+ cities);
-		countryStats.add(new StatsDataDTO("Cities", cities));
+		countryStats.add(new StatsDataDTO(CITIES_LABEL, cities));
 
 		long adms = admDao.countByCountryCode(country);
 		logger.info("counting stats for adms : "+ adms);
-		countryStats.add(new StatsDataDTO("Adms", adms));
+		countryStats.add(new StatsDataDTO(ADMS_LABEL, adms));
 
 		//then poi
 		long globalcount = 0;
 		for (int i = 0; i < daos.length; i++) {
 			IGisDao<? extends GisFeature> dao = daos[i];
-			if (dao.getPersistenceClass()== City.class || dao.getPersistenceClass()== Adm.class){
+			if (dao.getPersistenceClass()== City.class || dao.getPersistenceClass()== Adm.class || dao.getPersistenceClass()== Country.class){
 				continue;
 			}
 			long count = dao.countByCountryCode(country);
+			if (dao.getPersistenceClass()== GisFeature.class){
+				count--;//remove the country itself
+			}
 			logger.info("counting stats for pois:"+dao.getPersistenceClass().getSimpleName()+" : "+ count);
 			globalcount = globalcount+ count;
 			countryStats.add(new StatsDataDTO("Pois:"+dao.getPersistenceClass().getSimpleName(), count));
 		}
-		countryStats.add(new StatsDataDTO("Pois:all", globalcount));
+		countryStats.add(new StatsDataDTO(POIS_ALL_LABEL, globalcount));
 		logger.info("counting stats for pois:all : "+ globalcount);
 		return countryStats;
 	}
@@ -313,7 +391,7 @@ public class StatsDataManager implements IStatsDataManager{
 		return IStatsUsageService.FLUSH_THRESHOLD;
 	}
 
-	
+
 
 
 

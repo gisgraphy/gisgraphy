@@ -10,9 +10,13 @@ public interface IStatsDataManager {
 	
 	public List<StatsDataDTO> processCountryCode(String country) ;
 	
+	public List<StatsDataDTO> getAllSummary(boolean refresh);
+	
 	public void exportEachCountriesInJson();
 	
 	public void exportAllInJson();
+	
+	public void exportAllSummaryInJson();
 	
 	public void exportStats();
 
