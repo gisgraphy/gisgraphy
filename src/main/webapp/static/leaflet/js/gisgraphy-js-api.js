@@ -591,9 +591,9 @@ this.geocoding2.initialize();
                                     content += '<span class="isin-autocomplete">,' + zip + value.city + '</span>';
                                 }
                             }
-                            if (value.lat && value.lng) {
+                           /* if (value.lat && value.lng) {
                                 content += "<br/>(" + value.lat + "," + value.lng + ")";
-                            }
+                            }*/
                             $('<div onclick="moveCenterOfMapTo(' + value.lat + ',' + value.lng + ',\'' + value.placetype + '\')">').html(content).appendTo('#' + this.resultBoxNodeID);
 
                             //TODO : add search around

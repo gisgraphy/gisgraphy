@@ -84,7 +84,8 @@ fullyQualifiedName
 					<#if result.level??><li><@s.text name="global.level"/> : ${result.level}</li></#if>
 					<#if result.street_type??><li><@s.text name="global.streettype"/><@s.text name="${result.street_type}" /></li></#if>
 					<#if result.street_ref??><li><@s.text name="global.streetref"/><@s.text name="${result.street_ref}" /></li></#if>
-					<#if result.one_way??>
+					<#if result.one_way?? && result.placetype.equals("Street") >
+							
 							<#if result.one_way>
 								<@s.text name="street.oneway"/>
 							<#else>

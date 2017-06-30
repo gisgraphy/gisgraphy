@@ -31,8 +31,8 @@
 						<div class="summary">
 						<@s.text name="global.latitude"/> : <#if lat??>${lat}<#else>${result.location.y?c}</#if> 
 						<br/>
-						<@s.text name="global.longitude"/> : <#if lng??>${lng}<#else>${result.location.x?c}</#if>
-						<@s.text name="global.length"/> : ${result.length} m(s)<br/>
+						<@s.text name="global.longitude"/> : <#if lng??>${lng}<#else>${result.location.x?c}</#if><br/>
+						<#if result.length??><@s.text name="global.length"/> : ${result.length} m(s)<br/></#if>
 						<#if result.lanes??><@s.text name="global.lanes"/> : ${result.lanes}<br/></#if>
 						<#if result.toll??><@s.text name="global.toll"/> : ${result.toll}<br/></#if>
 						<#if result.surface??><@s.text name="global.surface"/> : ${result.surface}<br/></#if>
