@@ -967,7 +967,7 @@ public class GeocodingService implements IGeocodingService {
 					String isIn = solrResponseDto.getIs_in();
 					Point curLoc = GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat());
 					if (solrResponseDto.getIs_in_place()!=null){
-						 isIn = isIn +" "+ solrResponseDto.getIs_in();
+						 isIn = isIn +" "+ solrResponseDto.getIs_in_place();
 					}
 					if (!isEmptyString(streetName)){ 
 						if(streetName.equalsIgnoreCase(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin) && lastLocation!=null && !(GeolocHelper.distance(lastLocation, curLoc)>12000)){

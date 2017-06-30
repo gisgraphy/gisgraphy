@@ -1503,7 +1503,7 @@ public class GeocodingServiceTest {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
 	streets.add(street);
 	// exercise
 	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
@@ -1547,13 +1547,13 @@ public class GeocodingServiceTest {
     
     
     @Test
-    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate() {
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_NoIsInPlace() {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in",null);
 	streets.add(street);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in",null);
 	streets.add(street2);
 	
 	// exercise
@@ -1563,8 +1563,88 @@ public class GeocodingServiceTest {
 	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
 	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
 	Assert.assertEquals(1, addressResultsDto.getResult().size());
-	Address address = addressResultsDto.getResult().get(0);
 	
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_sameIsInPlace() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	streets.add(street);
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	streets.add(street2);
+	
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
+	
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_differentIsInPlace() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	streets.add(street);
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place2");
+	streets.add(street2);
+	
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(2, addressResultsDto.getResult().size());
+	
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_differentIsIn() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	streets.add(street);
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in2","is_in_place");
+	streets.add(street2);
+	
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(2, addressResultsDto.getResult().size());
+	
+    }
+    
+    //because a street can have several segment in several area with different zip, we only take isin + isinplace
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_FQDN_With_differentZipShouldDuplicate() {
+	// setup
+	GeocodingService geocodingService = new GeocodingService();
+	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("fqdn 567");
+	
+	streets.add(street);
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("fqdn 789");
+	streets.add(street2);
+	
+	// exercise
+	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
+
+	// verify
+	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+	Assert.assertEquals(1, addressResultsDto.getResult().size());
 	
     }
     
@@ -1574,11 +1654,11 @@ public class GeocodingServiceTest {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
 	streets.add(street);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
 	streets.add(street2);
-	SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in2");
+	SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in2");
 	streets.add(street3);
 	
 	// exercise
@@ -1600,7 +1680,7 @@ public class GeocodingServiceTest {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
 	streets.add(street);
 	String houseNumberToFind = "2";
 	// exercise
@@ -1647,7 +1727,7 @@ public class GeocodingServiceTest {
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
 	SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
 	results.add(street);
 	results.add(city);
 	// exercise
