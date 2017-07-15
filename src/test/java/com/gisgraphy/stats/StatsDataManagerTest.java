@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
 
-//@Ignore
+@Ignore
 public class StatsDataManagerTest extends AbstractIntegrationHttpSolrTestCase{
 
 	@Autowired

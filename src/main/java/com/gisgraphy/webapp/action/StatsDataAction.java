@@ -88,7 +88,7 @@ public class StatsDataAction extends ActionSupport {
 	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
 	public String alljson() throws Exception {
-		statsAsJson = statsDataManager.getAllInJson(refresh);
+		statsAsJson = statsDataManager.getAllInJson(refresh,true);
 		return Action.SUCCESS;
 	}
 

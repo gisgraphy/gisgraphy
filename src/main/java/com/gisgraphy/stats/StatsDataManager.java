@@ -103,6 +103,9 @@ public class StatsDataManager implements IStatsDataManager{
 	String EXPORT_DIRECTORY= "./data/export/stats/";
 
 
+	/**
+	 *  export one file per country with details stats
+	 */
 	@Override
 	public void exportEachCountriesInJson() {
 		File directory = new File(EXPORT_DIRECTORY);
@@ -116,7 +119,7 @@ public class StatsDataManager implements IStatsDataManager{
 		for (String country: countries){
 			counter++;
 			logger.info("stats "+counter+"/"+countries.size());
-			List<StatsDataDTO> countryStats = processCountryCode(country);
+			List<StatsDataDTO> countryStats = processCountryCode(country,true);
 			String json = UniversalSerializer.getInstance().writeToString(countryStats, OutputFormat.JSON);
 			File file = new File(EXPORT_DIRECTORY + "/" + country+".json");
 			try{
@@ -130,14 +133,16 @@ public class StatsDataManager implements IStatsDataManager{
 			}
 		}
 	}
-
+/**
+ * export one file with all the details stats for all the countries
+ */
 	@Override
 	public void exportAllInJson() {
 		File directory = new File(EXPORT_DIRECTORY);
 		if (! directory.exists()){
 			directory.mkdir();
 		}
-		String json = getAllInJson(true);
+		String json = getAllInJson(true,true);
 		File file = new File(EXPORT_DIRECTORY + "/" + "all.json");
 		try{
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
@@ -149,7 +154,32 @@ public class StatsDataManager implements IStatsDataManager{
 			logger.error("can not write stats feeds for all countries : "+e.getMessage());
 		}
 	}
+	
+	/**
+	 * export one file with all the not details stats for all the countries
+	 */
+	@Override
+	public void exportAllInJsonNoDetails() {
+		File directory = new File(EXPORT_DIRECTORY);
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		String json = getAllInJson(true,false);
+		File file = new File(EXPORT_DIRECTORY + "/" + "all_nodetails.json");
+		try{
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(json);
+			bw.close();
+		}
+		catch (IOException e){
+			logger.error("can not write stats feeds for all countries : "+e.getMessage());
+		}
+	}
 
+	/**
+	 * export one file with a summary of all stats per category (streets, city,..)
+	 */
 	@Override
 	public void exportAllSummaryInJson() {
 
@@ -175,17 +205,18 @@ public class StatsDataManager implements IStatsDataManager{
 	@Override
 	public void exportStats(){
 		exportAllInJson();
+		exportAllInJsonNoDetails();
 		exportEachCountriesInJson();
 		exportAllSummaryInJson();
 	}
 
-	public String getAllInJson(boolean refresh) {
-		getAll(refresh);
+	public String getAllInJson(boolean refresh,boolean withdetails) {
+		getAll(refresh,withdetails);
 		statsAsJson = UniversalSerializer.getInstance().writeToString(statsByCountry, OutputFormat.JSON);
 		return statsAsJson;
 	}
 
-	private Map<String, List<StatsDataDTO>> getAll(boolean refresh) {
+	private Map<String, List<StatsDataDTO>> getAll(boolean refresh, boolean withdetails) {
 		if (statsByCountry!=null && !statsByCountry.isEmpty() && !refresh){
 			logger.info("stats are alredy processed and in cache");
 			return statsByCountry;
@@ -196,7 +227,7 @@ public class StatsDataManager implements IStatsDataManager{
 		for (String country: countries){
 			counter++;
 			logger.info("stats "+counter+"/"+countries.size());
-			List<StatsDataDTO> countryStats = processCountryCode(country);
+			List<StatsDataDTO> countryStats = processCountryCode(country,withdetails);
 			localStatsByCountry.put(country, countryStats);
 		}
 		statsByCountry = localStatsByCountry;
@@ -205,7 +236,7 @@ public class StatsDataManager implements IStatsDataManager{
 
 	@Override
 	public List<StatsDataDTO> getAllSummary(boolean refresh) {
-		statsByCountry = getAll(refresh);
+		statsByCountry = getAll(refresh,true);
 		long streets = 0;
 		long cities = 0;
 		long pois = 0;
@@ -257,13 +288,13 @@ public class StatsDataManager implements IStatsDataManager{
 			}
 			return statsAsJson;
 		}
-		List<StatsDataDTO> countryStats = processCountryCode(countryCode);
+		List<StatsDataDTO> countryStats = processCountryCode(countryCode,true);
 		statsAsJson = UniversalSerializer.getInstance().writeToString(countryStats, OutputFormat.JSON);
 		return statsAsJson;
 	}
 
 	@Override
-	public List<StatsDataDTO> processCountryCode(String country) {
+	public List<StatsDataDTO> processCountryCode(String country,boolean withdetails) {
 		List<StatsDataDTO> countryStats = new ArrayList<StatsDataDTO>();
 		logger.info("process stats for country "+country);
 		long streets = openStreetMapDao.countByCountryCode(country);
@@ -295,7 +326,9 @@ public class StatsDataManager implements IStatsDataManager{
 			}
 			logger.info("counting stats for pois:"+dao.getPersistenceClass().getSimpleName()+" : "+ count);
 			globalcount = globalcount+ count;
+			if (withdetails){
 			countryStats.add(new StatsDataDTO("Pois:"+dao.getPersistenceClass().getSimpleName(), count));
+			}
 		}
 		countryStats.add(new StatsDataDTO(POIS_ALL_LABEL, globalcount));
 		logger.info("counting stats for pois:all : "+ globalcount);
