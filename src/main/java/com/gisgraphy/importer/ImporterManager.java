@@ -137,6 +137,11 @@ public class ImporterManager implements IImporterManager {
 			+ importer.getClass().getSimpleName());
 		importer.process();
 	    }
+	    try {
+			statsDataManager.exportStats();
+		} catch (Exception e1) {
+			logger.error("Can not export statistics : " + e1.getMessage(),e1);
+		}
 	    logger.info("end of import");
 	} finally {
 		try {
@@ -146,11 +151,7 @@ public class ImporterManager implements IImporterManager {
 		} catch (RuntimeException e) {
 			logger.error("Can not save statusDtoList : " + e.getMessage(),e);
 		}
-		try {
-			statsDataManager.exportStats();
-		} catch (Exception e1) {
-			logger.error("Can not export statistics : " + e1.getMessage(),e1);
-		}
+		
 		try {
 			this.endTime = System.currentTimeMillis();
 			this.inProgress = false;

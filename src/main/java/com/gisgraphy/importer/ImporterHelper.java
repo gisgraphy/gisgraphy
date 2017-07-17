@@ -65,6 +65,7 @@ import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
 import com.gisgraphy.helper.FeatureClassCodeHelper;
+import com.gisgraphy.helper.StringHelper;
 
 /**
  * Useful methods for importer
@@ -705,8 +706,8 @@ public class ImporterHelper {
 					}
 					List<AlternateName> toBeAdded = new ArrayList<AlternateName>();					
 					for (String name:alternateNames){
-						if (name!=null && name.length()<GisFeature.MAX_ALTERNATENAME_SIZE){
-							if (lang!=null &&  !"".equals(lang.trim()) && lang.length()<29){
+						if (name!=null && !StringHelper.isEmptyString(name) && name.length()<GisFeature.MAX_ALTERNATENAME_SIZE){
+							if (lang!=null &&  !"".equals(lang.trim()) && lang.length()< AlternateName.MAX_LANG_SIZE){
 								AlternateName alternateName2 = new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
 								alternateName2.setGisFeature(feature);
 								toBeAdded.add(alternateName2);
@@ -793,7 +794,7 @@ public class ImporterHelper {
 										
 					for (String name:alternateNames){
 						AlternateOsmName alternateNameToAdd;
-						if (name!=null  && !"".equals(name) && name.length()<OpenStreetMap.MAX_ALTERNATENAME_SIZE){
+						if (name!=null  && !StringHelper.isEmptyString(name) && name.length()<OpenStreetMap.MAX_ALTERNATENAME_SIZE){
 							if (street.getName()==null){
 								street.setName(name);
 								if (lang.equals("de") && decompounder.isDecompoundName(name)){
@@ -805,7 +806,7 @@ public class ImporterHelper {
 								}
 								continue;
 							} 
-							if (lang!=null &&  !"".equals(lang.trim()) && lang.length()<29){
+							if (lang!=null &&  !"".equals(lang.trim()) && lang.length() < AlternateName.MAX_LANG_SIZE){
 								alternateNameToAdd = new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
 								if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
 									street.addAlternateName(alternateNameToAdd);

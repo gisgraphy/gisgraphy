@@ -62,9 +62,11 @@ public class AlternateName {
 
     private String language;
 
-    private boolean isPreferredName;
+    private boolean isPreferredName = false;
 
-    private boolean isShortName;
+    private boolean isShortName =false;
+    
+    public static final int MAX_LANG_SIZE = 29;
 
     /**
      * @param name

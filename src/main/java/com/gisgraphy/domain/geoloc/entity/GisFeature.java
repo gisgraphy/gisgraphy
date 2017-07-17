@@ -61,8 +61,10 @@ import com.gisgraphy.domain.valueobject.SRID;
 import com.gisgraphy.helper.FeatureClassCodeHelper;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.IntrospectionIgnoredField;
+import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.importer.ImporterConfig;
 import com.gisgraphy.importer.LabelGenerator;
+import com.gisgraphy.util.StringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
@@ -704,8 +706,8 @@ public class GisFeature{
      */
     public void addAlternateName(AlternateName alternateName) {
     	if (alternateName!=null){
-    		if (alternateName.getName() != null && alternateName.getName().length() > MAX_ALTERNATENAME_SIZE){
-    			logger.warn("alternate name "+ alternateName.getName()+" is too long");
+    		if (alternateName.getName() != null && alternateName.getName().length() > MAX_ALTERNATENAME_SIZE || (alternateName.getLanguage()!=null && alternateName.getLanguage().length() > AlternateName.MAX_LANG_SIZE)){
+    			logger.error("alternate name "+ alternateName.getName()+" or language "+alternateName.getLanguage()+" is too long");
     		} else {
 	    		alternateName.setGisFeature(this);
 	    		Set<AlternateName> currentAlternateNames = getAlternateNames();
@@ -1284,7 +1286,7 @@ public class GisFeature{
      * @param zipCode the zip code to add
      */
 	public void addZipCode(ZipCode zipCode) {
-		if (zipCode!=null){
+		if (zipCode!=null && zipCode.getCode()!=null && !StringHelper.isEmptyString(zipCode.getCode())){
 			Set<ZipCode> actualZipCodes = getZipCodes();
 			if (actualZipCodes == null) {
 				actualZipCodes = new HashSet<ZipCode>();
