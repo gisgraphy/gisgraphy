@@ -66,6 +66,23 @@ public class GisHelperTest {
 	clazz = GisHelper.getClassEntityFromString(null);
 	Assert.assertNull(clazz);
     }
+    
+    @Test
+    public void testMakeEnvelope(){
+    	String envelope = GisHelper.makeEnvelope("C", -30d, 20d, 40000);
+    	
+    	envelope = GisHelper.makeEnvelope("C", -90d, 0d, 40000);
+    	Assert.assertFalse(envelope.contains("NaN"));
+    }
+    
+    @Test
+    public void testGetBoundingBox(){
+    	String bbox = GisHelper.getBoundingBox("C", -30d, 20d, 40000);
+    	
+    	bbox = GisHelper.getBoundingBox("C", -90d, 0d, 40000);
+    	Assert.assertFalse(bbox.contains("NaN"));
+    	
+    }
 
 
     

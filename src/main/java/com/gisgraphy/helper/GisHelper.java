@@ -94,16 +94,27 @@ public class GisHelper {
     double lat = Math.toRadians(latInDegree);
     double lon = Math.toRadians(longInDegree);
 
-	double deltaXInDegrees = Math.abs(Math.asin(Math
-		.sin(distance / Constants.RADIUS_OF_EARTH_IN_METERS)
-		/ Math.cos(lat)));
-	double deltaYInDegrees = Math.abs(distance
-		/ Constants.RADIUS_OF_EARTH_IN_METERS);
-
-	double minX = Math.toDegrees(lon - deltaXInDegrees);
-	double maxX = Math.toDegrees(lon + deltaXInDegrees);
-	double minY = Math.toDegrees(lat - deltaYInDegrees);
-	double maxY = Math.toDegrees(lat + deltaYInDegrees);
+	double deltaXInDegrees = Math.abs(
+			Math.asin(
+					Math.sin(distance / Constants.RADIUS_OF_EARTH_IN_METERS)/ Math.cos(lat)
+					)
+		);
+if (Double.isNaN(deltaXInDegrees)){
+	deltaXInDegrees=0;
+}
+double deltaYInDegrees = Math.abs(distance
+	/ Constants.RADIUS_OF_EARTH_IN_METERS);
+if (Double.isNaN(deltaYInDegrees)){
+	deltaYInDegrees=0;
+}
+double minX = Math.toDegrees(lon - deltaXInDegrees);
+if (Double.isNaN(minX)){minX=lon;}
+double maxX = Math.toDegrees(lon + deltaXInDegrees);
+if (Double.isNaN(maxX)){minX=lon;}
+double minY = Math.toDegrees(lat - deltaYInDegrees);
+if (Double.isNaN(minY)){minX=lat;}
+double maxY = Math.toDegrees(lat + deltaYInDegrees);
+if (Double.isNaN(maxY)){minX=lat;}
 
 	StringBuffer sb = new StringBuffer();
 	// {alias}.location && setSRID(BOX3D(...), 4326)
@@ -162,13 +173,22 @@ public class GisHelper {
 						Math.sin(distance / Constants.RADIUS_OF_EARTH_IN_METERS)/ Math.cos(lat)
 						)
 			);
+	if (Double.isNaN(deltaXInDegrees)){
+		deltaXInDegrees=0;
+	}
 	double deltaYInDegrees = Math.abs(distance
 		/ Constants.RADIUS_OF_EARTH_IN_METERS);
-
+	if (Double.isNaN(deltaYInDegrees)){
+		deltaYInDegrees=0;
+	}
 	double minX = Math.toDegrees(lon - deltaXInDegrees);
+	if (Double.isNaN(minX)){minX=lon;}
 	double maxX = Math.toDegrees(lon + deltaXInDegrees);
+	if (Double.isNaN(maxX)){minX=lon;}
 	double minY = Math.toDegrees(lat - deltaYInDegrees);
+	if (Double.isNaN(minY)){minX=lat;}
 	double maxY = Math.toDegrees(lat + deltaYInDegrees);
+	if (Double.isNaN(maxY)){minX=lat;}
 
 	//"ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";
 	StringBuffer sb = new StringBuffer();
