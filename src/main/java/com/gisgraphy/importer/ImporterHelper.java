@@ -274,7 +274,7 @@ public class ImporterHelper {
 
 	// for Log purpose
 	for (int i = 0; i < files.length; i++) {
-	    logger.info(files[i].getName() + " is a Geonames splited importable File");
+	    logger.info(files[i].getName() + " is a splited importable File");
 	}
 	logger.info(files.length +" files are Geonames importable files");
 

@@ -183,7 +183,7 @@ public class FulltextQuerySolrHelper {
 					//we do a bounding box
 					parameters.add(Constants.FQ_PARAMETER, FQ_LOCATION);
 					parameters.add(Constants.DISTANCE_PARAMETER,radius/1000+"");
-					logger.error("restrict to bbox with radius="+radius/1000);
+					logger.debug("restrict to bbox with radius="+radius/1000);
 				} /*else if(query.getRadius() == 0){
 					parameters.add(Constants.DISTANCE_PARAMETER,MAX_RADIUS+"");
 				}  */
@@ -201,7 +201,7 @@ public class FulltextQuerySolrHelper {
 		String bfField = "";
 		if (query.getPoint() != null ) {//promote nearest if  point is specified
 			bfField = BF_NEAREST;
-			logger.error("boost nearest on");
+			logger.debug("boost nearest on");
 		} else {
 			bfField=BF_POPULATION;
 		}
@@ -232,13 +232,13 @@ public class FulltextQuerySolrHelper {
 					.toString());
 			if (query.getPoint() != null ) {//promote nearest if  point is specified
 				bfField = BF_NEAREST;
-				logger.error("boost nearest on");
+				logger.debug("boost nearest on");
 			} else {
 				bfField=""; //population is already boost by bq
 			}
 			String querySolr = String.format(SUGGEST_QUERY_TEMPLATE,bfField,query.getQuery());
 			parameters.set(Constants.QUERY_PARAMETER, querySolr);
-			logger.error("querysolr="+querySolr);
+			logger.debug("querysolr="+querySolr);
 			/*if(query.getPoint()!=null){
 				parameters.set(Constants.BF_PARAMETER, BF_NEAREST);
 			}*/
@@ -294,7 +294,7 @@ public class FulltextQuerySolrHelper {
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
 			String querySolr = querybuffer.toString();
-			logger.error("querysolr="+querySolr);
+			logger.debug("querysolr="+querySolr);
 			String queryAsStr = querySolr;
 			
 			parameters.set(Constants.QUERY_PARAMETER, queryAsStr);
@@ -317,7 +317,7 @@ public class FulltextQuerySolrHelper {
 	public static void setFQPlacetype(FulltextQuery query,
 			ModifiableSolrParams parameters) {
 		if (query.isSuggest() && (query.getPlaceTypes() == null || query.getPlaceTypes().length==0)){
-			logger.error("fq placetype default = "+SUGGEST_FQ);
+			logger.debug("fq placetype default = "+SUGGEST_FQ);
 			parameters.add(Constants.FQ_PARAMETER, SUGGEST_FQ);
 		}
 		else if (query.getPlaceTypes() != null && containsOtherThingsThanNull(query.getPlaceTypes())) {
@@ -335,7 +335,7 @@ public class FulltextQuerySolrHelper {
 			}
 			sb.append(")");
 			parameters.add(Constants.FQ_PARAMETER, FQ_PLACETYPE+sb.toString());
-			logger.error("fq placetype = "+FQ_PLACETYPE+sb.toString());
+			logger.debug("fq placetype = "+FQ_PLACETYPE+sb.toString());
 		}
 	}
 	

@@ -37,6 +37,56 @@ public class NodeHouseNumber {
 	
 	
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("NodeHouseNumber [");
+		if (nodeId != null) {
+			builder.append("nodeId=");
+			builder.append(nodeId);
+			builder.append(", ");
+		}
+		if (location != null) {
+			builder.append("location=");
+			builder.append(location);
+			builder.append(", ");
+		}
+		if (houseNumber != null) {
+			builder.append("houseNumber=");
+			builder.append(houseNumber);
+			builder.append(", ");
+		}
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (streetName != null) {
+			builder.append("streetName=");
+			builder.append(streetName);
+			builder.append(", ");
+		}
+		if (city != null) {
+			builder.append("city=");
+			builder.append(city);
+			builder.append(", ");
+		}
+		if (zipCode != null) {
+			builder.append("zipCode=");
+			builder.append(zipCode);
+			builder.append(", ");
+		}
+		if (suburb != null) {
+			builder.append("suburb=");
+			builder.append(suburb);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 	public NodeHouseNumber(Point location, String houseNumber, String name,
 			String streetName, String city, String zipCode, String suburb) {
 		super();

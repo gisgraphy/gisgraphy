@@ -814,7 +814,7 @@ ___W___house"} SHAPE"
 		try {
 			results = fullTextSearchEngine.executeQuery(query);
 		} catch (RuntimeException e) {
-			logger.error("error during fulltext search : "+e.getMessage(),e);
+			logger.error("error during fulltext search for "+streetName+" : "+e.getMessage(),e);
 			return null;
 		}
 		int resultsSize = results.getResultsSize();

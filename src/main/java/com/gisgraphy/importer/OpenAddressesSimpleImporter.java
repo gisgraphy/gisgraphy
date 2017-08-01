@@ -282,13 +282,18 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		if (!isEmptyField(fields, 8, false)){
 			street.setZipCode(fields[8]);
 		} 
-		openStreetMapDao.save(street);
-		street.setCountryCode(countryCode);
-		HouseNumber hn = new HouseNumber(cleanedNumber,location);
-		hn.setName(housename);
-		hn.setSource(GISSource.OPENADDRESSES);
-		street.addHouseNumber(hn);
-		houseNumberDao.save(hn);
+		HouseNumber hn=null;
+		try {
+			openStreetMapDao.save(street);
+			street.setCountryCode(countryCode);
+			hn = new HouseNumber(cleanedNumber,location);
+			hn.setName(housename);
+			hn.setSource(GISSource.OPENADDRESSES);
+			street.addHouseNumber(hn);
+			houseNumberDao.save(hn);
+		} catch (Exception e) {
+			logger.error("error when savig data : "+e.getMessage(),e);
+		}
 
 		logger.debug(currentHash+ " : have save "+hn);
 		

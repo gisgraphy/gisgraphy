@@ -128,6 +128,42 @@ public class InterpolationHouseNumber {
 		return AddressInclusion;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("InterpolationHouseNumber [");
+		if (wayId != null) {
+			builder.append("wayId=");
+			builder.append(wayId);
+			builder.append(", ");
+		}
+		if (members != null) {
+			builder.append("members=");
+			builder.append(members.subList(0, Math.min(members.size(), maxLen)));
+			builder.append(", ");
+		}
+		if (streetName != null) {
+			builder.append("streetName=");
+			builder.append(streetName);
+			builder.append(", ");
+		}
+		if (interpolationType != null) {
+			builder.append("interpolationType=");
+			builder.append(interpolationType);
+			builder.append(", ");
+		}
+		if (AddressInclusion != null) {
+			builder.append("AddressInclusion=");
+			builder.append(AddressInclusion);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 	/**
 	 * @param addressInclusion the addressInclusion to set
 	 */
