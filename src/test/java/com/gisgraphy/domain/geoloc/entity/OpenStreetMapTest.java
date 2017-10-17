@@ -119,13 +119,13 @@ public class OpenStreetMapTest {
 		
 		List<AlternateOsmName> names = new ArrayList<AlternateOsmName>();
 		
-		names.add(new AlternateOsmName("foo", AlternateNameSource.OPENSTREETMAP));
+		names.add(new AlternateOsmName("foo", AlternateNameSource.OPENSTREETMAP,"fr"));
 		street.addAlternateNames(names);
 		
 		Assert.assertEquals(1, street.getAlternateNames().size());
 		Assert.assertEquals("double set is not correct",street, street.getAlternateNames().get(0).getStreet());
 		
-		street.addAlternateName(new AlternateOsmName("bar", AlternateNameSource.OPENSTREETMAP));
+		street.addAlternateName(new AlternateOsmName("bar", AlternateNameSource.OPENSTREETMAP,"fr"));
 		Assert.assertEquals("add should add not replace",2, street.getAlternateNames().size());
 		
 		Assert.assertEquals("double set is not correct",street, street.getAlternateNames().get(1).getStreet());
@@ -139,13 +139,13 @@ public class OpenStreetMapTest {
 		
 		List<AlternateOsmName> names = new ArrayList<AlternateOsmName>();
 		
-		names.add(new AlternateOsmName("foo", AlternateNameSource.OPENSTREETMAP));
+		names.add(new AlternateOsmName("foo", AlternateNameSource.OPENSTREETMAP,"fr"));
 		street.addAlternateNames(names);
 		
 		Assert.assertEquals(1, street.getAlternateNames().size());
 		Assert.assertEquals("double set is not correct",street, street.getAlternateNames().get(0).getStreet());
 		
-		street.addAlternateName(new AlternateOsmName(StringUtils.repeat("a", OpenStreetMap.MAX_ALTERNATENAME_SIZE+1), AlternateNameSource.OPENSTREETMAP));
+		street.addAlternateName(new AlternateOsmName(StringUtils.repeat("a", OpenStreetMap.MAX_ALTERNATENAME_SIZE+1), AlternateNameSource.OPENSTREETMAP,"fr"));
 		Assert.assertEquals("add should add not too long names",1, street.getAlternateNames().size());
 		
 		Assert.assertEquals("double set is not correct",street, street.getAlternateNames().get(0).getStreet());

@@ -107,8 +107,10 @@ public class GeonamesFeatureImporterTest {
     public void  splitAlternateNames() {
     	String alternateNamesString = "foo,bar,http://wikipedia,bar2";
     	GeonamesFeatureSimpleImporter featureImporter = new GeonamesFeatureSimpleImporter();
+		GisFeature gisFeature = new GisFeature();
+		gisFeature.setCountryCode("FR");
 		List<AlternateName> names =  featureImporter.splitAlternateNames(alternateNamesString,
-    			    new GisFeature());
+    			    gisFeature);
 		Assert.assertEquals("names that starts with http should not be imported",3, names.size());
 		Assert.assertEquals("foo", names.get(0).getName());
 		Assert.assertEquals("bar", names.get(1).getName());

@@ -35,8 +35,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-import sun.net.www.http.Hurryable;
-
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.HouseNumber;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
@@ -286,10 +284,11 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		try {
 			openStreetMapDao.save(street);
 			street.setCountryCode(countryCode);
-			hn = new HouseNumber(cleanedNumber,location);
+			hn = new HouseNumber(cleanedNumber,location,countryCode);
 			hn.setName(housename);
 			hn.setSource(GISSource.OPENADDRESSES);
 			street.addHouseNumber(hn);
+			hn.setCountryCode(street.getCountryCode());
 			houseNumberDao.save(hn);
 		} catch (Exception e) {
 			logger.error("error when savig data : "+e.getMessage(),e);

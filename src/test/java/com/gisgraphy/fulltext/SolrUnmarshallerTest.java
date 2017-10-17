@@ -203,9 +203,9 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 
 	country.addSpokenLanguage(lang);
 	
-	AlternateName alternateNameLocalized = new AlternateName("alternateFR",AlternateNameSource.ALTERNATENAMES_FILE);
+	AlternateName alternateNameLocalized = new AlternateName("alternateFR",AlternateNameSource.ALTERNATENAMES_FILE,"fr");
 	alternateNameLocalized.setLanguage("FR");
-	AlternateName alternateName = new AlternateName("alternate",AlternateNameSource.ALTERNATENAMES_FILE);
+	AlternateName alternateName = new AlternateName("alternate",AlternateNameSource.ALTERNATENAMES_FILE,"fr");
 	country.addAlternateName(alternateName);
 	country.addAlternateName(alternateNameLocalized);
 	Assert.assertEquals(2,country.getAlternateNames().size());
@@ -345,6 +345,7 @@ public class SolrUnmarshallerTest extends AbstractIntegrationHttpSolrTestCase {
 	street.setLength(length);
 	HouseNumber houseNumber = new HouseNumber();
 	houseNumber.setNumber("3");
+	houseNumber.setCountryCode("FR");
 	houseNumber.setLocation(GeolocHelper.createPoint(4F, 5F));
 	street.addHouseNumber(houseNumber);
 	street.setLanes(2);

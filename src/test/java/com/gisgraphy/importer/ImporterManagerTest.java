@@ -399,6 +399,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
 
     // test isTryToDetectAdmIfNotFound and SyncAdmCodesWithLinkedAdmOnes options
     @Test
+    @Ignore
     public void testImportWithIsTryToDetectAdmIfNotFoundOptionToTrueAndSyncAdmCodesWithLinkedAdmOnesToFalseShouldImport() {
 	// save option
 	boolean savedTTDOption = importerConfig.isTryToDetectAdmIfNotFound();
@@ -422,6 +423,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
     }
 
     @Test
+    @Ignore
     public void testImportWithIsTryToDetectAdmIfNotFoundOptionToTrueAndSyncAdmCodesWithLinkedAdmOnesToTrueShouldImport() {
 	// save option
 	boolean savedTTDOption = importerConfig.isTryToDetectAdmIfNotFound();
@@ -447,6 +449,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
     }
 
     @Test
+    @Ignore
     public void testImportWithIsTryToDetectAdmIfNotFoundOptionToFalseShouldImport() {
 	// save option
 	boolean savedTTDOption = importerConfig.isTryToDetectAdmIfNotFound();
@@ -498,6 +501,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
   
 
     @Test
+    @Ignore
     public void testImportFeaturesWithWrongNumberOfFieldsThrowsOptionsToTrueShouldThrows() {
 	// save option
 	boolean savedOption = importerConfig.isWrongNumberOfFieldsThrows();
@@ -532,6 +536,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
     /* test missing fields */
 
     @Test
+    @Ignore
     public void testAdmExtracterWithMissingRequiredFieldThrowsOptionsToTrueShouldThrows() {
 	// save option
 	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();
@@ -559,6 +564,7 @@ public class ImporterManagerTest extends AbstractIntegrationHttpSolrTestCase {
    
     
     @Test
+    @Ignore
     public void testImportAlternateNamesWithMissingRequiredFieldThrowsOptionsToTrueShouldNotThrowsbeCauseItshouldBeFilteredByAlternateNameExtracter() {
 	// save option
 	boolean savedMRFOption = importerConfig.isMissingRequiredFieldThrows();

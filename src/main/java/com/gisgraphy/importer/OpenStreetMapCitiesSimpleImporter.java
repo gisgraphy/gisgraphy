@@ -362,11 +362,11 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		}
 	}
 	//zip code
-	if(!isEmptyField(fields, 5, false) && (place.getZipCodes()==null || !place.getZipCodes().contains(new ZipCode(fields[5])))){
+	if(!isEmptyField(fields, 5, false) && (place.getZipCodes()==null || !place.getZipCodes().contains(new ZipCode(fields[5],countrycode)))){
 			populateZip(fields[5], place);
 	}
 	//subdivision zip code
-		if(!isEmptyField(fields, 6, false) && (place.getZipCodes()==null || !place.getZipCodes().contains(new ZipCode(fields[6])))){
+		if(!isEmptyField(fields, 6, false) && (place.getZipCodes()==null || !place.getZipCodes().contains(new ZipCode(fields[6],countrycode)))){
 				populateZip(fields[6], place);
 		}
 	
@@ -543,7 +543,7 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 				if (!ImporterHelper.isUnwantedZipCode(zipcode) 
 						)
 						{
-					city.addZipCode(new ZipCode(zipcode));
+					city.addZipCode(new ZipCode(zipcode,city.getCountryCode()));
 				}
 			}
 		

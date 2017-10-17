@@ -59,18 +59,18 @@ public class AlternateNameDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	City paris = GisgraphyTestHelper.createCity("Paris", 3.4F, 4.5F, 5L);
 	List<AlternateName> alternateNames = new ArrayList<AlternateName>();
 	AlternateName a1 = new AlternateName("FrenchParis",
-		AlternateNameSource.PERSONAL);
+		AlternateNameSource.PERSONAL,"fr");
 	a1.setLanguage("FR");
 	alternateNames.add(a1);
 	AlternateName a2 = new AlternateName("SpanishParis",
-		AlternateNameSource.PERSONAL);
+		AlternateNameSource.PERSONAL,"fr");
 	a2.setLanguage("ES");
 	alternateNames.add(a2);
 	AlternateName a3 = new AlternateName("NoLangParis",
-		AlternateNameSource.PERSONAL);
+		AlternateNameSource.PERSONAL,"fr");
 	alternateNames.add(a3);
 	AlternateName a4 = new AlternateName("deutchParis",
-		AlternateNameSource.PERSONAL);
+		AlternateNameSource.PERSONAL,"fr");
 	a4.setLanguage("DE");
 	alternateNames.add(a4);
 	paris.addAlternateNames(alternateNames);

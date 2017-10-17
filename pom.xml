@@ -7,7 +7,7 @@
 	<groupId>com.gisgraphy</groupId>
 	<artifactId>gisgraphy</artifactId>
 	<packaging>war</packaging>
-	<version>4.0-beta1</version>
+	<version>5.0-beta1</version>
 	<name>gisgraphy</name>
 	<url>http://www.gisgraphy.com</url>
 
@@ -596,7 +596,7 @@
 	<dependency>
 	<groupId>com.gisgraphy</groupId>
 	<artifactId>gisgraphy-commons</artifactId>
-	<version>4.0-beta1</version>
+	<version>5.0-beta1</version>
 	</dependency>
 		<dependency>
 			<groupId>${jdbc.groupId}</groupId>
@@ -1346,7 +1346,7 @@
 		<dependency>
 			<groupId>com.gisgraphy</groupId>
 			<artifactId>gisgraphy-utils</artifactId>
-			<version>4.0-beta1</version>
+			<version>5.0-beta1</version>
 			 <exclusions>
 				<exclusion>
 					<artifactId>slf4j-log4j12</artifactId>

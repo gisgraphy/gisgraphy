@@ -196,8 +196,8 @@ public class GisgraphyTestHelper {
 	city.setPopulation(1000000);
 	city.setSource(GISSource.PERSONAL);
 	city.setTimezone("gmt+1");
-	city.addZipCode(new ZipCode("3456"));
-	city.addZipCode(new ZipCode("3457"));
+	city.addZipCode(new ZipCode("3456","fr"));
+	city.addZipCode(new ZipCode("3457","fr"));
 	
 	city.setFullyQualifiedName("fullyQualifiedName");
 	city.setLabel("label");
@@ -233,7 +233,7 @@ public class GisgraphyTestHelper {
 	gisFeature.setPopulation(1000000);
 	gisFeature.setSource(GISSource.PERSONAL);
 	gisFeature.setTimezone("gmt+1");
-	gisFeature.addZipCode(new ZipCode("75000"));
+	gisFeature.addZipCode(new ZipCode("75000","fr"));
 	gisFeature.setFullyQualifiedName("fullyQualifiedName");
 	gisFeature.setLabel("label");
 	gisFeature.setLabelPostal("labelPostal");
@@ -409,8 +409,8 @@ public class GisgraphyTestHelper {
 		citySubdivision.setPopulation(1000000);
 		citySubdivision.setSource(GISSource.PERSONAL);
 		citySubdivision.setTimezone("gmt+1");
-		citySubdivision.addZipCode(new ZipCode("3456"));
-		citySubdivision.addZipCode(new ZipCode("7890"));
+		citySubdivision.addZipCode(new ZipCode("3456","fr"));
+		citySubdivision.addZipCode(new ZipCode("7890","fr"));
 		return citySubdivision;
 	}
     
@@ -560,12 +560,14 @@ public class GisgraphyTestHelper {
 	Country france = GisgraphyTestHelper.createCountryForFrance();
 
 	AlternateName countryAlternate = new AlternateName();
+	countryAlternate.setCountryCode("FR");
 	countryAlternate.setName("francia");
 	// countryAlternate.setGisFeature(admGrandGrandParent);
 	countryAlternate.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 
 	AlternateName countryAlternateFR = new AlternateName();
 	countryAlternateFR.setName("franciaFR");
+	countryAlternateFR.setCountryCode("FR");
 	// countryAlternate.setGisFeature(admGrandGrandParent);
 	countryAlternateFR.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	countryAlternateFR.setLanguage("FR");
@@ -576,13 +578,16 @@ public class GisgraphyTestHelper {
 	this.countryDao.save(france);
 
 	AlternateName alternateNameGGPFR = new AlternateName();
+	alternateNameGGPFR.setCountryCode("FR");
 	alternateNameGGPFR.setName("admGGPalternateFR");
 	alternateNameGGPFR.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	alternateNameGGPFR.setLanguage("FR");
 	AlternateName alternateNameGGP = new AlternateName();
+	alternateNameGGP.setCountryCode("FR");
 	alternateNameGGP.setName("admGGPalternate");
 	alternateNameGGP.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	AlternateName alternateNameGGP2 = new AlternateName();
+	alternateNameGGP2.setCountryCode("FR");
 	alternateNameGGP2.setName("admGGPalternate2");
 	alternateNameGGP2.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	admGrandGrandParent.addAlternateName(alternateNameGGP);
@@ -591,10 +596,12 @@ public class GisgraphyTestHelper {
 	Adm ggp = this.admDao.save(admGrandGrandParent);
 
 	AlternateName alternateNameGPFR = new AlternateName();
+	alternateNameGPFR.setCountryCode("FR");
 	alternateNameGPFR.setName("admGPalternateFR");
 	alternateNameGPFR.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	alternateNameGPFR.setLanguage("FR");
 	AlternateName alternateNameGP = new AlternateName();
+	alternateNameGP.setCountryCode("FR");
 	alternateNameGP.setName("admGPalternate");
 	alternateNameGP.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 
@@ -610,11 +617,13 @@ public class GisgraphyTestHelper {
 	this.admDao.save(adm5);
 
 	AlternateName alternateNamePFR = new AlternateName();
+	alternateNamePFR.setCountryCode("FR");
 	alternateNamePFR.setName("admPAlternateFR");
 	alternateNamePFR.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	alternateNamePFR.setLanguage("FR");
 
 	AlternateName alternateNameP = new AlternateName();
+	alternateNameP.setCountryCode("FR");
 	alternateNameP.setName("admPAlternate");
 	alternateNameP.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 
@@ -624,17 +633,19 @@ public class GisgraphyTestHelper {
 	Adm parent = this.admDao.save(admParent);
 
 	AlternateName alternateNamecityFR = new AlternateName();
+	alternateNamecityFR.setCountryCode("FR");
 	alternateNamecityFR.setName("cityalternateFR");
 	alternateNamecityFR.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	alternateNamecityFR.setLanguage("FR");
 	AlternateName alternateNamecity = new AlternateName();
+	alternateNamecity.setCountryCode("FR");
 	alternateNamecity.setName("cityalternate");
 	alternateNamecity.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 
 	gisFeature.addAlternateName(alternateNamecity);
 	gisFeature.addAlternateName(alternateNamecityFR);
 	City paris = new City(gisFeature);
-	paris.addZipCode(new ZipCode("50263"));
+	paris.addZipCode(new ZipCode("50263","fr"));
 	
 	paris.setAsciiName("ascii");
 	paris.setAmenity("amenity");
@@ -872,7 +883,8 @@ public class GisgraphyTestHelper {
 	City city = new City(gisFeature);
 	city.setFeatureClass("P");
 	city.setFeatureCode("PPL");
-	city.addZipCode(new ZipCode("75000"));
+	city.addZipCode(new ZipCode("75000","fr"));
+	city.setCountryCode("FR");
 	return city;
     }
 
@@ -903,6 +915,7 @@ public class GisgraphyTestHelper {
 	for (int i = 0; i < nombres; i++) {
 	    AlternateName alternateName = new AlternateName();
 	    alternateName.setName("lutece"+i);
+	    alternateName.setCountryCode("FR");
 	    alternateName.setGisFeature(gisFeature);
 	    alternateName.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	    alternateNames.add(alternateName);
@@ -1315,6 +1328,7 @@ public class GisgraphyTestHelper {
     	houseNumber.setLocation(GeolocHelper.createPoint(3F, 4F));
     	houseNumber.setOpenstreetmapId(1L);
     	houseNumber.setType(ASSOCIATED);
+    	houseNumber.setCountryCode("DE");
     	return houseNumber;
     }
     

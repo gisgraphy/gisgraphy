@@ -88,54 +88,61 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 	public void populatezip(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		City city = new City();
+		city.setCountryCode("FR");
 		importer.populateZip("23456", city);
 		Assert.assertEquals(1,city.getZipCodes().size());
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456","fr")));
 		
 		city = new City();
+		city.setCountryCode("FR");
 		importer.populateZip("23456,789", city);
 		Assert.assertEquals(2,city.getZipCodes().size());
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456","fr")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789","fr")));
 		
 		city = new City();
+		city.setCountryCode("FR");
 		importer.populateZip("23456|789", city);
 		Assert.assertEquals(2,city.getZipCodes().size());
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456","fr")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789","fr")));
 		
 		city = new City();
+		city.setCountryCode("FR");
 		importer.populateZip("23456;789", city);
 		Assert.assertEquals(2,city.getZipCodes().size());
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456","fr")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789","fr")));
 		
 		city = new City();
+		city.setCountryCode("FR");
 		importer.populateZip("23456;789;", city);
 		Assert.assertEquals(2,city.getZipCodes().size());
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456","fr")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789","fr")));
 		
 		//test cumulative and deduplicate
 		city = new City();
+		city.setCountryCode("FR");
 		importer.populateZip("23456;789;", city);
 		importer.populateZip("1011;12;789;75009 cedex", city);
 		//12 is too short and cedex is not a code we wish to import
 		Assert.assertEquals(3,city.getZipCodes().size());
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("1011")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456","fr")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789","fr")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("1011","fr")));
 	}
 	
 	@Test
 	public void populatezip_duplicate(){
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		City city = new City();
-		city.addZipCode(new ZipCode("23456"));
+		city.setCountryCode("FR");
+		city.addZipCode(new ZipCode("23456","fr"));
 		importer.populateZip("23456,789", city);
 		Assert.assertEquals(2,city.getZipCodes().size());
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456")));
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("23456","fr")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("789","fr")));
 		
 		
 	}
@@ -189,10 +196,12 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		String RawAlternateNames="";
 		GisFeature poi = new GisFeature();
+		poi.setCountryCode("FR");
 		OpenStreetMapCitiesSimpleImporter importer = new OpenStreetMapCitiesSimpleImporter();
 		
 		RawAlternateNames ="\"{\"\"\"\",name:genitive===Pełczyczyc___short_name===pełczycki}\"";
 		poi = new GisFeature();
+		poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(2,poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Pełczyczyc","GENITIVE"));
@@ -202,6 +211,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		RawAlternateNames="\"{\"\"name:af===Parys t___name:am===ፓሪስ___name:an===París___alt_name:fr===Париж\"\"}\"";
 		//RawAlternateNames ="\"{\"\"name:ca===Sant Andreu de Sueda___name:fr===Saint-André___name:oc===Sant Andreu de Sueda\"\",\"\"name:ca===Sant Andreu de Sueda___name:oc===Sant Andreu de Sueda\"\"}\"";
 		 poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(4, poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Parys t","AF"));
@@ -215,11 +225,13 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		}
 		RawAlternateNames ="\"{\"\"\"\"}\"";
 		poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertNull(poi.getAlternateNames());
 		
 		RawAlternateNames ="\"{\"\"\"\",name:genitive===Pełczyczyc___name:adjective===pełczycki}\"";
 		poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(2,poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Pełczyczyc","GENITIVE"));
@@ -230,6 +242,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		//w comma, one duplicate w same name and one with different for the same lang
 		RawAlternateNames ="{name:CA===Argelers___name:fr===Argelès-sur-Mer___name:oc===Argelersoc,name:ca===Argelers___name:oc===Argelers}";
 		poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(4,poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Argelers","CA"));
@@ -240,6 +253,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		RawAlternateNames ="{name:CA===Argelers___name:fr===Argelès-sur-Mer___name:oc===Argelersoc1,Argelersoc2,name:ca===Argelers___name:oc===Argelers}";
 		poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(5,poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Argelers","CA"));
@@ -251,6 +265,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		//w comma and alt_name after coma
 		RawAlternateNames ="{name:CA===Argelers___name:fr===Argelès-sur-Mer___name:oc===Argelersoc3,Argelersoc4,alt_name:ca===Argelers___name:oc===Argelers}";
 		poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(5,poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Argelers","CA"));
@@ -263,6 +278,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		//w comma and no duplicates 
 		RawAlternateNames ="{name:ca===Argelers___name:fr===Argelès-sur-Mer___name:oc===Argelers,name:xx===Argelers___name:yy===Argelers}";
 		poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(5,poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Argelers","CA"));
@@ -275,6 +291,7 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 		
 		RawAlternateNames ="\"{\"\"name:ca===Sant Andreu de Sueda1,Sant Andreu de Sueda2___name:fr===Saint-André___name:oc===Sant Andreu de Sueda\"\",\"\"name:ca===Sant Andreu de Sueda___name:oc===Sant Andreu de Sueda\"\"}\"";
 		poi = new GisFeature();
+		 poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(5,poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Sant Andreu de Sueda1","CA"));
@@ -513,8 +530,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(1000000L, city.getPopulation().longValue());
 				
 				Assert.assertEquals(2, city.getZipCodes().size());
-				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
-				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210","fr")));
+				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101","fr")));
 				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 			}
 		};
@@ -604,8 +621,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals("adm should be set",adm, city.getAdm());
 				
 				Assert.assertEquals(2, city.getZipCodes().size());
-				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
-				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210","fr")));
+				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101","fr")));
 				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
@@ -706,8 +723,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(1000000L, city.getPopulation().longValue());
 				
 				Assert.assertEquals(2, city.getZipCodes().size());
-				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
-				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210","fr")));
+				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101","fr")));
 				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				Assert.assertEquals("adm should be set",adm, city.getAdm());
 				Assert.assertEquals("population for citysubdivision should be 0",0, city.getPopulation().intValue());
@@ -790,8 +807,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(1000000L, city.getPopulation().longValue());
 				
 				Assert.assertEquals(2, city.getZipCodes().size());
-				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
-				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210","fr")));
+				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101","fr")));
 				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
 				
@@ -870,8 +887,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(6530243L, city.getOpenstreetmapId().longValue());
 				Assert.assertEquals(1000000L, city.getPopulation().longValue());
 				Assert.assertEquals(2, city.getZipCodes().size());
-				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
-				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210","fr")));
+				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101","fr")));
 				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				Assert.assertTrue("city should still be a municipality because it was before, even if it is a node, a previous condition make this city a municipality",((City)city).isMunicipality());
 				
@@ -953,8 +970,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(1000000L, city.getPopulation().longValue());
 				
 				Assert.assertEquals(2, city.getZipCodes().size());
-				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
-				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210","fr")));
+				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101","fr")));
 				Assert.assertEquals(generator.getBestZip(city.getZipCodes()), city.getZipCode());
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
@@ -1313,8 +1330,8 @@ public class OpenStreetMapCitiesSimpleImporterTest {
 				Assert.assertEquals(1000000L, city.getPopulation().longValue());
 				
 				Assert.assertEquals(2, city.getZipCodes().size());
-				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210")));
-				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101")));
+				Assert.assertTrue(city.getZipCodes().contains(new ZipCode("28-210","fr")));
+				Assert.assertTrue( city.getZipCodes().contains(new ZipCode("28-2101","fr")));
 				
 				Assert.assertEquals(generator.generateLabel(city), city.getLabel());
 				Assert.assertTrue("alternate labels are empty and shouldn't be", city.getAlternateLabels().size()!=0);

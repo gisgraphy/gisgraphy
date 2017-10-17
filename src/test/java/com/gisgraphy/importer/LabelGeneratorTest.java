@@ -189,8 +189,8 @@ public void testGenerateLabel_Adm(){
 	@Test
 	public void generateLabels_street() {
 		List<AlternateOsmName> altnames = new ArrayList<AlternateOsmName>();
-		altnames.add(new AlternateOsmName("altname", AlternateNameSource.OPENSTREETMAP));
-		altnames.add(new AlternateOsmName("altname2", AlternateNameSource.OPENSTREETMAP));
+		altnames.add(new AlternateOsmName("altname", AlternateNameSource.OPENSTREETMAP,"fr"));
+		altnames.add(new AlternateOsmName("altname2", AlternateNameSource.OPENSTREETMAP,"fr"));
 		
 		List<String> cities = new ArrayList<String>();
 		cities.add("city1");
@@ -206,6 +206,7 @@ public void testGenerateLabel_Adm(){
 			street.setIsIn("isIn");
 			street.addAlternateNames(altnames);
 			street.addIsInCitiesAlternateNames(cities);
+			street.setCountryCode("FR");
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(9, labels.size());
 			Assert.assertTrue(labels.contains("name, isIn"));
@@ -252,6 +253,7 @@ public void testGenerateLabel_Adm(){
 			street.setName("name");
 			street.setIsIn("isIn");
 			street.addAlternateNames(altnames);
+			street.setCountryCode("FR");
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(3, labels.size());
 			Assert.assertTrue(labels.contains("name, isIn"));
@@ -262,6 +264,7 @@ public void testGenerateLabel_Adm(){
 			//name but no city
 			street = new OpenStreetMap();
 			street.setName("name");
+			street.setCountryCode("FR");
 			street.addAlternateNames(altnames);
 			labels = generator.generateLabels(street);
 			Assert.assertTrue(labels.contains("name"));
@@ -271,6 +274,7 @@ public void testGenerateLabel_Adm(){
 			
 			//noname
 			street = new OpenStreetMap();
+			street.setCountryCode("FR");
 			street.addAlternateNames(altnames);
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(2, labels.size());
@@ -284,17 +288,20 @@ public void testGenerateLabel_Adm(){
 			street = new OpenStreetMap();
 			street.setName("name");
 			street.setIsIn("isIn");
+			street.setCountryCode("FR");
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(1, labels.size());
 			Assert.assertTrue(labels.contains("name, isIn"));
 			
 			street = new OpenStreetMap();
 			street.setIsIn("isIn");
+			street.setCountryCode("FR");
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(0, labels.size());
 			
 			//noname
 			street = new OpenStreetMap();
+			street.setCountryCode("FR");
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(0, labels.size());
 		
@@ -304,6 +311,7 @@ public void testGenerateLabel_Adm(){
 			street = new OpenStreetMap();
 			street.setName("name");
 			street.setIsIn("isIn");
+			street.setCountryCode("FR");
 			street.addIsInCitiesAlternateNames(cities);
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(3, labels.size());
@@ -313,6 +321,7 @@ public void testGenerateLabel_Adm(){
 			
 			//noname
 			street = new OpenStreetMap();
+			street.setCountryCode("FR");
 			street.addIsInCitiesAlternateNames(cities);
 			labels = generator.generateLabels(street);
 			Assert.assertEquals(0, labels.size());
@@ -321,6 +330,7 @@ public void testGenerateLabel_Adm(){
 			street = new OpenStreetMap();
 			street.setName("name");
 			street.setIsIn(null);
+			street.setCountryCode("FR");
 			street.setIsInPlace("isInPlace");
 			street.addAlternateNames(altnames);
 			street.addIsInCitiesAlternateNames(cities);
@@ -335,8 +345,8 @@ public void testGenerateLabel_Adm(){
 		City city = new City();
 		city.setName("name");
 		
-		city.addAlternateName(new AlternateName("alternateName",AlternateNameSource.PERSONAL));
-		city.addAlternateName(new AlternateName("alternateName2",AlternateNameSource.PERSONAL));
+		city.addAlternateName(new AlternateName("alternateName",AlternateNameSource.PERSONAL,"fr"));
+		city.addAlternateName(new AlternateName("alternateName2",AlternateNameSource.PERSONAL,"fr"));
 		
 		Set<String> labels = generator.generateLabels(city);
 		Assert.assertEquals(3, labels.size());
@@ -378,9 +388,10 @@ public void testGenerateLabel_Adm(){
 	public void generateLabels_adm() {
 		Adm adm = new Adm(3);
 		adm.setName("name");
+		adm.setCountryCode("FR");
 		
-		adm.addAlternateName(new AlternateName("alternateName",AlternateNameSource.PERSONAL));
-		adm.addAlternateName(new AlternateName("alternateName2",AlternateNameSource.PERSONAL));
+		adm.addAlternateName(new AlternateName("alternateName",AlternateNameSource.PERSONAL,"fr"));
+		adm.addAlternateName(new AlternateName("alternateName2",AlternateNameSource.PERSONAL,"fr"));
 		
 		Set<String> labels = generator.generateLabels(adm);
 		Assert.assertEquals(3, labels.size());
@@ -423,8 +434,8 @@ public void testGenerateLabel_Adm(){
 	public void generateLabelsForPois() {
 		
 			List<AlternateName> altnames = new ArrayList<AlternateName>();
-			altnames.add(new AlternateName("altname", AlternateNameSource.OPENSTREETMAP));
-			altnames.add(new AlternateName("altname2", AlternateNameSource.OPENSTREETMAP));
+			altnames.add(new AlternateName("altname", AlternateNameSource.OPENSTREETMAP,"fr"));
+			altnames.add(new AlternateName("altname2", AlternateNameSource.OPENSTREETMAP,"fr"));
 			
 			List<String> cities = new ArrayList<String>();
 			cities.add("city1");
@@ -438,6 +449,7 @@ public void testGenerateLabel_Adm(){
 				street = new Restaurant();
 				street.setName("name");
 				street.setIsIn("isIn");
+				street.setCountryCode("FR");
 				street.addAlternateNames(altnames);
 				street.addIsInCitiesAlternateNames(cities);
 				labels = generator.generateLabels(street);
@@ -483,6 +495,7 @@ public void testGenerateLabel_Adm(){
 				street = new Restaurant();
 				street.setName("name");
 				street.setIsIn("isIn");
+				street.setCountryCode("FR");
 				street.addAlternateNames(altnames);
 				labels = generator.generateLabels(street);
 				Assert.assertEquals(3, labels.size());
@@ -494,6 +507,7 @@ public void testGenerateLabel_Adm(){
 				//name but no city
 				street = new Restaurant();
 				street.setName("name");
+				street.setCountryCode("FR");
 				street.addAlternateNames(altnames);
 				labels = generator.generateLabels(street);
 				Assert.assertTrue(labels.contains("name"));
@@ -503,6 +517,7 @@ public void testGenerateLabel_Adm(){
 				
 				//noname
 				street = new Restaurant();
+				street.setCountryCode("FR");
 				street.addAlternateNames(altnames);
 				labels = generator.generateLabels(street);
 				Assert.assertEquals(2, labels.size());
@@ -516,17 +531,20 @@ public void testGenerateLabel_Adm(){
 				street = new Restaurant();
 				street.setName("name");
 				street.setIsIn("isIn");
+				street.setCountryCode("FR");
 				labels = generator.generateLabels(street);
 				Assert.assertEquals(1, labels.size());
 				Assert.assertTrue(labels.contains("name, isIn"));
 				
 				street = new Restaurant();
 				street.setIsIn("isIn");
+				street.setCountryCode("FR");
 				labels = generator.generateLabels(street);
 				Assert.assertEquals(0, labels.size());
 				
 				//noname
 				street = new Restaurant();
+				street.setCountryCode("FR");
 				labels = generator.generateLabels(street);
 				Assert.assertEquals(0, labels.size());
 			
@@ -536,6 +554,7 @@ public void testGenerateLabel_Adm(){
 				street = new Restaurant();
 				street.setName("name");
 				street.setIsIn("isIn");
+				street.setCountryCode("FR");
 				street.addIsInCitiesAlternateNames(cities);
 				labels = generator.generateLabels(street);
 				Assert.assertEquals(3, labels.size());
@@ -545,6 +564,7 @@ public void testGenerateLabel_Adm(){
 				
 				//noname
 				street = new Restaurant();
+				street.setCountryCode("FR");
 				street.addIsInCitiesAlternateNames(cities);
 				labels = generator.generateLabels(street);
 				Assert.assertEquals(0, labels.size());
@@ -568,7 +588,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("adm1Name");
 		city.setAdm2Name("adm2Name");
@@ -586,7 +606,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setName("aname");
 		city.setAdm1Name("adm1Name");
@@ -605,7 +625,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setName("aname");
 		city.setIsIn("aname");
@@ -624,7 +644,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("adm1Name");
 		city.setAdm2Name("adm2Name");
@@ -650,7 +670,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("adm1Name");
 		city.setAdm2Name("adm2Name");
@@ -669,7 +689,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("adm1Name");
 		city.setAdm2Name("adm2Name");
@@ -688,7 +708,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("adm1Name");
 		city.setAdm2Name("adm2Name");
@@ -706,7 +726,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("adm1Name");
 		city.setAdm2Name("adm2Name");
@@ -725,7 +745,7 @@ public void testGenerateLabel_Adm(){
 		city.setCountryCode("us");
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("alabama");
 		city.setAdm2Name("adm2Name");
@@ -744,7 +764,7 @@ public void testGenerateLabel_Adm(){
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
 
 		List<ZipCode> zipcodes = new ArrayList<ZipCode>();
-		zipcodes.add(new ZipCode("code"));
+		zipcodes.add(new ZipCode("code","fr"));
 		
 		city.setAdm1Name("adm1Name");
 		city.setAdm2Name("adm2Name");
@@ -769,8 +789,8 @@ public void testGenerateLabel_Adm(){
 		city.setAdm4Name("adm4Name");
 		city.setAdm5Name("adm5Name");
 		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
-		zipcodes.add(new ZipCode("95000"));
-		zipcodes.add(new ZipCode("96000"));
+		zipcodes.add(new ZipCode("95000","fr"));
+		zipcodes.add(new ZipCode("96000","fr"));
 		city.setZipCodes(zipcodes);
 		String bestZip = generator.getBestZip(zipcodes);
 		String fullyQualifiedName = generator.getFullyQualifiedName(city,false);
@@ -801,30 +821,30 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(null, generator.getBestZip(zips));
 		
 		zips = new HashSet<ZipCode>();
-		zips.add(new ZipCode("75002"));
+		zips.add(new ZipCode("75002","fr"));
 		Assert.assertEquals("75002", generator.getBestZip(zips));
 		
 		zips = new HashSet<ZipCode>();
-		zips.add(new ZipCode("10002"));
-		zips.add(new ZipCode("10"));
+		zips.add(new ZipCode("10002","fr"));
+		zips.add(new ZipCode("10","fr"));
 		Assert.assertEquals("zip less than two should be ignores","10002", generator.getBestZip(zips));
 		
 		zips = new HashSet<ZipCode>();
-		zips.add(new ZipCode("75002"));
-		zips.add(new ZipCode("75000"));
-		zips.add(new ZipCode("75001"));
-		zips.add(new ZipCode("75230 CEDEX 05"));
+		zips.add(new ZipCode("75002","fr"));
+		zips.add(new ZipCode("75000","fr"));
+		zips.add(new ZipCode("75001","fr"));
+		zips.add(new ZipCode("75230 CEDEX 05","fr"));
 		
 		Assert.assertEquals("75000", generator.getBestZip(zips));
 		
 		zips = new HashSet<ZipCode>();
-		zips.add(new ZipCode("AAAA"));
-		zips.add(new ZipCode("BBB"));
+		zips.add(new ZipCode("AAAA","fr"));
+		zips.add(new ZipCode("BBB","fr"));
 		Assert.assertEquals("AAAA", generator.getBestZip(zips));
 		
 		zips = new HashSet<ZipCode>();
-		zips.add(new ZipCode("AD500"));
-		zips.add(new ZipCode("AD501"));
+		zips.add(new ZipCode("AD500","fr"));
+		zips.add(new ZipCode("AD501","fr"));
 		
 		Assert.assertEquals("AD500", generator.getBestZip(zips));
 	}
@@ -1243,7 +1263,7 @@ public void testGenerateLabel_Adm(){
 	public void getNearestHouse_OneHouse() {
 		TreeSet<HouseNumber> houses = new TreeSet<HouseNumber>();
 		Point houseLocation = GeolocHelper.createPoint(3D, 4D);
-		HouseNumber house = new HouseNumber("1",houseLocation);
+		HouseNumber house = new HouseNumber("1",houseLocation,"fr");
 		houses.add(house);
 		Point searchPoint = GeolocHelper.createPoint(6D, 7D);
 		HouseNumberDistance nearestHouse = generator.getNearestHouse(houses, searchPoint);
@@ -1254,10 +1274,10 @@ public void testGenerateLabel_Adm(){
 	public void getNearestHouse_SeveralHouse() {
 		TreeSet<HouseNumber> houses = new TreeSet<HouseNumber>();
 		Point houseLocation = GeolocHelper.createPoint(4D, 5D);
-		HouseNumber house_far = new HouseNumber("far",houseLocation);
+		HouseNumber house_far = new HouseNumber("far",houseLocation,"fr");
 		
 		Point houseLocation2 = GeolocHelper.createPoint(3.1D, 4.1D);
-		HouseNumber house2_near = new HouseNumber("near",houseLocation2);
+		HouseNumber house2_near = new HouseNumber("near",houseLocation2,"fr");
 		
 		houses.add(house_far);
 		houses.add(house2_near);
@@ -1410,7 +1430,7 @@ public void testGenerateLabel_Adm(){
 	public void buildAddressFromHousenumberDistance(){
 		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
 		String number = "2";
-		HouseNumber houseNumber = new HouseNumber(number,GeolocHelper.createPoint(3D, 4D));
+		HouseNumber houseNumber = new HouseNumber(number,GeolocHelper.createPoint(3D, 4D),"fr");
 		String name = "houseName";
 		houseNumber.setName(name);
 		osm.addHouseNumber(houseNumber);
@@ -1464,7 +1484,7 @@ public void testGenerateLabel_Adm(){
 		city.setIsInAdm("isInAdm");
 		city.setOpenstreetmapId(12345L);
 		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
-		zipcodes.add(new ZipCode("zip"));
+		zipcodes.add(new ZipCode("zip","fr"));
 		city.setZipCodes(zipcodes);
 		city.setLocation(GeolocHelper.createPoint(2D, 3D));
 		city.setCountryCode("countryCode");
@@ -1503,7 +1523,7 @@ public void testGenerateLabel_Adm(){
 		city.setAdm5Name("adm5Name");
 		city.setIsInAdm("isInAdm");
 		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
-		zipcodes.add(new ZipCode("zip"));
+		zipcodes.add(new ZipCode("zip","fr"));
 		city.setZipCodes(zipcodes);
 		city.setLocation(GeolocHelper.createPoint(2D, 3D));
 		city.setAdminCentreLocation(GeolocHelper.createPoint(4D,5D));
@@ -1540,7 +1560,7 @@ public void testGenerateLabel_Adm(){
 		city.setAdm5Name("adm5Name");
 		city.setIsInAdm("isInAdm");
 		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
-		zipcodes.add(new ZipCode("zip"));
+		zipcodes.add(new ZipCode("zip","fr"));
 		city.setZipCodes(zipcodes);
 		city.setLocation(GeolocHelper.createPoint(2D, 3D));
 		city.setCountryCode("countryCode");

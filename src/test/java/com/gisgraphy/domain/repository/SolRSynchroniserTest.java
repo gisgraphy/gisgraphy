@@ -859,9 +859,9 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 	country.addSpokenLanguage(lang2);
 	country.addSpokenLanguage(lang);
 	
-	AlternateName alternateName = new AlternateName("alternate",AlternateNameSource.ALTERNATENAMES_FILE);
+	AlternateName alternateName = new AlternateName("alternate",AlternateNameSource.ALTERNATENAMES_FILE,"fr");
 	country.addAlternateName(alternateName);
-	AlternateName alternateName2 = new AlternateName("alternate 2",AlternateNameSource.ALTERNATENAMES_FILE);
+	AlternateName alternateName2 = new AlternateName("alternate 2",AlternateNameSource.ALTERNATENAMES_FILE,"fr");
 	country.addAlternateName(alternateName);
 	country.addAlternateName(alternateName2);
 	
@@ -922,9 +922,9 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 	country.addSpokenLanguage(lang2);
 	country.addSpokenLanguage(lang);
 	
-	AlternateName alternateNameLocalized = new AlternateName("alternateFR",AlternateNameSource.ALTERNATENAMES_FILE);
+	AlternateName alternateNameLocalized = new AlternateName("alternateFR",AlternateNameSource.ALTERNATENAMES_FILE,"fr");
 	alternateNameLocalized.setLanguage("FR");
-	AlternateName alternateName = new AlternateName("alternate",AlternateNameSource.ALTERNATENAMES_FILE);
+	AlternateName alternateName = new AlternateName("alternate",AlternateNameSource.ALTERNATENAMES_FILE,"fr");
 	country.addAlternateName(alternateName);
 	country.addAlternateName(alternateNameLocalized);
 	
@@ -1224,10 +1224,12 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 		String streetRef= "A1";
 		HouseNumber houseNumber1 = new HouseNumber();
 		houseNumber1.setNumber("4");
+		houseNumber1.setCountryCode("FR");
 		houseNumber1.setLocation(GeolocHelper.createPoint(4F, 3F));
 		
 		HouseNumber houseNumber2 = new HouseNumber();
 		houseNumber2.setNumber("3");
+		houseNumber2.setCountryCode("FR");
 		houseNumber2.setLocation(GeolocHelper.createPoint(6F, 5F));
 		
 		List<HouseNumber> houseNumbers = new ArrayList<HouseNumber>();
@@ -1236,8 +1238,8 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 		houseNumbers.add(houseNumber2);
 		
 		List<AlternateOsmName> alternateNames = new ArrayList<AlternateOsmName>();
-		alternateNames.add(new AlternateOsmName(altname1,AlternateNameSource.OPENSTREETMAP));
-		alternateNames.add(new AlternateOsmName(altname2,AlternateNameSource.OPENSTREETMAP));
+		alternateNames.add(new AlternateOsmName(altname1,AlternateNameSource.OPENSTREETMAP,"fr"));
+		alternateNames.add(new AlternateOsmName(altname2,AlternateNameSource.OPENSTREETMAP,"fr"));
 		
     	
 		OpenStreetMap street = new OpenStreetMap();

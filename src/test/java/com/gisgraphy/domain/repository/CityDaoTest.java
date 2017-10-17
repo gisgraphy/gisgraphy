@@ -327,7 +327,7 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetNearest() {
 	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
-	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL,"fr"));
 	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
 		3L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
@@ -346,7 +346,7 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetNearest_wrongCountryCode() {
 	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
-	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL,"fr"));
 	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
 		3L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
@@ -363,7 +363,7 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetNearest_filterMunicipality() {
 	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
-	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL,"fr"));
 	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
 		3L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
@@ -385,7 +385,7 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetNearests() {
 	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
-	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL,"fr"));
 	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
 		3L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
@@ -404,7 +404,7 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetNearests_limit() {
 	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
-	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL,"fr"));
 	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
 		3L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
@@ -423,7 +423,7 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetNearests_wrongCountryCode() {
 	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
-	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL,"fr"));
 	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
 		3L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
@@ -441,7 +441,7 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testGetNearests_filterMunicipality() {
 	City p1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F, 1L);
-	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL));
+	p1.addAlternateName(new AlternateName("Paname", AlternateNameSource.PERSONAL,"fr"));
 	City p2 = GisgraphyTestHelper.createCity("bordeaux", 44.83333F, -0.56667F,
 		3L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
@@ -519,9 +519,9 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	City p2 = GisgraphyTestHelper.createCity("vanves", 48.82F, 2.289F, 2L);
 	City p3 = GisgraphyTestHelper.createCity("goussainville", 49.01667F,
 		2.46667F, 3L);
-	p2.addZipCode(new ZipCode("75000"));
-	p2.addZipCode(new ZipCode("75001"));
-	p2.addZipCode(new ZipCode("75002"));
+	p2.addZipCode(new ZipCode("75000","fr"));
+	p2.addZipCode(new ZipCode("75001","fr"));
+	p2.addZipCode(new ZipCode("75002","fr"));
 	this.cityDao.save(p1);
 	this.cityDao.save(p2);
 	this.cityDao.save(p3);
@@ -835,11 +835,11 @@ public class CityDaoTest extends AbstractIntegrationHttpSolrTestCase {
     public void testListByZipCodeShouldReturnCorrectValues() {
 	City city1 = GisgraphyTestHelper.createCity("paris", 48.86667F, 2.3333F,
 		1L);
-	city1.addZipCode(new ZipCode("75003"));
+	city1.addZipCode(new ZipCode("75003","fr"));
 	city1.setCountryCode("FR");
 	City city2 = GisgraphyTestHelper.createCity("paris2", 48.86667F, 2.3333F,
 		2L);
-	city2.addZipCode(new ZipCode("75003"));
+	city2.addZipCode(new ZipCode("75003","fr"));
 	city2.setCountryCode("EN");
 	this.cityDao.save(city1);
 	this.cityDao.save(city2);

@@ -124,9 +124,10 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		//getConfigInFile();
-		/*logger.error("all words : "+NESTED_QUERY_TEMPLATE);
-		logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
+		/*getConfigInFile();
+		logger.error("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);
+		System.out.println("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);
+		/logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
 		boolean spellchecker = true;
 		ModifiableSolrParams parameters = new ModifiableSolrParams();
 

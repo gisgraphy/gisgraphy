@@ -66,6 +66,8 @@ public class AlternateName {
 
     private boolean isShortName =false;
     
+    private String countryCode;
+    
     public static final int MAX_LANG_SIZE = 29;
 
     /**
@@ -76,10 +78,14 @@ public class AlternateName {
      * @see AlternateNameSource
      * 
      **/                
-    public AlternateName(String name, AlternateNameSource source) {
+    public AlternateName(String name, AlternateNameSource source,String countryCode) {
 	super();
 	this.name = name;
 	this.source = source;
+	if (countryCode==null){
+		throw new RuntimeException("countrycode should not be null");
+	}
+	this.countryCode=countryCode.toUpperCase();
     }
     
     /**
@@ -91,13 +97,17 @@ public class AlternateName {
      * @see AlternateNameSource
      * 
      **/                
-    public AlternateName(String name, String language,AlternateNameSource source) {
+    public AlternateName(String name, String language,AlternateNameSource source,String countryCode) {
 	super();
 	this.name = name;
 	if (language!=null){
 		this.language=language.toUpperCase();
 	}
 	this.source = source;
+	if (countryCode==null){
+		throw new RuntimeException("countrycode should not be null");
+	}
+	this.countryCode=countryCode.toUpperCase();
     }
 
     /**
@@ -106,6 +116,27 @@ public class AlternateName {
     public AlternateName() {
 	super();
     }
+    
+    /**
+     * @return The ISO 3166 alpha-2 letter code.
+     */
+    @Index(name = "alternatenamecountryindex")
+    @Column(length = 3,nullable=false)
+    public String getCountryCode() {
+    	return countryCode;
+    }
+
+/**
+ * @param countryCode the countryCode to set
+ */
+public void setCountryCode(String countryCode) {
+	if (countryCode!=null){
+		this.countryCode = countryCode.toUpperCase();
+	}
+	 else {
+		 throw new RuntimeException("alternate name should have a not null countrycode");
+	 }
+}
 
     /**
      * The datastore id

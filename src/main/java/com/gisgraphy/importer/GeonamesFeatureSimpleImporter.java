@@ -288,6 +288,11 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 		&& importerConfig.isImportGisFeatureEmbededAlternateNames()) {
 	    List<AlternateName> splitedAlternateNames = splitAlternateNames(fields[3],
 		    gisFeature);
+	    if (splitedAlternateNames!=null){
+	    	for (AlternateName an:splitedAlternateNames){
+	    		an.setCountryCode(countryCode);
+	    	}
+	    }
 		gisFeature.addAlternateNames(splitedAlternateNames);
 	}
 
@@ -390,7 +395,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	   
 		String foundZipCode = findZipCode(fields);
 		if (foundZipCode != null){
-			gisFeature.addZipCode(new ZipCode(foundZipCode));//TODO tests zip we should take embeded option into account
+			gisFeature.addZipCode(new ZipCode(foundZipCode,gisFeature.getCountryCode()));//TODO tests zip we should take embeded option into account
 		}
 	    this.gisFeatureDao.save(gisFeature);
 	} else {
@@ -419,6 +424,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	    				}
 	    			if (cityByShape.getAlternateNames()!=null){
 	    				for (AlternateName name : cityByShape.getAlternateNames() ){
+	    					name.setCountryCode(poi.getCountryCode());
 	    					if (name!=null && name.getName()!=null){
 	    						poi.addIsInCitiesAlternateName(name.getName());
 	    					}
@@ -445,6 +451,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	    			}
 	    			if (city.getAlternateNames()!=null){
 	    				for (AlternateName name : city.getAlternateNames() ){
+	    					name.setCountryCode(city.getCountryCode());
 	    					if (name!=null && name.getName()!=null){
 	    						poi.addIsInCitiesAlternateName(name.getName());
 	    					}
@@ -742,6 +749,7 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	    alternateName.setName(name.trim());
 	    alternateName.setSource(AlternateNameSource.EMBEDED);
 	    alternateName.setGisFeature(gisFeature);
+	    alternateName.setCountryCode(gisFeature.getCountryCode());
 	    alternateNamesList.add(alternateName);
 		}
 	}

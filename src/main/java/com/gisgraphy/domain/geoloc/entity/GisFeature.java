@@ -761,7 +761,7 @@ public class GisFeature{
      * @return The ISO 3166 alpha-2 letter code.
      */
     @Index(name = "gisFeatureCountryindex")
-    @Column(length = 3)
+    @Column(length = 3,nullable=false)
     public String getCountryCode() {
 	return countryCode;
     }

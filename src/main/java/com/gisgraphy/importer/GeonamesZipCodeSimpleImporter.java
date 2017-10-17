@@ -173,7 +173,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 		boolean found = false;
 		GisFeature cityByShape = cityDao.getByShape(zipPoint,countryCode,true);
 		if (cityByShape!=null){
-			ZipCode zipCode = new ZipCode(code);
+			ZipCode zipCode = new ZipCode(code,countryCode);
 			//if (feature.getZipCodes() == null || !feature.getZipCodes().contains(zipCode)) {
 			cityByShape.addZipCode(zipCode);
 			cityDao.save((City)cityByShape);
@@ -181,7 +181,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 		} else {
 			 cityByShape = cityDao.getByShape(zipPoint,countryCode,false);
 			 if (cityByShape!=null){
-					ZipCode zipCode = new ZipCode(code);
+					ZipCode zipCode = new ZipCode(code,countryCode);
 					//if (feature.getZipCodes() == null || !feature.getZipCodes().contains(zipCode)) {
 					cityByShape.addZipCode(zipCode);
 					cityDao.save((City)cityByShape);
@@ -192,7 +192,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 		//try with subdivision too (in addition)
 		CitySubdivision citySubdivision = citySubdivisionDao.getByShape(zipPoint, countryCode);
 		if (citySubdivision!=null){
-			ZipCode zipCode = new ZipCode(code);
+			ZipCode zipCode = new ZipCode(code,countryCode);
 			citySubdivision.addZipCode(zipCode);
 			citySubdivisionDao.save(citySubdivision);
 			found = true;
@@ -349,7 +349,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	city.setAdm(adm);
 	setAdmCodesWithLinkedAdmOnes(adm, city, importerConfig.isSyncAdmCodesWithLinkedAdmOnes());
 	setAdmNames(adm, city);
-	city.addZipCode(new ZipCode(fields[1]));
+	city.addZipCode(new ZipCode(fields[1],countryCode));
 	
 	city.setAlternateLabels(labelGenerator.generateLabels(city));
 	city.setLabel(labelGenerator.generateLabel(city));
@@ -365,7 +365,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	if (feature == null) {
 	    return null;
 	}
-	ZipCode zipCode = new ZipCode(code);
+	ZipCode zipCode = new ZipCode(code,feature.getCountryCode());
 	//if (feature.getZipCodes() == null || !feature.getZipCodes().contains(zipCode)) {
 	    feature.addZipCode(zipCode);
 	    return gisFeatureDao.save(feature);

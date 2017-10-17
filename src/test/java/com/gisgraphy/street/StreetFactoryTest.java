@@ -107,8 +107,8 @@ public class StreetFactoryTest {
 	openStreetMap.addAlternateLabel("alternateLabel2");
 	
 	List<AlternateOsmName> alternateNames = new ArrayList<AlternateOsmName>();
-	alternateNames.add(new AlternateOsmName("altname",AlternateNameSource.PERSONAL));
-	alternateNames.add(new AlternateOsmName("altname2",AlternateNameSource.OPENSTREETMAP));
+	alternateNames.add(new AlternateOsmName("altname",AlternateNameSource.PERSONAL,"fr"));
+	alternateNames.add(new AlternateOsmName("altname2",AlternateNameSource.OPENSTREETMAP,"fr"));
 	openStreetMap.addAlternateNames(alternateNames);
 	
 	Set<String> citiesAlternateNames = new HashSet<String>();

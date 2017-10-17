@@ -131,6 +131,7 @@ public class GeonamesAlternateNamesSimpleImporter extends AbstractSimpleImporter
 	}
 
 	alternateName.setGisFeature(gisFeature);
+	alternateName.setCountryCode(gisFeature.getCountryCode());
 	if (isAnUnWantedLanguageField(fields[2])) {
 	    return;
 	}
@@ -155,7 +156,7 @@ public class GeonamesAlternateNamesSimpleImporter extends AbstractSimpleImporter
 						" that mean that zipcode is added but the field" +
 						" will not be added in the feed of the web service");
 		    } 
-		    gisFeature.addZipCode(new ZipCode(fields[3]));
+		    gisFeature.addZipCode(new ZipCode(fields[3],gisFeature.getCountryCode()));
 			// Hibernate will save the feature according to his
 			// class even if it is cast in an other class
 			this.gisFeatureDao.save(gisFeature);

@@ -73,6 +73,7 @@ public class OutputstreamResponseWrapperTest extends
 	GisFeature gisFeature = GisgraphyTestHelper.createCity("Saint-André",
 		1.5F, 2F, featureId);
 	AlternateName alternateName = new AlternateName();
+	alternateName.setCountryCode("FR");
 	alternateName.setName("alteré");
 	alternateName.setGisFeature(gisFeature);
 	alternateName.setSource(AlternateNameSource.ALTERNATENAMES_FILE);

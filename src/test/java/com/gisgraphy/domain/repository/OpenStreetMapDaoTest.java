@@ -631,8 +631,9 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	streetOSM2.setStreetType(StreetType.FOOTWAY);
 	streetOSM2.setName("John Kenedy");
 	streetOSM2.setOpenstreetmapId(123456L);
-	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F));
+	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F),"fr");
 	houseNumber.setNumber("3");
+	houseNumber.setCountryCode("DE");
 	streetOSM2.addHouseNumber(houseNumber);
 	
 	StringHelper.updateOpenStreetMapEntityForIndexation(streetOSM2);
@@ -665,7 +666,7 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	openStreetMapDao.save(streetOSM);
 	assertNotNull(openStreetMapDao.get(streetOSM.getId()));
 	
-	streetOSM.addHouseNumber(new HouseNumber("100",GeolocHelper.createPoint(10F, 20F)));
+	streetOSM.addHouseNumber(new HouseNumber("100",GeolocHelper.createPoint(10F, 20F),"fr"));
 	openStreetMapDao.save(streetOSM);
 	
 	//we create a multilineString a little bit closer than the first one 
@@ -682,8 +683,9 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	streetOSM2.setStreetType(StreetType.FOOTWAY);
 	streetOSM2.setName("John Kenedy");
 	streetOSM2.setOpenstreetmapId(123456L);
-	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F));
+	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F),"fr");
 	houseNumber.setNumber("3");
+	houseNumber.setCountryCode("DE");
 	streetOSM2.addHouseNumber(houseNumber);
 	
 	StringHelper.updateOpenStreetMapEntityForIndexation(streetOSM2);
@@ -716,7 +718,7 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     		
     		OpenStreetMap streetOSM = GisgraphyTestHelper.createOpenStreetMapForPeterMartinStreet();
     		streetOSM.setShape(shape);
-    		AlternateOsmName alternateName = new AlternateOsmName("alternatename street",AlternateNameSource.OPENSTREETMAP);
+    		AlternateOsmName alternateName = new AlternateOsmName("alternatename street",AlternateNameSource.OPENSTREETMAP,streetOSM.getCountryCode());
 			streetOSM.addAlternateName(alternateName);
     		openStreetMapDao.save(streetOSM);
     		assertNotNull(openStreetMapDao.get(streetOSM.getId()));
@@ -733,7 +735,7 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     		streetCloserEmptyName.setStreetType(StreetType.FOOTWAY);
     		streetCloserEmptyName.setName(null);
     		streetCloserEmptyName.setOpenstreetmapId(123456L);
-    		HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F));
+    		HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F),"fr");
     		houseNumber.setNumber("3");
     		streetCloserEmptyName.addHouseNumber(houseNumber);
     		
@@ -785,8 +787,9 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	streetCloserEmptyName.setStreetType(StreetType.FOOTWAY);
 	streetCloserEmptyName.setName(null);
 	streetCloserEmptyName.setOpenstreetmapId(123456L);
-	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F));
+	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F),"fr");
 	houseNumber.setNumber("3");
+	houseNumber.setCountryCode("DE");
 	streetCloserEmptyName.addHouseNumber(houseNumber);
 	
 	StringHelper.updateOpenStreetMapEntityForIndexation(streetCloserEmptyName);
@@ -838,8 +841,9 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	streetOSM2.setStreetType(StreetType.SECONDARY);
 	streetOSM2.setName("John Kenedy");
 	streetOSM2.setOpenstreetmapId(123456L);
-	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F));
+	HouseNumber houseNumber = new HouseNumber("3",GeolocHelper.createPoint(6.94130446F , 50.91544866F),"fr");
 	houseNumber.setNumber("3");
+	houseNumber.setCountryCode("DE");
 	streetOSM2.addHouseNumber(houseNumber);
 	
 	StringHelper.updateOpenStreetMapEntityForIndexation(streetOSM2);

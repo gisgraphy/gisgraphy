@@ -506,6 +506,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		EasyMock.replay(osmDaoMock);
 		
 		final OpenStreetMap openStreetMap = new OpenStreetMap();
+		openStreetMap.setCountryCode("FR");
 		
 		final Point point = (Point)GeolocHelper.convertFromHEXEWKBToGeometry("0101000020E6100000046DBC85BFA81D40DA7D22AA4BDD4540");
 		final AssociatedStreetHouseNumber associatedStreetHouseNumber = new AssociatedStreetHouseNumber();
@@ -537,6 +538,11 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 					Assert.fail("buildHouseNumberFromAssociatedHouseNumber is not call with correct parameter");
 					return null;
 				}
+			}
+			@Override
+			protected void saveOsm(OpenStreetMap osm) {
+				Assert.assertEquals("FR",osm.getHouseNumbers().iterator().next().getCountryCode());
+				super.saveOsm(osm);
 			}
 		};
 		
@@ -596,6 +602,8 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		Long openstreetmapId =158189815L;
 		OpenStreetMap osm = new OpenStreetMap();
 		osm.setOpenstreetmapId(openstreetmapId);
+		final String countryCode ="FF";
+		osm.setCountryCode(countryCode );
 		
 		IOpenStreetMapDao osmDaoMock = EasyMock.createMock(IOpenStreetMapDao.class);
 		EasyMock.expect(osmDaoMock.getByOpenStreetMapId(openstreetmapId )).andStubReturn(osm);
@@ -623,6 +631,12 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 					return null;
 				}
 			}
+			
+			@Override
+			protected void saveOsm(OpenStreetMap osm) {
+				Assert.assertEquals(countryCode,osm.getHouseNumbers().iterator().next().getCountryCode());
+				super.saveOsm(osm);
+			}
 		};
 		
 		importer.setOpenStreetMapDao(osmDaoMock);
@@ -646,6 +660,9 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		OpenStreetMap osm = new OpenStreetMap();
 		osm.setOpenstreetmapId(openstreetmapId);
+		final String countryCode ="FF";
+		osm.setCountryCode(countryCode );
+		
 		final AssociatedStreetHouseNumber associatedStreetHouseNumber = new AssociatedStreetHouseNumber();
 		
 		IOpenStreetMapDao osmDaoMock = EasyMock.createMock(IOpenStreetMapDao.class);
@@ -675,6 +692,12 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 					Assert.fail("buildHouseNumberFromAssociatedHouseNumber is not call with correct parameter");
 					return null;
 				}
+			}
+			
+			@Override
+			protected void saveOsm(OpenStreetMap osm) {
+				Assert.assertEquals(countryCode,osm.getHouseNumbers().iterator().next().getCountryCode());
+				super.saveOsm(osm);
 			}
 		};
 		
@@ -711,6 +734,8 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		final OpenStreetMap osm = new OpenStreetMap();
 		osm.setCityConfident(false);
+		String countryCode ="FF";
+		osm.setCountryCode(countryCode);
 		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter(){
 		
 			@Override
@@ -723,6 +748,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 				Assert.assertEquals("isInPlace should be filled",house.getSuburb(), osm.getIsInPlace());
 				Assert.assertEquals("isIn  should be filled if it is not city confident",house.getCity(), osm.getIsIn());
 				Assert.assertTrue("zip should be filled",osm.getIsInZip().contains(house.getZipCode()));
+				Assert.assertEquals("countrycode should be filled","FF",osm.getHouseNumbers().iterator().next().getCountryCode());
 				super.saveOsm(osm);
 			}
 			
@@ -757,6 +783,8 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		final OpenStreetMap osm = new OpenStreetMap();
 		osm.setIsIn("isIn");
 		osm.setCityConfident(true);
+		String countryCode ="FF";
+		osm.setCountryCode(countryCode);
 		OpenStreetMapHouseNumberSimpleImporter importer = new OpenStreetMapHouseNumberSimpleImporter(){
 		
 			@Override
@@ -767,6 +795,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 			@Override
 			protected void saveOsm(OpenStreetMap osm) {
 				Assert.assertEquals("isIn should not be filled if it is city confident","isIn", osm.getIsIn());
+				Assert.assertEquals("countrycode should be filled","FF",osm.getHouseNumbers().iterator().next().getCountryCode());
 				super.saveOsm(osm);
 			}
 			
@@ -789,6 +818,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		
 		HouseNumber houseNumber = new HouseNumber();
 		houseNumber.setNumber(house.getHouseNumber());
+		
 		houseNumber.setName(house.getName());
 		houseNumber.setType(HouseNumberType.NODE);
 		Point location = house.getLocation();
@@ -796,12 +826,16 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		houseNumber.setOpenstreetmapId(openstreetmapId);
 		
 		
+		String countryCode ="FF";
 		final OpenStreetMap osm = EasyMock.createMock(OpenStreetMap.class);
 		EasyMock.expect(osm.getOpenstreetmapId()).andStubReturn(openstreetmapId);
 		EasyMock.expect(osm.getIsInZip()).andStubReturn(null);
+		EasyMock.expect(osm.getIsInPlace()).andStubReturn("isinplace");
+		EasyMock.expect(osm.getCountryCode()).andStubReturn(countryCode);
 		EasyMock.expect(osm.isCityConfident()).andStubReturn(true);
 		osm.setIsInPlace(house.getSuburb());
 		osm.addHouseNumber(houseNumber);
+		//osm.setCountryCode(countryCode);
 		EasyMock.replay(osm);
 		
 		final SolrResponseDto solrResponseDto = EasyMock.createNiceMock(SolrResponseDto.class);
@@ -838,6 +872,7 @@ public class OpenStreetMapHouseNumberSimpleImporterTest {
 		Assert.assertEquals(point, actual.getLocation());
 		Assert.assertEquals("name", actual.getName());
 		Assert.assertEquals("12345", actual.getNumber());
+		Assert.assertEquals(countryCode, actual.getCountryCode());
 		Assert.assertEquals(247464344L, actual.getOpenstreetmapId().longValue());
 		Assert.assertEquals(HouseNumberType.NODE, actual.getType());
 		

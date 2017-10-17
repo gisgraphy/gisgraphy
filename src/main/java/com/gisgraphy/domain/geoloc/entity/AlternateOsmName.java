@@ -61,6 +61,9 @@ public class AlternateOsmName {
     private AlternateNameSource source;
 
     private String language;
+    
+    private String countryCode;
+    
 
 
     /**
@@ -71,10 +74,14 @@ public class AlternateOsmName {
      * @see AlternateNameSource
      * 
      **/                
-    public AlternateOsmName(String name, AlternateNameSource source) {
+    public AlternateOsmName(String name, AlternateNameSource source,String countryCode) {
 	super();
 	this.name = name;
 	this.source = source;
+	if (countryCode==null){
+		throw new RuntimeException("countrycode should not be null");
+	}
+	this.countryCode=countryCode.toUpperCase();
     }
     
     /**
@@ -86,13 +93,17 @@ public class AlternateOsmName {
      * @see AlternateNameSource
      * 
      **/                
-    public AlternateOsmName(String name, String language,AlternateNameSource source) {
+    public AlternateOsmName(String name, String language,AlternateNameSource source,String countryCode) {
 	super();
 	this.name = name;
 	if(language!=null){
 		this.language=language.toUpperCase();
 	}
 	this.source = source;
+	if (countryCode==null){
+		throw new RuntimeException("countrycode should not be null");
+	}
+	this.countryCode=countryCode.toUpperCase();
     }
 
     /**
@@ -241,6 +252,26 @@ public class AlternateOsmName {
 		+ ((street == null) ? 0 : street.hashCode());
 	result = PRIME * result + ((name == null) ? 0 : name.hashCode());
 	return result;
+    }
+    
+    /**
+     * @return The ISO 3166 alpha-2 letter code.
+     */
+    @Index(name = "alternateosmnamecountryindex")
+    @Column(length = 3,nullable=false)
+    public String getCountryCode() {
+    	return countryCode;
+    }
+
+    /**
+     * @param countryCode the countryCode to set
+     */
+    public void setCountryCode(String countryCode) {
+    	if (countryCode!=null){
+    		this.countryCode = countryCode.toUpperCase();
+    	}  else {
+			 throw new RuntimeException("alternate osm name should have a not null countrycode");
+		 }
     }
 
     /*

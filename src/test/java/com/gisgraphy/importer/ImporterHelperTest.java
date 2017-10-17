@@ -433,6 +433,7 @@ public class ImporterHelperTest {
 	  		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 	  		OpenStreetMap street = new OpenStreetMap();
 	  		street.setName("trucstrasse");
+	  		street.setCountryCode("FR");
 	  		street = importer.populateAlternateNames(street, RawAlternateNames);
 	  		Assert.assertEquals(2, street.getAlternateNames().size());
 	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"trucstrasse"));
@@ -447,6 +448,7 @@ public class ImporterHelperTest {
 	  		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 	  		OpenStreetMap street = new OpenStreetMap();
 	  		street.setName("trucstrasse");
+	  		street.setCountryCode("FR");
 	  		street = importer.populateAlternateNames(street, RawAlternateNames);
 	  		Assert.assertEquals(2, street.getAlternateNames().size());
 	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"truc"));
@@ -462,6 +464,7 @@ public class ImporterHelperTest {
 	   		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 	   		OpenStreetMap street = new OpenStreetMap();
 	   		street.setName("trucstrasse");
+	   		street.setCountryCode("FR");
 	   		street = importer.populateAlternateNames(street, RawAlternateNames);
 	   		Assert.assertEquals(2, street.getAlternateNames().size());
 	   		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"trucstrasse"));
@@ -475,6 +478,7 @@ public class ImporterHelperTest {
 	      	String RawAlternateNames="name:de===trucstrasse___name:de===truc strasse";
 	  		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 	  		OpenStreetMap street = new OpenStreetMap();
+	  		street.setCountryCode("FR");
 	  		street = importer.populateAlternateNames(street, RawAlternateNames);
 	  		Assert.assertEquals(2, street.getAlternateNames().size());
 	  		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"truc strasse"));

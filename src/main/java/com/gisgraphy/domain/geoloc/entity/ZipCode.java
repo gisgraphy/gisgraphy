@@ -51,6 +51,8 @@ public class ZipCode {
     private String code;
 
     private GisFeature gisFeature;
+    
+    private String countryCode;
 
     /**
      * /** Default Constructor
@@ -62,11 +64,16 @@ public class ZipCode {
      * @param code
      *            the code of the zipcode (will be uppercased)
      */
-    public ZipCode(String code) {
+    public ZipCode(String code, String countryCode) {
 	if (code != null) {
 	    this.code = code.toUpperCase();
 	} else {
 	    throw new IllegalArgumentException("Can not create a zip code with null code");
+	}
+	if (countryCode != null) {
+	    this.countryCode = countryCode.toUpperCase();
+	} else {
+	    throw new IllegalArgumentException("Can not create a zip code with null countryCode");
 	}
     }
 
@@ -133,6 +140,27 @@ public class ZipCode {
     public String toString() {
 	return this.code;
     }
+    
+    /**
+     * @return The ISO 3166 alpha-2 letter code.
+     */
+    @Index(name = "zipcodecountryindex")
+    @Column(length = 3,nullable=false)
+    public String getCountryCode() {
+    	return countryCode;
+    }
+
+/**
+ * @param countryCode the countryCode to set
+ */
+public void setCountryCode(String countryCode) {
+	if (countryCode!=null){
+		this.countryCode = countryCode.toUpperCase();
+	}
+	 else {
+		 throw new RuntimeException("alternate name should have a not null countrycode");
+	 }
+}
 
     /*
      * (non-Javadoc)

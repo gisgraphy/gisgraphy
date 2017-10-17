@@ -454,6 +454,9 @@ ___W___house"} SHAPE"
 			}
 			List<HouseNumber> houseNumbers = processInterpolationHouseNumber(house);
 			if (houseNumbers.size()!=0){
+				for (HouseNumber houseNumber: houseNumbers){
+					houseNumber.setCountryCode(osm.getCountryCode());
+				}
 				osm.addHouseNumbers(houseNumbers);
 				saveOsm(osm);
 			} else {
@@ -509,9 +512,10 @@ ___W___house"} SHAPE"
 						//Long openstreetmapId = street.getOpenstreetmap_id();
 						//OpenStreetMap osm = openStreetMapDao.getByOpenStreetMapId(openstreetmapId);
 						HouseNumber houseNumber = buildHouseNumberFromAssociatedHouseNumber(houseMember);
-						if (houseNumber!=null){
-							street.addHouseNumber(houseNumber);
-							saveOsm(street);
+						if (houseNumber!=null && street!=null){
+								houseNumber.setCountryCode(street.getCountryCode());
+								street.addHouseNumber(houseNumber);
+								saveOsm(street);
 						}
 					} else {
 						logger.error("processAssociatedStreet : can not find associated street for name "+houseMember.getStreetName()+", position :"+ houseMember.getLocation());
@@ -543,7 +547,8 @@ ___W___house"} SHAPE"
 					associatedStreet.setZipCode(houseMember.getZipCode());
 				}
 				HouseNumber houseNumber = buildHouseNumberFromAssociatedHouseNumber(houseMember);
-				if (houseNumber!=null){
+				if (houseNumber!=null && associatedStreet!=null){
+						houseNumber.setCountryCode(associatedStreet.getCountryCode());
 					associatedStreet.addHouseNumber(houseNumber);
 				}
 			}
@@ -571,6 +576,7 @@ ___W___house"} SHAPE"
 					associatedStreet.setZipCode(houseMember.getZipCode());
 				}
 				if (associatedStreet!=null && houseNumber!=null){
+					houseNumber.setCountryCode(associatedStreet.getCountryCode());
 					associatedStreet.addHouseNumber(houseNumber);
 					saveOsm(associatedStreet);
 				} else {
@@ -605,11 +611,13 @@ ___W___house"} SHAPE"
 		if (osm!=null){
 					try {
 						osm.addHouseNumber(houseNumber);
+						houseNumber.setCountryCode(osm.getCountryCode());
 						if (house.getZipCode()!=null && osm.getIsInZip()!=null){
 							//we override even if it is already present because it is a set
 							osm.addIsInZip(house.getZipCode());
 							osm.setZipCode(house.getZipCode());
 						}
+						houseNumber.setCountryCode(osm.getCountryCode());
 						if (house.getCity()!= null && !osm.isCityConfident()){//we override if it not cityConfident 
 							osm.setIsIn(house.getCity());
 						}

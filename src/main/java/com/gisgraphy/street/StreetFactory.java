@@ -82,7 +82,7 @@ public class StreetFactory implements IStreetFactory {
 			}
 			if (openstreetmap.getAlternateNames()!=null){
 				for (AlternateOsmName alternateOsmName : openstreetmap.getAlternateNames()){
-					street.addAlternateName(new AlternateName(alternateOsmName.getName(),alternateOsmName.getSource()));
+					street.addAlternateName(new AlternateName(alternateOsmName.getName(),alternateOsmName.getSource(),openstreetmap.getCountryCode()));
 
 				}
 			}

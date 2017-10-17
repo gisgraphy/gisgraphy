@@ -114,6 +114,7 @@ public class FeatureCodeTest extends AbstractIntegrationHttpSolrTestCase {
 			Object feature = featureCode.getObject();
 			if (feature instanceof Country) {
 				Country typedFeature = (Country) feature;
+				typedFeature.setCountryCode("FR");
 				typedFeature.setIso3166Alpha2Code(RandomStringUtils.random(2));
 				typedFeature.setIso3166Alpha3Code(RandomStringUtils.random(3));
 				typedFeature.setIso3166NumericCode(count.intValue());
@@ -124,6 +125,7 @@ public class FeatureCodeTest extends AbstractIntegrationHttpSolrTestCase {
 				gisFeatureDao.save(typedFeature);
 			} else {
 				GisFeature typedFeature = (GisFeature) feature;
+				typedFeature.setCountryCode("FR");
 				typedFeature.setFeatureId(count++);
 				typedFeature.setLocation(GeolocHelper.createPoint(1.5F, 3.2F));
 				typedFeature.setName("name" + count);

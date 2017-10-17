@@ -39,7 +39,7 @@ public class AddressHelperTest {
 	public void getNearestHouse_OneHouse() {
 		TreeSet<HouseNumber> houses = new TreeSet<HouseNumber>();
 		Point houseLocation = GeolocHelper.createPoint(3D, 4D);
-		HouseNumber house = new HouseNumber("1",houseLocation);
+		HouseNumber house = new HouseNumber("1",houseLocation,"fr");
 		houses.add(house);
 		Point searchPoint = GeolocHelper.createPoint(6D, 7D);
 		HouseNumberDistance nearestHouse = addressHelper.getNearestHouse(houses, searchPoint);
@@ -50,10 +50,10 @@ public class AddressHelperTest {
 	public void getNearestHouse_SeveralHouse() {
 		TreeSet<HouseNumber> houses = new TreeSet<HouseNumber>();
 		Point houseLocation = GeolocHelper.createPoint(4D, 5D);
-		HouseNumber house_far = new HouseNumber("far",houseLocation);
+		HouseNumber house_far = new HouseNumber("far",houseLocation,"fr");
 		
 		Point houseLocation2 = GeolocHelper.createPoint(3.1D, 4.1D);
-		HouseNumber house2_near = new HouseNumber("near",houseLocation2);
+		HouseNumber house2_near = new HouseNumber("near",houseLocation2,"fr");
 		
 		houses.add(house_far);
 		houses.add(house2_near);
@@ -244,7 +244,7 @@ public class AddressHelperTest {
 	public void buildAddressFromHousenumberDistance(){
 		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
 		String number = "2";
-		HouseNumber houseNumber = new HouseNumber(number,GeolocHelper.createPoint(3D, 4D));
+		HouseNumber houseNumber = new HouseNumber(number,GeolocHelper.createPoint(3D, 4D),"fr");
 		String name = "houseName";
 		houseNumber.setName(name);
 		osm.addHouseNumber(houseNumber);
@@ -295,7 +295,7 @@ public class AddressHelperTest {
 		city.setAdm5Name("adm5Name");
 		city.setIsInAdm("isInAdm");
 		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
-		zipcodes.add(new ZipCode("zip"));
+		zipcodes.add(new ZipCode("zip","fr"));
 		city.setZipCodes(zipcodes);
 		city.setLocation(GeolocHelper.createPoint(2D, 3D));
 		city.setCountryCode("countryCode");
@@ -331,7 +331,7 @@ public class AddressHelperTest {
 		city.setAdm5Name("adm5Name");
 		city.setIsInAdm("isInAdm");
 		Set<ZipCode> zipcodes = new HashSet<ZipCode>();
-		zipcodes.add(new ZipCode("zip"));
+		zipcodes.add(new ZipCode("zip","fr"));
 		city.setZipCodes(zipcodes);
 		city.setLocation(GeolocHelper.createPoint(2D, 3D));
 		city.setCountryCode("countryCode");

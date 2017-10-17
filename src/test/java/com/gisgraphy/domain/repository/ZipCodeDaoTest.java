@@ -43,7 +43,7 @@ public class ZipCodeDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	public void testGetByCodeAndCountry(){
 		String code = "code1";
 		String countryCode = "FR";
-		ZipCode zip1 = new ZipCode(code);
+		ZipCode zip1 = new ZipCode(code,"fr");
 		
 		GisFeature gisFeature = GisgraphyTestHelper.createGisFeature("asciiname", 3F, 4F, 1L);
 		gisFeature.setCountryCode(countryCode);
@@ -65,8 +65,8 @@ public class ZipCodeDaoTest extends AbstractIntegrationHttpSolrTestCase{
 		String smartCode = "DN16";
 		String smartCountryCode = "GB";
 		
-		ZipCode smartZip = new ZipCode(smartCode);
-		ZipCode zip1 = new ZipCode(code);
+		ZipCode smartZip = new ZipCode(smartCode,"fr");
+		ZipCode zip1 = new ZipCode(code,"fr");
 		
 		GisFeature gisFeature = GisgraphyTestHelper.createGisFeature("asciiname", 3F, 4F, 1L);
 		gisFeature.setCountryCode(countryCode);
@@ -104,8 +104,8 @@ public class ZipCodeDaoTest extends AbstractIntegrationHttpSolrTestCase{
 		String smartCode = "H3Z";
 		String smartCountryCode = "CA";
 		
-		ZipCode smartZip = new ZipCode(smartCode);
-		ZipCode zip1 = new ZipCode(code);
+		ZipCode smartZip = new ZipCode(smartCode,"fr");
+		ZipCode zip1 = new ZipCode(code,"fr");
 		
 		GisFeature gisFeature = GisgraphyTestHelper.createGisFeature("asciiname", 3F, 4F, 1L);
 		gisFeature.setCountryCode(countryCode);
@@ -138,8 +138,8 @@ public class ZipCodeDaoTest extends AbstractIntegrationHttpSolrTestCase{
 	@Test
 	public void testListByCode(){
 		String code = "code1";
-		ZipCode zip1 = new ZipCode(code);
-		ZipCode zip2 = new ZipCode(code);
+		ZipCode zip1 = new ZipCode(code,"fr");
+		ZipCode zip2 = new ZipCode(code,"fr");
 		
 		GisFeature gisFeature = GisgraphyTestHelper.createGisFeature("asciiname", 3F, 4F, 1L);
 		gisFeature.addZipCode(zip1);

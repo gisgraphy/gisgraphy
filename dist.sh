@@ -13,4 +13,4 @@ cd ../tools
 ./installall.sh
 cd -
 
-mvn clean compile javadoc:javadoc war:war hibernate3:hbm2ddl assembly:assembly -Dmaven.test.skip  -Dresetdb=false -Pprod
+mvn clean compile war:war hibernate3:hbm2ddl assembly:assembly -Dmaven.test.skip  -Dresetdb=false -Pprod

@@ -170,7 +170,7 @@ public class QuattroshapesFileRetrieverTest {
 			    + fileToDownload);
 		    if (importerConfig.isRetrieveFiles()) {
 			Assert.assertTrue("Le fichier " + fileToDownload
-				+ " have not been untar in "
+				+ " is not correct (format) "
 				+ importerConfig.getQuattroshapesDir(), file.exists());
 		    } else {
 			Assert.assertFalse("Le fichier " + fileToDownload

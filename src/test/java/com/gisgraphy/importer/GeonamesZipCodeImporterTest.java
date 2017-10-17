@@ -172,7 +172,7 @@ public class GeonamesZipCodeImporterTest {
 		
 		boolean actual = importer.getByShape(countryCode, "code", location);
 		Assert.assertEquals(true, actual);
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code","fr")));
 		EasyMock.verify(cityDao);
     }
     @Test
@@ -203,7 +203,7 @@ public class GeonamesZipCodeImporterTest {
 		
 		boolean actual = importer.getByShape(countryCode, "code", location);
 		Assert.assertEquals(true, actual);
-		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code")));
+		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code","fr")));
 		EasyMock.verify(cityDao);
     }
     
@@ -653,8 +653,9 @@ public class GeonamesZipCodeImporterTest {
     public void addAndSaveZipCodeToFeatureWithAlreadyExistingCode(){
 	Long featureId = 123456L; 
 	GisFeature gisFeature = new GisFeature();
+	gisFeature.setCountryCode("FR");
 	gisFeature.setFeatureId(123456L);
-	gisFeature.addZipCode(new ZipCode("code"));
+	gisFeature.addZipCode(new ZipCode("code","fr"));
 	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter();
 	IGisFeatureDao gisFeatureDaoMock = EasyMock.createMock(IGisFeatureDao.class);
 	EasyMock.expect(gisFeatureDaoMock.getByFeatureId(featureId)).andReturn(gisFeature);
@@ -662,7 +663,7 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.replay(gisFeatureDaoMock);
 	importer.setGisFeatureDao(gisFeatureDaoMock);
 	GisFeature actual = importer.addAndSaveZipCodeToFeature("code", featureId);
-	Assert.assertTrue(actual.getZipCodes().contains(new ZipCode("code")));
+	Assert.assertTrue(actual.getZipCodes().contains(new ZipCode("code","fr")));
 	Assert.assertEquals(featureId,actual.getFeatureId());
 	EasyMock.verify(gisFeatureDaoMock);
     }
@@ -672,6 +673,7 @@ public class GeonamesZipCodeImporterTest {
 	Long featureId = 123456L; 
 	GisFeature gisFeature = new GisFeature();
 	gisFeature.setFeatureId(123456L);
+	gisFeature.setCountryCode("FR");
 	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter();
 	IGisFeatureDao gisFeatureDaoMock = EasyMock.createMock(IGisFeatureDao.class);
 	EasyMock.expect(gisFeatureDaoMock.getByFeatureId(featureId)).andReturn(gisFeature);
@@ -679,7 +681,7 @@ public class GeonamesZipCodeImporterTest {
 	EasyMock.replay(gisFeatureDaoMock);
 	importer.setGisFeatureDao(gisFeatureDaoMock);
 	GisFeature actual = importer.addAndSaveZipCodeToFeature("code", featureId);
-	Assert.assertTrue(actual.getZipCodes().contains(new ZipCode("code")));
+	Assert.assertTrue(actual.getZipCodes().contains(new ZipCode("code","fr")));
 	Assert.assertEquals(featureId,actual.getFeatureId());
 	EasyMock.verify(gisFeatureDaoMock);
     }
@@ -751,7 +753,7 @@ public class GeonamesZipCodeImporterTest {
     	Assert.assertEquals(countryCode, city.getCountryCode());
     	Assert.assertNotNull(city.getZipCodes());
     	Assert.assertEquals(1, city.getZipCodes().size());
-    	Assert.assertEquals(new ZipCode("post"), city.getZipCodes().iterator().next());
+    	Assert.assertEquals(new ZipCode("post","fr"), city.getZipCodes().iterator().next());
     	EasyMock.verify(cityDaoMock);
     	EasyMock.verify(admDaoMock);
     	EasyMock.verify(idGenerator);

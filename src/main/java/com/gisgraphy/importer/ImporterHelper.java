@@ -708,13 +708,15 @@ public class ImporterHelper {
 					for (String name:alternateNames){
 						if (name!=null && !StringHelper.isEmptyString(name) && name.length()<GisFeature.MAX_ALTERNATENAME_SIZE){
 							if (lang!=null &&  !"".equals(lang.trim()) && lang.length()< AlternateName.MAX_LANG_SIZE){
-								AlternateName alternateName2 = new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+								AlternateName alternateName2 = new AlternateName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP,feature.getCountryCode());
 								alternateName2.setGisFeature(feature);
+								alternateName2.setCountryCode(feature.getCountryCode());
 								toBeAdded.add(alternateName2);
 								//feature.addAlternateName(alternateName2);
 							} else {
-								AlternateName alternateName2 = new AlternateName(name.trim(),AlternateNameSource.OPENSTREETMAP);
+								AlternateName alternateName2 = new AlternateName(name.trim(),AlternateNameSource.OPENSTREETMAP,feature.getCountryCode());
 								alternateName2.setGisFeature(feature);
+								alternateName2.setCountryCode(feature.getCountryCode());
 								toBeAdded.add(alternateName2);
 								//feature.addAlternateName(alternateName2);
 							}
@@ -799,7 +801,7 @@ public class ImporterHelper {
 								street.setName(name);
 								if (lang.equals("de") && decompounder.isDecompoundName(name)){
 									String otherFormat = decompounder.getOtherFormat(name);
-									alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+									alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP,street.getCountryCode());
 									if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
 										street.addAlternateName(alternateNameToAdd);
 									}
@@ -807,19 +809,22 @@ public class ImporterHelper {
 								continue;
 							} 
 							if (lang!=null &&  !"".equals(lang.trim()) && lang.length() < AlternateName.MAX_LANG_SIZE){
-								alternateNameToAdd = new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+								alternateNameToAdd = new AlternateOsmName(name.trim(),lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP,street.getCountryCode());
+								alternateNameToAdd.setCountryCode(street.getCountryCode());
 								if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
 									street.addAlternateName(alternateNameToAdd);
 								}
-									if (lang.equals("de") && decompounder.isDecompoundName(name)){
+									if (lang.equalsIgnoreCase("DE") && decompounder.isDecompoundName(name)){
 										String otherFormat = decompounder.getOtherFormat(name);
-										alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP);
+										alternateNameToAdd = new AlternateOsmName(otherFormat,lang.trim().toLowerCase(),AlternateNameSource.OPENSTREETMAP,street.getCountryCode());
+										alternateNameToAdd.setCountryCode(street.getCountryCode());
 										if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
 											street.addAlternateName(alternateNameToAdd);
 										}
 									}
 							} else {
-								alternateNameToAdd = new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP);
+								alternateNameToAdd = new AlternateOsmName(name.trim(),AlternateNameSource.OPENSTREETMAP,street.getCountryCode());
+								alternateNameToAdd.setCountryCode(street.getCountryCode());
 								if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameToAdd)){
 									street.addAlternateName(alternateNameToAdd);
 								}
@@ -831,8 +836,9 @@ public class ImporterHelper {
 			}	
 		}
 		if (street.getName()!=null && street.getCountryCode()!=null && street.getCountryCode().equals("DE") && decompounder.isDecompoundName(street.getName())){
-						AlternateOsmName alternateNameOtherFormat = new AlternateOsmName(decompounder.getOtherFormat(street.getName()),"DE",AlternateNameSource.OPENSTREETMAP);
+						AlternateOsmName alternateNameOtherFormat = new AlternateOsmName(decompounder.getOtherFormat(street.getName()),"DE",AlternateNameSource.OPENSTREETMAP,street.getCountryCode());
 						if (street.getAlternateNames() == null  || !street.getAlternateNames().contains(alternateNameOtherFormat)){
+							alternateNameOtherFormat.setCountryCode(street.getCountryCode());
 							street.addAlternateName(alternateNameOtherFormat);
 						}
 			    	}

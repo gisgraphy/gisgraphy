@@ -10,24 +10,25 @@ public class HouseNumberTest {
 
 	@Test
 	public void testConstructorPointNumber(){
-		HouseNumber houseNumber = new HouseNumber("foo",GeolocHelper.createPoint(3D, 4D));
+		HouseNumber houseNumber = new HouseNumber("foo",GeolocHelper.createPoint(3D, 4D),"fr");
 		Assert.assertEquals("foo", houseNumber.getNumber());
+		Assert.assertEquals("FR", houseNumber.getCountryCode());
 		Assert.assertNotNull(houseNumber.getLocation());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructorPointNumber_NullNumber(){
-		new HouseNumber(null,GeolocHelper.createPoint(3D, 4D));
+		new HouseNumber(null,GeolocHelper.createPoint(3D, 4D),"fr");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructorPointNumber_EmptyNumber(){
-		new HouseNumber("",GeolocHelper.createPoint(3D, 4D));
+		new HouseNumber("",GeolocHelper.createPoint(3D, 4D),"fr");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructorPointNumber_NullLocation(){
-		new HouseNumber("foo",null);
+		new HouseNumber("foo",null,"fr");
 	}
 	
 	

@@ -38,6 +38,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 		String RawAlternateNames="name:de===Rheinpalast___name:en===Palace of the Rhine___name:fr===Palais du Rhin___old_name:de===Kaiserpalast___old_name:en===Imperial Palace___old_name:fr===Palais Imperial";
 		OpenStreetMapPoisSimpleImporter importer = new OpenStreetMapPoisSimpleImporter();
 		GisFeature poi = new GisFeature();
+		poi.setCountryCode("FR");
 		poi = importer.populateAlternateNames(poi, RawAlternateNames);
 		Assert.assertEquals(6, poi.getAlternateNames().size());
 		Assert.assertTrue(alternateNameContains(poi.getAlternateNames(),"Rheinpalast","DE"));
@@ -341,12 +342,12 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city.setName(cityName);
 			city.setFeatureId(1L);
 			final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-			zipCodes.add(new ZipCode("zip1"));
+			zipCodes.add(new ZipCode("zip1","fr"));
 			city.addZipCodes(zipCodes);
 			Point location= GeolocHelper.createPoint(2F, 3F);
 			
-			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 			city.addAlternateName(an1);
 			city.addAlternateName(an2);
 			
@@ -389,7 +390,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city.setMunicipality(false);
 			city.setFeatureId(1L);
 			final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-			zipCodes.add(new ZipCode("zip1"));
+			zipCodes.add(new ZipCode("zip1","fr"));
 			city.addZipCodes(zipCodes);
 			
 			final String  cityName2= "cityName2";
@@ -401,7 +402,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city2.setName(cityName2);
 			city2.setFeatureId(1L);
 			final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
-			zipCodes2.add(new ZipCode("zip2"));
+			zipCodes2.add(new ZipCode("zip2","fr"));
 			city2.addZipCodes(zipCodes2);
 			
 			
@@ -409,8 +410,8 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			
 	    	String countryCode = "FR";
 	    	
-			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 			city.addAlternateName(an1);
 			city.addAlternateName(an2);
 	    	
@@ -454,7 +455,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city.setFeatureId(1L);
 			city.setMunicipality(false);
 			final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-			zipCodes.add(new ZipCode("zip1"));
+			zipCodes.add(new ZipCode("zip1","fr"));
 			city.addZipCodes(zipCodes);
 			city.setLocation(GeolocHelper.createPoint(4F, 5F));
 			
@@ -467,15 +468,15 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city2.setName(cityName2);
 			city2.setFeatureId(2L);
 			final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
-			zipCodes2.add(new ZipCode("zip2"));
+			zipCodes2.add(new ZipCode("zip2","fr"));
 			city2.addZipCodes(zipCodes2);
 			city2.setLocation(GeolocHelper.createPoint(2.1F, 5.1F));
 			
 			Point location= GeolocHelper.createPoint(2F, 3F);
 	    	String countryCode = "FR";
 	    	
-			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 			city.addAlternateName(an1);
 			city.addAlternateName(an2);
 	    	
@@ -523,7 +524,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city.setName(cityName);
 			city.setMunicipality(false);
 			final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-			zipCodes.add(new ZipCode("zip1"));
+			zipCodes.add(new ZipCode("zip1","fr"));
 			city.addZipCodes(zipCodes);
 			city.setLocation(GeolocHelper.createPoint(2.1F, 5.1F));
 			
@@ -536,7 +537,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city2.setAdm2Name(adm2name2);
 			city2.setName(cityName2);
 			final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
-			zipCodes2.add(new ZipCode("zip2"));
+			zipCodes2.add(new ZipCode("zip2","fr"));
 			city2.addZipCodes(zipCodes2);
 			city2.setLocation(GeolocHelper.createPoint(4F, 5F));
 			
@@ -545,8 +546,8 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			
 	    	String countryCode = "FR";
 	    	
-			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 			city.addAlternateName(an1);
 			city.addAlternateName(an2);
 	    	
@@ -590,14 +591,14 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city.setName(cityName);
 			city.setMunicipality(false);
 			final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-			zipCodes.add(new ZipCode("zip1"));
+			zipCodes.add(new ZipCode("zip1","fr"));
 			city.addZipCodes(zipCodes);
 			Point location= GeolocHelper.createPoint(2F, 3F);
 			
 	    	String countryCode = "FR";
 	    	
-			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 			city.addAlternateName(an1);
 			city.addAlternateName(an2);
 
@@ -639,14 +640,14 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			city.setName(cityName);
 			city.setMunicipality(false);
 			final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-			zipCodes.add(new ZipCode("zip1"));
+			zipCodes.add(new ZipCode("zip1","fr"));
 			city.addZipCodes(zipCodes);
 			Point location= GeolocHelper.createPoint(2F, 3F);
 			
 	    	String countryCode = "FR";
 	    	
-			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+			AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+			AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 			city.addAlternateName(an1);
 			city.addAlternateName(an2);
 
@@ -688,7 +689,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 	    	
 	    	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
 	    	City cityByShape= new City();
-	    	cityByShape.addZipCode(new ZipCode("zip"));
+	    	cityByShape.addZipCode(new ZipCode("zip","fr"));
 	    	cityByShape.setName("name");
 	    	cityByShape.setPopulation(1000000);
 	    	Adm adm = new Adm(2);
@@ -722,7 +723,7 @@ public class OpenStreetMapPoisSimpleImporterTest {
 			final City city = new City();
 			city.setMunicipality(false);
 			final List<ZipCode> zipCodes = new ArrayList<ZipCode>();
-			zipCodes.add(new ZipCode("zip1"));
+			zipCodes.add(new ZipCode("zip1","fr"));
 			Point location= GeolocHelper.createPoint(2F, 3F);
 			
 	    	String countryCode = "FR";

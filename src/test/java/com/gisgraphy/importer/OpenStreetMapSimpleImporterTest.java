@@ -202,6 +202,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	String RawAlternateNames="name:fr===Cheka Jedid,Chekia Atiq:Chekia Jedide;Chekia Jedidé___name:nl===Karl-Franzens-Universität Graz";
 		OpenStreetMapSimpleImporter importer = new OpenStreetMapSimpleImporter();
 		OpenStreetMap street = new OpenStreetMap();
+		street.setCountryCode("FR");
 		street = importer.populateAlternateNames(street, RawAlternateNames);
 		Assert.assertEquals(4, street.getAlternateNames().size());
 		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Chekia Atiq"));
@@ -220,6 +221,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		  	 RawAlternateNames="\"alt_name===Night Fire Drive___old_name===David Evans Road___note:name===The highway signs say \"\"Night Fire ROAD,\"\" other sources say \"\"Night Fire DRIVE.\"\" Confusingly, Dawson County GIS says \"\"David Evans Road.\"\" Going with the highway signs as correct, but listing NF Drive as an alt_name and DE Road as an old_name.___source:name===survey 2014-08-30\"";
 		street = new OpenStreetMap();
 		street.setName("name");
+		street.setCountryCode("FR");
    		street = importer.populateAlternateNames(street, RawAlternateNames);
    		Assert.assertEquals(2, street.getAlternateNames().size());
    		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Night Fire Drive"));
@@ -233,6 +235,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
    		 RawAlternateNames="name:fr===Cheka Jedid,Chekia Atiq:Chekia Jedide;Chekia Jedidé___name:historic:1952===Karl-Franzens-Universität Graz";
 		 importer = new OpenStreetMapSimpleImporter();
 		 street = new OpenStreetMap();
+		 street.setCountryCode("FR");
 		street = importer.populateAlternateNames(street, RawAlternateNames);
 		Assert.assertEquals(4, street.getAlternateNames().size());
 		Assert.assertTrue(alternateOsmNameContains(street.getAlternateNames(),"Chekia Atiq"));
@@ -587,12 +590,12 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm5Name("adm5Name");
     	city.setMunicipality(false);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		city.addZipCodes(zipCodes);
 		Point location= GeolocHelper.createPoint(2F, 3F);
 		
-		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 		city.addAlternateName(an1);
 		city.addAlternateName(an2);
 		
@@ -650,7 +653,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm5Name("adm5Name");
     	city.setMunicipality(true);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		city.addZipCodes(zipCodes);
 		
 		final String  cityName2= "cityName2";
@@ -664,7 +667,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city2.setFeatureId(1L);
 		city2.setId(456L);
 		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
-		zipCodes2.add(new ZipCode("zip2"));
+		zipCodes2.add(new ZipCode("zip2","fr"));
 		city2.addZipCodes(zipCodes2);
 		
 		
@@ -672,8 +675,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		
     	String countryCode = "FR";
     	
-		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 		city.addAlternateName(an1);
 		city.addAlternateName(an2);
     	
@@ -734,7 +737,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm5Name("adm5NameCity");
 		city.setMunicipality(true);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		city.addZipCodes(zipCodes);
 		city.setLocation(GeolocHelper.createPoint(4F, 5F));
 		
@@ -749,15 +752,15 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city2.setId(456L);
 		city2.setMunicipality(false);
 		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
-		zipCodes2.add(new ZipCode("zip2"));
+		zipCodes2.add(new ZipCode("zip2","fr"));
 		city2.addZipCodes(zipCodes2);
 		city2.setLocation(GeolocHelper.createPoint(2.1F, 5.1F));
 		
 		Point location= GeolocHelper.createPoint(2F, 3F);
     	String countryCode = "FR";
     	
-		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 		city.addAlternateName(an1);
 		city.addAlternateName(an2);
     	
@@ -819,7 +822,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm5Name("adm5NameCity");
 		city.setMunicipality(false);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		city.addZipCodes(zipCodes);
 		city.setLocation(GeolocHelper.createPoint(4F, 5F));
 		
@@ -833,7 +836,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city2.setFeatureId(2L);
 		city2.setId(456L);
 		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
-		zipCodes2.add(new ZipCode("zip2"));
+		zipCodes2.add(new ZipCode("zip2","fr"));
 		city2.addZipCodes(zipCodes2);
 		city2.setLocation(GeolocHelper.createPoint(2.1F, 5.1F));
 		city.setMunicipality(true);
@@ -841,8 +844,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		Point location= GeolocHelper.createPoint(2F, 3F);
     	String countryCode = "FR";
     	
-		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 		city.addAlternateName(an1);
 		city.addAlternateName(an2);
     	
@@ -906,7 +909,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	city.setAdm5Name("adm5Name");
 		city.setMunicipality(false);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		city.addZipCodes(zipCodes);
 		city.setLocation(GeolocHelper.createPoint(2.1F, 5.1F));
 		
@@ -920,7 +923,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city2.setAdm2Name(adm2name2);
 		city2.setName(cityName2);
 		final Set<ZipCode> zipCodes2 = new HashSet<ZipCode>();
-		zipCodes2.add(new ZipCode("zip2"));
+		zipCodes2.add(new ZipCode("zip2","fr"));
 		city2.addZipCodes(zipCodes2);
 		city2.setLocation(GeolocHelper.createPoint(4F, 5F));
 		city.setMunicipality(true);
@@ -930,8 +933,8 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		
     	String countryCode = "FR";
     	
-		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 		city.addAlternateName(an1);
 		city.addAlternateName(an2);
     	
@@ -996,14 +999,14 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setFeatureId(1L);
 		city.setId(123L);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		city.addZipCodes(zipCodes);
 		Point location= GeolocHelper.createPoint(2F, 3F);
 		
     	String countryCode = "FR";
     	
-		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 		city.addAlternateName(an1);
 		city.addAlternateName(an2);
 
@@ -1061,14 +1064,14 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		city.setFeatureId(1L);
 		city.setId(123L);
 		final Set<ZipCode> zipCodes = new HashSet<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		city.addZipCodes(zipCodes);
 		Point location= GeolocHelper.createPoint(2F, 3F);
 		
     	String countryCode = "FR";
     	
-		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP);
-		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP);
+		AlternateName an1 = new AlternateName("an1",AlternateNameSource.OPENSTREETMAP,"fr");
+		AlternateName an2 = new AlternateName("an2",AlternateNameSource.OPENSTREETMAP,"fr");
 		city.addAlternateName(an1);
 		city.addAlternateName(an2);
 
@@ -1119,7 +1122,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
     	ICityDao cityDao = EasyMock.createMock(ICityDao.class);
     	ICitySubdivisionDao citySubdivisionDao = EasyMock.createMock(ICitySubdivisionDao.class);
     	City cityByShape= new City();
-    	cityByShape.addZipCode(new ZipCode("zip"));
+    	cityByShape.addZipCode(new ZipCode("zip","fr"));
     	cityByShape.setName("name");
     	cityByShape.setPopulation(1000000);
     	cityByShape.setAdm1Name("adm1Name");
@@ -1172,7 +1175,7 @@ public class OpenStreetMapSimpleImporterTest extends AbstractIntegrationHttpSolr
 		final City city = new City();
 		city.setMunicipality(false);
 		final List<ZipCode> zipCodes = new ArrayList<ZipCode>();
-		zipCodes.add(new ZipCode("zip1"));
+		zipCodes.add(new ZipCode("zip1","fr"));
 		Point location= GeolocHelper.createPoint(2F, 3F);
 		
     	String countryCode = "FR";

@@ -263,7 +263,7 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testPopulateAcityShouldsetZipCode() {
 	City city1 = GisgraphyTestHelper.createCity("name", 1.5F, 1.6F, 2L);
-	city1.addZipCode(new ZipCode("10000"));
+	city1.addZipCode(new ZipCode("10000","FR"));
 	City city2 = new City();
 	city2.populate(city1);
 	for (ZipCode zipcode : city1.getZipCodes())
@@ -275,7 +275,7 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testToStringShouldContainsTheClassName() {
 	City city1 = GisgraphyTestHelper.createCity("name", 1.5F, 1.6F, 2L);
-	city1.addZipCode(new ZipCode("10000"));
+	city1.addZipCode(new ZipCode("10000","FR"));
 	assertTrue(city1.toString().startsWith(City.class.getSimpleName()));
     }
     
@@ -283,8 +283,8 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
     public void testAddZipCodesShouldDoADoubleSet(){
 	GisFeature gisFeature = new GisFeature();
 	gisFeature.setFeatureId(3L);
-	ZipCode zipCode1 = new ZipCode("zip1");
-	ZipCode zipCode2 = new ZipCode("zip2");
+	ZipCode zipCode1 = new ZipCode("zip1","FR");
+	ZipCode zipCode2 = new ZipCode("zip2","FR");
 	List<ZipCode> zipCodes = new ArrayList<ZipCode>();
 	zipCodes.add(zipCode1);
 	zipCodes.add(zipCode2);
@@ -300,7 +300,7 @@ public class GisFeatureTest extends AbstractIntegrationHttpSolrTestCase {
     public void testAddZipCodeShouldDoADoubleSet(){
 	GisFeature gisFeature = new GisFeature();
 	gisFeature.setFeatureId(3L);
-	ZipCode zipCode1 = new ZipCode("zip2");
+	ZipCode zipCode1 = new ZipCode("zip2","FR");
 	gisFeature.addZipCode(zipCode1);
 	Assert.assertEquals("all the zipcodes of the list should be added",1, gisFeature.getZipCodes().size());
 	Assert.assertTrue("zipCode1 is missing", gisFeature.getZipCodes().contains(zipCode1));

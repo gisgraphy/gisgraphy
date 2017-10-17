@@ -124,7 +124,7 @@ public class LabelGenerator {
 			}
 			if (street.getName() != null) {
 				altnames.add(new AlternateOsmName(street.getName(),
-						AlternateNameSource.PERSONAL));
+						AlternateNameSource.PERSONAL,street.getCountryCode()));
 			}
 
 			List<String> altcities = new ArrayList<String>();
@@ -177,6 +177,9 @@ public class LabelGenerator {
 				if (feature.getAlternateNames() != null) {
 					for (AlternateName altname:feature.getAlternateNames()){
 						if (altname.getName()!=null && !altname.getName().startsWith("http")){
+							if (altname.getCountryCode()==null){
+								altname.setCountryCode(feature.getCountryCode());
+							}
 							labels.add(altname.getName());
 						}
 					}
@@ -201,11 +204,17 @@ public class LabelGenerator {
 		Set<String> labels = new HashSet<String>();
 		List<AlternateName> altnames = new ArrayList<AlternateName>();
 		if (poi.getAlternateNames() != null) {
+			for (AlternateName altname:poi.getAlternateNames()){
+				if (altname.getCountryCode()==null){
+					altname.setCountryCode(poi.getCountryCode());
+				}
+			}
 			altnames.addAll(poi.getAlternateNames());
 		}
 		if (poi.getName() != null) {
-			altnames.add(new AlternateName(poi.getName(),
-					AlternateNameSource.PERSONAL));
+			AlternateName aname = new AlternateName(poi.getName(),
+					AlternateNameSource.PERSONAL,poi.getCountryCode());
+			altnames.add(aname);
 		}
 
 		List<String> altcities = new ArrayList<String>();

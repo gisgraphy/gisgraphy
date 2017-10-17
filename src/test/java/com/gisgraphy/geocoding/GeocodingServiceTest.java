@@ -1649,29 +1649,7 @@ public class GeocodingServiceTest {
     }
     
     
-    @Test
-    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_and_more_street() {
-	// setup
-	GeocodingService geocodingService = new GeocodingService();
-	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
-	streets.add(street);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
-	streets.add(street2);
-	SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in2");
-	streets.add(street3);
-	
-	// exercise
-	AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, null);
-
-	// verify
-	Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
-	Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
-	Assert.assertEquals(2, addressResultsDto.getResult().size());
-	Address address = addressResultsDto.getResult().get(0);
-	
-	
-    }
+   
     
     
     

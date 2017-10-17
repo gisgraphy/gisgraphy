@@ -66,15 +66,19 @@ public class HouseNumber implements Comparable<HouseNumber>{
     public HouseNumber() {
     }
 
-    public HouseNumber(String number, Point location) {
+    public HouseNumber(String number, Point location,String countryCode) {
     	if (number==null || "".equals(number.trim())){
     		throw new IllegalArgumentException("wrong number given for housenumber");
     	}
     	if (location==null){
     		throw new IllegalArgumentException("wrong location for housenumber");
     	}
+    	if (countryCode==null){
+    		throw new IllegalArgumentException("wrong countrycode for housenumber");
+    	}
     	this.number = number;
 		this.location = location;
+		this.countryCode = countryCode.toUpperCase();
 	}
 
 	@IntrospectionIgnoredField
@@ -91,6 +95,8 @@ public class HouseNumber implements Comparable<HouseNumber>{
     private static final HouseNumberComparator comparator = new HouseNumberComparator();
 
     private String name;
+    
+    private String countryCode;
 
     private Point location;
     
@@ -320,6 +326,28 @@ public class HouseNumber implements Comparable<HouseNumber>{
 		return true;
 	}
 	 
+	 
+	 
+	 /**
+	  * @return The ISO 3166 alpha-2 letter code.
+	  */
+	 @Index(name = "housenumbercountryindex")
+	 @Column(length = 3,nullable=false)
+	 public String getCountryCode() {
+		 return countryCode;
+	 }
+
+	/**
+	 * @param countryCode the countryCode to set
+	 */
+	public void setCountryCode(String countryCode) {
+		 if (countryCode!=null){
+		this.countryCode = countryCode.toUpperCase();
+		 } else {
+			 throw new RuntimeException("house number should have a not null countrycode");
+		 }
+	}
+
 	@Override
 	public String toString() {
 		return "HouseNumber [id=" + id + ", openstreetmapId=" + openstreetmapId

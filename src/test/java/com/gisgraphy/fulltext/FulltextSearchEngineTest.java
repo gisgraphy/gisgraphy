@@ -675,12 +675,13 @@ public class FulltextSearchEngineTest extends
 	GisFeature gisFeature = GisgraphyTestHelper.createCity("Saint-André les lille",
 		1.5F, 2F, featureId);
 	AlternateName alternateName = new AlternateName();
+	alternateName.setCountryCode("FR");
 	alternateName.setName("alteré");
 	alternateName.setGisFeature(gisFeature);
 	alternateName.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	gisFeature.addAlternateName(alternateName);
 	City paris = new City(gisFeature);
-	paris.addZipCode(new ZipCode("50263"));
+	paris.addZipCode(new ZipCode("50263","fr"));
 
 	// save cities and check it is saved
 	this.cityDao.save(paris);
@@ -736,12 +737,13 @@ public class FulltextSearchEngineTest extends
 	GisFeature gisFeature = GisgraphyTestHelper.createCity("Saint-André",
 		1.5F, 2F, featureId);
 	AlternateName alternateName = new AlternateName();
+	alternateName.setCountryCode("FR");
 	alternateName.setName("alteré");
 	alternateName.setGisFeature(gisFeature);
 	alternateName.setSource(AlternateNameSource.ALTERNATENAMES_FILE);
 	gisFeature.addAlternateName(alternateName);
 	City paris = new City(gisFeature);
-	paris.addZipCode(new ZipCode("50263"));
+	paris.addZipCode(new ZipCode("50263","fr"));
 
 	// save cities and check it is saved
 	this.cityDao.save(paris);
@@ -1172,7 +1174,7 @@ public class FulltextSearchEngineTest extends
     @Test
     public void testSearchShouldConsiderZipCodeAsAWholeWordAndNotSplitMinusSign() {
 	City city = GisgraphyTestHelper.createCity("Saint André", 1.5F, 2F, 1001L);
-	city.addZipCode(new ZipCode("30-520"));
+	city.addZipCode(new ZipCode("30-520","fr"));
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	// commit changes
@@ -1201,7 +1203,7 @@ public class FulltextSearchEngineTest extends
     @Test
     public void testSearchShouldConsiderZipCodeAsAWholeWordAndNotSplitSpace_allwordRequired() {
 	City city = GisgraphyTestHelper.createCity("Saint André", 1.5F, 2F, 1001L);
-	city.addZipCode(new ZipCode("30 520"));
+	city.addZipCode(new ZipCode("30 520","fr"));
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	// commit changes
@@ -1230,7 +1232,7 @@ public class FulltextSearchEngineTest extends
     @Test
     public void testSearchShouldConsiderZipCodeAsAWholeWordAndNotSplitSpace() {
 	City city = GisgraphyTestHelper.createCity("Saint André", 1.5F, 2F, 1001L);
-	city.addZipCode(new ZipCode("30 520"));
+	city.addZipCode(new ZipCode("30 520","fr"));
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	// commit changes
@@ -1381,7 +1383,7 @@ public class FulltextSearchEngineTest extends
     public void testExecuteQuery_for_CA_zip() {
 	City city = GisgraphyTestHelper.createCity("montreal", 1.5F, 2F, 1001L);
 	city.setCountryCode("CA");
-	city.addZipCode(new ZipCode("H3Z"));//H3Z 2Y7
+	city.addZipCode(new ZipCode("H3Z","fr"));//H3Z 2Y7
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	// commit changes
@@ -1414,7 +1416,7 @@ public class FulltextSearchEngineTest extends
     public void testExecuteQuery_for_GB_zip() {
 	City city = GisgraphyTestHelper.createCity("montreal", 1.5F, 2F, 1001L);
 	city.setCountryCode("GB");
-	city.addZipCode(new ZipCode("EC1A"));//EC1A 1HQ
+	city.addZipCode(new ZipCode("EC1A","fr"));//EC1A 1HQ
 	this.cityDao.save(city);
 	assertNotNull(this.cityDao.getByFeatureId(1001L));
 	// commit changes

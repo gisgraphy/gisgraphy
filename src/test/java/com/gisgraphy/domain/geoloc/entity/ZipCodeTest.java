@@ -32,33 +32,33 @@ public class ZipCodeTest {
 	
 	@Test
 	public void testSetCodeShouldUppercase(){
-		ZipCode zipCode = new ZipCode("");
+		ZipCode zipCode = new ZipCode("","fr");
 		zipCode.setCode(code);
 		Assert.assertEquals("zipcode constructor should upper case","CODE", zipCode.getCode());
 	}
 	
 	@Test
 	public void testConstructorShouldUpperCaseCode(){
-		ZipCode zipCode = new ZipCode(code);
+		ZipCode zipCode = new ZipCode(code,"fr");
 		Assert.assertEquals("zipcode constructor should upper case","CODE", zipCode.getCode());
 	}
 	
 	@Test
 	public void testToString(){
-		ZipCode zipCode = new ZipCode(code);
+		ZipCode zipCode = new ZipCode(code,"fr");
 		Assert.assertEquals("toString should return the code ","CODE", zipCode.toString());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testZipCodeMustHaveACode(){
-		new ZipCode(null);
+		new ZipCode(null,"fr");
 	}
 	
 	@Test
 	public void testEquals(){
-		ZipCode zipcode1 = new ZipCode(code);
-		ZipCode zipcodeEquals = new ZipCode(code);
-		ZipCode zipcodeNotEquals = new ZipCode(code+code);
+		ZipCode zipcode1 = new ZipCode(code,"fr");
+		ZipCode zipcodeEquals = new ZipCode(code,"fr");
+		ZipCode zipcodeNotEquals = new ZipCode(code+code,"fr");
 		Assert.assertTrue("Equals must be base on the code",zipcode1.equals(zipcodeEquals));
 		Assert.assertFalse("Equals must be base on the code",zipcode1.equals(zipcodeNotEquals));
 		

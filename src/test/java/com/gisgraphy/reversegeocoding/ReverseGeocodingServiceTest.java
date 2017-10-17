@@ -34,7 +34,7 @@ public class ReverseGeocodingServiceTest {
 		IOpenStreetMapDao openStreetMapDao = EasyMock.createMock(IOpenStreetMapDao.class);
 		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
 		String number = "2";
-		HouseNumber houseNumber = new HouseNumber(number,GeolocHelper.createPoint(3D, 4D));
+		HouseNumber houseNumber = new HouseNumber(number,GeolocHelper.createPoint(3D, 4D),"fr");
 		String name = "houseName";
 		houseNumber.setName(name);
 		osm.addHouseNumber(houseNumber);;
