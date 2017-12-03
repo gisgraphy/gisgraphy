@@ -806,6 +806,27 @@ public class GenericGisDao<T extends GisFeature> extends
 		}
 		return 0;
 	}
+	
+	
+	@Override
+	public long countShapeByCountryCode(final String countryCode) {
+		if (countryCode!=null){
+			return ((Long) this.getHibernateTemplate().execute(
+					new HibernateCallback() {
+
+					    public Object doInHibernate(Session session)
+						    throws PersistenceException {
+						String queryString = "select count(*) from "
+							+ persistentClass.getSimpleName()+ " where countrycode='"+countryCode.toUpperCase()+"' AND shape is not null";
+
+						Query qry = session.createQuery(queryString);
+						Long result = (Long) qry.uniqueResult();
+						return result;
+					    }
+					})).longValue();
+		}
+		return 0;
+	}
     
 
     

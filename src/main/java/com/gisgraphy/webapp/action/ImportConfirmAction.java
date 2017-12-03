@@ -154,6 +154,7 @@ public class ImportConfirmAction extends ActionSupport {
 			
 		} else {
 			if (getCountryCodes() != null && getCountryCodes().size() > 0) {
+				importerConfig.setCountryCodes(countryCodes);
 				StringBuffer geonamesCountryFileList = new StringBuffer();
 				StringBuffer openstreetmapCountryFileList = new StringBuffer();
 				for (String country : countryCodes) {

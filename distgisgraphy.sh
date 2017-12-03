@@ -46,7 +46,7 @@ cd ../tools
 ./installall.sh
 cd -
 
-mvn clean compile javadoc:javadoc war:war hibernate3:hbm2ddl assembly:assembly -Dmaven.test.skip  -Dresetdb=false -Pgisgraphy
+mvn clean compile  war:war hibernate3:hbm2ddl assembly:assembly -Dmaven.test.skip  -Dresetdb=false -Pgisgraphy
 
 rm $curDir/data/libs/*
 cd ../extra/

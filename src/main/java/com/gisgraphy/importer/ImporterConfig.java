@@ -274,6 +274,8 @@ public class ImporterConfig {
     
     private int parsedAddressUnlockKey;
     
+    private List<String> countryCodes; 
+    
     
     /*
      *  
@@ -286,6 +288,8 @@ public class ImporterConfig {
      */
     
   
+
+	
 
 	/**
      * @return true if the importer should process the import of Geonames data
@@ -1362,6 +1366,8 @@ public class ImporterConfig {
     
     
     private  Integer key = 0;
+
+	private String quote;
     
     /**
 	 * @return the key
@@ -2107,6 +2113,32 @@ public class ImporterConfig {
 
 	public void setRenameFilesAfterProcessing(boolean renameFilesAfterProcessing) {
 		this.renameFilesAfterProcessing = renameFilesAfterProcessing;
+	}
+	
+	/**
+	 * @return the countryCodes
+	 */
+	public List<String> getCountryCodes() {
+		return countryCodes;
+	}
+
+	/**
+	 * @param countryCodes the countryCodes to set
+	 */
+	public void setCountryCodes(List<String> countryCodes) {
+		this.countryCodes = countryCodes;
+		updateQuote();
+	}
+	
+	protected void updateQuote(){
+		quote = ImporterHelper.getQuoteAsJSon(this);
+	}
+	
+	public String getQuote(){
+		if (quote==null){
+			updateQuote();
+		} 
+			return quote;
 	}
 
 }

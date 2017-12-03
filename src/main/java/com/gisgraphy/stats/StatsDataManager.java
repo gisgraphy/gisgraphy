@@ -71,6 +71,12 @@ public class StatsDataManager implements IStatsDataManager{
 	private static final String ADDRESSES_LABEL = "Addresses";
 
 	private static final String STREETS_LABEL = "Streets";
+	
+	private static final String STREETS_SHAPE_LABEL = "Streets";
+	
+	private static final String CITIES_SHAPE_LABEL = "Streets";
+	
+	private static final String ADMS_SHAPE_LABEL = "Streets";
 
 	private static Logger logger = LoggerFactory
 			.getLogger(StatsDataManager.class);
@@ -134,7 +140,7 @@ public class StatsDataManager implements IStatsDataManager{
 		}
 	}
 /**
- * export one file with all the details stats for all the countries
+ * export ONE file with all the details stats for all the countries
  */
 	@Override
 	public void exportAllInJson() {
@@ -300,7 +306,11 @@ public class StatsDataManager implements IStatsDataManager{
 		long streets = openStreetMapDao.countByCountryCode(country);
 		logger.info("counting stats for streets : "+ streets);
 		countryStats.add(new StatsDataDTO(STREETS_LABEL, streets));
-
+		
+		long streetsWithShape = openStreetMapDao.countByCountryCode(country);
+		logger.info("counting stats for shape streets : "+ streetsWithShape);
+		countryStats.add(new StatsDataDTO(STREETS_SHAPE_LABEL, streetsWithShape));
+		
 		long houses = houseNumberDao.countByCountryCode(country);
 		logger.info("counting stats for houses : "+ houses);
 		countryStats.add(new StatsDataDTO(ADDRESSES_LABEL, houses));
@@ -308,10 +318,18 @@ public class StatsDataManager implements IStatsDataManager{
 		long cities = cityDao.countByCountryCode(country);
 		logger.info("counting stats for cities : "+ cities);
 		countryStats.add(new StatsDataDTO(CITIES_LABEL, cities));
+		
+		long citiesWithShape = cityDao.countShapeByCountryCode(country);
+		logger.info("counting stats for cities shapes: "+ citiesWithShape);
+		countryStats.add(new StatsDataDTO(CITIES_SHAPE_LABEL, citiesWithShape));
 
 		long adms = admDao.countByCountryCode(country);
 		logger.info("counting stats for adms : "+ adms);
 		countryStats.add(new StatsDataDTO(ADMS_LABEL, adms));
+		
+		long admsWithShape = admDao.countByCountryCode(country);
+		logger.info("counting stats for adms shapes: "+ admsWithShape);
+		countryStats.add(new StatsDataDTO(ADMS_SHAPE_LABEL, admsWithShape));
 
 		//then poi
 		long globalcount = 0;

@@ -262,4 +262,13 @@ public interface IGisDao<T> extends IDao<T, java.lang.Long> {
      *                 if thrown by JDBC API
      */
     public long countByCountryCode(String countryCode);
+    
+    /**
+     * @return the number of element in the Datastore
+     * @throws HibernateException
+     *                 if thrown by the Hibernate API
+     * @throws SQLException
+     *                 if thrown by JDBC API
+     */
+    public long countShapeByCountryCode(String countryCode);
 }

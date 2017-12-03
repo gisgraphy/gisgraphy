@@ -186,4 +186,6 @@ public interface IOpenStreetMapDao extends IDao<OpenStreetMap, java.lang.Long> {
     
     public long countByCountryCode(String countryCode);
     
+    public long countShapeByCountryCode(String countryCode);
+    
 }

@@ -12,7 +12,7 @@
       <@s.text name="import.processingRequest"/>
      <br/><img src="/images/loading.gif" width=20px /> <@s.text name="import.wait.importSince"/> ${importFormatedTimeElapsed}<br/> 
      <br/><@s.text name="import.time.info" ><@s.param>10</@s.param><@s.param>30</@s.param></@s.text>. <@s.text name="import.time.why"><@s.param>http://www.gisgraphy.com/faq.html#why-import-long</@s.param><@s.param>http://www.gisgraphy.com/faq.html#how-long-import</@s.param></@s.text>
-<br/>
+<br/><br/>
 <@s.url id="hookURL" action="hook" method="execute"/>
 Want to be notify when import has finished ? you can define an URL that will be called when the import will be done : click <a href="${hookURL}">here</a>
         
@@ -69,6 +69,10 @@ Want to be notify when import has finished ? you can define an URL that will be 
     <p/>
     <@s.url id="thisUrl" action="import" includeParams="all" />
     <@s.text name="import.refreshText"/> <a href="${thisUrl}"><@s.text name="global.refresh"/></a>.
-	
+<script type="text/javascript">
+quote=${quote} ;
+console.log(quote.price);
+$("price").replace(quote.price);
+</script>	
 </body>
 </html>

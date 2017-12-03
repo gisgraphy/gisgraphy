@@ -60,9 +60,16 @@ public class ImportAction extends ActionSupport {
     private String hookURL;
     
     
-    
 
     /**
+	 * @return the quote
+	 */
+	public String getQuote() {
+		return importerManager.getImporterConfig().getQuote();
+	}
+
+
+	/**
 	 * @return the hookURL
 	 */
 	public String getImporterManagerHookURL() {

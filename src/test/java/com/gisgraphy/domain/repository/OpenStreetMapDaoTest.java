@@ -911,5 +911,44 @@ public class OpenStreetMapDaoTest extends AbstractIntegrationHttpSolrTestCase{
     	
     }
     
+    @Test
+    public void testCountShapeByCountryCode_notnullshape(){
+    	HouseNumber houseNumber = GisgraphyTestHelper.createHouseNumber();
+    	OpenStreetMap street = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+    	Assert.assertNotNull(street.getShape());
+    	street.setCountryCode("US");
+    	street = openStreetMapDao.save(street);
+    	//houseNumber.setStreet(street);
+    	street.addHouseNumber(houseNumber);
+    	houseNumberDao.save(houseNumber);
+    	street = openStreetMapDao.save(street);
+    	
+    	Assert.assertNotNull(houseNumber.getId());
+    	Assert.assertEquals(1,openStreetMapDao.countShapeByCountryCode("US"));
+    	Assert.assertEquals(1,openStreetMapDao.countShapeByCountryCode("us"));
+    	Assert.assertEquals(0,openStreetMapDao.countShapeByCountryCode("foo"));
+    	
+    }
+    
+    @Test
+    public void testCountShapeByCountryCode_nullshape(){
+    	HouseNumber houseNumber = GisgraphyTestHelper.createHouseNumber();
+    	OpenStreetMap street = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+    	street.setShape(null);
+    	Assert.assertNull(street.getShape());
+    	street.setCountryCode("US");
+    	street = openStreetMapDao.save(street);
+    	//houseNumber.setStreet(street);
+    	street.addHouseNumber(houseNumber);
+    	houseNumberDao.save(houseNumber);
+    	street = openStreetMapDao.save(street);
+    	
+    	Assert.assertNotNull(houseNumber.getId());
+    	Assert.assertEquals(0,openStreetMapDao.countShapeByCountryCode("US"));
+    	Assert.assertEquals(0,openStreetMapDao.countShapeByCountryCode("us"));
+    	Assert.assertEquals(0,openStreetMapDao.countShapeByCountryCode("foo"));
+    	
+    }
+    
 }
 

@@ -32,6 +32,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -428,6 +430,21 @@ public class ImporterConfigTest {
     }
     
  
+    @Test
+    public void updateCountryCodeShouldUpdateQuotes(){
+    	ImporterConfig importerConfig = new ImporterConfig();
+    	String quote1 = importerConfig.getQuote();
+		Assert.assertNotNull(quote1);
+		List<String> countryCodes = new ArrayList<String>();
+		countryCodes.add("FR");
+		importerConfig.setCountryCodes(countryCodes );
+		String quote2 = importerConfig.getQuote();
+		Assert.assertNotEquals(quote1, quote2);
+		
+		
+		
+    	
+    }
 	    
 
 }

@@ -397,6 +397,8 @@ public class ImporterManager implements IImporterManager {
     public void setDatabaseHelper(IDatabaseHelper databaseHelper) {
         this.databaseHelper = databaseHelper;
     }
+
+	
     
     
 

@@ -26,12 +26,14 @@
 package com.gisgraphy.importer;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -57,7 +59,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.compound.Decompounder;
-import com.gisgraphy.compound.Decompounder.state;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
@@ -104,6 +105,9 @@ public class ImporterHelper {
     
     public static final String UNWANTED_ZIPCODE_REGEXP = "(.*(?:CEDEX).*|(?:\\d{5}\\sSP\\s\\d+))";
     public static final Pattern UNWANTED_ZIPCODE_PATTERN = Pattern.compile(UNWANTED_ZIPCODE_REGEXP,Pattern.CASE_INSENSITIVE);
+    
+    public static String QUOTE_URL ="https://premium.gisgraphy.com/dump/quote";
+    
    private static  Decompounder decompounder = new Decompounder();
     
 	
@@ -578,6 +582,48 @@ public class ImporterHelper {
 		}
  		
     }
+    public static String getURLContent(String address){
+    	if (address == null || address.trim().equals("")){
+    		logger.error("can not call a null URL");
+    		return null;
+    	}
+    	 BufferedReader in=null;;
+    	HttpURLConnection conn = null;
+    	 try {
+			URL url = new URL(address);
+			conn = (HttpURLConnection) url.openConnection();
+			if (conn instanceof HttpURLConnection) {
+				conn.setRequestProperty("User-Agent", "gisgraphy_");
+			((HttpURLConnection) conn).setInstanceFollowRedirects(false);
+			}
+				
+			  in = new BufferedReader(
+				        new InputStreamReader(((HttpURLConnection) conn).getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				return response.toString();
+		} catch (Exception e) {
+			logger.error("error when calling "+address+" "+e.getMessage(),e);
+		} finally{
+			if (in !=null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					//ignore
+				}
+			}
+			
+		}
+    	 return null;
+ 		
+    }
+    
+    
+   
 
     public static String[] correctLastAdmCodeIfPossible(String[] fields) {
 	if (FeatureClassCodeHelper.is_Adm(fields[6], fields[7]) && !AbstractSimpleImporterProcessor.isEmptyField(fields, 0, false)) {
@@ -901,6 +947,31 @@ public class ImporterHelper {
 			return true ; 
 		}
 		return false;
+	}
+	
+	public static String getQuoteAsJSon(ImporterConfig importerConfig) {
+		String countrystr="";
+		String planet;
+		if (importerConfig!=null && importerConfig.getCountryCodes()!=null && importerConfig.getCountryCodes().size() >0){
+			planet="0";
+			
+			for (String cc : importerConfig.getCountryCodes()){
+				if (cc != null){
+					countrystr+=cc.toUpperCase()+",";
+				}
+			}
+			//compute countrycodes str
+		} else {
+			//it is an all countries dump
+			planet="1";
+		}
+		String url = QUOTE_URL+"?planet="+planet+"&countries="+countrystr;
+		logger.info("will get dump quote for "+url);
+		String content =ImporterHelper.getURLContent(url);
+		if (content==null){
+			return "{\"price\":\"?\"}";
+		}
+		return content;
 	}
 
 }

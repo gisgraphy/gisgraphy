@@ -487,6 +487,41 @@ public class ImporterHelperTest {
 	  		
 	  	}
 	    
+	    @Test
+	    public void testGetURLContent(){
+	    	String URLOK = "http://www.gisgraphy.com";
+	    	String URLKO = "http://www.notexistingserver.com";
+	    	String URL404 = "http://www.gisgraphy.com/notexist";
+	    	String urlHTTPS = "https://twitter.com/";
+	    	
+	    	Assert.assertNotNull(ImporterHelper.getURLContent(URLOK));
+	    	Assert.assertNotNull(ImporterHelper.getURLContent(urlHTTPS));
+	    	Assert.assertNull(ImporterHelper.getURLContent(URLKO));
+	    	Assert.assertNull(ImporterHelper.getURLContent(URL404));
+	    	
+	    }
+	    
+	    @Test
+	    public void testGetQuoteAsJSon(){
+	    	
+	    	ImporterConfig importerConfig = new ImporterConfig();
+	    	String quote = ImporterHelper.getQuoteAsJSon(null);
+	    	Assert.assertTrue(quote.contains("price"));
+	    	
+	    	importerConfig.setCountryCodes(null);
+	    	quote = ImporterHelper.getQuoteAsJSon(new ImporterConfig() );
+			System.out.println(quote);
+			Assert.assertTrue(quote.contains("price"));
+			
+			List<String> list = new ArrayList<String>();
+			list.add("FR");
+			importerConfig.setCountryCodes(list);
+			quote = ImporterHelper.getQuoteAsJSon(importerConfig );
+			System.out.println(quote);
+			Assert.assertTrue(quote.contains("price"));
+			
+	    }
+	    
 	   
 	
 }
