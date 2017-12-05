@@ -43,6 +43,7 @@ public class CountryInfo {
      put("AI","Anguilla");
      put("AL","Albania");
      put("AM","Armenia");
+     put("AN","Netherlands Antilles");//deprecated
      put("AO","Angola");
      put("AQ","Antarctica");
      put("AR","Argentina");
@@ -62,10 +63,10 @@ public class CountryInfo {
      put("BI","Burundi");
      put("BJ","Benin");
      put("BL","Saint Barthelemy");
-     put("BQ","Bonaire, Sint Eustatius and Saba");
      put("BM","Bermuda");
      put("BN","Brunei");
      put("BO","Bolivia");
+     put("BQ","Bonaire, Sint Eustatius and Saba");
      put("BR","Brazil");
      put("BS","Bahamas");
      put("BT","Bhutan");
@@ -86,6 +87,7 @@ public class CountryInfo {
      put("CN","China");
      put("CO","Colombia");
      put("CR","Costa Rica");
+     put("CS","Serbia and Montenegro");//
      put("CU","Cuba");
      put("CV","Cape Verde");
      put("CW","Curacao");
@@ -125,7 +127,7 @@ public class CountryInfo {
      put("GP","Guadeloupe");
      put("GQ","Equatorial Guinea");
      put("GR","Greece");
-     put("GS","South Georgia and the South Sandwich Islands");
+     put("GS","South Georgia and the South Sandwich Islands");//
      put("GT","Guatemala");
      put("GU","Guam");
      put("GW","Guinea-Bissau");
@@ -136,12 +138,14 @@ public class CountryInfo {
      put("HR","Croatia");
      put("HT","Haiti");
      put("HU","Hungary");
+     put("IC","Îles Canaries");//
      put("ID","Indonesia");
      put("IE","Ireland");
      put("IL","Israel");
      put("IM","Isle of Man");
      put("IN","India");
      put("IO","British Indian Ocean Territory");
+     //ip ?
      put("IQ","Iraq");
      put("IR","Iran");
      put("IS","Iceland");
@@ -280,7 +284,7 @@ public class CountryInfo {
      put("VU","Vanuatu");
      put("WF","Wallis and Futuna");
      put("WS","Samoa");
-     put("XK","Kosovo");
+     put("XK","Kosovo");//not regognized by all
      put("YE","Yemen");
      put("YT","Mayotte");
      put("ZA","South Africa");
