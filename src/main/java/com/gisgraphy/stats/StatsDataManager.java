@@ -72,11 +72,11 @@ public class StatsDataManager implements IStatsDataManager{
 
 	private static final String STREETS_LABEL = "Streets";
 	
-	private static final String STREETS_SHAPE_LABEL = "Streets";
+	private static final String STREETS_SHAPE_LABEL = "Streets_shape";
 	
-	private static final String CITIES_SHAPE_LABEL = "Streets";
+	private static final String CITIES_SHAPE_LABEL = "Cities_shape";
 	
-	private static final String ADMS_SHAPE_LABEL = "Streets";
+	private static final String ADMS_SHAPE_LABEL = "Adms_shape";
 
 	private static Logger logger = LoggerFactory
 			.getLogger(StatsDataManager.class);
@@ -210,9 +210,9 @@ public class StatsDataManager implements IStatsDataManager{
 
 	@Override
 	public void exportStats(){
+		exportEachCountriesInJson();
 		exportAllInJson();
 		exportAllInJsonNoDetails();
-		exportEachCountriesInJson();
 		exportAllSummaryInJson();
 	}
 
