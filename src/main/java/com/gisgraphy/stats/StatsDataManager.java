@@ -307,7 +307,7 @@ public class StatsDataManager implements IStatsDataManager{
 		logger.info("counting stats for streets : "+ streets);
 		countryStats.add(new StatsDataDTO(STREETS_LABEL, streets));
 		
-		long streetsWithShape = openStreetMapDao.countByCountryCode(country);
+		long streetsWithShape = openStreetMapDao.countShapeByCountryCode(country);
 		logger.info("counting stats for shape streets : "+ streetsWithShape);
 		countryStats.add(new StatsDataDTO(STREETS_SHAPE_LABEL, streetsWithShape));
 		
@@ -327,7 +327,7 @@ public class StatsDataManager implements IStatsDataManager{
 		logger.info("counting stats for adms : "+ adms);
 		countryStats.add(new StatsDataDTO(ADMS_LABEL, adms));
 		
-		long admsWithShape = admDao.countByCountryCode(country);
+		long admsWithShape = admDao.countShapeByCountryCode(country);
 		logger.info("counting stats for adms shapes: "+ admsWithShape);
 		countryStats.add(new StatsDataDTO(ADMS_SHAPE_LABEL, admsWithShape));
 
