@@ -1,4 +1,4 @@
- If you want to set up the Gisgraphy database, you can consult the "setup your environnement" section at http://www.gisgraphy.com/documentation/installation/index.htm
+ If you want to set up the Gisgraphy database, you can consult the "setup your environnement" section at https://www.gisgraphy.com/documentation/installation/index.php
  
  the script can be run by running the following command in a command window or a Linux shell :
  
@@ -23,8 +23,6 @@
  via the "edit profile" menu. if you've check the remember me checkbox on the login page. you must logout and login to be abble to change the password.
  
  Still have questions or trouble ?
- Forum : http://www.gisgraphy.com/forum
- Mail : davidmasclet@gisgraphy.com
- Send feedbacks : http://www.gisgraphy.com/feedback/index.htm
+ Mail : contact@gisgraphy.com
     
  

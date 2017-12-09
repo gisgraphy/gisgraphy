@@ -23,8 +23,8 @@
  <@s.text name="search.openstreetmap.data"><@s.param>http://openstreetmap.org</@s.param></@s.text>.
  <@s.text name="search.geocoding.notUsinggooglemap"/>.
  <@s.text name="search.docandinstall">
- 	<@s.param>http://www.gisgraphy.com/documentation/user-guide.htm#geocodingservice</@s.param>
- 	<@s.param>http://www.gisgraphy.com/documentation/installation/index.htm</@s.param>
+ 	<@s.param>https://www.gisgraphy.com/documentation/user-guide.php#geocodingservice</@s.param>
+ 	<@s.param>https://www.gisgraphy.com/documentation/installation/index.php</@s.param>
  </@s.text>.
 </div><br/><br/>
 <div class="clear"></div>

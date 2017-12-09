@@ -46,12 +46,12 @@
         </div>
 	        <div id="footer" class="clearfix">
              <div class="divider"><div></div></div>
-    <span class="left"><img src="http://www.gisgraphy.com/images/logos/poweredby.png" style="vertical-align:middle"/> <fmt:message key="webapp.version"/> | <a href="http://www.gisgraphy.com/feedback/" ><span class="underline red"><fmt:message key="global.give.feedback"/></span></a> | <span id="validators">
+    <span class="left"><img src="https://www.gisgraphy.com/images/logos/poweredby.png" style="vertical-align:middle"/> <fmt:message key="webapp.version"/><span id="validators">
             <a href="/public/servicesdescription.html"><fmt:message key="search.webservices.overview.breadcrumbs"/></a> 
         </span>
     </span>
      <span class="right" style="padding-top:10px;">
-        <a href="http://services.gisgraphy.com/public/donate.html" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" alt="donate" class="donateBtn"/></a> | <a href="http://www.gisgraphy.com/free-access.htm"><fmt:message key="termsAndConditions"/></a> | <a href="<fmt:message key="company.url"/>"><fmt:message key="company.name"/> Project</a>  | <a href="mailto:<fmt:message key="company.mail"/>">Contact</a> | <a href="http://davidmasclet.gisgraphy.com">Blog</a> 
+        <a href="http://services.gisgraphy.com/public/donate.html" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" alt="donate" class="donateBtn"/></a> | <a href="https://www.gisgraphy.com/free-access.php"><fmt:message key="termsAndConditions"/></a> | <a href="<fmt:message key="company.url"/>"><fmt:message key="company.name"/> Project</a>  | <a href="mailto:<fmt:message key="company.mail"/>">Contact</a> | <a href="http://davidmasclet.gisgraphy.com">Blog</a> 
     </span>
 
         </div>
@@ -64,9 +64,9 @@
 <fmt:message key="gisgraphy.about">
 	<fmt:param>http://www.geonames.org/about.html</fmt:param>
 	<fmt:param>http://openstreetmap.org/</fmt:param>
-	<fmt:param>http://www.gisgraphy.com/</fmt:param>
+	<fmt:param>https://www.gisgraphy.com/</fmt:param>
 </fmt:message>.
-<fmt:message key="gisgraphy.baduse"><fmt:param>http://www.gisgraphy.com/abuse.txt</fmt:param></fmt:message>.
+<fmt:message key="gisgraphy.baduse"><fmt:param>https://www.gisgraphy.com/abuse.txt</fmt:param></fmt:message>.
 </div>
 <fmt:message key="global.availablelang"/> : <span><a href="/?locale=en"><img src="/images/languages/EN_US.png"  alt="Gisgraphy in english"/></a></span> |
 <span><a href="/?locale=fr_fr"><img src="/images/languages/FR.png"  alt="Gisgraphy en francais"/></a></span> |

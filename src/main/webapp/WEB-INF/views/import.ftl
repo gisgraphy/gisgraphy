@@ -107,7 +107,7 @@ goToStep(${step});
 </@s.text>
 <br/>
 <@s.text name="gisgraphy.ask.for.custom.dump">
-	<@s.param>http://www.gisgraphy.com/premium/</@s.param>
+	<@s.param>https://premium.gisgraphy.com</@s.param>
 </@s.text>
 <div>
 	<span class="next"><input type="button"  onclick="goToStep(2);" value="<@s.text name="global.next.step" />" class="gotostep"/></span>
@@ -592,7 +592,7 @@ goToStep(${step});
 				<@s.text name="import.only.important.options"/>. <@s.text name="import.option.moreinfos"/>.
 				<div style="margin-left: 20px;" >
 					<@s.checkbox value="%{fillIsInEnabled}" name="fillIsInEnabled" id="fillIsInEnabled" theme="simple"/> <@s.text name="import.options.is_in"/>
-				<br/><@s.text name="import.options.is_in.explanation"><@s.param>http://www.gisgraphy.com/premium/</@s.param><@s.param>javascript:goToStep(4);</@s.param></@s.text>
+				<br/><@s.text name="import.options.is_in.explanation"><@s.param>https://premium.gisgraphy.com</@s.param><@s.param>javascript:goToStep(4);</@s.param></@s.text>
 				</div>
 				<div style="margin-left: 20px;" >
 					<@s.checkbox value="%{importEmbededAlternateNames}" name="importEmbededAlternateNames" id="importEmbededAlternateNames" theme="simple"/> <@s.text name="import.options.embededAlternatenames"/>
@@ -627,7 +627,7 @@ goToStep(${step});
 			   	<@s.text name="import.finalstep"/>. <@s.text name="premium.desc"/>
 				</p>
 				<div class="premiumsection">
-				<a href="http://www.gisgraphy.com/premium" id="gopremium"><@s.text name="premium.learn.more"/></a>
+				<a href="https://premium.gisgraphy.com" id="gopremium"><@s.text name="premium.learn.more"/></a>
 					</div>
 				
 				<div class="sectionHeader"><@s.text name="global.confirm"/></div>

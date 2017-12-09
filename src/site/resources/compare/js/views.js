@@ -9,7 +9,7 @@ var Yonder = Yonder || {};
           
       // create the tile layer with correct attribution
 	  var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	  var osmAttrib='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://www.gisgraphy.com/attributions.html">attributions</a> | geocoding by <a href="http://www.gisgraphy.com">Gisgraphy</a>';
+	  var osmAttrib='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="https://www.gisgraphy.com/attributions.html">attributions</a> | geocoding by <a href="http://www.gisgraphy.com">Gisgraphy</a>';
 	  var osm = new L.TileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib});	
 
 	

@@ -4,7 +4,7 @@
       <question> If gisgraphy is free, why is there premium services ?</question>
       <answer>
         <p>
-           Gisgraphy is free, and so does the services hosted on <a href="http://services.gisgraphy.com" target="gisgraphy">services.gisgraphy.com</a> (see <a href="http://www.gisgraphy.com/free-access.htm">Terms And Conditions</a>). Only premium services are not. It is normal that hosting services and custom installation are not free.
+           Gisgraphy is free, and so does the services hosted on <a href="http://services.gisgraphy.com" target="gisgraphy">services.gisgraphy.com</a> (see <a href="https://www.gisgraphy.com/free-access.php">Terms And Conditions</a>). Only premium services are not. It is normal that hosting services and custom installation are not free.
         </p>
       </answer>
     </faq>
@@ -20,7 +20,7 @@
       <question> I am interested to subscribe, what the next step ?</question>
       <answer>
         <p>
-           Simply click on the order button on the <a href="http://www.gisgraphy.com/premium/index.htm">premium page</a>. After you have register, we will discuss of your needs.
+           Simply click on the order button on the <a href="https://premium.gisgraphy.com">premium page</a>. After you have register, we will discuss of your needs.
            then you will get a host and an API key to use.
         </p>
       </answer>

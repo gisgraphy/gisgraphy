@@ -41,4 +41,4 @@
  House numbers CSV format : complex format based on the Karlsruhe schema. You will probably learn more about this format by reading the 
 (opensource) Gisgraphy house numbers importer code.
 
-More questions ? site : http://www.gisgraphy.com/ or mail : davidmasclet@gisgraphy.com
+More questions ? site : https://www.gisgraphy.com/ or mail : contact@gisgraphy.com

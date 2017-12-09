@@ -19,7 +19,7 @@
    				 <h1 style="color:#333;font-size: 2em;"><img src="/images/logos/logo_70.png" style="vertical-align:middle;" alt="Free GIS Services"/><decorator:title/></h1>
     			 <div id="tagline"><fmt:message key="webapp.name"/> : <fmt:message key="webapp.tagline"/></div>
     			 <br/><br/>
-    			 <div><a href="/ajaxfulltextsearch.html">Go to free Gisgraphy GIS services</a> | <a href="http://www.gisgraphy.com/">Go to Gisgraphy open source project</a></div>
+    			 <div><a href="/ajaxfulltextsearch.html">Go to free Gisgraphy GIS services</a> | <a href="https://www.gisgraphy.com/">Go to Gisgraphy open source project</a></div>
 			</div>
         </div>
 		<div id="content" class="clearfix">
@@ -38,7 +38,7 @@
         </span>
     </span>
    <span class="right">
-        <a href="http://services.gisgraphy.com/public/donate.html" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" alt="donate" class="donateBtn"/></a> | <a href="http://www.gisgraphy.com/free-access.htm"><fmt:message key="termsAndConditions"/></a> | <a href="<fmt:message key="company.url"/>"><fmt:message key="company.name"/> Project</a>  | <a href="mailto:<fmt:message key="company.mail"/>">Contact</a> | <a href="http://davidmasclet.gisgraphy.com" >Blog</a> 
+        <a href="http://services.gisgraphy.com/public/donate.html" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" alt="donate" class="donateBtn"/></a> | <a href="https://www.gisgraphy.com/free-access.php"><fmt:message key="termsAndConditions"/></a> | <a href="<fmt:message key="company.url"/>"><fmt:message key="company.name"/> Project</a>  | <a href="mailto:<fmt:message key="company.mail"/>">Contact</a> | <a href="http://davidmasclet.gisgraphy.com" >Blog</a> 
     </span>
 
         </div>

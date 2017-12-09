@@ -25,7 +25,7 @@ com.gisgraphy.importer.ImporterManager importerManager = (com.gisgraphy.importer
 
 
 <ul class="glassList">
-<li><a href="http://www.gisgraphy.com/documentation/index.htm"><fmt:message key="global.read.docs" /></a></li>
+<li><a href="https://www.gisgraphy.com/documentation/index.php"><fmt:message key="global.read.docs" /></a></li>
 	<% try { if (!importerManager.isAlreadyDone()) { %>
    <li>
         <a href="<c:url value='/admin/importconfirm.html'/>"><fmt:message key="menu.admin.import"/></a>
@@ -57,6 +57,6 @@ com.gisgraphy.importer.ImporterManager importerManager = (com.gisgraphy.importer
 
 <p><fmt:message key="premium.desc"/><br/></p>
 
-<iframe src="http://www.gisgraphy.com/news/getnews.php?version=<fmt:message key="gisgraphy.version"/>" 
+<iframe src="https://www.gisgraphy.com/news/getnews.php?version=<fmt:message key="gisgraphy.version"/>" 
 width="100%" height="100%" id="iframenews" frameborder="0" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" noresize
 > </iframe>

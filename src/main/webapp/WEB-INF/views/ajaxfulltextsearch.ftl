@@ -23,8 +23,8 @@
 <@s.text name="search.fulltext.desc"/>.
  <@s.text name="search.geonames.data"><@s.param>http://geonames.org</@s.param></@s.text>.
  <@s.text name="search.docandinstall">
- 	<@s.param>http://www.gisgraphy.com/documentation/user-guide.htm#fulltextservice</@s.param>
- 	<@s.param>http://www.gisgraphy.com/documentation/installation/index.htm</@s.param>
+ 	<@s.param>https://www.gisgraphy.com/documentation/user-guide.php#fulltextservice</@s.param>
+ 	<@s.param>https://www.gisgraphy.com/documentation/installation/index.php</@s.param>
  </@s.text>.
  <@s.text name="search.ws.use">
  	<@s.param>${simpleFulltextSearchUrl}</@s.param>

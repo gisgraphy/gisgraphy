@@ -33,7 +33,7 @@
             <value description="phone_number"></value>
             <value description="postal_code">75000</value>
             <value description="province">Ile de France</value>
-            <value description="website">http://www.gisgraphy.com</value>
+            <value description="website">https://www.gisgraphy.com</value>
             <value description="password_hint"><![CDATA[Same as login.]]></value>
             <value description="version">1</value>
             <value description="account_enabled">1</value>
@@ -54,7 +54,7 @@
             <value description="phone_number"></value>
             <value description="postal_code">75000</value>
             <value description="province">Ile de France</value>
-            <value description="website">http://www.gisgraphy.com</value>
+            <value description="website">https://www.gisgraphy.com</value>
             <value description="password_hint"><![CDATA[Same as login.]]></value>
             <value description="version">1</value>
             <value description="account_enabled">1</value>

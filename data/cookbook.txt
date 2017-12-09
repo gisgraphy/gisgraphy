@@ -131,7 +131,7 @@ JkWorkersFile /etc/apache2/workers.properties
  #-------------------------------------------
   vim /etc/apache2/sites-available/000-default
   <VirtualHost *:80 >
-        ServerAdmin davidmasclet@gisgraphy.com
+        ServerAdmin contact@gisgraphy.com
         ServerName www.gisgraphy.com
         DocumentRoot /var/www/
 
@@ -178,9 +178,9 @@ php_value auto_append_file "footer.inc"
   vim /etc/apache2/sites-available/services
   <virtualHost *:80 >
 ServerName services.gisgraphy.com
-ServerAdmin davidmasclet@gisgraphy.com
+ServerAdmin contact@gisgraphy.com
 
-ErrorDocument 403 "You don't have permission to access this, or you've reached the maximum number of requests allowed or you abuse the service. (you'll be block for a short period), see http://www.gisgraphy.com/abuse.txt to see ip that are marked as abused "
+ErrorDocument 403 "You don't have permission to access this, or you've reached the maximum number of requests allowed or you abuse the service. (you'll be block for a short period), see https://www.gisgraphy.com/abuse.txt to see ip that are marked as abused "
 
 CustomLog /var/log/apache2/access-services.log combined
 ErrorLog /var/log/apache2/error-services.log
@@ -207,7 +207,7 @@ edit /etc/php/apache2/php.ini=>include must contains :/var/www/inclue:
 vim /etc/apache2/sites-available/download
 
 <VirtualHost *:80 >
-        ServerAdmin davidmasclet@gisgraphy.com
+        ServerAdmin contact@gisgraphy.com
         ServerName download.gisgraphy.com
         DocumentRoot /var/www-download/
 
@@ -253,7 +253,7 @@ vim /etc/apache2/sites-available/download
 
 vim /etc/apache2/sites-available/maintenance
 <VirtualHost *:80 >
-        ServerAdmin davidmasclet@gisgraphy.com
+        ServerAdmin contact@gisgraphy.com
         ServerName raphael.gisgraphy.com
         #ServerName www.gisgraphy.com
         #ServerAlias download.gisgraphy.com

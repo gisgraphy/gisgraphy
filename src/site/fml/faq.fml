@@ -20,7 +20,7 @@
       <question>Is it possible to import geonames and not Openstreetmap dataset and vice et versa ?</question>
       <answer>
         <p>
-          Yes! Just choose the dataset(s) you are interested in on the confirm import page. If you want to import an other dataset later, a <a href="http://www.gisgraphy.com/forum/viewtopic.php?f=3&amp;t=219">workaround is possible</a>
+          Yes! Just choose the dataset(s) you are interested in on the confirm import page. If you want to import an other dataset later, a <a href="https://www.gisgraphy.com/forum/viewtopic.php?f=3&amp;t=219">workaround is possible</a>
         </p>
       </answer>
     </faq>
@@ -124,14 +124,6 @@
       <answer>
         <p>
 		Because the data are pre-processed : we extract streets, calculate the length, the middle point, clean some values, improve names (especially for fleet tracking), and so on. an other reason : we thought that it is simple to import csv, instead of a complicated XML one ;) 
-        </p>
-      </answer>
-    </faq>
-    <faq id="customizeplacetype">
-     <question>Is it possible to customize placetype?</question>
-      <answer>
-        <p>
-		Yes, you can find some information <a href="http://www.gisgraphy.com/placetype.htm">here</a>. 
         </p>
       </answer>
     </faq>

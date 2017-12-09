@@ -30,18 +30,17 @@ Some scripts are provided to manage gisgraphy, most of them are for unix / linux
 - setGisgrapgyAsService : intall the startup script (unix only).
 
 
-Read the installation guide in the "docs" directory or online (last updates and corrections) : http://www.gisgraphy.com/documentation/installation/index.htm
+Read the installation guide in the "docs" directory or online (last updates and corrections) : https://www.gisgraphy.com/documentation/installation/index.php
 
 Note : you may need to change script permission on Linux / Macintosch : chmod +x ./launch.sh 
 
 Open http://localhost:8080/ to connect to Gisgraphy and http://localhost:8080/solr/admin/ in a browser to connect to SOLR admin page
 Open http://localhost:8080/mainMenu.html to go to the admin page (import data / statistics...)
 
-Read the documentation in the "docs" directory or online  : http://www.gisgraphy.com/documentation/index.htm
+Read the documentation in the "docs" directory or online  : https://www.gisgraphy.com/documentation/index.php
 
  Still have questions or trouble ?
- Forum : http://www.gisgraphy.com/forum
- Mail : davidmasclet@gisgraphy.com
- Send feedbacks : http://www.gisgraphy.com/feedback/index.htm
+ Mail : contact@gisgraphy.com
+
 
 

@@ -518,7 +518,7 @@ toggleAddressForm = function(structured){
 	</div>
 	<#if !url.contains('geocod')>
 					<@s.text name="addressparser.view.implemented.country" >
-						<@s.param>http://www.gisgraphy.com/documentation/addressparser.htm#implemetedcountries</@s.param>					
+						<@s.param>https://www.gisgraphy.com/documentation/addressparser.htm#implemetedcountries</@s.param>					
 					</@s.text>
 				
 				</#if>
@@ -745,7 +745,7 @@ toggleAddressForm = function(structured){
 			<br/>
 			  <div class="importantMessage indented"><@s.text name="search.noResult"/>!!</div><br/><br/>
 					<@s.text name="addressparser.view.implemented.country" >
-						<@s.param>http://www.gisgraphy.com/documentation/addressparser.htm#implemetedcountries</@s.param>					
+						<@s.param>https://www.address-parser.net/documentation/documentation.php#implemetedcountries</@s.param>					
 					</@s.text>
 <br/><br/><br/><br/>
 			
@@ -989,7 +989,7 @@ toggleAddressForm = function(structured){
 				     		map = L.map('leafletmap').setView([lat, lng], ${zoom});
 					}
 					var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-					var osmAttrib='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://www.gisgraphy.com/attributions.html">attributions</a> | geocoding by <a href="http://www.gisgraphy.com">Gisgraphy</a>';
+					var osmAttrib='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="https://www.gisgraphy.com/attributions.html">attributions</a> | geocoding by <a href="https://www.gisgraphy.com">Gisgraphy</a>';
 					var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 20, attribution: osmAttrib});
 					map.addLayer(osm);
 					

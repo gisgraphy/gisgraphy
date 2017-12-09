@@ -103,7 +103,7 @@ public class ImportAction extends ActionSupport {
 
     
     public boolean isImportAlreadyDone() throws ImporterMetaDataException{
-	return importerManager.isAlreadyDone();
+    	return importerManager.isAlreadyDone();
     }
     
     

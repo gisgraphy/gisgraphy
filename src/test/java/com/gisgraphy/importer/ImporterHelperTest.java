@@ -46,9 +46,9 @@ public class ImporterHelperTest {
 
 	@Test
 	public void testGetHTTPFileSize() {
-		Assert.assertEquals(1150, ImporterHelper.getHttpFileSize("http://www.gisgraphy.com/favicon.ico"));
-		Assert.assertEquals(-1, ImporterHelper.getHttpFileSize("http://www.gisgraphy.com/FileThatNotExists"));
-		Assert.assertEquals(-1, ImporterHelper.getHttpFileSize("http://download.geonames.org/export/zip/notexist.zip"));
+		Assert.assertEquals(1150, ImporterHelper.getHttpFileSize("https://www.gisgraphy.com/favicon.ico"));
+		Assert.assertEquals(-1, ImporterHelper.getHttpFileSize("https://www.gisgraphy.com/FileThatNotExists"));
+		Assert.assertEquals(-1, ImporterHelper.getHttpFileSize("https://download.geonames.org/export/zip/notexist.zip"));
 	}
 	
 	
@@ -347,7 +347,7 @@ public class ImporterHelperTest {
 	
 	@Test
 	public void testDownload() throws FileNotFoundException{
-		ImporterHelper.download("http://www.gisgraphy.com/protectfiles/test.php", "/tmp/testdl.txt");
+		ImporterHelper.download("https://www.gisgraphy.com/protectfiles/test.php", "/tmp/testdl.txt");
 	}
 	
 	@Test
@@ -489,9 +489,9 @@ public class ImporterHelperTest {
 	    
 	    @Test
 	    public void testGetURLContent(){
-	    	String URLOK = "http://www.gisgraphy.com";
+	    	String URLOK = "https://www.gisgraphy.com";
 	    	String URLKO = "http://www.notexistingserver.com";
-	    	String URL404 = "http://www.gisgraphy.com/notexist";
+	    	String URL404 = "https://www.gisgraphy.com/notexist";
 	    	String urlHTTPS = "https://twitter.com/";
 	    	
 	    	Assert.assertNotNull(ImporterHelper.getURLContent(URLOK));

@@ -295,7 +295,7 @@ public class Constants {
     /**
      * The default Link for the RSS/ATOM
      */
-    public static final String FEED_LINK = "http://www.gisgraphy.com";
+    public static final String FEED_LINK = "https://www.gisgraphy.com";
     
     /**
      * The default Description for the RSS/ATOM

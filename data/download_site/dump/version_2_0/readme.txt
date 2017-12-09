@@ -1,6 +1,6 @@
 Welcome to the dump page.
 
-You can order recent dump on http://www.gisgraphy.com/premium. 
+You can order recent dump on https://premium.gisgraphy.com. 
 
  If you are not interested in all the countries, 
  or, only Openstreetmap dataset, it will takes less times to inject those dump than

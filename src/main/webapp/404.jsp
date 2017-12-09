@@ -24,7 +24,7 @@
 </style>
 <script type="text/javascript">
   var GOOG_FIXURL_LANG = 'fr';
-  var GOOG_FIXURL_SITE = 'http://www.gisgraphy.com/';
+  var GOOG_FIXURL_SITE = 'https://www.gisgraphy.com/';
 </script>
 <script type="text/javascript" 
     src="http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>

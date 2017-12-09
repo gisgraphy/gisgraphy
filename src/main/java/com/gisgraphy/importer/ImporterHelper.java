@@ -471,7 +471,7 @@ public class ImporterHelper {
 	    }
 	    logger.info(localFileName + "\t" + numWritten);
 	} catch (UnknownHostException e) {
-	    String errorMessage = "can not download " + address + " to " + localFileName + " : " + e.getMessage() + ". if the host exists and is reachable," + " maybe this links can help : http://www.gisgraphy.com/forum/viewtopic.php?f=3&t=64 ";
+	    String errorMessage = "can not download " + address + " to " + localFileName + " : " + e.getMessage();
 	    logger.warn(errorMessage);
 	    throw new ImporterException(errorMessage, e);
 	} catch (FileNotFoundException e) {

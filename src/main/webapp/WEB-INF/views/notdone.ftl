@@ -12,7 +12,7 @@
 							<@s.param>/admin/importconfirm.html</@s.param>
 						</@s.text><@s.text name="global.or"/>&nbsp;
 						<@s.text name="gisgraphy.ask.for.custom.dump">
-							<@s.param>http://www.gisgraphy.com/premium/</@s.param>
+							<@s.param>https://premium.gisgraphy.com</@s.param>
 						</@s.text>
 				</div>
 			 <div class="clear"><br/></div>

@@ -48,10 +48,10 @@
         <div id="footer" class="clearfix">
             <jsp:include page="/common/footer.jsp"/>
         </div>
-		<img src="http://www.gisgraphy.com/images/pixel.gif"/>
+		<img src="https://www.gisgraphy.com/images/pixel.gif"/>
     </div>
     <div id="feedback-box">
-		<a id="feedback" title="Please give us some feedbacks" href="http://www.gisgraphy.com/feedback/">
+		<a id="feedback" title="Please give us some feedbacks" href="https://www.gisgraphy.com/feedback/">
 			<img class="feedback" width="81" height="81" border="0" alt="feedbacks" src="/images/feedbacks.png"/>
 		</a>
 	</div>

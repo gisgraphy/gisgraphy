@@ -9,7 +9,7 @@
 	<packaging>war</packaging>
 	<version>5.0-beta1</version>
 	<name>gisgraphy</name>
-	<url>http://www.gisgraphy.com</url>
+	<url>https://www.gisgraphy.com</url>
 
 	<prerequisites>
 		<maven>2.0.8</maven>
@@ -1488,7 +1488,7 @@
 				<resetdb>false</resetdb>
 				<hbm2ddl.drop>false</hbm2ddl.drop>
 				<fill.db.skip>true</fill.db.skip>
-				<GisgraphyMessage>Gisgraphy needs you, please give us some &lt;a href="http://www.gisgraphy.com/feedback/"&gt;&lt;span class="underline " &gt;feedbacks&lt;/span&gt;&lt;/a&gt;, on the services, things you''ve appreciated, functionnality you wish to have on the next release, problems you've got, bugs you''ve found, ... </GisgraphyMessage>
+				<GisgraphyMessage></GisgraphyMessage>
 			</properties>
 		</profile>
 		<profile>

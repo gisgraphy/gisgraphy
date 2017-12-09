@@ -130,7 +130,7 @@
 			 <@s.url id="servicesDescription" action="servicesdescription" includeParams="all" namespace="/public" />
 				<a href="${advancedSearchUrl}" onclick="$('advancedsearch').toggle();return false;"><@s.text name="search.advanced"/></a>
 				<br/>
-				<a href="http://www.gisgraphy.com/documentation/user-guide.htm#fulltextservice" ><@s.text name="global.xml.api"/></a>
+				<a href="https://www.gisgraphy.com/documentation/user-guide.php#fulltextservice" ><@s.text name="global.xml.api"/></a>
 				<br/>
 				<a href="${servicesDescription}"><@s.text name="search.servicesdescription.title"/></a>
 				<br/>
@@ -145,7 +145,7 @@
 			  <@s.url id="servicesDescription" action="servicesdescription" includeParams="all" namespace="/public" />
 				<a href="${advancedSearchUrl}" onclick="$('advancedsearch').toggle();return false;"><@s.text name="search.advanced"/></a>
 				<br/>
-				<a href="http://www.gisgraphy.com/documentation/user-guide.htm#geolocservice" ><@s.text name="global.xml.api"/></a>
+				<a href="https://www.gisgraphy.com/documentation/user-guide.php#geolocservice" ><@s.text name="global.xml.api"/></a>
 				<br/>
 				<a href="${servicesDescription}"><@s.text name="search.servicesdescription.title"/></a>
 				<br/>
@@ -162,7 +162,7 @@
 					<a href="${advancedSearchUrl}" onclick="$('advancedsearch').toggle();return false;"><@s.text name="search.advanced"/></a>
 					<br/>
 				</#if>
-				<a href="http://www.gisgraphy.com/documentation/user-guide.htm#${docAnchor}" ><@s.text name="global.xml.api"/></a>
+				<a href="https://www.gisgraphy.com/documentation/user-guide.php#${docAnchor}" ><@s.text name="global.xml.api"/></a>
 				<br/>
 			  	<@s.url id="servicesDescription" action="servicesdescription" includeParams="all" namespace="/public" />
 				<a href="${servicesDescription}"><@s.text name="search.servicesdescription.title"/></a>
