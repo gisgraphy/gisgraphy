@@ -8,7 +8,7 @@
  * [Find nearby](#find-nearby)
  * [Fulltext search / Autocompletion](#fulltext-search--autocompletion)
  * [Address parser](#address-parser)
-* [Openstreetmap data download](#openstreetmap-data-download)
+* [Openstreetmap data download](#Addresses-/-pois-/-street-database-in-CSV )
 * [Gisgraphoid](#gisgraphoid)
 * [Leaflet Plugins](#leaflet-plugins)
 * [A little bit further...](#a-little-bit-further)
@@ -83,26 +83,19 @@ Divide a single address (as string) into its individual component parts : house
 					access](https://www.gisgraphy.com/free-access.php)
 			
 
-## Openstreetmap data download ##
+## Addresses / pois / street database in CSV ##
 -----------------
 
 Gisgraphy want to simplify the access to the Openstreetmap data. The model of the openstreetmap data is in
 [XML](http://wiki.openstreetmap.org/wiki/OSM_XML)
 or
 [PBF](http://wiki.openstreetmap.org/wiki/PBF_Format)
-and is not simple to manage. To simplify this, We have :
+and is not simple to manage. To simplify this, We have Split the main PBF file for each countries.
 
-*   Extract all the streets(**76 millions**), cities (**4.3 millions of cities / 216 000 shapes**), Points
-		of interest (**7 millions**), and house numbers(**34 Milions**) for each 240 country, and put it in a CSV/TSV
-		format.
-*   Split the main PBF file for each countries.
-*   Extract the shape of more than 160 000 cities and localities extracted from [Quatroshapes]() with
-		their associated geonames Id
+All those files are *freely available on our [download server](http://download.gisgraphy.com/)
 
-All those files are *freely available on our [download server](http://download.gisgraphy.com/)*
+You can also order our address database (or street, cities and administrative division ones) in CSV/TSV format.[Read more](https://www.gisgraphy.com/data/index.php)
 
-In addition to the native openstreetmap data, some pre-calculated fields (length, middle point) are added...
-[Read more](https://www.gisgraphy.com/download/download_data.htm)
 
 ## Gisgraphoid ###
 -----------------
