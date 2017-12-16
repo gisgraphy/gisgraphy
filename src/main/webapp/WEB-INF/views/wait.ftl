@@ -11,14 +11,14 @@
       <@s.if test="importInProgress">
       <@s.text name="import.processingRequest"/>
      <br/><img src="/images/loading.gif" width=20px /> <@s.text name="import.wait.importSince"/> ${importFormatedTimeElapsed}<br/> 
-     <br/><@s.text name="import.time.info" >. <@s.text name="import.time.why"></@s.text>
+     <br/><@s.text name="import.time.info" />. <@s.text name="import.time.why"></@s.text>
 <br/><br/>
 <@s.url id="hookURL" action="hook" method="execute"/>
 Want to be notify when import has finished ? you can define an URL that will be called when the import will be done : click <a href="${hookURL}">here</a>
         
     </@s.if>
      <@s.if test="importAlreadyDone">
-     <br/><@s.text name="import.took.time"/> ${importFormatedTimeElapsed}  
+     <br/><@s.text name="import.took.time"/> ${importFormatedTimeElapsed}? <@s.text name="import.time.why"></@s.text> 
     </@s.if>
     
     </p>

@@ -17,9 +17,14 @@
 <br/><br/>
 
 <div class="tip greentip">
-<fmt:message key="gisgraphy.ask.for.dump"><fmt:param>http://download.gisgraphy.com/</fmt:param></fmt:message>
-</div>
+<fmt:message key="gisgraphy.ask.for.dump"><fmt:param>https://premium.gisgraphy.com/</fmt:param></fmt:message>
+<@s.text name="import.time.why"></@s.text>
 
+</div>
+<script type="text/javascript">
+quote=${quote} ;
+$("price").replace(quote.price);
+</script>	
 <% 
 Exception ex = (Exception) request.getAttribute("exception");
 if (ex != null){
