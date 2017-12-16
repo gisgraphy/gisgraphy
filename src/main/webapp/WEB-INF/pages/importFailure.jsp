@@ -18,12 +18,11 @@
 
 <div class="tip greentip">
 <fmt:message key="gisgraphy.ask.for.dump"><fmt:param>https://premium.gisgraphy.com/</fmt:param></fmt:message>
-<@s.text name="import.time.why"></@s.text>
+<fmt:message key="import.time.why"></fmt:message>
 
 </div>
 <script type="text/javascript">
-quote=${quote} ;
-$("price").replace(quote.price);
+$("price").replace(" some ");
 </script>	
 <% 
 Exception ex = (Exception) request.getAttribute("exception");
