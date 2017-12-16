@@ -94,7 +94,8 @@ public class FulltextQuerySolrHelper {
 	protected static final String SUGGEST_FQ = "placetype:city placetype:adm placetype:street";
 	protected static final String SUGGEST_FL = "name,zipcode,country_code,adm1_name,is_in,feature_id,lat,lng,score,house_numbers";
 	
-	protected static String CITY_BOOST_QUERY="placetype:city^800 placetype:adm^600";
+	protected static String CITY_ADM_BOOST_QUERY="placetype:city^800 placetype:adm^600";
+	protected static String CITY_BOOST_QUERY="placetype:city^200";
 	protected static String STREET_BOOST_QUERY="placetype:street^150";
 	// we need to consider adm1name for andora and brooklin
 	protected static final String NESTED_QUERY_NUMERIC_TEMPLATE =          "_query_:\"{!edismax qf='zipcode^1.2 pf=name^1.1'  bq='placetype:City^2 population^2' bf='pow(map(population,0,0,0.0001),0.3)     pow(map(city_population,0,0,0.0000001),0.3)' }%s\"";
@@ -126,8 +127,8 @@ public class FulltextQuerySolrHelper {
 		
 		/*getConfigInFile();
 		logger.error("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);
-		System.out.println("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);
-		/logger.error("not all words : "+NESTED_QUERY_TEMPLATE);*/
+		System.out.println("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);*/
+		//logger.error("not all words : "+NESTED_QUERY_TEMPLATE);
 		boolean spellchecker = true;
 		ModifiableSolrParams parameters = new ModifiableSolrParams();
 
@@ -257,9 +258,12 @@ public class FulltextQuerySolrHelper {
 			List<String> streetTypes = smartStreetDetection.getStreetTypes(query.getQuery());
 			if ((!isStreetQuery(query) && streetTypes.size()==1)){
 				bqField=STREET_BOOST_QUERY;
-			} else if (query.getPlaceTypes()==null || query.getPlaceTypes().length==0 || isAdministrative(query.getPlaceTypes())){
-				bqField=CITY_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
-			}
+			} else if (query.getPlaceTypes()==null || query.getPlaceTypes().length==0){
+					bqField=CITY_ADM_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
+				}
+			 else if (isAdministrative(query.getPlaceTypes())){
+				bqField=CITY_BOOST_QUERY;//we force nothin  because it is admin query
+			} 
 			
 			
 			String queryString;
@@ -370,6 +374,7 @@ public class FulltextQuerySolrHelper {
 
 			
 				NESTED_QUERY_TEMPLATE = in.readLine();
+				CITY_ADM_BOOST_QUERY=in.readLine();
 				CITY_BOOST_QUERY=in.readLine();
 				//ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
 				

@@ -344,6 +344,6 @@ public void setCountryCode(String countryCode) {
     public String toString() {
 	return name + "[" + alternateNameId + "][linked to "
 		+ gisFeature.getFeatureId() + "[lang=" + language + "][short="
-		+ isShortName + "][preferred=" + isPreferredName + "]";
+		+ isShortName + "][preferred=" + isPreferredName + "][countrycode="+countryCode+"]";
     }
 }

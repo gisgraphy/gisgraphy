@@ -65,18 +65,6 @@
     </authentication-manager>
 
 
-
-
-<authentication-manager>
-    <authentication-provider ><!--user-service-ref="userDao"-->
-       <!-- <password-encoder hash="sha"/>-->
-       <user-service>
-            <user name="user" password="user" authorities="ROLE_USER"/>
-            <user name="admin" password="admin" authorities="ROLE_ADMIN"/>
-        </user-service>
-    </authentication-provider>
-   </authentication-manager>
-
 <b:bean id="userdao" class="com.gisgraphy.service.UserSecurityAdvice"/>
 
    <global-method-security proxy-target-class="false">

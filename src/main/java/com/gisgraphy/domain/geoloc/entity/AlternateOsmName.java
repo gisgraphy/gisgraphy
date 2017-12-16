@@ -321,6 +321,6 @@ public class AlternateOsmName {
     @Override
     public String toString() {
 	return name + "[" + alternateNameId + "][linked to "
-		+ street.getId() + "[lang=" + language + "]";
+		+ street.getId() + "[lang=" + language + "][countrycode="+countryCode+"]";
     }
 }

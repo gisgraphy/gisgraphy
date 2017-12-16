@@ -7,6 +7,12 @@ if [[ -e ../addressParser ]]
 then
 	cd ../addressParser/
 	./generateSolution.sh ./config-template/file/
+	if  [[ $? != 0 ]] 
+		then
+			echo "can not build address parser"
+			exit 1 
+	fi
+
 	cp target/export/addressParser-???.jar $curDir/data/libs/
 	cd $curDir
 else

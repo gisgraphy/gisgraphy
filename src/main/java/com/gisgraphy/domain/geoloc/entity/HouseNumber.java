@@ -348,19 +348,59 @@ public class HouseNumber implements Comparable<HouseNumber>{
 		 }
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "HouseNumber [id=" + id + ", openstreetmapId=" + openstreetmapId
-				+ ", number=" + number + ", type=" + type + ", name=" + name
-				+ ", location=" + location + ", street=" + street
-				+ ", getId()=" + getId() + ", getOpenstreetmapId()="
-				+ getOpenstreetmapId() + ", getName()=" + getName()
-				+ ", getLocation()=" + getLocation() + ", getLatitude()="
-				+ getLatitude() + ", getLongitude()=" + getLongitude()
-				+ ", getNumber()=" + getNumber() + ", getType()=" + getType()
-				+ ", getStreet()=" + getStreet() + ", hashCode()=" + hashCode()
-				+ ", getClass()=" + getClass() + ", toString()="
-				+ super.toString() + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("HouseNumber [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
+		}
+		if (openstreetmapId != null) {
+			builder.append("openstreetmapId=");
+			builder.append(openstreetmapId);
+			builder.append(", ");
+		}
+		if (number != null) {
+			builder.append("number=");
+			builder.append(number);
+			builder.append(", ");
+		}
+		if (type != null) {
+			builder.append("type=");
+			builder.append(type);
+			builder.append(", ");
+		}
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (countryCode != null) {
+			builder.append("countryCode=");
+			builder.append(countryCode);
+			builder.append(", ");
+		}
+		if (location != null) {
+			builder.append("location=");
+			builder.append(location);
+			builder.append(", ");
+		}
+		if (street != null) {
+			builder.append("street=");
+			builder.append(street);
+			builder.append(", ");
+		}
+		if (source != null) {
+			builder.append("source=");
+			builder.append(source);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	/**
