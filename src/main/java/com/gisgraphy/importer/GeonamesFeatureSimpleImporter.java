@@ -373,6 +373,9 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	List<Adm > adms = admDao.ListByShape(gisFeature.getLocation(), countryCode);
 	if (adms.size()>0){
 		adm = adms.get(adms.size()-1);
+	} else {
+		logger.warn("can not find adm for "+gisFeature.getName()+gisFeature.getLocation());
+		
 	}
 	gisFeature.setAdm(adm);
 	
