@@ -34,7 +34,7 @@
       </subtitle>
       <author>
         <name>David MASCLET</name>
-        <email>davidmasclet@gisgraphy.com</email>
+        <email>contact@gisgraphy.com</email>
       </author>
       <link href="http://services.gisgraphy.com/"/>
       <updated>2008-12-01T07:02:32Z</updated>

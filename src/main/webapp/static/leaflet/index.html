@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
 
 
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="style/leaflet.css" />
     <link href="style/gisgraphy-leaflet.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -20,7 +20,7 @@
     <script src="js/typeahead/handlebars-v1.3.0.js"></script>
     <script src="js/gisgraphy-js-api.js"></script>
 
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="js/leaflet.js"></script>
     <script src="js/gisgraphy-leaflet-geocoder.js"></script>
 
     <script src="js/gisgraphy-leaflet-reverse-geocoder.js"></script>
@@ -28,8 +28,9 @@
 
 
     <div id="header">
-        <a href="https://www.gisgraphy.com"><img src="https://www.gisgraphy.com/images/logos/logo_48.png" style="vertical-align:middle;" />Gisgraphy</a> is open sources and only use open data. This server is for <a href="https://www.gisgraphy.com/free-access.php">demonstration only</a>. Test it, <a href="/public/geocoding.html">Play with webservices</a> but then
-		 <a href="https://www.gisgraphy.com/documentation/installation/index.php">Install Gisgraphy locally</a> or subscribe to  <a href="http://premium.gisgraphy.com">premium hosted services</a> </div>
+        <a href="https://www.gisgraphy.com"><img src="https://www.gisgraphy.com/images/logos/logo_48.png" style="vertical-align:middle;" />Gisgraphy project</a> | <a href="/public/geocoding.html">Play with webservices</a> | <a href="http://premium.gisgraphy.com/">Premium plans</a> | <a href="http://download.gisgraphy.com">Download Data</a> | <a href="http://www.gisgraphy.com/documentation/installation/index.htm">Install on your servers</a> | <a href="http://www.gisgraphy.com/documentation/index.htm">Documentation</a>
+        <br/>Gisgraphy is free and open sources, and run with opensources data. This server is for demonstration only.<br/>
+		 Please, <a href="http://www.gisgraphy.com/documentation/installation/index.htm">Install Gisgraphy locally</a> or subscribe to  <a href="http://premium.gisgraphy.com">premium hosted services</a> </div>
     <div id="map"></div>
 
     <script>
@@ -39,7 +40,7 @@
         var layerUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         L.tileLayer(layerUrl, {
             maxZoom: 18,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="https://www.gisgraphy.com/attributions.html">attributions</a> | geocoding by <a href="https://www.gisgraphy.com">Gisgraphy</a>',
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://www.gisgraphy.com/attributions.html">attributions</a> | geocoding by <a href="http://www.gisgraphy.com">Gisgraphy</a>',
             id: 'examples.map-i875mjb7'
         }).addTo(map);
 

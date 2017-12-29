@@ -4,7 +4,7 @@
 	<ShortName>Gisgraphy search</ShortName>
 	<Description>Free and open sources GIS services</Description>
 	<Tags>Free and open sources GIS services</Tags>
-	<Contact>davidmasclet@gisgraphy.com</Contact>	
+	<Contact>contact@gisgraphy.com</Contact>	
 	<InputEncoding>UTF-8</InputEncoding>
 	<OutputEncoding>UTF-8</OutputEncoding>
 	<Image height="16" width="16" type="image/png">https://www.gisgraphy.com/images/logos/logo_16.png</Image>

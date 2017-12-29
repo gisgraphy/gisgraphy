@@ -5,7 +5,7 @@
       <hr/>
     </div>
     <div id="footer">
-      <div class="footerelmt"> &copy gisgraphy 2014  | Logo by <a href="http://www.icondrawer.com/">icondrawer</a> | <a href="mailto:davidmasclet@gisgraphy.com">Contact</a> | <a href="http://davidmasclet.gisgraphy.com">Blog</a> (in french) </div>
+      <div class="footerelmt"> &copy gisgraphy 2014  | Logo by <a href="http://www.icondrawer.com/">icondrawer</a> | <a href="mailto:contact@gisgraphy.com">Contact</a> | <a href="http://davidmasclet.gisgraphy.com">Blog</a> (in french) </div>
 <br/>
       <div class="clear">
         <hr/>

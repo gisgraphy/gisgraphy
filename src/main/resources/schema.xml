@@ -389,7 +389,7 @@ decompound after lower because words of dictionary are in lower, unpunct
   <field name="suggest_all_label" type="suggest" indexed="true" stored="false" multiValued="true"/>
   <field name="suggest_in" type="suggest" indexed="true" stored="false" multiValued="true"/>
   <copyField source="name*" dest="suggest_name"/>
-<!--    <copyField source="is_in*" dest="suggest_in"/>-->
+  <copyField source="is_in*" dest="suggest_in"/>
   <copyField source="all_name" dest="suggest_all_name"/>
   <copyField source="fully_qualified_name" dest="suggest_fqdn_name"/>
   <copyField source="all_label" dest="suggest_all_label"/>

@@ -31,8 +31,8 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-//@Ignore
-public class RelevanceGeocodingTest {
+@Ignore
+public class RelevanceGeocodingLightTest {
 
 	private static final long[] MAGDEBURGERSTRASSE = new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,91146628};
 
@@ -63,7 +63,7 @@ public class RelevanceGeocodingTest {
 	public final static String OUTPUT_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output.csv";
 	public final static String OUTPUT_FAIL_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output_fail.csv";
 
-	private static final boolean houseNumber = true;
+	private static final boolean houseNumber = false;
 	
 	IRestClient restClient = new RestClient();
 	
@@ -83,23 +83,10 @@ public class RelevanceGeocodingTest {
 		}
 	};
 	
-	//us
 	
 	
 	
-	@Test
-	public void washington() throws InterruptedException, IOException{
-		if (countryTest.contains("US")|| countryTest.contains("ALL")){
-			String rawAddress = "washington";
-			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "US");
-			Assert.assertNotNull(addressResultsDto);
-			//state/city
-			isAllIdsPresentInResults(new long[]{165479,5396194L},addressResultsDto.getResult(), rawAddress);
-			//first result should be city ?
-			isFirstCorrectById(5396194,addressResultsDto.getResult(), rawAddress);
-		}
-			
-	}
+	
 
 	
 	
@@ -111,7 +98,6 @@ public class RelevanceGeocodingTest {
 // \__,_|\__,_|_| |_| |_|
 //       
 	 
-	
 	
 	@Test
 	public void adm2() throws InterruptedException, IOException{
@@ -1521,7 +1507,7 @@ public class RelevanceGeocodingTest {
 	@Test
 	public void compoundConcatenateTwoWord_vs_Separate() throws InterruptedException, IOException{
 		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
-			String rawAddress = "Stauffenberg straße , Berlin";
+			String rawAddress = "Stauffenbergstraße , Berlin";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
 			isFirstInExpectedIds(new long[]{4597354L,465724298L,4597354L}, addressResultsDto.getResult(), rawAddress);
@@ -1533,7 +1519,7 @@ public class RelevanceGeocodingTest {
 	@Test
 	public void compoundConcatenateTwoWord_vs_SeparateSynonym1() throws InterruptedException, IOException{
 		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
-			String rawAddress = "Stauffenberg strasse , Berlin";
+			String rawAddress = "Stauffenbergstrasse , Berlin";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
 			isFirstInExpectedIds(new long[]{4597354L,465724298L,4597354L}, addressResultsDto.getResult(), rawAddress);
@@ -1554,7 +1540,7 @@ public class RelevanceGeocodingTest {
 	@Test
 	public void compoundConcatenateTwoWord_vs_SeparateSynonym2() throws InterruptedException, IOException{
 		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
-			String rawAddress = "Stauffenberg str , Berlin";
+			String rawAddress = "Stauffenbergstrasse , Berlin";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
 			isFirstInExpectedIds(new long[]{4597354L,465724298L,4597354L}, addressResultsDto.getResult(), rawAddress);
@@ -1577,7 +1563,7 @@ public class RelevanceGeocodingTest {
 	@Test
 	public void compoundConcatenateTwoWord_vs_SeparateSynonym3() throws InterruptedException, IOException{
 		if (countryTest.contains("DE")|| countryTest.contains("ALL")){
-			String rawAddress = "Stauffenberg str. , Berlin";
+			String rawAddress = "Stauffenbergstr. , Berlin";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 			Assert.assertNotNull(addressResultsDto);
 			isFirstInExpectedIds(new long[]{4597354L,465724298L,4597354L}, addressResultsDto.getResult(), rawAddress);
@@ -2355,8 +2341,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 	private boolean isFirstCorrectById(long expectedOpenstreetmapId,List<Address> actual, String rawAddress){
 		if(actual.size()>0 && actual.get(0)!=null){
 			Address address = actual.get(0);
-			if (address.getSourceId() != null && expectedOpenstreetmapId != address.getSourceId()){
-				Assert.fail(rawAddress +": expected "+expectedOpenstreetmapId+ " but was " +address.getSourceId()+" / "+address);
+			if (expectedOpenstreetmapId != address.getId()){
+				Assert.fail(rawAddress +": expected "+expectedOpenstreetmapId+ " but was " +address.getId()+" / "+address);
 				return false;
 			} 
 			return true;
@@ -2392,8 +2378,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			for(Address address: actual){
-				if (address!=null && address.getSourceId()!=null){
-					ids.add(address.getSourceId());
+				if (address!=null){
+					ids.add(address.getId());
 				}
 			}
 			
@@ -2413,8 +2399,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			for(Address address: actual){
-				if (address!=null && address.getSourceId()!=null){
-					ids.add(address.getSourceId());
+				if (address!=null){
+					ids.add(address.getId());
 				}
 			}
 			
@@ -2429,7 +2415,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		return true;
 	}
 	
-	private boolean isFulltextCorrectByOSMIds(Long[] expectedOpenstreetmapIds,List<SolrResponseDto> actual, String rawAddress){
+	private boolean isFulltextCorrectByIds(Long[] expectedOpenstreetmapIds,List<SolrResponseDto> actual, String rawAddress){
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			for(SolrResponseDto address: actual){
@@ -2461,9 +2447,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		if(actual.size()>0 && actual.get(0)!=null){
 			List<Long> ids = new ArrayList<Long>();
 			Address address = actual.get(0);
-			if (address.getSourceId()!=null){
-				ids.add(address.getSourceId());
-			}
+			ids.add(address.getId());
 			
 			for (long expectedOpenstreetmapId:expectedOpenstreetmapIds){
 				if (ids.contains(expectedOpenstreetmapId)){
@@ -2495,8 +2479,8 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 	}
 	
 	private boolean isFirstCorrectByIds(long[] expectedOpenstreetmapIds,List<Address> actual, String rawAddress){
-		if(actual.size()>0 && actual.get(0)!=null && actual.get(0).getSourceId()!=null){
-			Long actualId = actual.get(0).getSourceId(); 
+		if(actual.size()>0 && actual.get(0)!=null){
+			Long actualId = actual.get(0).getId(); 
 			
 			for (long expectedOpenstreetmapId:expectedOpenstreetmapIds){
 				if (actualId==expectedOpenstreetmapId){

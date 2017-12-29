@@ -80,7 +80,7 @@
 <span><a href="/?locale=no"><img src="/images/languages/NO.png"  alt="Gisgraphy in Norwegian"/></a></span> |
 <span><a href="/?locale=tr"><img src="/images/languages/TR.png"  alt="Gisgraphy in Turkish"/></a></span> |
 <span><a href="/?locale=kr"><img src="/images/languages/KR.png"  alt="Gisgraphy in Korean"/></a></span> |
-<br/><br/> <a href="mailto:davidmasclet@gisgraphy.com?subject=help for translation">We need help for translation</a>
+<br/><br/> <a href="mailto:contact@gisgraphy.com?subject=help for translation">We need help for translation</a>
 </div>
 <script type="text/javascript">
 _uacct = "<%= com.gisgraphy.domain.valueobject.GisgraphyConfig.googleanalytics_uacctcode %>";

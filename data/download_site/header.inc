@@ -68,7 +68,7 @@
 						<li><a href="https://www.gisgraphy.com/documentation/installation/index.htm">Installation</a></li>
 						<li><a href="https://www.gisgraphy.com/forum/"  target="gisgraphyservices">Forum</a></li>
 						<li><a href="https://www.gisgraphy.com/faq.html">FAQ</a></li>
-						<li><a href="mailto:davidmasclet@gisgraphy.com">Contact</a></li>
+						<li><a href="mailto:contact@gisgraphy.com">Contact</a></li>
 						<li><a href="https://www.gisgraphy.com/changes-report.html">Changes Report</a></li>
 						<li><a href="https://www.gisgraphy.com/license.html">License</a></li>
 						<li><a href="https://www.gisgraphy.com/documentation/client-libraries.htm">Client libraries</a></li>

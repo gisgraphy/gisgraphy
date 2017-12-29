@@ -47,7 +47,7 @@ com.gisgraphy.importer.ImporterManager importerManager = (com.gisgraphy.importer
 		<a href="<c:url value='/admin/stats.html'/>"><fmt:message key="stats.title"/></a>
 	</li>
 	<li>
-		<a href="mailto:davidmasclet@gisgraphy.com?subject=[contact_from_admin_page]"><fmt:message key="global.contact"/></a>
+		<a href="mailto:contact@gisgraphy.com?subject=[contact_from_admin_page]"><fmt:message key="global.contact"/></a>
 	</li>
   	<li>
         <fmt:message key="global.gohome"/>

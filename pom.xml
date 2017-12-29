@@ -586,10 +586,10 @@
 		</repository>-->
 	</repositories>
 	<pluginRepositories>
-		<pluginRepository>
+		<!-- <pluginRepository>
 			<id>appfuse</id>
 			<url>http://static.appfuse.org/repository</url>
-		</pluginRepository>
+		</pluginRepository>-->
 	</pluginRepositories>
 	<!-- Dependencies calculated by AppFuse when running full-source plugin -->
 	<dependencies>
@@ -1712,7 +1712,7 @@
 
 	<properties>
 		<!-- Application settings -->
-		<copyright.year>2014</copyright.year>
+		<copyright.year>2018</copyright.year>
 		<dao.framework>hibernate</dao.framework>
 		<web.framework>struts</web.framework>
 		<amp.genericCore>true</amp.genericCore>

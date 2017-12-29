@@ -2,7 +2,7 @@
 Welcome to Gisgraphy download server. Since 2006, Gisgraphy is a free opensource framework based on <a href="http://www.openstreetmap.org" target="gis">Openstreetmap</a>, <a href="http://www.geonames.org" target="gis">Geonames</a> and  <a href="http://quattroshapes.com/" target="gis">Quatroshapes</a> data that offers the ability to do geolocalisation, geocoding, and reverse geooding via Java APIs or REST webservices.
 <br/>
 More informations on the <a href="https://www.gisgraphy.com">Gisgraphy web site</a>.<br/>
-<div style="color:#FF0000">Due to people that have abused / hacked the service, only PBF are available. CSV files for import are curently unavailable. Please send a mail to davidmasclet@gisgraphy.com if you really need it urgently.</div><br/>
+<div style="color:#FF0000">Due to people that have abused / hacked the service, only PBF are available. CSV files for import are curently unavailable. Please send a mail to contact@gisgraphy.com if you really need it urgently.</div><br/>
 <strong>
 <ul>
 <li>Freely available</li>
@@ -11,7 +11,7 @@ More informations on the <a href="https://www.gisgraphy.com">Gisgraphy web site<
 </ul>
 </strong>
 
-More questions, needs consulting, suggestions, comments, special needs ? site : <a href="https://www.gisgraphy.com/">https://www.gisgraphy.com/</a> or Mail : <a href="mailto:davidmasclet@gisgraphy.com">davidmasclet@gisgraphy.com</a><br/>
+More questions, needs consulting, suggestions, comments, special needs ? site : <a href="https://www.gisgraphy.com/">https://www.gisgraphy.com/</a> or Mail : <a href="mailto:contact@gisgraphy.com">contact@gisgraphy.com</a><br/>
 You can <a href="https://premium.gisgraphy.com/products#data">order custom extracts</a> (based on openstreetmap tags. e.g :maxspeed), address databases, zipcodes extract, or Gisgraphy dumps on <a href="https://premium.gisgraphy.com/products#dump">gisgraphy premium page</a><br/>
 <br/>
 <div class="center"><center><a href="/images/osmfiles.jpg" target="gis"><img src="/images/osmfiles.jpg" width="600"/><br/>
