@@ -10,7 +10,7 @@ defaultAjax = {
         if (currentRequests["geocoding"]) {
             try {
                 currentRequests["geocoding"].abort();
-                console.log('aborting');
+               // console.log('aborting');
             } catch (e) {
                 console.log(e);
             }
@@ -38,13 +38,13 @@ function detectLanguage() {
 
 
 $(document).ajaxStart(function() {
-    console.log("Triggered ajaxStart handler.");
+    //console.log("Triggered ajaxStart handler.");
     $('#gisgraphy-leaflet-searchButton').css("background-image", "url(img/loading.gif)");
     $('#gisgraphy-leaflet-searchButton').addClass("searching");
 });
 
 $(document).ajaxStop(function() {
-    console.log("Triggered ajaxStop handler.");
+   // console.log("Triggered ajaxStop handler.");
     $('#gisgraphy-leaflet-searchButton').css("background-image", 'url("img/search.png")');
     $('#gisgraphy-leaflet-searchButton').removeClass("searching");
 });
@@ -243,7 +243,7 @@ var defaultAjax2 = {
         if (currentRequests2["geocoding"]) {
             try {
                 currentRequests2["geocoding"].abort();
-                console.log('aborting');
+                //console.log('aborting');
             } catch (e) {
                 console.log(e);
             }
@@ -407,7 +407,7 @@ this.geocoding2.initialize();
                 $.each(house_numbers, function(key, value) {
                     var hnArray = value.split(':');
                     if (number == hnArray[0] && !found) {
-                        console.log('found house number :' + hnArray[0] + ' is at ' + hnArray[1]);
+                        //console.log('found house number :' + hnArray[0] + ' is at ' + hnArray[1]);
                         found = true;
                     }
                 });
@@ -512,9 +512,9 @@ this.geocoding2.initialize();
         };
 
         function doProcessGeocodingResults(data) {
-            if (console && console.log) {
-                //	      console.log(data.result );
-            }
+          /*  if (console && console.log) {
+                	      console.log(data.result );
+            }*/
 
             $('#' + this.resultBoxNodeID).empty();
             var numResult = 1;
@@ -638,9 +638,9 @@ this.geocoding2.initialize();
         }
 
         function doProcessGeolocResults(data) {
-            if (console && console.log) {
+           /* if (console && console.log) {
                 console.log(data.result);
-            }
+            }*/
             var RedIcon = L.Icon.Default.extend({
                 options: {
                     iconUrl: 'img/marker-icon-red.png'
@@ -655,7 +655,7 @@ this.geocoding2.initialize();
                     var markerGeolocArray = [];
                     $.each(data.result,
                         function(index, value) {
-                            console.log(value);
+                            //console.log(value);
                             var content = '';
                             if (value.countryCode) {
                                 content += '<img src="img/' + value.countryCode + '.png" alt="' + value.countryCode + '" class="flag-autocomplete"/>';
@@ -951,7 +951,7 @@ $('input.typeahead').parent().css('z-index', 3000);
                         if (!this.itemSelected) {
                             //        var selectedValue = $('input.typeahead').data().ttView.dropdownView.getFirstSuggestion().datum.id;
                             //      $("#value_id").val(selectedValue);
-                            console.log('enter pressed : ' + this.itemSelected);
+                           // console.log('enter pressed : ' + this.itemSelected);
                             this.doGeocoding();
                             $('#' + this.inputSearchNodeID).typeahead('close');
                             //        $('#gisgraphy-leaflet-form').submit();
@@ -975,14 +975,14 @@ $('input.typeahead').parent().css('z-index', 3000);
         autocompleteGisgraphyCounter++;
 
         var doOnAutocompleted = $.proxy(function(obj, datum, name) {
-            console.log('doOnAutocompleted');
+            //console.log('doOnAutocompleted');
             if (datum && datum.poiType && this.allowPoiSelection) {
                 $('#' + this.placetypeNodeID + ' option[value="' + datum.poiType + '"]').prop('selected', true);
             } else {
                 $('#' + this.placetypeNodeID + ' option[value=""]').prop('selected', true);
             }
             /*if (typeof map != 'undefined' && datum && datum.lat && datum.lng){
-            		console.log('moving to '+datum.lat+','+datum.lng);
+            		//console.log('moving to '+datum.lat+','+datum.lng);
                                             map.panTo(new L.LatLng(datum.lat,datum.lng));
             }*/
             if (datum.house_numbers && datum.house_numbers.length > 0) {
@@ -1011,14 +1011,14 @@ $('input.typeahead').parent().css('z-index', 3000);
         }, this);
 
         var doOnSelect = $.proxy(function(obj, datum, name) {
-            console.log('doOnSelect');
+            //console.log('doOnSelect');
             if (datum && datum.poiType && this.allowPoiSelection) {
                 $('#' + this.placetypeNodeID + ' option[value="' + datum.poiType + '"]').prop('selected', true);
             } else {
                 $('#' + this.placetypeNodeID + ' option[value=""]').prop('selected', true);
             }
             /*if (typeof map != 'undefined' && datum && datum.lat && datum.lng){
-            		console.log('moving to '+datum.lat+','+datum.lng);
+            		//console.log('moving to '+datum.lat+','+datum.lng);
                                             map.panTo(new L.LatLng(datum.lat,datum.lng));
             }*/
             if (datum.house_numbers && datum.house_numbers.length > 0) {
@@ -1051,14 +1051,14 @@ $('input.typeahead').parent().css('z-index', 3000);
         }, this);
 
         var doOnChoose = $.proxy(function(obj, datum, name) {
-            console.log('doOnChosse');
+           // console.log('doOnChosse');
             if (datum && datum.poiType && this.allowPoiSelection) {
                 $('#' + this.placetypeNodeID + ' option[value="' + datum.poiType + '"]').prop('selected', true);
             } else {
                 $('#' + this.placetypeNodeID + ' option[value=""]').prop('selected', true);
             }
             /*if (typeof map != 'undefined' && datum && datum.lat && datum.lng){
-            		console.log('moving to '+datum.lat+','+datum.lng);
+            		//console.log('moving to '+datum.lat+','+datum.lng);
                                             map.panTo(new L.LatLng(datum.lat,datum.lng));
             }*/
             if (datum.house_numbers && datum.house_numbers.length > 0) {
@@ -1225,9 +1225,9 @@ function convertDMS(input) {
     var obj;
     var matches = input.match(/((\d+)\s?[:°dD]*\s?(\d+)\s?\s?[:'′]*\s?(\d+([.]\d+)?)?\s?[:\"″]*\s?([NnSs])\s?([,;]\s?)?(\d+)\s?[:°dD]*\s?(\d+)\s?[:'′]*\s?(\d+([.]\d+)?)?\s?[:\"″]*\s?([EeWw]))/);
     if (matches) {
-        /*for (var i=0;i<matches.length;i++){
-		console.log(matches[i]);
-	}*/
+        //for (var i=0;i<matches.length;i++){
+		//console.log(matches[i]);
+	//}
         lat = convertToDecimal(matches[2], matches[3], matches[4], matches[6]);
         long = convertToDecimal(matches[8], matches[9], matches[10], matches[12]);
         obj = {
@@ -1325,7 +1325,7 @@ function extractHouseNumber(str) {
     res = str.trim().replace(re_clean_last,"").match(num_p);
     if (res && res.length >= 0) {
         res = res[0].replace(/\W+/g, "").trim();
-        console.log('find "' + res + '" in "' + str + '"');
+        //console.log('find "' + res + '" in "' + str + '"');
         return res;
     } else {
         return '';
@@ -1342,7 +1342,7 @@ function getHouseNumbercoordinate(house_numbers, autocompleteid) {
             if (number == hnArray[0]) {
                 if (hnArray[1] && !found) {
                     var latLongAsStr = hnArray[1].split(',');
-                    console.log('found house number :' + hnArray[0] + ' is at ' + latLongAsStr[0] + ' and ' + latLongAsStr[1]);
+                   // console.log('found house number :' + hnArray[0] + ' is at ' + latLongAsStr[0] + ' and ' + latLongAsStr[1]);
                     found = true;
                     coord = {
                         "lat": latLongAsStr[1],
@@ -1361,7 +1361,7 @@ function replaceHouseNumber(str) {
         return str;
     }
     strReplaced = str.trim().replace(re_clean_last,"").replace(num_pattern, "").trim();
-    console.log(str + '=>' + strReplaced);
+    //console.log(str + '=>' + strReplaced);
     return strReplaced;
 }
 
