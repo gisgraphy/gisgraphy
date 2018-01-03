@@ -90,7 +90,10 @@ public class FulltextQuerySolrHelper {
 	protected static  String NESTED_QUERY_TEMPLATE = "_query_:\"{!edismax qf='name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
-	protected static  String SUGGEST_QUERY_TEMPLATE = "_query_:\"{!edismax qf='suggest_in^0.5 suggest_name^0.55 zipcode^0.2 name^0.01' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\"";
+	//good result :"_query_:\"{!edismax qf='suggest_in^0.5 suggest_name^0.55 suggest_fqdn_name^5 suggest_all_label^5 zipcode^0.2 name^0.01' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\""
+	//initial : "_query_:\"{!edismax qf='suggest_in^0.5 suggest_name^0.55 zipcode^0.2 name^0.01' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\"";
+	//short : "_query_:\"{!edismax qf='suggest_name^0.55 suggest_fqdn_name^0.7' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\"";
+	protected static  String SUGGEST_QUERY_TEMPLATE = "_query_:\"{!edismax qf='suggest_name^0.55 suggest_fqdn_name^0.7' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\"";
 	protected static final String SUGGEST_FQ = "placetype:city placetype:adm placetype:street";
 	protected static final String SUGGEST_FL = "name,zipcode,country_code,adm1_name,is_in,feature_id,lat,lng,score,house_numbers";
 	
@@ -125,9 +128,8 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		/*getConfigInFile();
+		getConfigInFile();
 		logger.error("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);
-		System.out.println("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);*/
 		//logger.error("not all words : "+NESTED_QUERY_TEMPLATE);
 		boolean spellchecker = true;
 		ModifiableSolrParams parameters = new ModifiableSolrParams();
@@ -373,9 +375,8 @@ public class FulltextQuerySolrHelper {
 
 
 			
-				NESTED_QUERY_TEMPLATE = in.readLine();
-				CITY_ADM_BOOST_QUERY=in.readLine();
-				CITY_BOOST_QUERY=in.readLine();
+			SUGGEST_QUERY_TEMPLATE = in.readLine();
+			NESTED_QUERY_TEMPLATE=in.readLine();
 				//ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
 				
 

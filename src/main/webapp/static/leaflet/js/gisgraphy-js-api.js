@@ -230,7 +230,7 @@ DEFAULT_LANGUAGE = detectLanguage();
                     return names;
 
                 },
-                rateLimitWait: 130
+                rateLimitWait: 500
             }
         });
 
