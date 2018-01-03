@@ -74,7 +74,6 @@ function moveCenterOfMapTo(lat, lng, placetype) {
 
 function getZoomByPlaceType(placetype) {
     var zoom = 14; //for city and other
-    console.log(placetype);
     if (typeof placetype != 'undefined') {
         if (placetype.toUpperCase() == 'STREET') {
             zoom = 18;
