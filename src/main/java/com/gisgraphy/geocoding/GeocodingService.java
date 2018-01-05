@@ -759,7 +759,7 @@ public class GeocodingService implements IGeocodingService {
 	}
 
 	
-
+/*
 	protected HouseNumberDtoInterpolation processApproximativeHouseNumber(String houseNumberToFind, Integer houseNumberToFindAsInt,
 			HouseNumberDtoInterpolation bestApprox, String countryCode,
 			HouseNumberDtoInterpolation houseNumberDtoToProcess) {
@@ -807,7 +807,7 @@ public class GeocodingService implements IGeocodingService {
 		HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation(bestApproxLocation, bestApproxHN) ;
 		result.setHouseNumberDif(curentDif);
 		return result;
-	}
+	}*/
 
 	protected HouseNumberDtoInterpolation searchHouseNumber(Integer houseNumberToFindAsInt, List<HouseNumberDto> houseNumbersList,String countryCode, boolean doInterpolation) { //TODO pass the house as int directly
 		if(houseNumberToFindAsInt==null || houseNumbersList==null || houseNumbersList.size()==0){
@@ -837,7 +837,9 @@ public class GeocodingService implements IGeocodingService {
 				}
 				if (candidateNormalized!=null && candidateNormalized == houseNumberToFindAsInt){
 					logger.info("house number candidate found : "+candidate.getNumber());
-					return new HouseNumberDtoInterpolation(candidate.getLocation(),houseNumberToFindAsInt);
+					HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation(candidate.getLocation(),houseNumberToFindAsInt);
+					result.setApproximative(false);
+					return result;
 				} else if (candidateNormalized < houseNumberToFindAsInt ){
 					if (nearestLower ==null || candidateNormalized > nearestLower){
 						nearestLower = candidateNormalized;
@@ -858,6 +860,7 @@ public class GeocodingService implements IGeocodingService {
 			return null;
 		}
 		HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation();
+		result.setApproximative(true);
 		if (nearestHouseUpper !=null){
 			logger.info(" higher : "+nearestUpper);
 			result.setHigherLocation(nearestHouseUpper.getLocation());
@@ -873,7 +876,9 @@ public class GeocodingService implements IGeocodingService {
 				if (nearestHouseLower !=null && nearestHouseUpper != null){
 					Point location = GeolocHelper.interpolatedPoint(nearestHouseLower.getLocation(), nearestHouseUpper.getLocation(), nearestUpper, nearestLower, houseNumberToFindAsInt);
 					if (location !=null){
-						return new HouseNumberDtoInterpolation(location,houseNumberToFindAsInt);
+						result =new HouseNumberDtoInterpolation(location,houseNumberToFindAsInt);
+						result.setApproximative(true);
+						return result;
 					} else {
 						return null;
 					}
@@ -973,6 +978,7 @@ public class GeocodingService implements IGeocodingService {
 					}
 					if (!isEmptyString(streetName)){ 
 						if(streetName.equalsIgnoreCase(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin) && lastLocation!=null && !(GeolocHelper.distance(lastLocation, curLoc)>12000)){
+							logger.debug("same street");
 							sameStreet=true;//probably the same street
 							if (housenumberFound){
 								continue;
@@ -998,8 +1004,10 @@ public class GeocodingService implements IGeocodingService {
 							HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
 								if (houseNumber !=null){
 									if (houseNumber.isApproximative()){
+										logger.debug("found approximative "+houseNumber.getExactNumerAsString());
 										
 									} else {
+										logger.debug("found exact "+houseNumber.getExactNumerAsString());
 										housenumberFound=true;
 										address.setHouseNumber(houseNumber.getExactNumerAsString());
 										address.setLat(houseNumber.getExactLocation().getY());
@@ -1014,7 +1022,8 @@ public class GeocodingService implements IGeocodingService {
 								}
 							//}
 						}
-						} else { //the streetName is different, 
+						} else { //the streetName is different,
+							logger.debug("not same street");
 							sameStreet=false;
 							//remove the last results added
 							for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){

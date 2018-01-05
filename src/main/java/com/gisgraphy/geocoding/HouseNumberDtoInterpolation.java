@@ -14,6 +14,8 @@ public class HouseNumberDtoInterpolation {
 	private Integer HigherNumber;
 	private Integer HouseNumberDif;
 	
+	private boolean approximative = false;
+	
 	
 	
 
@@ -39,7 +41,6 @@ public class HouseNumberDtoInterpolation {
 
 	public HouseNumberDtoInterpolation() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 
@@ -182,7 +183,17 @@ public class HouseNumberDtoInterpolation {
 
 
 	public boolean isApproximative(){
-		return !(exactNumber !=null && exactLocation != null);
+		return approximative;
+	}
+
+
+
+
+	/**
+	 * @param approximative the approximative to set
+	 */
+	public void setApproximative(boolean approximative) {
+		this.approximative = approximative;
 	}
 
 
@@ -223,7 +234,15 @@ public class HouseNumberDtoInterpolation {
 		if (HigherNumber != null) {
 			builder.append("HigherNumber=");
 			builder.append(HigherNumber);
+			builder.append(", ");
 		}
+		if (HouseNumberDif != null) {
+			builder.append("HouseNumberDif=");
+			builder.append(HouseNumberDif);
+			builder.append(", ");
+		}
+		builder.append("approximative=");
+		builder.append(approximative);
 		builder.append("]");
 		return builder.toString();
 	}
