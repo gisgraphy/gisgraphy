@@ -2634,6 +2634,47 @@ public class GeocodingServiceTest {
     	Assert.assertTrue(geocodingService.needParsing("toto;toto"));
     }
     
+    @Test
+    public void setStateInAddress_ForFrance(){
+    	GeocodingService geocodingService = new GeocodingService();
+    	SolrResponseDto solrResponseDto = EasyMock.createMock(SolrResponseDto.class);
+    	EasyMock.expect(solrResponseDto.getCountry_code()).andStubReturn("FR");
+    	EasyMock.expect(solrResponseDto.getAdm2_name()).andStubReturn("adm2");
+    	EasyMock.expect(solrResponseDto.getIs_in_adm()).andStubReturn("isinadm");
+    	EasyMock.replay(solrResponseDto);
+		Address address = new Address();
+		geocodingService.setStateInAddress(solrResponseDto, address );
+		Assert.assertEquals("adm2", address.getState());
+    	
+    }
+    
+    @Test
+    public void setStateInAddress(){
+    	GeocodingService geocodingService = new GeocodingService();
+    	SolrResponseDto solrResponseDto = EasyMock.createMock(SolrResponseDto.class);
+    	EasyMock.expect(solrResponseDto.getCountry_code()).andStubReturn("MM");
+    	EasyMock.expect(solrResponseDto.getAdm2_name()).andStubReturn("adm2");
+    	EasyMock.expect(solrResponseDto.getIs_in_adm()).andStubReturn("isinadm");
+    	EasyMock.replay(solrResponseDto);
+		Address address = new Address();
+		geocodingService.setStateInAddress(solrResponseDto, address );
+		Assert.assertEquals("isinadm", address.getState());
+    	
+    }
+    @Test
+    public void setStateInAddress_nullcountrycode(){
+    	GeocodingService geocodingService = new GeocodingService();
+    	SolrResponseDto solrResponseDto = EasyMock.createMock(SolrResponseDto.class);
+    	EasyMock.expect(solrResponseDto.getCountry_code()).andStubReturn(null);
+    	EasyMock.expect(solrResponseDto.getAdm2_name()).andStubReturn("adm2");
+    	EasyMock.expect(solrResponseDto.getIs_in_adm()).andStubReturn("isinadm");
+    	EasyMock.replay(solrResponseDto);
+		Address address = new Address();
+		geocodingService.setStateInAddress(solrResponseDto, address );
+		Assert.assertEquals("isinadm", address.getState());
+    	
+    }
+    
   
 
    

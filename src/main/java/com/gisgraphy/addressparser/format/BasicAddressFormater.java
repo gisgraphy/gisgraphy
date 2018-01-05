@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.StreetTypeOrder;
+import com.gisgraphy.addressparser.commons.GeocodingLevels;
 
 /**
  *  @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
@@ -190,7 +191,46 @@ public class BasicAddressFormater {
 	} else {
 	    newLine = " ";
 	}
-	List<String> lines = getLines(address,scriptType);
+	List<String> lines;
+	if (address.getGeocodingLevel()!=null && (address.getGeocodingLevel()!= GeocodingLevels.HOUSE_NUMBER && address.getGeocodingLevel()!= GeocodingLevels.STREET  )) {
+		lines =  new ArrayList<String>();
+		if (address.getGeocodingLevel()==GeocodingLevels.CITY || address.getGeocodingLevel()==GeocodingLevels.CITY_SUBDIVISION){
+			String cityName = address.getCity();
+			String separator="";
+			if (cityName==null){
+				if (address.getName()!=null){
+					cityName= address.getName();
+				} else {
+					cityName="";
+				}
+			}
+			String citySubName = address.getQuarter();
+			if (citySubName==null){
+					if (address.getCitySubdivision()!=null){
+						citySubName= address.getCitySubdivision();
+						} else {
+							citySubName="";
+						}
+			}
+			if (citySubName.equals(cityName)){
+				citySubName="";
+			}
+			if (!citySubName.equals("")){
+				separator = ", ";
+			}
+			if (address.getZipCode()!=null){
+				lines.add(citySubName+separator+cityName+", "+address.getZipCode());
+			} else {
+				lines.add(citySubName+separator+cityName);
+			}
+		} else {
+			lines.add(address.getName());
+		}
+	} else {
+		 lines = getLines(address,scriptType);
+	}
+	
+	
 	return join(lines, newLine);
     }
     

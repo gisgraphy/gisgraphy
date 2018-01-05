@@ -683,7 +683,9 @@ public class LabelGenerator {
 		if (openStreetMap.getIsInPlace()!=null){
 			address.setCitySubdivision(openStreetMap.getIsInPlace());
 		}
-		if (openStreetMap.getIsInAdm()!=null){
+		if (openStreetMap.getCountryCode()!=null && openStreetMap.getCountryCode().equalsIgnoreCase("FR") && openStreetMap.getAdm2Name()!=null ){ //avoid france metropolitaine in state
+			address.setState(openStreetMap.getAdm2Name());
+		} else if (openStreetMap.getIsInAdm()!=null) {
 			address.setState(openStreetMap.getIsInAdm());
 		}
 		if (openStreetMap.getAdm1Name()!=null){
@@ -833,7 +835,9 @@ public class LabelGenerator {
 		if (city.getName()!=null){
 			address.setCity(city.getName());
 		}
-		if (city.getIsInAdm()!=null){
+		if (city.getCountryCode()!=null && city.getCountryCode().equalsIgnoreCase("FR") && city.getAdm2Name()!=null ){ //avoid france metropolitaine in state
+			address.setState(city.getAdm2Name());
+		} else if (city.getIsInAdm()!=null) {
 			address.setState(city.getIsInAdm());
 		}
 		if (city.getAdm1Name()!=null){

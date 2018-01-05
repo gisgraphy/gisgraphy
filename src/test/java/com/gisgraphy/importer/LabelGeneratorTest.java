@@ -1302,6 +1302,7 @@ public void testGenerateLabel_Adm(){
 		osm.setAdm3Name("adm3Name");
 		osm.setAdm4Name("adm4Name");
 		osm.setAdm5Name("adm5Name");
+		osm.setIsInAdm("isInAdm");
 		osm.setZipCode("zipCodeSet");
 		osm.setCountryCode("US");
 		Address address = generator.buildAddressFromOpenstreetMap(osm);
@@ -1314,6 +1315,7 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
 		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
 		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals(osm.getIsInAdm(), address.getState());
 		Assert.assertEquals("When there is a zipcode, we take it","zipCodeSet", address.getZipCode());
 		Assert.assertEquals(osm.getCountryCode(), address.getCountryCode());
 		Assert.assertEquals(osm.getLatitude(), address.getLat());
@@ -1339,6 +1341,29 @@ public void testGenerateLabel_Adm(){
 		Assert.assertEquals("streettype in osm (service,...) is not the streettype in an address",null, address.getStreetType());
 		Assert.assertEquals(osm.getLength(), address.getLength());
 		Assert.assertEquals(osm.getMaxSpeedBackward(), address.getMaxSpeedBackward());
+		
+	}
+	
+	@Test
+	public void buildAddressFromOpenstreetMapShouldSetStateToADM2IfCountryCodeISFrance(){
+		OpenStreetMap osm = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
+		osm.setAdm1Name("adm1Name");
+		osm.setAdm2Name("adm2Name");
+		osm.setAdm3Name("adm3Name");
+		osm.setAdm4Name("adm4Name");
+		osm.setAdm5Name("adm5Name");
+		osm.setZipCode("zipCodeSet");
+		osm.setCountryCode("FR");
+		Address address = generator.buildAddressFromOpenstreetMap(osm);
+		Assert.assertEquals(osm.getName(), address.getStreetName());
+		Assert.assertEquals(osm.getIsIn(), address.getCity());
+		Assert.assertEquals(osm.getIsInPlace(), address.getCitySubdivision());
+		Assert.assertEquals(osm.getAdm1Name(), address.getAdm1Name());
+		Assert.assertEquals(osm.getAdm2Name(), address.getAdm2Name());
+		Assert.assertEquals(osm.getAdm3Name(), address.getAdm3Name());
+		Assert.assertEquals(osm.getAdm4Name(), address.getAdm4Name());
+		Assert.assertEquals(osm.getAdm5Name(), address.getAdm5Name());
+		Assert.assertEquals(osm.getAdm2Name(), address.getState());
 		
 	}
 	

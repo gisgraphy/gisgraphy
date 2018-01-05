@@ -935,7 +935,9 @@ public class GeocodingService implements IGeocodingService {
 				}
 				if (solrResponseDto.getOpenstreetmap_id()!=null){
 					address.setSourceId(solrResponseDto.getOpenstreetmap_id());
-				}
+				} else if (solrResponseDto.getFeature_id()!=null){
+					address.setSourceId(solrResponseDto.getFeature_id());
+				}  
 				address.setId(solrResponseDto.getFeature_id());
 				String countryCode = solrResponseDto.getCountry_code();
 				address.setCountryCode(countryCode);
@@ -980,7 +982,7 @@ public class GeocodingService implements IGeocodingService {
 							address.setStreetName(solrResponseDto.getName());
 							address.setStreetRef(solrResponseDto.getStreet_ref());
 							address.setCity(solrResponseDto.getIs_in());
-							address.setState(solrResponseDto.getIs_in_adm());
+							setStateInAddress(solrResponseDto, address);
 							if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
 								address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
 							}
@@ -1022,7 +1024,7 @@ public class GeocodingService implements IGeocodingService {
 							//populate fields
 							address.setStreetName(solrResponseDto.getName());
 							address.setCity(solrResponseDto.getIs_in());
-							address.setState(solrResponseDto.getIs_in_adm());
+							setStateInAddress(solrResponseDto, address);
 							if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
 								address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
 							}
@@ -1051,7 +1053,7 @@ public class GeocodingService implements IGeocodingService {
 						}
 			  } else {//streetname is null, we search for housenumber anyway
 					address.setCity(solrResponseDto.getIs_in());
-					address.setState(solrResponseDto.getIs_in_adm());
+					setStateInAddress(solrResponseDto, address);
 					if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
 						address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
 					}
@@ -1116,6 +1118,15 @@ public class GeocodingService implements IGeocodingService {
 			}
 		}
 		return new AddressResultsDto(addresses, 0L);
+	}
+
+	protected void setStateInAddress(SolrResponseDto solrResponseDto,
+			Address address) {
+		if (solrResponseDto.getCountry_code()!=null && solrResponseDto.getCountry_code().equalsIgnoreCase("FR") && solrResponseDto.getAdm2_name()!=null ){ //avoid france metropolitaine in state
+			address.setState(solrResponseDto.getAdm2_name());
+		} else if (solrResponseDto.getIs_in_adm()!=null) {
+			address.setState(solrResponseDto.getIs_in_adm());
+		}
 	}
 
 	protected boolean allowInterpolation(SolrResponseDto solrResponseDto) {
