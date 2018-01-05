@@ -1003,10 +1003,14 @@ public class GeocodingService implements IGeocodingService {
 							}
 							HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
 								if (houseNumber !=null){
-									if (houseNumber.isApproximative()){
-										logger.debug("found approximative "+houseNumber.getExactNumerAsString());
+									if (houseNumber.isApproximative() ){
+										 if (houseNumber.getExactNumerAsString()!=null){
+											 logger.debug("found approximative "+houseNumber.getExactNumerAsString());
+										 } else {
+												logger.debug("found nothing");
+										 }
 										
-									} else {
+									} else if (houseNumber.getExactLocation()!=null){
 										logger.debug("found exact "+houseNumber.getExactNumerAsString());
 										housenumberFound=true;
 										address.setHouseNumber(houseNumber.getExactNumerAsString());
