@@ -328,10 +328,10 @@ public class GeocodingService implements IGeocodingService {
 			if (streettypes!=null && streettypes.size()==1){
 				smartstreetdetection = true;
 				if (Decompounder.isDecompoudCountryCode(countryCode) || decompounder.isDecompoundName(newAddress)){
-					/*logger.error("find specific german address");
+					logger.error("find specific german address");
 					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
 					logger.error("alternativeGermanAddress= "+alternativeGermanAddress);
-					alternativeGermanAddress = replaceGermanSynonyms(alternativeGermanAddress);*/
+					//alternativeGermanAddress = replaceGermanSynonyms(alternativeGermanAddress);
 					newAddress = StringHelper.expandStreetType(newAddress, null);
 					logger.error("new rawAddress with synonyms ="+newAddress);
 					//logger.error("new alternative with synonyms ="+alternativeGermanAddress);
@@ -735,7 +735,7 @@ public class GeocodingService implements IGeocodingService {
 		//}
 	}
 
-	protected String getBestCitySearchSentence(Address address) {
+/*	protected String getBestCitySearchSentence(Address address) {
 		String sentence = "";
 		if (isNotEmptyString(address.getCity())) {
 			sentence += " " + address.getCity();
@@ -757,7 +757,7 @@ public class GeocodingService implements IGeocodingService {
 		}
 		return new String(sentence + choice).trim();
 	}
-
+*/
 	
 /*
 	protected HouseNumberDtoInterpolation processApproximativeHouseNumber(String houseNumberToFind, Integer houseNumberToFindAsInt,
