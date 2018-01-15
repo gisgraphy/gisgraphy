@@ -89,7 +89,7 @@ public class FulltextQuerySolrHelper {
 	public static String MM_ALL_WORD_REQUIRED ="100%%";
 	
 	//_query_:"{!edismax qf='label^18 name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s"=>better for rue de lille bailleul=>label do the job
-	protected static  String NESTED_QUERY_TEMPLATE = "_query_:\"{!edismax qf='name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
+	protected static  String NESTED_QUERY_TEMPLATE = "_query_:\"{!edismax qf='label^18 name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
 	//good result :"_query_:\"{!edismax qf='suggest_in^0.5 suggest_name^0.55 suggest_fqdn_name^5 suggest_all_label^5 zipcode^0.2 name^0.01' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\""
