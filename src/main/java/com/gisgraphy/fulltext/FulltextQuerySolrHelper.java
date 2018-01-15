@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.addressparser.Address;
+import com.gisgraphy.compound.Decompounder;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
@@ -84,9 +85,10 @@ public class FulltextQuerySolrHelper {
 	private static OutputStyleHelper outputStyleHelper = new OutputStyleHelper();
 
 	
-	public static String MM_NOT_ALL_WORD_REQUIRED ="3<-1 4<3";
+	public static String MM_NOT_ALL_WORD_REQUIRED ="2<2";//"3<-1 4<3";
 	public static String MM_ALL_WORD_REQUIRED ="100%%";
 	
+	//_query_:"{!edismax qf='label^18 name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s"=>better for rue de lille bailleul=>label do the job
 	protected static  String NESTED_QUERY_TEMPLATE = "_query_:\"{!edismax qf='name^25 all_name^10 fully_qualified_name %s' pf='all_label' ps=0 tie='0.1' bq=' %s'   mm='%s'  bf='%s'}%s\"";
 	protected static  String NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE = NESTED_QUERY_TEMPLATE;
 	
@@ -123,12 +125,15 @@ public class FulltextQuerySolrHelper {
 			+ GisFeature.LOCATION_COLUMN_NAME + " " + Constants.POINT_PARAMETER
 			+ "=%f,%f " + Constants.DISTANCE_PARAMETER + "=%f}\"";
 
+	
+	private static Decompounder decompounder = new Decompounder();
+	
 	/**
 	 * @return A Representation of all the needed parameters
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		//getConfigInFile();
+		getConfigInFile();
 		//logger.error("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);
 		//logger.error("not all words : "+NESTED_QUERY_TEMPLATE);
 		boolean spellchecker = true;
@@ -210,12 +215,13 @@ public class FulltextQuerySolrHelper {
 			bfField=BF_POPULATION;
 		}
 		
-		boolean isNumericQuery = isNumericQuery(query.getQuery());
+		String querystr = query.getQuery();
+		boolean isNumericQuery = isNumericQuery(querystr);
 		StringBuffer querybuffer ;
 		
-		if (query.getQuery().startsWith(FEATUREID_PREFIX)){
+		if (querystr.startsWith(FEATUREID_PREFIX)){
 			spellchecker=false;
-			String id = query.getQuery().substring(FEATUREID_PREFIX.length());
+			String id = querystr.substring(FEATUREID_PREFIX.length());
 			String queryString = String.format(NESTED_QUERY_ID_TEMPLATE,id);
 			parameters.set(Constants.QUERY_PARAMETER, queryString);
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
@@ -223,9 +229,9 @@ public class FulltextQuerySolrHelper {
 			/*if (query.getPoint() != null ){
 			parameters.set(Constants.BF_PARAMETER, BF_NEAREST);
 			}*/
-		} else if (query.getQuery().startsWith(OPENSTREETMAPID_PREFIX)){
+		} else if (querystr.startsWith(OPENSTREETMAPID_PREFIX)){
 			spellchecker=false;
-			String id = query.getQuery().substring(OPENSTREETMAPID_PREFIX.length());
+			String id = querystr.substring(OPENSTREETMAPID_PREFIX.length());
 			String queryString = String.format(NESTED_QUERY_OPENSTREETMAP_ID_TEMPLATE,id);
 			parameters.set(Constants.QUERY_PARAMETER, queryString);
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
@@ -240,16 +246,24 @@ public class FulltextQuerySolrHelper {
 			} else {
 				bfField=""; //population is already boost by bq
 			}
-			String querySolr = String.format(SUGGEST_QUERY_TEMPLATE,bfField,query.getQuery());
+			
+		 if (
+				 (query.getCountryCode()!=null && !"".equals(query.getCountryCode().trim()) && Decompounder.isDecompoudCountryCode(query.getCountryCode()))
+				 || decompounder.isDecompoundName(querystr)
+				 || isStreetQuery(query)
+				 ){
+			 querystr = decompounder.addOtherFormat(querystr);
+		 }
+			String querySolr = String.format(SUGGEST_QUERY_TEMPLATE,bfField,querystr);
 			parameters.set(Constants.QUERY_PARAMETER, querySolr);
 			logger.debug("querysolr="+querySolr);
 			/*if(query.getPoint()!=null){
 				parameters.set(Constants.BF_PARAMETER, BF_NEAREST);
 			}*/
-		} else if (isNumericQuery(query.getQuery())) {
+		} else if (isNumericQuery(querystr)) {
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
 					.toString());
-			String queryString = String.format(NESTED_QUERY_NUMERIC_TEMPLATE,query.getQuery());
+			String queryString = String.format(NESTED_QUERY_NUMERIC_TEMPLATE,querystr);
 			parameters.set(Constants.QUERY_PARAMETER, queryString);
 		} else {
 			// we overide the query type
@@ -257,8 +271,8 @@ public class FulltextQuerySolrHelper {
 		    Constants.SolrQueryType.standard.toString());
 	    parameters.set(Constants.QUERY_PARAMETER, query.getQuery());*/
 			String bqField="";
-			List<String> streetTypes = smartStreetDetection.getStreetTypes(query.getQuery());
-			if ((!isStreetQuery(query) && streetTypes.size()==1)){
+			List<String> streetTypes = smartStreetDetection.getStreetTypes(querystr);
+			if ((!isStreetQuery(query) && streetTypes.size()>=1)){
 				bqField=STREET_BOOST_QUERY;
 			} else if (query.getPlaceTypes()==null || query.getPlaceTypes().length==0){
 					bqField=CITY_ADM_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
@@ -271,12 +285,12 @@ public class FulltextQuerySolrHelper {
 			String queryString;
 			if (query.isFuzzy()){
 				if (streetTypes!=null && streetTypes.size()==1){
-					queryString = buildFuzzyWords(query.getQuery(),streetTypes.get(0));
+					queryString = buildFuzzyWords(querystr,streetTypes.get(0));
 				} else {
-					queryString = buildFuzzyWords(query.getQuery(),null);
+					queryString = buildFuzzyWords(querystr,null);
 				}
 			} else {
-				queryString = query.getQuery();
+				queryString = querystr;
 			}
 			/*if (query.isExactName()){
 				querybuffer = new StringBuffer(String.format(EXACT_NAME_QUERY_TEMPLATE,"",boost,boostNearest,queryString));
@@ -312,7 +326,7 @@ public class FulltextQuerySolrHelper {
 
 		if (SpellCheckerConfig.enabled && query.hasSpellChecking() && !isNumericQuery && !query.isSuggest() && spellchecker){
 			parameters.set(Constants.SPELLCHECKER_ENABLED_PARAMETER,"true");
-			parameters.set(Constants.SPELLCHECKER_QUERY_PARAMETER, query.getQuery());
+			parameters.set(Constants.SPELLCHECKER_QUERY_PARAMETER, querystr);
 			parameters.set(Constants.SPELLCHECKER_COLLATE_RESULTS_PARAMETER,SpellCheckerConfig.collateResults);
 			parameters.set(Constants.SPELLCHECKER_NUMBER_OF_SUGGESTION_PARAMETER,SpellCheckerConfig.numberOfSuggestion);
 			parameters.set(Constants.SPELLCHECKER_DICTIONARY_NAME_PARAMETER,SpellCheckerConfig.spellcheckerDictionaryName.toString());
@@ -375,8 +389,8 @@ public class FulltextQuerySolrHelper {
 
 
 			
-			SUGGEST_QUERY_TEMPLATE = in.readLine();
-			NESTED_QUERY_TEMPLATE=in.readLine();
+			NESTED_QUERY_TEMPLATE = in.readLine();
+			//NESTED_QUERY_TEMPLATE=in.readLine();
 				//ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
 				
 

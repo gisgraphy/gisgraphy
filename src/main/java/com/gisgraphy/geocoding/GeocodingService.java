@@ -323,10 +323,10 @@ public class GeocodingService implements IGeocodingService {
 			for (String streettype : streettypes){
 				logger.info("found street type : "+streettype);
 			}
-				boolean smartstreetdetection = false;
+				boolean smartstreetdetected = false;
 			String alternativeGermanAddress =null;
 			if (streettypes!=null && streettypes.size()==1){
-				smartstreetdetection = true;
+				smartstreetdetected = true;
 				if (Decompounder.isDecompoudCountryCode(countryCode) || decompounder.isDecompoundName(newAddress)){
 					logger.error("find specific german address");
 					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
@@ -341,14 +341,14 @@ public class GeocodingService implements IGeocodingService {
 				}
 			}
 				results = doSearch(newAddress,alternativeGermanAddress, countryCode, 
-						needParsing,houseNumber, false, query.getPoint(), query.getRadius(), smartstreetdetection);
+						needParsing,houseNumber, false, query.getPoint(), query.getRadius(), smartstreetdetected);
 				
 					
 					
 					//try in fuzzy
 					if (results.getNumFound()==0 && query.isFuzzy()){
 						results = doSearch(newAddress,alternativeGermanAddress, countryCode,
-								needParsing,houseNumber, true, query.getPoint(), query.getRadius(), smartstreetdetection);
+								needParsing,houseNumber, true, query.getPoint(), query.getRadius(), smartstreetdetected);
 					}
 					
 				//------------------------------------------------------------------------------------
@@ -484,10 +484,10 @@ public class GeocodingService implements IGeocodingService {
 	}*/
 
 	protected AddressResultsDto doSearch( String rawaddress,String alternativeStreetAddress,
-			String countryCode, boolean needParsing,String houseNumber, boolean fuzzy, Point point, Double radius, boolean smartStreetDetection) {
+			String countryCode, boolean needParsing,String houseNumber, boolean fuzzy, Point point, Double radius, boolean smartStreetDetected) {
 		AddressResultsDto results;
 		List<SolrResponseDto> exactMatches  ;
-		if (!smartStreetDetection){
+		if (!smartStreetDetected){
 			 exactMatches = doSearchExact(rawaddress,
 					countryCode, fuzzy, point, radius, null);
 		} else {

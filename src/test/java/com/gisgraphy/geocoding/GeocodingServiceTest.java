@@ -1988,7 +1988,7 @@ public class GeocodingServiceTest {
 	Assert.assertTrue(findStreetCalled);
     }*/
     
-    @Test
+   /* @Test
     public void getBestCitySearchSentence(){
 	GeocodingService geocodingService = new GeocodingService();
 	
@@ -2060,7 +2060,7 @@ public class GeocodingServiceTest {
 	sentence = geocodingService.getBestCitySearchSentence(address);
 	Assert.assertEquals("75002 state",sentence);
 	
-    }
+    }*/
     
    /* @Test
     public void mergeSolrResponseDto(){

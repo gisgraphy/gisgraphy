@@ -105,6 +105,28 @@ public class DecompoudTest {
 		Decompounder d = new Decompounder(words);
 		Assert.assertEquals("foostrasse", d.getOtherFormat("foo strasse"));
 		Assert.assertEquals("foo strasse", d.getOtherFormat("foostrasse"));
+		Assert.assertEquals("foostrasse, berlin", d.getOtherFormat("foo strasse, berlin"));
+		Assert.assertEquals("foo strasse , berlin", d.getOtherFormat("foostrasse, berlin"));
+		Assert.assertEquals("abc, foo strasse , berlin", d.getOtherFormat("abc, foostrasse, berlin"));
+	}
+	
+	@Test
+	public void testaddOtherFormat(){
+		 List<String> words = new ArrayList<String>(){ 
+				{
+				add("weg");
+				add("straße."); 
+				add("strasse."); 
+				add("wald");
+				add("str.");
+				}
+			};
+		Decompounder d = new Decompounder(words);
+		Assert.assertEquals("foo strasse foostrasse", d.addOtherFormat("foo strasse"));
+		Assert.assertEquals("foo strasse foostrasse", d.addOtherFormat("foostrasse"));
+		Assert.assertEquals("foo strasse foostrasse , berlin", d.addOtherFormat("foo strasse, berlin"));
+		Assert.assertEquals("foo strasse foostrasse , berlin", d.addOtherFormat("foostrasse, berlin"));
+		Assert.assertEquals("abc, foo strasse foostrasse , berlin", d.addOtherFormat("abc, foostrasse, berlin"));
 	}
 	
 	@Test
@@ -140,6 +162,9 @@ public class DecompoudTest {
 		Assert.assertEquals("foo str truc straße", d.getOtherFormatForText("foostr trucstraße"));
 
 		Assert.assertEquals("foo str. truc straße", d.getOtherFormatForText("foostr. trucstraße"));
+		Assert.assertEquals("foostr. trucstraße, berlin", d.getOtherFormatForText("foo str. truc straße, berlin"));
+		
+		Assert.assertEquals("abc, foostr. trucstraße, berlin", d.getOtherFormatForText("abc, foo str. truc straße, berlin"));
 		
 		
 	}

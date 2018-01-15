@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 public class Decompounder {
 	private Pattern p;
 	private Pattern concatenatePattern;
+	private Pattern addPattern;
 	public enum state {CONCATENATE, SEPARATE, NOT_APPLICABLE};
 	Pattern ENDING_POINT = Pattern.compile("\\.$");
 	
@@ -98,6 +99,8 @@ public class Decompounder {
 		String re2 = trie(endWords, CONDENSE);
 		concatenatePattern = Pattern
 				.compile("((\\S|\\s)("+re2+"\\b[\\.]?))",Pattern.CASE_INSENSITIVE);
+		 addPattern = Pattern
+				.compile("(\\b([a-z]+)\\s?("+re2+"\\b[\\.]?))",Pattern.CASE_INSENSITIVE);
 		
 		re= "((?:("+re2+"\\b[\\.]?))|(?:"+re+"))";
 		//System.out.println(re);
@@ -134,6 +137,51 @@ public class Decompounder {
 	}
 	
 	public String getOtherFormatForText(String text){
+		if (text==null){
+			return text;
+		}
+		Matcher m = concatenatePattern.matcher(text);
+				StringBuffer s = new StringBuffer();
+				while (m.find()) {
+					/*System.out.println("--------------");
+					System.out.println(m.group(1));
+					System.out.println(m.group(2));
+					System.out.println(m.group(3));
+					System.out.println("--------------");*/
+					if (" ".equals(m.group(2))|| "-".equals(m.group(2))){
+					m.appendReplacement(s,  m.group(3) );
+					} else {
+						m.appendReplacement(s,  m.group(2)+" " +m.group(3) + " ");
+					}
+		}
+				m.appendTail(s);
+				return s.toString().replaceAll("\\s+", " ").trim();
+	}
+	public String addOtherFormat(String text){
+		if (text==null){
+			return text;
+		}
+		Matcher m = addPattern.matcher(text);
+				StringBuffer s = new StringBuffer();
+				while (m.find()) {
+					/*System.out.println("--------------");
+					System.out.println(m.group(1));
+					System.out.println(m.group(2));
+					System.out.println(m.group(3));
+					System.out.println("--------------");*/
+					if (" ".equals(m.group(2))|| "-".equals(m.group(2))){
+					m.appendReplacement(s,  m.group(3) );
+					} else {
+						m.appendReplacement(s,  m.group(2)+" " +m.group(3) + " "+m.group(2)+m.group(3) + " ");
+					}
+		}
+				m.appendTail(s);
+				return s.toString().replaceAll("\\s+", " ").trim();
+	}
+	
+	
+	
+	public String OtherFormatForText(String text){
 		if (text==null){
 			return text;
 		}
