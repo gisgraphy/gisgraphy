@@ -96,7 +96,8 @@ public class GeocodingService implements IGeocodingService {
 			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
 			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,\\.;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b$|avenue\\b$|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))"
 			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
-			+ "|\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
+			+ "|\\s(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
+			+ "|(?:\\b\\d{1,4}\\b\\s?(?:[a-d])?\\b$)"
 			+")";
 
 	private static final String FUZZY_ACTIVE = "fuzzy:active";
@@ -1515,10 +1516,7 @@ public class GeocodingService implements IGeocodingService {
 		Matcher m = HOUSENUMBERPATTERN.matcher(address);
 		if (m.find()) {
 			String houseNumber = m.group().trim();
-			if (houseNumber.length() >=4 && (address.trim().indexOf(houseNumber)+houseNumber.length()) >= address.length()-3){
-				//it is probably a zip code
-				return null;
-			}
+			
 			if (houseNumber != null) {
 
 				Matcher m2 = FIRST_NUMBER_EXTRACTION_PATTERN
@@ -1526,6 +1524,10 @@ public class GeocodingService implements IGeocodingService {
 				if (m2.find()) {
 					houseNumber = m2.group();
 				}
+			}
+			if (houseNumber.length() >=4 && (address.trim().indexOf(houseNumber)+houseNumber.length()) >= address.length()-3){
+				//it is probably a zip code
+				return null;
 			}
 			String newAddress;
 			if (countryCode !=null){

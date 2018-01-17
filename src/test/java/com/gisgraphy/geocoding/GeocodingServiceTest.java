@@ -2483,9 +2483,12 @@ public class GeocodingServiceTest {
 	Assert.assertTrue(geocodeIsCalled);
     }
     
+   
     @Test
     public void findHouseNumber(){
     	GeocodingService geocodingService = new GeocodingService();
+    	
+  
     	
     	Assert.assertEquals("9", geocodingService.findHouseNumber("9 avenue de l'opera paris",null).getHouseNumber());
     	Assert.assertEquals("avenue de l'opera paris", geocodingService.findHouseNumber("9 avenue de l'opera paris",null).getAddressWithoutHouseNumber());
@@ -2522,9 +2525,17 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13a, berlin",null).getHouseNumber());
     	Assert.assertEquals("Lottumstraße, berlin", geocodingService.findHouseNumber("Lottumstraße, 13a, berlin",null).getAddressWithoutHouseNumber());
     	
+    	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13a, berlin",null).getHouseNumber());
+    	Assert.assertEquals("Lottumstraße, berlin", geocodingService.findHouseNumber("Lottumstraße, 13a, berlin",null).getAddressWithoutHouseNumber());
     	
-    	Assert.assertEquals("13", geocodingService.findHouseNumber("Lottumstraße, 13a, berlin","DE").getHouseNumber());
-    	Assert.assertEquals("Lottumstraße, berlin", geocodingService.findHouseNumber("Lottumstraße, 13a, berlin","DE").getAddressWithoutHouseNumber());
+    	Assert.assertEquals("82", geocodingService.findHouseNumber("Reichenhallerstr. 82 A 83395 Freilassing",null).getHouseNumber());
+    	Assert.assertEquals("Reichenhallerstr. 83395 Freilassing", geocodingService.findHouseNumber("Reichenhallerstr. 82 A 83395 Freilassing","DE").getAddressWithoutHouseNumber());
+    	
+    	Assert.assertEquals("82", geocodingService.findHouseNumber("83395 Freilassing, Reichenhallerstr. 82 A",null).getHouseNumber());
+    	Assert.assertEquals("83395 Freilassing, Reichenhallerstr.", geocodingService.findHouseNumber("83395 Freilassing, Reichenhallerstr. 82 A","DE").getAddressWithoutHouseNumber());
+    	
+      	Assert.assertEquals("82", geocodingService.findHouseNumber("83395 Freilassing, Reichenhallerstr. 82A",null).getHouseNumber());
+    	Assert.assertEquals("83395 Freilassing, Reichenhallerstr.", geocodingService.findHouseNumber("83395 Freilassing, Reichenhallerstr. 82A","DE").getAddressWithoutHouseNumber());
     	
     	Assert.assertEquals(null, geocodingService.findHouseNumber("95190","FR"));
     	Assert.assertEquals(null, geocodingService.findHouseNumber("95190","FR"));
@@ -2552,7 +2563,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("rue de la gare 59000 lille", geocodingService.findHouseNumber("165 ter, rue de la gare 59000 lille",null).getAddressWithoutHouseNumber());
     	
 
-    	
+    
     	
     	
     	Assert.assertEquals("165", geocodingService.findHouseNumber("165 bis rue de la gare 59000 lille",null).getHouseNumber());
