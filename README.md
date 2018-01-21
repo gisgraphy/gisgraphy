@@ -1,14 +1,15 @@
 # Free, open source, and ready to use geocoder, reverse geocoder and geolocalisation webservices
 * [Demo](#demo)
-* [Who I am ?](#who-i-am)
+* [About us ?](#About-us)
+* [Install it locally](#Install-it-locally)
 * [Webservices overview](#webservices-overview-)
  * [Geocoding](#geocoding)
  * [Reverse geocoding ](#reverse-geocoding)
  * [Street search](#street-search)
- * [Find nearby](#find-nearby)
+ * [Nearby](#Nearby)
  * [Fulltext search / Autocompletion](#fulltext-search--autocompletion)
  * [Address parser](#address-parser)
-* [Openstreetmap data download](#Addresses-/-pois-/-street-database-in-CSV )
+* [CSV or SQL database](#Addresses-/-pois-/-street-database-in-CSV )
 * [Gisgraphoid](#gisgraphoid)
 * [Leaflet Plugins](#leaflet-plugins)
 * [A little bit further...](#a-little-bit-further)
@@ -17,7 +18,7 @@
 
 Since 2006, [Gisgraphy](https://www.gisgraphy.com) is a free, open source framework that offers the possibility to do geolocalisation and geocoding
 		via Java APIs or REST webservices. Because geocoding is nothing without data, it provides an easy to use importer that
-		will automatically download and import the necessary (free) data to your local database ([OpenStreetMap](http://www.openstreetmap.org), [Geonames](http://www.geonames.org/) and [Quattroshapes](http://www.quattroshapes.com) : more than 100 million
+		will automatically download and import the necessary (free) data to your local database ([OpenStreetMap](http://www.openstreetmap.org), [Openaddresses](https://openaddresses.io/), [Geonames](http://www.geonames.org/) and [Quattroshapes](http://www.quattroshapes.com) : more than 100 million
 		entries). You can also add your own data with the Web interface or the importer connectors provided. Gisgraphy is
 		production ready, and has been designed to be scalable(load balanced), performant and used in other languages than
 		just java : results can be output in XML, JSON, PHP, Python, Ruby, YAML, GeoRSS, and Atom. One of the most popular GPS
@@ -31,8 +32,11 @@ Since 2006, [Gisgraphy](https://www.gisgraphy.com) is a free, open source framew
 
 [gisgraphy web site](https://www.gisgraphy.com)
 
-## Who I am ##
-My name is David Masclet, I have developed Gisgraphy since 2006, My goal is to provide a realistic alternative for geocoding and geolocalisation. Feel free to contact me at davidmasclet[at]gisgraphy.com.
+## About us ##
+Since 2006, Gisgraphy's goal is to provide a realistic alternative for geocoding and geolocalisation. Feel free to contact us at contact[at]gisgraphy.com.
+
+## Install it locally ##
+We got Docker images and installation scripts. read the [installation guide](http://www2.gisgraphy.com/documentation/installation/index.php) to set up Gisgraphy on you own server.
 
 ## Webservices overview :##
 -----------------
@@ -43,58 +47,48 @@ All the webservice are world wide (243 countries) and support pagination. Actual
 
 ### Geocoding ###
 
-Give an Address, structured or not, and get GPS position in 243 countries.
+Provide an address, structured or not, and get it's GPS position. Worldwide coverage, including house numbers of more than +410 million addresses.
 
-[Doc](https://www.gisgraphy.com/documentation/user-guide.php#geocodingservice) | [REST API](https://www.gisgraphy.com/documentation/user-guide.php#geocodingwebservice) | [Java API](https://www.gisgraphy.com/documentation/user-guide.php#geocodingservicejavaapi) | [Demo](http://services.gisgraphy.com/public/geocoding.html) | [Free access](https://www.gisgraphy.com/free-access.php)
+[Doc](https://www.gisgraphy.com/documentation/user-guide.php#geocodingservice) | [Demo](http://services.gisgraphy.com/public/geocoding.html) | [Free access](https://www.gisgraphy.com/free-access.php)
 			
 ###	Reverse geocoding ###
-Give a GPS position and get the corresponding address
+Provide a GPS position and get the corresponding address. Worldwide coverage, including house numbers of more than +410 millions of addresses.
 
-[Doc](https://www.gisgraphy.com/documentation/user-guide.php#streetservice) | [REST API](https://www.gisgraphy.com/documentation/user-guide.php#streetwebservice) | [Java API](https://www.gisgraphy.com/documentation/user-guide.php#streetservicejavaapi) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
+[Doc](https://www.gisgraphy.com/documentation/user-guide.php#streetservice) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
 					access](https://www.gisgraphy.com/free-access.php)
 			
 ### Street search ###
-Find streets and the associated informations, for a given GPS point (and an
-				optionnal name). It is very useful for tracking software like Open Gts, but a lot of other use cases.
+Find streets for a given GPS point (and an optional name). Speed-limit, number of lanes, toll or not, surface type, azimuth, etc. For GTS tracking software (e.g : Open GTS or Traccar), but lot of other use cases.
 
-[Doc](https://www.gisgraphy.com/documentation/user-guide.php#streetservice) | [REST API](https://www.gisgraphy.com/documentation/user-guide.php#streetwebservice) | [Java API](https://www.gisgraphy.com/documentation/user-guide.php#streetservicejavaapi) | [Demo](http://services.gisgraphy.com/public/reverse_geocoding_worldwide.html) | [Free
+[Doc](https://www.gisgraphy.com/documentation/user-guide.php#streetservice) | [Demo](https://services.gisgraphy.com/public/streetSearch.html) | [Free
 					access](https://www.gisgraphy.com/free-access.php)
 			
-### Find nearby ###
-Find places, streets, whatever you want, around a GPS point for a given radius.
-				Results can be sorted by distance.
+### Nearby ###
+Find places, POIs, cities, streets around a GPS point for a given radius. Results include and can also be sorted by the distance from the given point. 230+ POIs type availables (e.g : restaurant, station, ATM, PostOffice, Doctor, Parking, tourist information office). Very powerfull when coupled with the reverse geocoding service to find place around an address.
 
-[Doc](https://www.gisgraphy.com/documentation/user-guide.php#geolocservice) | [REST API](https://www.gisgraphy.com/documentation/user-guide.php#geolocwebservice) | [Java API](https://www.gisgraphy.com/documentation/user-guide.php#geolocservicejavaapi) | [Demo](http://services.gisgraphy.com/ajaxgeolocsearch.html) | [Free access](https://www.gisgraphy.com/free-access.php)
+[Doc](https://www.gisgraphy.com/documentation/user-guide.php#geolocservice) | [Demo](http://services.gisgraphy.com/ajaxgeolocsearch.html) | [Free access](https://www.gisgraphy.com/free-access.php)
 			
 ### Fulltext search / Autocompletion ###
-For a given text and an optionnal GPS point, Find places, cities, streets, zip codes,... with informations
-				(coordinates, states, population, elevation, alternate names in many languages). **Auto completion**, location
-				bias, spellchecking, all words required or not...
+For a given text and an optional GPS point, find places, POIs, cities, streets, zip codes,...with its information (coordinates, states, population, elevation, alternate names in many languages and alphabet). Many options availables : Auto completion (as you type), location bias, fuzzy, spell checking, all words required or not, place type filtering,...
 
-[Doc](https://www.gisgraphy.com/documentation/user-guide.php#fulltextservice) | [REST API](https://www.gisgraphy.com/documentation/user-guide.php#fulltextwebservice) | [Java API](https://www.gisgraphy.com/documentation/user-guide.php#fulltextservicejavaapi) | [Demo](http://services.gisgraphy.com/ajaxfulltextsearch.html?advancedSearch=true) | [Free access](https://www.gisgraphy.com/free-access.php)
+[Doc](https://www.gisgraphy.com/documentation/user-guide.php#fulltextservice) | [Demo](http://services.gisgraphy.com/) | [Free access](https://www.gisgraphy.com/free-access.php)
 			
 ### Address parser ###
 
-Divide a single address (as string) into its individual component parts : house
-				number, street type (bd, street, ..), street name, unit (apt, batiment, ...), zipcode, state, country, city.
+Divide a single address (as a string) into its individual component parts : house number, street type (directional, street, ..), street name, unit (apt, building, ...), zip-code, state, country, city. Manage PO boxes and address format in 60+ countries. This software is not open source and can be used on-line as a web-service or a license can be purchased for an unlimited off-line use
 
-[Doc](https://www.gisgraphy.com/documentation/addressparser.htm) | [REST
-					API](https://www.gisgraphy.com/documentation/addressparser.htm#webservice) | [Java API](https://www.gisgraphy.com/documentation/addressparser.htm#javaapi) | [Demo](http://services.gisgraphy.com/public/addressparser.html) | [Free
+[Doc](https://address-parser.net) |  [Demo](https://address-parser.net/try.php) | [Free
 					access](https://www.gisgraphy.com/free-access.php)
 			
 
 ## Addresses / pois / street database in CSV ##
 -----------------
 
-Gisgraphy want to simplify the access to the Openstreetmap data. The model of the openstreetmap data is in
-[XML](http://wiki.openstreetmap.org/wiki/OSM_XML)
-or
-[PBF](http://wiki.openstreetmap.org/wiki/PBF_Format)
-and is not simple to manage. To simplify this, We have Split the main PBF file for each countries.
+We have built a unique and worldwide address, POIs (point of interest), streets, cities, and administrative divisions databases of 500+ millions entries.
 
-All those files are *freely available on our [download server](http://download.gisgraphy.com/)
+Available country per country and in CSV or SQL format to simplify things. We use open data from best open data sources : Openstreetmap, Openaddresses, Geonames, Quattroshapes.
 
-You can also order our address database (or street, cities and administrative division ones) in CSV/TSV format.[Read more](https://www.gisgraphy.com/data/index.php)
+You can order our address database (or street, cities and administrative division ones) in CSV/TSV format.[Read more](https://www.gisgraphy.com/data/index.php)
 
 
 ## Gisgraphoid ###

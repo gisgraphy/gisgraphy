@@ -65,7 +65,7 @@ public class FulltextQuerySolrHelper {
 
 	protected static String ALL_ADM1_NAME_ALL_ADM2_NAME = " all_adm1_name^0.2 all_adm2_name^0.2 ";
 
-	public static final Float MIN_SCORE = 15F;
+	public static final Float MIN_SCORE = 10F;
 	
 	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 	
