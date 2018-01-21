@@ -1,7 +1,7 @@
 # Free, open source, and ready to use geocoder, reverse geocoder and geolocalisation webservices
 * [Demo](#demo)
-* [About us ?](#About-us)
-* [Install it locally](#Install-it-locally)
+* [About us](#about-us)
+* [Install it locally](##install-it-locally)
 * [Webservices overview](#webservices-overview-)
  * [Geocoding](#geocoding)
  * [Reverse geocoding ](#reverse-geocoding)
