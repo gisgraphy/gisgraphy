@@ -117,7 +117,6 @@ You can order our address database (or street, cities and administrative divisio
 -----------------
 *   Importers from geonames / openstreetmap, openaddresses, quattroshapes files. Just give the country(ies) you wish to import and / or the placetypes, and Gisgraphy download the files and import them with all the alternate names
 		(optional) and sync the database with a fulltext search engine
-*   All Openstreetmap data processed in csv format (view [data](https://www.gisgraphy.com/download/download_data.htm))
 	<li>[Leaflet plugins](https://www.gisgraphy.com/documentation/leaflet.php)
 *   WorldWide geocoding / worldWide reverse geocoding / street search WebServices;
 	<li>REST WebService
