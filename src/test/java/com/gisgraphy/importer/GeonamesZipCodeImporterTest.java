@@ -170,7 +170,7 @@ public class GeonamesZipCodeImporterTest {
 		importer.setCityDao(cityDao);
 		importer.setCitySubdivisionDao(citySubdivisionDao);
 		
-		boolean actual = importer.getByShape(countryCode, "code", location);
+		boolean actual = importer.processByShape(countryCode, "code", location);
 		Assert.assertEquals(true, actual);
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code","fr")));
 		EasyMock.verify(cityDao);
@@ -201,7 +201,7 @@ public class GeonamesZipCodeImporterTest {
 		importer.setCitySubdivisionDao(citySubdivisionDao);
 		
 		
-		boolean actual = importer.getByShape(countryCode, "code", location);
+		boolean actual = importer.processByShape(countryCode, "code", location);
 		Assert.assertEquals(true, actual);
 		Assert.assertTrue(city.getZipCodes().contains(new ZipCode("code","fr")));
 		EasyMock.verify(cityDao);
@@ -211,7 +211,7 @@ public class GeonamesZipCodeImporterTest {
     public void WhenACityIsFoundByShapeWeShouldNotFindByLocation(){
     	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
     		@Override
-    		protected boolean getByShape(String countryCode, String code,
+    		protected boolean processByShape(String countryCode, String code,
     				Point zipPoint) {
     			return true;
     		}
@@ -231,7 +231,7 @@ public class GeonamesZipCodeImporterTest {
     	
     	GeonamesZipCodeSimpleImporter importer = new GeonamesZipCodeSimpleImporter(){
     		@Override
-    		protected boolean getByShape(String countryCode, String code,
+    		protected boolean processByShape(String countryCode, String code,
     				Point zipPoint) {
     			return false;
     		}
@@ -285,9 +285,9 @@ public class GeonamesZipCodeImporterTest {
     		
     		
     		@Override
-    		protected GisFeature addNewEntityAndZip(String[] fields) {
+    		protected GisFeature addNewEntityAndZip(String[] fields,GisFeature feature) {
     			Assert.fail("unwanted zip should not be saved");
-    			return super.addNewEntityAndZip(fields);
+    			return super.addNewEntityAndZip(fields,feature);
     		}
     	};
     	importer.processData("AD\t75021 CEDEX 01\tCanillo\t\t\t\t\t\t\t42.5833\t1.6667\t6");
@@ -738,7 +738,7 @@ public class GeonamesZipCodeImporterTest {
     	importerConfig.setTryToDetectAdmIfNotFound(true);
     	importer.setImporterConfig(importerConfig);
     	
-    	GisFeature city = importer.addNewEntityAndZip(fields);
+    	GisFeature city = importer.addNewEntityAndZip(fields,new City());
     	
     	
     	

@@ -66,6 +66,8 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcessor {
 	
+	public static final Float MIN_SCORE = 11F;
+	
 	protected static final Logger logger = LoggerFactory.getLogger(GeonamesZipCodeSimpleImporter.class);
 
     protected IGisFeatureDao gisFeatureDao;
@@ -86,7 +88,13 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
     
     LabelGenerator labelGenerator = LabelGenerator.getInstance();
 
-
+    //some countries have a delivery system and postcode doesn't belong to a city but to a more precise location
+    public final static List<String> precise_Country = new ArrayList<String>(){
+    	{
+    		add("GB");
+    		//add("NL");
+    	}
+    };
 
 
     protected int[] accuracyToDistance = { 50000, 50000, 40000, 10000, 10000, 5000, 3000 };
@@ -149,27 +157,45 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	if (!isEmptyField(fields, 10, true) && !isEmptyField(fields, 9, true)) {
 	    zipPoint = GeolocHelper.createPoint(new Float(fields[10]), new Float(fields[9]));
 	}
-	boolean found = getByShape(countryCode, code, zipPoint);
-	if (found){
-		//we find a city, we return
-		return;
-	}
+	
+	boolean precise = true;
+	GisFeature gisFeature;
+	if (!precise_Country.contains(countryCode)){
+		precise=false;
+		logger.debug("doing search by shape");
+		boolean found = processByShape(countryCode, code, zipPoint);
+		if (found){
+			//we find a city and have set the zipcode, don't need to process further
+			return;
+		}
+    } 
 	
 	Long featureId = findFeature(fields, zipPoint, getAccurateDistance(accuracy));
 	
-	GisFeature gisFeature;
+	
 	if (featureId != null) {
-	    logger.info(dumpFields(fields) +" returns "+ featureId );
+	    logger.debug(dumpFields(fields) +" returns "+ featureId );
 	    gisFeature = addAndSaveZipCodeToFeature(code, featureId);
-	    logger.info("Adding zip " + fields[1] +" to "+gisFeature);
-	} else {
-	    logger.warn(dumpFields(fields) +" returns nothings ");
-	    gisFeature = addNewEntityAndZip(fields);
-	    logger.info("Adding new zip " + fields[1] +" to "+gisFeature);
-	}
+	    //logger.debug("Adding zip " + fields[1] +" to "+gisFeature);
+	} 
+	
+		if (!precise && featureId == null){
+			gisFeature = addNewEntityAndZip(fields,new City());
+			logger.debug("creating zip for city" + fields[1] +" to "+gisFeature);
+			return;
+		} 
+		if (precise){
+			gisFeature = addNewEntityAndZip(fields,new CitySubdivision());
+			logger.debug("creating zip for subdivision " + fields[1] +" to "+gisFeature);
+		}
+	
+	
+	
     }
 
-	protected boolean getByShape(String countryCode, String code, Point zipPoint) {
+	
+
+	protected boolean processByShape(String countryCode, String code, Point zipPoint) {
 		boolean found = false;
 		GisFeature cityByShape = cityDao.getByShape(zipPoint,countryCode,true);
 		if (cityByShape!=null){
@@ -213,6 +239,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	//}
 	FulltextResultsDto results = doAFulltextSearch(query,fields[0],zipPoint);
 	if (results.getNumFound() == 0) {
+		 logger.debug("no result found for "+query );
 	   /* if (extendedsearch) {
 		// do a basic search
 		results = doAFulltextSearch(fields[2], fields[0],zipPoint);
@@ -244,8 +271,10 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 		return null;
 
 	   // }
+		
 	} else if (results.getResults().size() == 1) {
 	    // we found the one!
+		 logger.debug("score for "+fields[2]+"= "+ results.getResults().get(0).getScore()+", id="+results.getResults().get(0).getFeature_id()+" and name="+results.getResults().get(0).getName() );
 		if (StringHelper.isSameName(fields[2], results.getResults().get(0).getName())  ||  results.getResults().get(0).getScore()> MIN_SCORE || StringHelper.isSameAlternateNames(fields[2], results.getResults().get(0).getName_alternates())){
 			return results.getResults().get(0).getFeature_id();
 		} else {
@@ -254,13 +283,14 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	} else {
 		// more than one match iterate and calculate distance and
 	    // take the best one by score
+		 logger.debug("score for "+fields[2]+"= "+ results.getResults().get(0).getScore()+", id="+results.getResults().get(0).getFeature_id()+" and name="+results.getResults().get(0).getName() );
 		for (SolrResponseDto result : results.getResults()){
 			//score is important for case when we search Munchen and city name is Munich
 			if (StringHelper.isSameName(fields[2], result.getName()) ||  result.getScore()> MIN_SCORE || StringHelper.isSameAlternateNames(fields[2], result.getName_alternates())){
 				return result.getFeature_id();
 			} 
 			//shortcut : if score is less than this, the next one will be automatically less, 
-			if (result.getScore()<15){
+			if (result.getScore()<MIN_SCORE){
 				return null;
 			}
 		}
@@ -305,8 +335,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	return accuracyToDistance[accuracyLevel];
     }
 
-    protected GisFeature addNewEntityAndZip(String[] fields) {
-	City city = new City();
+    protected GisFeature addNewEntityAndZip(String[] fields,GisFeature city) {
 	Point location = null;
 	long nextFeatureId = IdGenerator.getNextFeatureId();
 	city.setFeatureId(nextFeatureId);
@@ -315,7 +344,11 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 		logger.warn(name + "is too long");
 		name= name.substring(0, NAME_MAX_LENGTH-1);
 	}
-	city.setName(name);
+	if (city instanceof CitySubdivision){
+		city.setName(fields[1]+", "+name);
+	} else {
+		city.setName(name);
+	}
 	// Location
 	if (!isEmptyField(fields, 9, true) && !isEmptyField(fields, 10, true)) {
 	    location = GeolocHelper.createPoint(new Float(fields[10]), new Float(fields[9]));
@@ -355,7 +388,7 @@ public class GeonamesZipCodeSimpleImporter extends AbstractSimpleImporterProcess
 	city.setLabel(labelGenerator.generateLabel(city));
 	city.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(city));
 	
-	cityDao.save(city);
+	gisFeatureDao.save(city);
 	//we do not return the saved entity for test purpose
 	return city;
     }
