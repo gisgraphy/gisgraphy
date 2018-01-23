@@ -583,6 +583,8 @@ public void testGenerateLabel_Adm(){
 		return i++;
 	}
 	
+	
+	
 	@Test
 	public void testGetFullyQualifiedNameFeatureShouldContainsZipCodeIfCityHasOneZipCode() {
 		City city = GisgraphyTestHelper.createCity("Paris", 1F, 2F, 3L);
@@ -1119,6 +1121,14 @@ public void testGenerateLabel_Adm(){
 			Assert.assertEquals(1, countNumberOfOccurence(actual,"\\(AL\\)"));
 			Assert.assertEquals(1, countNumberOfOccurence(actual,"alabama"));
 		}
+	    @Test
+		public void getFullyQualifiedNameAddressWithCountryCodeShouldNotThrow(){
+			Address address= new Address();
+					
+			address.setCountryCode("XX");
+			System.out.println(generator.getFullyQualifiedName(address));
+			
+	    }
 		
 		@Test
 		public void getFullyQualifiedNameAddress(){

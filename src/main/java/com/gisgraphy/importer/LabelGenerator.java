@@ -517,13 +517,20 @@ public class LabelGenerator {
 				sb.append(countryName);
 				//.append(", ");
 			} else {
-				return sb.substring(0, sb.length()-2);
+				if (sb.length()>=2){
+					return sb.substring(0, sb.length()-2);
+				} else {
+					return sb.toString();
+				}
 			}
 			//sb.append(address.getCountryCode().toUpperCase());
 		}
 		String str =  sb.toString();
 		if (str.trim().endsWith(",")){
-			return str.substring(0, sb.length()-2);
+			if (sb.length()>=2){
+				return str.substring(0, sb.length()-2);
+			} else 
+				return sb.toString();
 		}
 		//System.out.println(str);
 		return str;
