@@ -27,6 +27,7 @@ import java.util.SortedSet;
 import org.springframework.stereotype.Service;
 
 import com.gisgraphy.addressparser.Address;
+import com.gisgraphy.addressparser.AddressResultsDto;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.addressparser.format.DisplayMode;
@@ -275,6 +276,18 @@ public class AddressHelper {
 		address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
 		address.setFormatedPostal(formater.getEnvelopeAddress(address, DisplayMode.COMMA));
 		return address;
+	}
+	
+	public static AddressResultsDto limitNbResult(AddressResultsDto results, int limit) {
+		if (results==null){
+			return new AddressResultsDto();
+		}
+		if (limit >=1 && results.getResult()!=null && results.getResult().size()>1){
+			limit = Math.min(limit, results.getResult().size());
+			results.setResult(results.getResult().subList(0, limit));
+		}
+		
+		return results;
 	}
 
 

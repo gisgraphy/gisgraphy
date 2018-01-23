@@ -105,29 +105,6 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 			openStreetMap =openStreetMapDao.getNearestFrom(point,DEFAULT_STREET_RADIUS);
 		}
 		if (openStreetMap!= null){
-			//stupid patch
-	/*		logger.error("patch admname");
-			City city = cityDao.getByShape(point, null, false);
-			if (city == null){
-				logger.info("No city by shape found, try by vicinity");
-				city = cityDao.getNearest(point,null, false, DEFAULT_RADIUS);
-				if (city == null){
-					logger.error("No city by vicinity found");
-				} else {
-					logger.error("find a city by vicinity "+city.getName()+" / "+city.getId()+"/"+city.getAdm1Name());
-					if (city.getAdm1Name()!= null){
-						openStreetMap.setIsInAdm(city.getAdm1Name());
-					}
-				}
-			} else {
-				logger.info("find a city by shape "+city.getName()+" / "+city.getId()+"/"+city.getAdm1Name());
-				if (city.getAdm1Name()!= null){
-					openStreetMap.setIsInAdm(city.getAdm1Name());
-				}
-			}*/
-				//end of stupid patch
-			
-			
 			logger.debug("found a street "+openStreetMap);
 			if (openStreetMap.getHouseNumbers()!=null && openStreetMap.getHouseNumbers().size() >=1 ){
 				
