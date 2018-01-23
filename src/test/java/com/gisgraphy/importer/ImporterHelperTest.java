@@ -523,11 +523,11 @@ public class ImporterHelperTest {
 	    }
 @Test
 public void doesNotLookAsJson(){
-	Assert.assertFalse(ImporterHelper.doesNotLookAsJson(null));
-	Assert.assertFalse(ImporterHelper.doesNotLookAsJson(""));
-	Assert.assertFalse(ImporterHelper.doesNotLookAsJson("{"));
-	Assert.assertTrue(ImporterHelper.doesNotLookAsJson("{}"));
-	Assert.assertTrue(ImporterHelper.doesNotLookAsJson("{\"price\":\"?\"}"));
+	Assert.assertFalse(ImporterHelper.isJson(null));
+	Assert.assertFalse(ImporterHelper.isJson(""));
+	Assert.assertFalse(ImporterHelper.isJson("{"));
+	Assert.assertTrue(ImporterHelper.isJson("{}"));
+	Assert.assertTrue(ImporterHelper.isJson("{\"price\":\"?\"}"));
 	
 }
 	   

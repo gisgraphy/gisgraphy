@@ -969,7 +969,7 @@ public class ImporterHelper {
 		String url = QUOTE_URL+"?planet="+planet+"&countries="+countrystr;
 		logger.info("will get dump quote for "+url);
 		String content =ImporterHelper.getURLContent(url);
-		if (doesNotLookAsJson(content)){
+		if (!isJson(content)){
 			return "{\"price\":\"?\"}";
 		}
 		return content;
@@ -977,7 +977,7 @@ public class ImporterHelper {
 
 
 
-	protected static boolean doesNotLookAsJson(String test) {
+	protected static boolean isJson(String test) {
 		if (test==null){
 			return false;
 		}
