@@ -55,6 +55,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -968,10 +969,25 @@ public class ImporterHelper {
 		String url = QUOTE_URL+"?planet="+planet+"&countries="+countrystr;
 		logger.info("will get dump quote for "+url);
 		String content =ImporterHelper.getURLContent(url);
-		if (content==null){
+		if (doesNotLookAsJson(content)){
 			return "{\"price\":\"?\"}";
 		}
 		return content;
+	}
+
+
+
+	protected static boolean doesNotLookAsJson(String test) {
+		if (test==null){
+			return false;
+		}
+		try {
+		       final ObjectMapper mapper = new ObjectMapper();
+		       mapper.readTree(test);
+		       return true;
+		    } catch (Exception e) {
+		       return false;
+		    }
 	}
 
 }

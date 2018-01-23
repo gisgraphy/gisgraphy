@@ -521,7 +521,15 @@ public class ImporterHelperTest {
 			Assert.assertTrue(quote.contains("price"));
 			
 	    }
-	    
+@Test
+public void doesNotLookAsJson(){
+	Assert.assertFalse(ImporterHelper.doesNotLookAsJson(null));
+	Assert.assertFalse(ImporterHelper.doesNotLookAsJson(""));
+	Assert.assertFalse(ImporterHelper.doesNotLookAsJson("{"));
+	Assert.assertTrue(ImporterHelper.doesNotLookAsJson("{}"));
+	Assert.assertTrue(ImporterHelper.doesNotLookAsJson("{\"price\":\"?\"}"));
+	
+}
 	   
 	
 }
