@@ -121,11 +121,18 @@ public class ImporterConfig {
 
     public final static String GEONAMES_ALTERNATENAME_ZIP_FILE="alternateNames.zip";
     
+    public final static String GEONAMES_UK_FULL_ZIP_FILE="GB_full.csv.zip";
+    
+    public final static String GEONAMES_UK_FULL_ZIPCODE_FILE="GB_full.csv";
+    
     public final static String GEONAMES_COMPRESSED_FILE_EXTENSION=".zip";
     
     public final static String OPENSTREETAMP_COMPRESSED_FILE_EXTENSION=".gis";
     
     public final static String GEONAMES_DEFAULT_FILES_TO_DOWNLOAD = "allCountries.zip"+OPTION_SEPARATOR+GEONAMES_ALTERNATENAME_ZIP_FILE;
+    
+    public final static String GEONAMES_DEFAULT_ZIP_FILES_TO_DOWNLOAD = "allCountries.zip"+OPTION_SEPARATOR+GEONAMES_UK_FULL_ZIP_FILE;
+    
     
     
 
@@ -207,6 +214,8 @@ public class ImporterConfig {
     private boolean retrieveFiles = false;
 
     private String geonamesFilesToDownload = "";
+    
+    private String geonamesZipFilesToDownload = "";
 
     private String openStreetMapFilesToDownload = "";
     
@@ -467,8 +476,41 @@ public class ImporterConfig {
 	}
 	logger.debug("set geonamesZipCodeDir to " + this.geonamesZipCodeDir);
     }
+    
+    /**
+     * @return The option
+     * @see #setGeonamesFilesToDownload(String)
+     */
+    public String getGeonamesZipFilesToDownload() {
+    	return this.geonamesZipFilesToDownload;
+    }
+    
+    /**
+     * The list of the Geonames files to be download from the
+     * {@link #geonamesDownloadURL}. the several files will be separated by
+     * {@link #OPTION_SEPARATOR}, if not set or null, defaulting to {@link #GEONAMES_DEFAULT_FILES_TO_DOWNLOAD}
+     * 
+     * @param geonamesFilesToDownload
+     *            the filesToDownload to set
+     */
+    @Required
+    public void setGeonamesZipFilesToDownload(String geonamesZipFilesToDownload) {
+	if (geonamesZipFilesToDownload == null || geonamesZipFilesToDownload.trim().equals("")) {
+	    logger.warn("the option geonamesZipFilesToDownload is not set and will be set to his default value : " + GEONAMES_DEFAULT_ZIP_FILES_TO_DOWNLOAD);
+	    this.geonamesZipFilesToDownload = GEONAMES_DEFAULT_ZIP_FILES_TO_DOWNLOAD;
+	} else {
+	    this.geonamesZipFilesToDownload = geonamesZipFilesToDownload;
+	    logger.info("geonamesZipFilesToDownload=" + geonamesZipFilesToDownload);
+	}
+    }
 
-   
+    /**
+     * @return A list of string with the files to be download, processed from
+     *         {@link #geonamesFilesToDownload}
+     */
+    public List<String> getGeonamesDownloadZipFilesListFromOption() {
+    	return splitSemiColmunStringToList(geonamesZipFilesToDownload);
+    }
 
     
     

@@ -357,6 +357,7 @@
 		<property name="geonamesZipCodeDownloadURL" value="${importer.geonames.zipcode.downloadURL}"/>
 		<property name="retrieveFiles" value="${importer.retrieveFiles}"/>
 		<property name="geonamesFilesToDownload" value="${importer.geonamesFilesToDownload}"/>
+		<property name="geonamesZipFilesToDownload" value="${importer.geonamesZipFilesToDownload}"/>
 		<property name="openStreetMapFilesToDownload" value="${importer.openstreetmapFilesToDownload}"/>
 		<property name="openAddressesFilesToDownload" value="${importer.openaddressesFilesToDownload}"/>
 		<property name="openStreetMapHouseNumberFilesToDownload" value="${importer.openstreetmapHouseNumberFilesToDownload}"/>

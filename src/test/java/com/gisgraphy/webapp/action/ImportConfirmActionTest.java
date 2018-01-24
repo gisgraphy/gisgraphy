@@ -169,6 +169,7 @@ public class ImportConfirmActionTest {
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapCitiesFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapPoisFilesToDownload());
     	Assert.assertEquals(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getGeonamesFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.GEONAMES_DEFAULT_ZIP_FILES_TO_DOWNLOAD, importerConfig.getGeonamesZipFilesToDownload());
     }
     
     @Test
@@ -185,6 +186,7 @@ public class ImportConfirmActionTest {
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapAdmFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapPoisFilesToDownload());
     	Assert.assertEquals(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getGeonamesFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.GEONAMES_DEFAULT_ZIP_FILES_TO_DOWNLOAD, importerConfig.getGeonamesZipFilesToDownload());
     }
     
     @Test
@@ -194,19 +196,21 @@ public class ImportConfirmActionTest {
     	action.setImporterConfig(importerConfig);
     	action.setImportallcountries(false);
     	List<String> countryCodes = new ArrayList<String>();
+    	countryCodes.add("GB");//test to upper case
     	countryCodes.add("fr");//test to upper case
     	countryCodes.add("DE");
     	countryCodes.add("US");
     	countryCodes.add("x");//countrycode should only have two letters
     	action.setCountryCodes(countryCodes);
     	action.setConfig();
-    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapFilesToDownload());
-    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenAddressesFilesToDownload());
-    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
-    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapCitiesFilesToDownload());
-    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapAdmFilesToDownload());
-    	Assert.assertEquals("FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapPoisFilesToDownload());
-    	Assert.assertEquals("FR.zip;DE.zip;US.zip;"+ImporterConfig.GEONAMES_ALTERNATENAME_ZIP_FILE, importerConfig.getGeonamesFilesToDownload());
+    	Assert.assertEquals("GB.gis;FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapFilesToDownload());
+    	Assert.assertEquals("GB.gis;FR.gis;DE.gis;US.gis", importerConfig.getOpenAddressesFilesToDownload());
+    	Assert.assertEquals("GB.gis;FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
+    	Assert.assertEquals("GB.gis;FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapCitiesFilesToDownload());
+    	Assert.assertEquals("GB.gis;FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapAdmFilesToDownload());
+    	Assert.assertEquals("GB.gis;FR.gis;DE.gis;US.gis", importerConfig.getOpenStreetMapPoisFilesToDownload());
+    	Assert.assertEquals("GB.zip;FR.zip;DE.zip;US.zip;"+ImporterConfig.GEONAMES_ALTERNATENAME_ZIP_FILE, importerConfig.getGeonamesFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.GEONAMES_UK_FULL_ZIP_FILE+";FR.zip;DE.zip;US.zip;", importerConfig.getGeonamesZipFilesToDownload());
     }
     
     @Test

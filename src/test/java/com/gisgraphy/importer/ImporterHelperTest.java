@@ -192,6 +192,9 @@ public class ImporterHelperTest {
 
 			File goodFilePatternUSForGeonames = new File(tempDirectoryPath + File.separator + "US.txt");
 			goodFilePatternUSForGeonames.createNewFile();
+			
+			File goodFilePatternUKFullZipForGeonames = new File(tempDirectoryPath + File.separator + "GB_full.csv");
+			goodFilePatternUKFullZipForGeonames.createNewFile();
 
 			File goodFilePatternUS2 = new File(tempDirectoryPath + File.separator + "US.12.txt");
 			goodFilePatternUS2.createNewFile();
@@ -217,7 +220,7 @@ public class ImporterHelperTest {
 			File badFilePatternWithALLCountriesPattern = new File(tempDirectoryPath + File.separator + ImporterHelper.ALLCOUTRY_FILENAME);
 			badFilePatternWithALLCountriesPattern.createNewFile();
 
-			assertEquals("wrongnumber of files created ", 12, tempDir.listFiles().length);
+			assertEquals("wrongnumber of files created ", 13, tempDir.listFiles().length);
 
 			File[] fileToBeImported = ImporterHelper.listCountryFilesToImport(tempDirectoryPath);
 			assertEquals(1, fileToBeImported.length);
@@ -226,7 +229,7 @@ public class ImporterHelperTest {
 			assertTrue(" the ImporterHelper.ALLCOUTRY_FILENAME can not be deleted ", badFilePatternWithALLCountriesPattern.delete());
 
 			fileToBeImported = ImporterHelper.listCountryFilesToImport(tempDirectoryPath);
-			assertEquals("Only UppercaseFile with two letters and US.NUMBER.txt should be listed ", 5, fileToBeImported.length);
+			assertEquals("Only UppercaseFile with two letters and US.NUMBER.txt should be listed ", 6, fileToBeImported.length);
 		} finally {
 			assertTrue("the tempDir has not been deleted", GisgraphyTestHelper.DeleteNonEmptyDirectory(tempDir));
 		}

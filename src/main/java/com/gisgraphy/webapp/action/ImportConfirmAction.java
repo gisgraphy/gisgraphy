@@ -151,14 +151,21 @@ public class ImportConfirmAction extends ActionSupport {
 			importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapPoisFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
+			importerConfig.setGeonamesZipFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_ZIP_FILES_TO_DOWNLOAD);
 			
 		} else {
 			if (getCountryCodes() != null && getCountryCodes().size() > 0) {
 				importerConfig.setCountryCodes(countryCodes);
 				StringBuffer geonamesCountryFileList = new StringBuffer();
+				StringBuffer geonamesZipCountryFileList = new StringBuffer();
 				StringBuffer openstreetmapCountryFileList = new StringBuffer();
 				for (String country : countryCodes) {
 					if (country != null && country.length() == 2) {
+						if (country.equalsIgnoreCase("GB")){
+							geonamesZipCountryFileList.append(ImporterConfig.GEONAMES_UK_FULL_ZIP_FILE).append(ImporterConfig.OPTION_SEPARATOR);
+						}else {
+							geonamesZipCountryFileList.append(country.toUpperCase()).append(ImporterConfig.GEONAMES_COMPRESSED_FILE_EXTENSION).append(ImporterConfig.OPTION_SEPARATOR);
+						}
 						geonamesCountryFileList.append(country.toUpperCase()).append(ImporterConfig.GEONAMES_COMPRESSED_FILE_EXTENSION).append(ImporterConfig.OPTION_SEPARATOR);
 						openstreetmapCountryFileList.append(country.toUpperCase()).append(ImporterConfig.OPENSTREETAMP_COMPRESSED_FILE_EXTENSION).append(ImporterConfig.OPTION_SEPARATOR);
 					}
@@ -169,6 +176,7 @@ public class ImportConfirmAction extends ActionSupport {
 					openstreetmapCountryFileListAsString = openstreetmapCountryFileListAsString.substring(0, openstreetmapCountryFileListAsString.length() - 1);
 				}
 				String geonamesFileList = geonamesCountryFileList.toString();
+				String geonamesZipFileList = geonamesZipCountryFileList.toString();
 				importerConfig.setOpenAddressesFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapHouseNumberFilesToDownload(openstreetmapCountryFileListAsString);
@@ -176,6 +184,7 @@ public class ImportConfirmAction extends ActionSupport {
 				importerConfig.setOpenStreetMapAdmFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapPoisFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setGeonamesFilesToDownload(geonamesFileList);
+				importerConfig.setGeonamesZipFilesToDownload(geonamesZipFileList);
 				// TODO +log
 			} else {
 				logger.info("Import all countries is false but no country list recieved,set list to default");
@@ -186,6 +195,7 @@ public class ImportConfirmAction extends ActionSupport {
 				importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapPoisFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
+				importerConfig.setGeonamesZipFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_ZIP_FILES_TO_DOWNLOAD);
 			}
 		}
 		logger.info("openstreetmap files to download wizard : "+importerConfig.getOpenStreetMapFilesToDownload());

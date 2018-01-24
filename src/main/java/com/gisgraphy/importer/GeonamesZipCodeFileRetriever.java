@@ -72,17 +72,38 @@ public class GeonamesZipCodeFileRetriever extends AbstractFileRetriever {
      * ()
      */
     public void decompressFiles() throws IOException  {
-	File[] filesToUnZip = getFilesToProcess();
-	for (int i = 0; i < filesToUnZip.length; i++) {
-	    ImporterHelper.unzipFile(filesToUnZip[i]);
-	}
+    	File[] filesToUnZip = getFilesToProcess();
+    	for (int i = 0; i < filesToUnZip.length; i++) {
+    		ImporterHelper.unzipFile(filesToUnZip[i]);
+    	}
 
-	// for log purpose
-	File[] filesToImport = ImporterHelper.listCountryFilesToImport(getDownloadDirectory());
+    	manageUK();
 
-	for (int i = 0; i < filesToImport.length; i++) {
-	    logger.info("the files " + filesToImport[i].getName() + " will be imported");
-	}
+    	// for log purpose
+    	File[] filesToImport = ImporterHelper.listCountryFilesToImport(getDownloadDirectory());
+
+    	for (int i = 0; i < filesToImport.length; i++) {
+    		logger.info("the files " + filesToImport[i].getName() + " will be imported");
+    	}
+    }
+    
+    protected void manageUK(){
+    	File[] filesToImport = ImporterHelper.listCountryFilesToImport(getDownloadDirectory());
+    	File ukFile = null;
+    	File ukFullFile=null;
+    	for (int i = 0; i < filesToImport.length; i++) {
+    		if (filesToImport[i].getName().equals("GB_full.csv")){
+    			ukFullFile = filesToImport[i];
+    		} else if (filesToImport[i].getName().equals("GB.txt")){
+    			ukFile = filesToImport[i];
+    		}
+    	}
+    	
+    	if (ukFile!=null && ukFullFile!=null){
+    		ukFile.delete();
+    	}
+    	
+    	
     }
 
     /*
@@ -102,12 +123,12 @@ public class GeonamesZipCodeFileRetriever extends AbstractFileRetriever {
      */
     @Override
     List<String> getFilesToDownload() {
-	return importerConfig.getGeonamesDownloadFilesListFromOption();
+    	return importerConfig.getGeonamesDownloadZipFilesListFromOption();
     }
 
     @Override
     public File[] getFilesToProcess() throws IOException {
-	return ImporterHelper.listZipFiles(getDownloadDirectory());
+    	return ImporterHelper.listZipFiles(getDownloadDirectory());
     }
 
     @Override

@@ -88,6 +88,8 @@ public class ImporterHelper {
      * The regexp that every country file dump matches
      */
     public static final String GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING = "[A-Za-z][A-Za-z](.txt)";
+    
+    public static final String GEONAMES_UK_FULLFILE_ACCEPT_REGEX_STRING = "GB_full.csv";
 
     public static final String OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING = "[A-Za-z][A-Za-z](.txt|.dat)";
     
@@ -180,11 +182,12 @@ public class ImporterHelper {
     public static FileFilter countryFileFilter = new FileFilter() {
 	public boolean accept(File file) {
 	    Pattern patternGeonames = Pattern.compile(GEONAMES_COUNTRY_FILE_ACCEPT_REGEX_STRING,Pattern.CASE_INSENSITIVE);
+	    Pattern patternUKFullZipGeonames = Pattern.compile(GEONAMES_UK_FULLFILE_ACCEPT_REGEX_STRING,Pattern.CASE_INSENSITIVE);
 	    Pattern patternOpenStreetMapUS = Pattern.compile(OPENSTREETMAP_FILE_ACCEPT_REGEX_STRING,Pattern.CASE_INSENSITIVE);
 	    Pattern patternQuattroshapes = Pattern.compile(QUATTROSHAPES_FILE_ACCEPT_REGEX_STRING,Pattern.CASE_INSENSITIVE);
 
 	    return (file.isFile() && file.exists()) && !EXCLUDED_README_FILENAME.equals(file.getName())
-		    && ( patternGeonames.matcher(file.getName()).matches() || ALLCOUTRY_FILENAME.equals(file.getName()) || patternOpenStreetMapUS.matcher(file.getName()).matches() || patternQuattroshapes.matcher(file.getName()).matches());
+		    && ( patternGeonames.matcher(file.getName()).matches() || patternUKFullZipGeonames.matcher(file.getName()).matches() || ALLCOUTRY_FILENAME.equals(file.getName()) || patternOpenStreetMapUS.matcher(file.getName()).matches() || patternQuattroshapes.matcher(file.getName()).matches());
 	}
     };
     
@@ -225,34 +228,51 @@ public class ImporterHelper {
      */
     public static File[] listCountryFilesToImport(String directoryPath) {
 
-	File dir = new File(directoryPath);
+    	File dir = new File(directoryPath);
 
-	File[] files = dir.listFiles(countryFileFilter);
+    	File[] files = dir.listFiles(countryFileFilter);
 
-	if (files == null) {
-	    return new File[0];
-	}
+    	if (files == null) {
+    		return new File[0];
+    	}
 
-	for (File file : files) {
-	    if (ALLCOUTRY_FILENAME.equals(file.getName())) {
-		files = new File[1];
-		files[0] = file;
-		logger.info(ALLCOUTRY_FILENAME + " is present. Only this file will be imported. all other country files will be ignore");
-		break;
-	    }
-	}
-	
-	if (files.length==0){
-	    logger.warn("there is no file to import in "+directoryPath);
-	}
 
-	// for Log purpose
-	for (int i = 0; i < files.length; i++) {
-	    logger.info(files[i].getName() + " is an importable File");
-	}
-	logger.info(files.length +" files are importable files");
+    	File ukfullZipfile = null;
+    	for (File file : files) {
+    		if (ImporterConfig.GEONAMES_UK_FULL_ZIPCODE_FILE.equals(file.getName())) {
+    			logger.info(ImporterConfig.GEONAMES_UK_FULL_ZIPCODE_FILE + " is present.");
+    			ukfullZipfile=file;
+    			break;
+    		}
+    	}
 
-	return files;
+    	for (File file : files) {
+    		if (ALLCOUTRY_FILENAME.equals(file.getName())) {
+    			if (ukfullZipfile!=null){
+    				files = new File[2];
+    				files[0] = file;
+    				files[1] = ukfullZipfile;
+    				logger.info(ALLCOUTRY_FILENAME + " is present. Only this file and "+ImporterConfig.GEONAMES_UK_FULL_ZIPCODE_FILE+" will be imported. all other country files will be ignore");
+    			} else {
+    				files = new File[1];
+    				files[0] = file;
+    				logger.info(ALLCOUTRY_FILENAME + " is present. Only this file will be imported. all other country files will be ignore");
+    			}
+    			break;
+    		}
+    	}
+
+    	if (files.length==0){
+    		logger.warn("there is no file to import in "+directoryPath);
+    	} else {
+
+    		// for Log purpose
+    		for (int i = 0; i < files.length; i++) {
+    			logger.info(files[i].getName() + " is an importable File");
+    		}
+    		logger.info(files.length +" files are importable files");
+    	}
+    	return files;
     }
 
     
