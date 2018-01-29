@@ -33,6 +33,7 @@ public class ZipcodeNormalizer {
     private final static int REGEXP_CASEINSENSITIVE_FLAG = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
     private final static String CA_PATTERN_EXPRESSION = "(?<=[a-z]\\d[a-z])[\\s–\\-]?\\d[a-z]\\d";
     private final static Pattern CA_PATTERN = Pattern.compile(CA_PATTERN_EXPRESSION, REGEXP_CASEINSENSITIVE_FLAG);
+    public static final Pattern ZIP_PATTERN = Pattern.compile("(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9‌​][0-9]?)|(([A-Z-[QVX‌​]][0-9][A-HJKSTUW])|‌​([A-Z-[QVX]][A-Z-[IJ‌​Z]][0-9][ABEHMNPRVWX‌​Y]))))\\s?[0-9][A-Z-[‌​CIKMOV]]{2})",Pattern.CASE_INSENSITIVE);
     
     private final static String GB_PATTERN_EXPRESSION = "(?<=[A-Z]{2}\\d[A-Z])\\s?\\d[A-Z]{2}|(?<=[A-Z]{2}\\d{2})\\s?\\d[A-Z]{2}|(?<=[A-Z]\\d)\\s?\\d[A-Z]{2}|(?<=[A-Z]{2}\\d)\\s?\\d[A-Z]{2}|(?<=[A-Z]\\d[A-Z])\\s?\\d[A-Z]{2}|(?<=[A-Z]\\d{2})\\s?\\d[A-Z]{2}|(?<=GIR)\\s?0AA|(?<=[A-Z]{4})\\s?1ZZ";
   //LLNL NLL|LLNN NLL|LN NLL|LLN NLL|LNL NLL|LNN NLL|
@@ -54,13 +55,13 @@ public class ZipcodeNormalizer {
 	if (string==null){
 	    return null;
 	}
-	if (countryCode == null || "".equals(countryCode.trim())){
-	    return  normalize_ca(normalize_gb(string));
-	} else if("GB".equalsIgnoreCase(countryCode)){
+	if (countryCode == null || "".equals(countryCode.trim())|| "CA".equalsIgnoreCase(countryCode)){
+	    return  normalize_ca(string);
+	} /*else if("GB".equalsIgnoreCase(countryCode)){
 	    return normalize_gb(string);
 	} else if ("CA".equalsIgnoreCase(countryCode)){
 	    return normalize_ca(string); 
-	} else {
+	} */else {
 	    return string;
 	}
 	
@@ -90,6 +91,30 @@ public class ZipcodeNormalizer {
 	}
 	return pattern.matcher(string).replaceAll("").trim();
     }
+    
+    public static String fixGBZipCode(String zipcode){
+		if (zipcode!=null){
+			Matcher m = ZIP_PATTERN.matcher(zipcode);
+			if (m.find()){
+				zipcode=zipcode.replace(m.group(0), m.group(0).replace(" ", "-"));
+			}
+		}
+		System.out.println("return new ZIP"+zipcode);
+		return zipcode;
+		
+		
+	}
+    
+    public static boolean containsGBPostCode(String zipcode){
+		if (zipcode!=null){
+			Matcher m = ZIP_PATTERN.matcher(zipcode);
+			if (m.find()){
+				return true;
+			}
+		}return false;
+		
+		
+	}
 
    
 }

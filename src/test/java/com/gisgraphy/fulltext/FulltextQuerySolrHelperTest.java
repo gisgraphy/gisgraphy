@@ -25,7 +25,6 @@ import static com.gisgraphy.domain.valueobject.Pagination.paginate;
 import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.BF_NEAREST;
 import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.BF_POPULATION;
 import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.CITY_BOOST_QUERY;
-import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.FUZZY_FACTOR;
 import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.MAX_RADIUS_IN_METER;
 import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.MM_NOT_ALL_WORD_REQUIRED;
 import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.NESTED_QUERY_NOT_ALL_WORDS_REQUIRED_TEMPLATE;
@@ -1853,4 +1852,6 @@ public class FulltextQuerySolrHelperTest {
 		Assert.assertEquals("Am Silberberg 2 ", FulltextQuerySolrHelper.clean(" Am Silberberg 2 - "));
 	}
 
+	
+	
 }

@@ -65,6 +65,7 @@ import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.SmartStreetDetection;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.fulltext.SolrResponseDtoDistanceComparator;
+import com.gisgraphy.geoloc.ZipcodeNormalizer;
 import com.gisgraphy.helper.CountryDetector;
 import com.gisgraphy.helper.CountryDetectorDto;
 import com.gisgraphy.helper.GeolocHelper;
@@ -444,15 +445,15 @@ public class GeocodingService implements IGeocodingService {
 			List<SolrResponseDto> filterResults = new ArrayList<SolrResponseDto>();
 			for (SolrResponseDto result: exactMatches){
 				boolean added= false;
-				if(result!=null && result.getName()!=null && StringHelper.isSameName(rawaddress, result.getName(),1)){
+				if(result!=null && result.getName()!=null && (StringHelper.isSameName(rawaddress, result.getName(),1) || ZipcodeNormalizer.containsGBPostCode(rawaddress))){
 					filterResults.add(result);
 					added =true;
-					logger.error("filter same name, adding "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
+					logger.error("filter same name, adding "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
 				}
 				else if (!added){
 					for (String nameAlternate : result.getName_alternates()){
 						if (nameAlternate!=null && StringHelper.isSameName(rawaddress, nameAlternate,1)){
-							logger.error("filter same name, adding alternate "+(result.getOpenstreetmap_id()==null?result.getOpenstreetmap_id():result.getFeature_id())+" :  "+nameAlternate+" / "+result.getFully_qualified_name() );
+							logger.error("filter same name, adding alternate "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+" :  "+nameAlternate+" / "+result.getFully_qualified_name() );
 							filterResults.add(result);
 							added=true;
 							break;
@@ -461,7 +462,7 @@ public class GeocodingService implements IGeocodingService {
 					
 				}
 				if (!added){
-					logger.error("filter same name, ignoring :"+result.getFully_qualified_name() );
+					logger.error("filter same name, ignoring :"+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
 				}
 			}
 			if (!filterResults.isEmpty()){

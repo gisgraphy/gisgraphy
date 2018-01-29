@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.util.ClientUtils;
@@ -50,6 +52,7 @@ import com.gisgraphy.domain.valueobject.Constants;
 import com.gisgraphy.domain.valueobject.Output.OutputStyle;
 import com.gisgraphy.fulltext.spell.SpellCheckerConfig;
 import com.gisgraphy.geocoding.GeocodingService;
+import com.gisgraphy.geoloc.ZipcodeNormalizer;
 import com.gisgraphy.serializer.common.OutputFormat;
 
 /**
@@ -79,7 +82,8 @@ public class FulltextQuerySolrHelper {
 	public static final String OPENSTREETMAPID_PREFIX = FullTextFields.OPENSTREETMAP_ID.getValue()+":";
 	
 	public static final int MAX_RADIUS_IN_METER = 100000;
-
+	
+	
 	private static SmartStreetDetection smartStreetDetection = new SmartStreetDetection();
 
 	private static OutputStyleHelper outputStyleHelper = new OutputStyleHelper();
@@ -310,6 +314,7 @@ public class FulltextQuerySolrHelper {
 				if (isAdministrative(query.getPlaceTypes())){
 					is_in=ALL_ADM1_NAME_ALL_ADM2_NAME;
 				}
+				queryString=ZipcodeNormalizer.fixGBZipCode(queryString);
 				querybuffer = new StringBuffer(String.format(NESTED_QUERY_TEMPLATE,is_in,bqField,mm,bfField,queryString));
 			//}
 			parameters.set(Constants.QT_PARAMETER, Constants.SolrQueryType.advanced
@@ -678,4 +683,7 @@ public class FulltextQuerySolrHelper {
 		sb.append(") ");
 		return sb.toString();
 	}
+	
+	
+	
 }
