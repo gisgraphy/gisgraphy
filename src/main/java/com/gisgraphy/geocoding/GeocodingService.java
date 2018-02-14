@@ -90,13 +90,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 @Service
 public class GeocodingService implements IGeocodingService {
-	private static final String HN_REGEXP = "((("
-			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
-			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,\\.;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b$|avenue\\b$|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))"
-			+ "|(((?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
-			+ "|\\s(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
-			+ "|(?:\\b\\d{1,4}\\b\\s?(?:[a-d])?\\b$)"
-			+")";
+	
 
 	private static final String FUZZY_ACTIVE = "fuzzy:active";
 	//private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
@@ -127,53 +121,8 @@ public class GeocodingService implements IGeocodingService {
 	public final static Pagination FIVE_RESULT_PAGINATION = Pagination.paginate().from(0).to(5);
 	public final static Pagination TEN_RESULT_PAGINATION = Pagination.paginate().from(0).to(10);
 	public final static SolrResponseDtoDistanceComparator comparator = new SolrResponseDtoDistanceComparator();
-	//public final static Pattern HOUSENUMBERPATTERN = Pattern.compile("((((?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b))(?=\\w+)+?))");
-	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile(HN_REGEXP,
-			Pattern.CASE_INSENSITIVE);
-	//
-	//
 	
-	public final static Pattern FIRST_NUMBER_EXTRACTION_PATTERN = Pattern.compile("^([0-9]+)");
-	public final static List<String> countryWithZipIs4Number= new ArrayList<String>(){
-		{
-			add("GE");
-			add("AS");
-			add("AU");
-			add("BD");
-			add("CH");
-			add("CK");
-			add("CR");
-			add("CY");
-			add("HU");
-			add("HM");
-			add("LR");
-			add("SJ");
-			add("MK");
-			add("MZ");
-			add("NE");
-			add("NZ");
-			add("PH");
-			add("VE");
-			add("CV");
-			add("CX");
-			add("ET");
-			add("GW");
-			add("ZA");
-			add("LI");
-			add("LU");
-			add("PY");
-			}
-	};
 	
-	public final static List<String> countryWithZipIs3Number= new ArrayList<String>(){
-		{
-			add("GN");
-			add("IS");
-			add("LS");
-			add("OM");
-			add("PG");
-			}
-	};
 	
 	
 	Decompounder decompounder = new Decompounder();
@@ -313,7 +262,7 @@ public class GeocodingService implements IGeocodingService {
 			statsUsageService.increaseUsage(StatsUsageType.GEOCODING);
 			AddressResultsDto results;
 			rawAddress = StringHelper.prepareQuery(rawAddress);
-			HouseNumberAddressDto houseNumberAddressDto = findHouseNumber(rawAddress, countryCode);
+			HouseNumberAddressDto houseNumberAddressDto = GeocodingHelper.findHouseNumber(rawAddress, countryCode);
 			String newAddress = rawAddress;
 			
 			String houseNumber = null;
@@ -995,53 +944,7 @@ public class GeocodingService implements IGeocodingService {
 		}
 	}
 
-	protected HouseNumberAddressDto findHouseNumber(String address,
-			String countryCode) {
-		if (address == null) {
-			return null;
-		}
-		Matcher m = HOUSENUMBERPATTERN.matcher(address);
-		if (m.find()) {
-			String houseNumber = m.group().trim();
-			
-			if (houseNumber != null) {
-
-				Matcher m2 = FIRST_NUMBER_EXTRACTION_PATTERN
-						.matcher(houseNumber);
-				if (m2.find()) {
-					houseNumber = m2.group();
-				}
-			}
-			if (houseNumber.length() >=4 && (address.trim().indexOf(houseNumber)+houseNumber.length()) >= address.length()-3){
-				//it is probably a zip code
-				return null;
-			}
-			String newAddress;
-			if (countryCode !=null){
-				countryCode = countryCode.toUpperCase();
-			}
-			if (houseNumber.length() == 4 && (countryCode == null || (countryCode!= null && countryWithZipIs4Number.contains(countryCode)))  
-					|| houseNumber.length() == 3 && (countryCode!= null && countryWithZipIs3Number.contains(countryCode)) 
-					){
-				logger.info("found house number " + houseNumber + " in '" + address
-						+ "' for country '"+countryCode+"' but we don't remove it since it can be a zipcode");
-				newAddress = address;
-			} else {
-				newAddress = m.replaceFirst("").trim();
-				newAddress = newAddress.replaceFirst("^[,\\s]+", "");
-				
-			}
-			HouseNumberAddressDto houseNumberAddressDto = new HouseNumberAddressDto(
-					newAddress, address, houseNumber);
-			logger.info("found house number " + houseNumber + " in '" + address
-					+ "' for countrycode = '"+countryCode+"', new address wo housenumber = " + newAddress);
-			return houseNumberAddressDto;
-		} else {
-			logger.info("no house number found in " + address);
-			return null;
-		}
-
-	}
+	
 
 	@Autowired
 	public void setAddressParser(IAddressParserService addressParser) {

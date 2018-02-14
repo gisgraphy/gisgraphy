@@ -23,6 +23,7 @@
 package com.gisgraphy.fulltext;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -37,6 +38,11 @@ import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.module.SimpleModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +54,18 @@ import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.repository.GisFeatureDao;
 import com.gisgraphy.domain.valueobject.Constants;
+import com.gisgraphy.domain.valueobject.HouseNumberAddressDto;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchEntry;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchResponse;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchResponseHeader;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchResult;
+import com.gisgraphy.geocoding.GeocodingHelper;
 import com.gisgraphy.geoloc.ZipcodeNormalizer;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.service.ServiceException;
 import com.gisgraphy.stats.StatsUsageType;
+import com.gisgraphy.street.HouseNumberDeserializer;
+import com.gisgraphy.street.HouseNumberDto;
 
 /**
  * Default (threadsafe) implementation of {@link IFullTextSearchEngine}
@@ -75,6 +89,9 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
     private IsolrClient solrClient;
     
     FulltextResultDtoBuilder builder = new FulltextResultDtoBuilder();
+    HouseNumberDeserializer houseNumberDeserializer = new HouseNumberDeserializer();
+    
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     @Qualifier("gisFeatureDao")
@@ -124,14 +141,51 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
      * @see com.gisgraphy.domain.geoloc.service.fulltextsearch.IFullTextSearchEngine#executeAndSerialize(com.gisgraphy.domain.geoloc.service.fulltextsearch.FulltextQuery,
      *      java.io.OutputStream)
      */
+    @SuppressWarnings("deprecation")
     public void executeAndSerialize(FulltextQuery query,
-	    OutputStream outputStream) throws FullTextSearchException {
-	statsUsageService.increaseUsage(StatsUsageType.FULLTEXT);
-	Assert.notNull(query, "Can not execute a null query");
-	Assert.notNull(outputStream,
-		"Can not serialize into a null outputStream");
-	String queryString = ZipcodeNormalizer.normalize(query.getQuery(), query.getCountryCode());
-	query.withQuery(queryString);
+    		OutputStream outputStream) throws FullTextSearchException {
+    	statsUsageService.increaseUsage(StatsUsageType.FULLTEXT);
+    	Assert.notNull(query, "Can not execute a null query");
+    	Assert.notNull(outputStream,
+    			"Can not serialize into a null outputStream");
+    	String queryString = ZipcodeNormalizer.normalize(query.getQuery(), query.getCountryCode());
+    	query.withQuery(queryString);
+    	if (query.isSuggest()){
+    		HouseNumberAddressDto dto = GeocodingHelper.findHouseNumber(queryString,query.getCountryCode());
+    		if (dto !=null && dto.getHouseNumber()!=null){
+    			if (!dto.getAddressWithoutHouseNumber().trim().isEmpty()){
+    				query.withQuery(dto.getAddressWithoutHouseNumber());
+    				try {
+    					String feed = executeQueryToString(query);
+    					GisgraphySearchResult feedAsObj = mapper.readValue(feed, GisgraphySearchResult.class);
+    					feedAsObj = updateFeed(feedAsObj,dto.getHouseNumber());
+    					mapper.writeValue(outputStream, feedAsObj);
+    				} catch (Exception e) {
+    					String message = e.getCause()!=null?e.getCause().getMessage():e.getMessage();
+    					logger
+    					.error("An error has occurred during suggest search of query "
+    							+ query + " : " + message,e);
+    					throw new FullTextSearchException(message,e);
+    				}
+    			} else {
+    				GisgraphySearchResult result = new GisgraphySearchResult();
+    				result.setResponse(new GisgraphySearchResponse());
+    				result.setResponseHeader(new GisgraphySearchResponseHeader());
+    				try {
+    					mapper.writeValue(outputStream, result);
+    				} catch (Exception e) {
+    					String message = e.getCause()!=null?e.getCause().getMessage():e.getMessage();
+    					logger
+    					.error("An error has occurred during suggest search of query "
+    							+ query + " : " + message,e);
+    					throw new FullTextSearchException(message,e);
+    				}
+    			}
+    		}
+		//if no HN found, we do the common process
+		
+		
+	}
 	try {
 		if (!disableLogging){
 			logger.info(query.toString());
@@ -161,7 +215,34 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
 
     }
 
-    /*
+    protected GisgraphySearchResult updateFeed(GisgraphySearchResult feedAsObj,String number) {
+    	if (number == null || number.isEmpty() || feedAsObj ==null || feedAsObj.getResponse() == null || feedAsObj.getResponse().getDocs() ==null){
+    		return feedAsObj;	
+    	}
+    	    List<GisgraphySearchEntry> docs = feedAsObj.getResponse().getDocs();
+    	    for (GisgraphySearchEntry entry : docs){
+    	    	boolean found = false;
+    	    	List<String> house_numbers = entry.getHouseNumbers();
+        	    if (house_numbers !=null ) {
+        	    	for (String houseNumber: house_numbers){
+        	    		HouseNumberDto dto = houseNumberDeserializer
+							.deserialize(houseNumber);
+        	    		if (dto.getNumber()!=null &&  dto.getNumber().equals(number) && !found){
+        	    			  found = true;
+        	    			  logger.error("find hn "+dto.getNumber()+ " for "+entry.getFeatureId()+"/"+entry.getName()+"/"+entry.getIsIn());
+        	    			entry.setHouseNumber(dto.getNumber());
+        	    			entry.setLat(dto.getLatitude());
+        	    			entry.setLng(dto.getLongitude());
+        	    			break;
+        	    		}
+        	    	}
+        	    }
+    	    }
+        	       
+    	    return feedAsObj;
+	}
+
+	/*
      * (non-Javadoc)
      * 
      * @see com.gisgraphy.domain.geoloc.service.fulltextsearch.IFullTextSearchEngine#executeQueryToString(com.gisgraphy.domain.geoloc.service.fulltextsearch.FulltextQuery)

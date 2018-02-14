@@ -101,7 +101,7 @@ public class FulltextQuerySolrHelper {
 	//short : "_query_:\"{!edismax qf='suggest_name^0.55 suggest_fqdn_name^0.7' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\"";
 	protected static  String SUGGEST_QUERY_TEMPLATE = "_query_:\"{!edismax qf='suggest_name^0.55 suggest_fqdn_name^0.7' bq='population^1.5 placetype:city^1.2'   mm='1<100%% 2<-2 5<-3' bf='%s' }%s\"";
 	protected static final String SUGGEST_FQ = "placetype:city placetype:adm placetype:street";
-	protected static final String SUGGEST_FL = "name,zipcode,country_code,adm1_name,is_in,feature_id,lat,lng,score,house_numbers";
+	protected static final String SUGGEST_FL = "name,zipcode,country_code,adm1_name,is_in,is_in_place,is_in_zip,feature_id,lat,lng,score,house_numbers";
 	
 	protected static String CITY_ADM_BOOST_QUERY="placetype:city^800 placetype:adm^600";
 	protected static String CITY_BOOST_QUERY="placetype:city^200";

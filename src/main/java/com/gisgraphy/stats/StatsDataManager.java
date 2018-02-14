@@ -210,9 +210,9 @@ public class StatsDataManager implements IStatsDataManager{
 
 	@Override
 	public void exportStats(){
+		exportAllInJsonNoDetails();
 		exportEachCountriesInJson();
 		exportAllInJson();
-		exportAllInJsonNoDetails();
 		exportAllSummaryInJson();
 	}
 

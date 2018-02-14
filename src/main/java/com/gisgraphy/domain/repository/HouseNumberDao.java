@@ -58,7 +58,7 @@ public class HouseNumberDao extends GenericDao<HouseNumber, Long> implements
 					    public Object doInHibernate(Session session)
 						    throws PersistenceException {
 						String queryString = "select count(*) from "
-							+ persistentClass.getSimpleName()+ " h inner join Openstreetmap o on o.id=h.street where o.countrycode='"+countryCode.toUpperCase()+"'";//
+							+ persistentClass.getSimpleName()+ " h where h.countrycode='"+countryCode.toUpperCase()+"'";//
 
 						Query qry = session.createSQLQuery(queryString);
 						Long result =  ((Number)qry.uniqueResult()).longValue();

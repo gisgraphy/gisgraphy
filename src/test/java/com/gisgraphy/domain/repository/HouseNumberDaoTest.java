@@ -100,6 +100,7 @@ public class HouseNumberDaoTest extends AbstractIntegrationHttpSolrTestCase {
     @Test
     public void testCountByCountryCode(){
     	HouseNumber houseNumber = GisgraphyTestHelper.createHouseNumber();
+    	houseNumber.setCountryCode("US");
     	OpenStreetMap street = GisgraphyTestHelper.createOpenStreetMapForJohnKenedyStreet();
     	street.setCountryCode("US");
     	street = openStreetMapDao.save(street);

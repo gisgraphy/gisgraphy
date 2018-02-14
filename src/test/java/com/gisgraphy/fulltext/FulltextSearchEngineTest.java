@@ -36,6 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -66,6 +67,9 @@ import com.gisgraphy.domain.valueobject.Output.OutputStyle;
 import com.gisgraphy.domain.valueobject.Pagination;
 import com.gisgraphy.fulltext.spell.ISpellCheckerIndexer;
 import com.gisgraphy.fulltext.spell.SpellCheckerConfig;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchEntry;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchResponse;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchResult;
 import com.gisgraphy.helper.FileHelper;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.serializer.common.OutputFormat;
@@ -1722,6 +1726,78 @@ public class FulltextSearchEngineTest extends
 	assertEquals(new Long(4), statsUsageService
 		.getUsage(StatsUsageType.FULLTEXT));
     }
+    
+    
+    @Test
+    public void testUpdateFeed(){
+    	GisgraphySearchResult actual = new GisgraphySearchResult();
+    	FullTextSearchEngine fullTextSearchEngineTest = new FullTextSearchEngine(
+    			new MultiThreadedHttpConnectionManager());
+    	GisgraphySearchResult updated = fullTextSearchEngineTest.updateFeed(actual, null);
+    	Assert.assertEquals(updated, actual);
+    	
+    	updated = fullTextSearchEngineTest.updateFeed(null, null);
+    	Assert.assertNull(updated);
+    	
+    	 actual = createGisgraphySearchEntry();
+		
+    	updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+    	Assert.assertEquals(2, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+    	Assert.assertEquals(31, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+    	Assert.assertEquals("11", updated.getResponse().getDocs().get(0).getHouseNumber());
+    	
+    	
+    	Assert.assertEquals(5, updated.getResponse().getDocs().get(1).getLat(),0.00001);
+    	Assert.assertEquals(41, updated.getResponse().getDocs().get(1).getLng(),0.00001);
+    	Assert.assertEquals("11", updated.getResponse().getDocs().get(1).getHouseNumber());
+    	
+
+   	 actual = createGisgraphySearchEntry();
+   	updated = fullTextSearchEngineTest.updateFeed(actual, "13");
+   	//no HN found
+   	Assert.assertEquals(98, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	Assert.assertEquals(120, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	Assert.assertEquals(null, updated.getResponse().getDocs().get(0).getHouseNumber());
+	
+	
+	Assert.assertEquals(6, updated.getResponse().getDocs().get(1).getLat(),0.00001);
+	Assert.assertEquals(43, updated.getResponse().getDocs().get(1).getLng(),0.00001);
+	Assert.assertEquals("13", updated.getResponse().getDocs().get(1).getHouseNumber());
+    	
+    	
+    }
+
+	protected GisgraphySearchResult createGisgraphySearchEntry() {
+		GisgraphySearchResult actual;
+		actual = new GisgraphySearchResult();
+    	GisgraphySearchResponse solrResponse =new GisgraphySearchResponse();
+    	List<GisgraphySearchEntry> docs = new ArrayList<GisgraphySearchEntry>();
+    	GisgraphySearchEntry gisgraphySearchEntry1 = new GisgraphySearchEntry();
+    	List<String> houseNumbers = new ArrayList<String>();
+    	houseNumbers.add("10:30,1");
+    	houseNumbers.add("11:31,2");
+    	houseNumbers.add("12:32,3");
+		gisgraphySearchEntry1.setHouseNumbers(houseNumbers );
+		gisgraphySearchEntry1.setLat(98);
+		gisgraphySearchEntry1.setLng(120);
+		docs.add(gisgraphySearchEntry1 );
+		
+		
+		GisgraphySearchEntry gisgraphySearchEntry2 = new GisgraphySearchEntry();
+    	List<String> houseNumbers2 = new ArrayList<String>();
+    	houseNumbers2.add("9:40,4");
+    	houseNumbers2.add("11:41,5");
+    	houseNumbers2.add("13:43,6");
+		gisgraphySearchEntry2.setHouseNumbers(houseNumbers2);
+		gisgraphySearchEntry2.setLat(88);
+		gisgraphySearchEntry2.setLng(110);
+		docs.add(gisgraphySearchEntry2);
+		
+		
+		solrResponse.setDocs(docs );
+		actual.setResponse(solrResponse);
+		return actual;
+	}
 
     @Test
     public void testReturnFields() {
