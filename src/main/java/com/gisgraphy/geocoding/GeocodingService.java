@@ -291,16 +291,16 @@ public class GeocodingService implements IGeocodingService {
 					logger.error("don't proces specific german address");
 				}
 			}
-				results = doSearch(newAddress,alternativeGermanAddress, countryCode, 
-						needParsing,houseNumber, false, query.getPoint(), query.getRadius(), smartstreetdetected);
-				
-					
-					
-					//try in fuzzy
-					if ((results.getNumFound()==0 && query.isFuzzy())||results.getResult().size()>0 && results.getResult().get(0).getScore()<SCORE_THRESHOLD_FUZZY){
-						results = doSearch(newAddress,alternativeGermanAddress, countryCode,
-								needParsing,houseNumber, true, query.getPoint(), query.getRadius(), smartstreetdetected);
-					}
+			results = doSearch(newAddress,alternativeGermanAddress, countryCode, 
+					needParsing,houseNumber, false, query.getPoint(), query.getRadius(), smartstreetdetected);
+
+
+
+			//try in fuzzy
+			if (query.isFuzzy() && (results.getNumFound()==0 || (results.getResult().size()>0 && results.getResult().get(0).getScore()< SCORE_THRESHOLD_FUZZY ))){
+				results = doSearch(newAddress,alternativeGermanAddress, countryCode,
+						needParsing,houseNumber, true, query.getPoint(), query.getRadius(), smartstreetdetected);
+			}
 					
 				
 			Long endTime = System.currentTimeMillis();
@@ -379,7 +379,7 @@ public class GeocodingService implements IGeocodingService {
 
 	protected List<SolrResponseDto> doSearchStreet(String rawaddress,
 			String countryCode, boolean fuzzy, Point point, Double radius) {
-		logger.debug("will search for street"+(fuzzy?"in fuzzy mode":" in strict mode"));
+		logger.debug("will search for street "+(fuzzy?" in fuzzy mode":" in strict mode"));
 		List<SolrResponseDto> fulltextResultsDto = findStreetInText(rawaddress, countryCode, point, fuzzy, radius); //we search for street because we think that it is not a city nor an adm that 
 		//List<SolrResponseDto> mergedResults = mergeSolrResponseDto(exactMatches, fulltextResultsDto);
 		return fulltextResultsDto;
