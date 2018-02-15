@@ -1,4 +1,4 @@
-autocompleteGisgraphyCounter = 0;
+ console.log(placetype);autocompleteGisgraphyCounter = 0;
 autocompleteGisgraphy = [];
 
 
@@ -10,7 +10,7 @@ defaultAjax = {
         if (currentRequests["geocoding"]) {
             try {
                 currentRequests["geocoding"].abort();
-               // console.log('aborting');
+                console.log('aborting');
             } catch (e) {
                 console.log(e);
             }
@@ -38,13 +38,13 @@ function detectLanguage() {
 
 
 $(document).ajaxStart(function() {
-    //console.log("Triggered ajaxStart handler.");
+    console.log("Triggered ajaxStart handler.");
     $('#gisgraphy-leaflet-searchButton').css("background-image", "url(img/loading.gif)");
     $('#gisgraphy-leaflet-searchButton').addClass("searching");
 });
 
 $(document).ajaxStop(function() {
-   // console.log("Triggered ajaxStop handler.");
+    console.log("Triggered ajaxStop handler.");
     $('#gisgraphy-leaflet-searchButton').css("background-image", 'url("img/search.png")');
     $('#gisgraphy-leaflet-searchButton').removeClass("searching");
 });
@@ -188,7 +188,7 @@ DEFAULT_LANGUAGE = detectLanguage();
                     var docMap = {};
                     var seen = {};
                     if (d && d.response && d.response['docs']) {
-                        $.each(d.response['docs'], function(key, value) {
+                       /* $.each(d.response['docs'], function(key, value) {
                             if (value.name) {
                                 var keyMap = value.feature_id;
                                 if (value.is_in && value.is_in.length >= 0) {
@@ -197,17 +197,23 @@ DEFAULT_LANGUAGE = detectLanguage();
                                 if (!docMap.hasOwnProperty(keyMap)) {
                                     docMap[keyMap] = value;
                                 } else {
-                                    if (value.house_numbers && docMap[keyMap]) {
+                                    if (value.house_numbers && value.house_numbers.length > 0 && docMap[keyMap]) {
                                         if (!docMap[keyMap].house_numbers || docMap[keyMap].house_numbers.length == 0) {
                                             docMap[keyMap].house_numbers = [];
                                         }
                                         docMap[keyMap].house_numbers = docMap[keyMap].house_numbers.concat(value.house_numbers);
                                     }
+				//hn
+					if (value.house_number && docMap[keyMap]) {
+                                            docMap[keyMap].house_number = value.house_number;
+                                    }
                                 }
                             }
-                        });
+                        });*/
                         $.each(d.response['docs'], function(key, value) {
-                            var found = false;
+                           // var found = false;
+				 names.push(value);
+/*
                             if (value.feature_id) {
                                 $.each(docMap, function(keyMap, valueMap) {
                                     if (found == true) {
@@ -219,7 +225,7 @@ DEFAULT_LANGUAGE = detectLanguage();
 
                                     }
                                 });
-                            }
+                            }*/
                         });
                         /* $.each(docMap, function(key, value) {
 				names.push(value)
@@ -243,7 +249,7 @@ var defaultAjax2 = {
         if (currentRequests2["geocoding"]) {
             try {
                 currentRequests2["geocoding"].abort();
-                //console.log('aborting');
+                console.log('aborting');
             } catch (e) {
                 console.log(e);
             }
@@ -282,7 +288,7 @@ function replace2() {
 	    } else {
 	            fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=20";
 	    }
-            fulltextUrlWithParam = fulltextUrlWithParam + "&q=" + replaceHouseNumber($('#' + this.inputSearchNodeID).val());
+            fulltextUrlWithParam = fulltextUrlWithParam + "&q=" + clean($('#' + this.inputSearchNodeID).val());
             if (this.apiKey != undefined) {
                 fulltextUrlWithParam = fulltextUrlWithParam + '&apikey=' + this.apiKey;
             }
@@ -399,21 +405,7 @@ this.geocoding2.initialize();
             else
                 return opts.inverse(this);
         });
-        Handlebars.registerHelper('housenumber', function(house_numbers, autocompleteGisgraphyNumber) {
-            var found = false;
-            var idElement = autocompleteGisgraphyNumber;
-            var number = extractHouseNumber($('#' + idElement).val());
-            if (house_numbers && number.length >= 0) {
-                $.each(house_numbers, function(key, value) {
-                    var hnArray = value.split(':');
-                    if (number == hnArray[0] && !found) {
-                        //console.log('found house number :' + hnArray[0] + ' is at ' + hnArray[1]);
-                        found = true;
-                    }
-                });
-                return found == true ? number : "";
-            }
-        });
+       
 
 
         Handlebars.registerHelper('l10n', $.proxy(function(keyword) {
@@ -476,7 +468,7 @@ this.geocoding2.initialize();
  fulltextUrlWithParam = fulltextUrlWithParam + "&from=1&to=20";
 }
    
-            fulltextUrlWithParam = fulltextUrlWithParam + "&q=" + replaceHouseNumber($('#' + this.inputSearchNodeID).val());
+            fulltextUrlWithParam = fulltextUrlWithParam + "&q=" + clean($('#' + this.inputSearchNodeID).val());
             if (this.apiKey != undefined) {
                 fulltextUrlWithParam = fulltextUrlWithParam + '&apikey=' + this.apiKey;
             }
@@ -512,9 +504,9 @@ this.geocoding2.initialize();
         };
 
         function doProcessGeocodingResults(data) {
-          /*  if (console && console.log) {
-                	      console.log(data.result );
-            }*/
+            if (console && console.log) {
+                //	      console.log(data.result );
+            }
 
             $('#' + this.resultBoxNodeID).empty();
             var numResult = 1;
@@ -542,8 +534,8 @@ this.geocoding2.initialize();
 
                                     content += "<strong>" + value.name + zip + "</strong>";
                                 }
-                                if (value.houseNumber) {
-                                    content += " " + value.houseNumber;
+                                if (value.house_number) {
+                                    content += " " + value.house_number;
                                 }
                                 if (value.city) {
                                     if (hasName == true && value.dependentLocality) {
@@ -561,8 +553,8 @@ this.geocoding2.initialize();
 
 
                             } else {
-                                if (value.houseNumber) {
-                                    content += value.houseNumber + " ";
+                                if (value.house_number) {
+                                    content += value.house_number + " ";
                                 }
                                 if (value.streetName) {
                                     hasName = true;
@@ -638,9 +630,9 @@ this.geocoding2.initialize();
         }
 
         function doProcessGeolocResults(data) {
-           /* if (console && console.log) {
+            if (console && console.log) {
                 console.log(data.result);
-            }*/
+            }
             var RedIcon = L.Icon.Default.extend({
                 options: {
                     iconUrl: 'img/marker-icon-red.png'
@@ -655,7 +647,7 @@ this.geocoding2.initialize();
                     var markerGeolocArray = [];
                     $.each(data.result,
                         function(index, value) {
-                            //console.log(value);
+                            console.log(value);
                             var content = '';
                             if (value.countryCode) {
                                 content += '<img src="img/' + value.countryCode + '.png" alt="' + value.countryCode + '" class="flag-autocomplete"/>';
@@ -778,9 +770,10 @@ this.sources=[{
                 displayKey: function(obj) {
                     if (obj && obj['country_code'] && obj['country_code'].length == 2 && $.inArray(obj['country_code'], NAME_HOUSE_COUNTRYCODE) >= 0) {
                         var addressFormated = obj['name'];
-                        var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
-                        if (housenumber && housenumber.length > 0) {
-                            addressFormated += ' ' + housenumber;
+                        //var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
+			var house_number= obj['house_number'] ? obj['house_number'] : "";
+                        if (house_number && house_number.length > 0) {
+                            addressFormated += ' ' + house_number;
                         }
                         if (obj['is_in'] || obj['is_in_place']) {
                             if (obj['is_in_place']) {
@@ -797,9 +790,10 @@ this.sources=[{
                         return addressFormated;
 
                     } else {
-                        var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
-                        if (housenumber && housenumber.length > 0) {
-                            housenumber = housenumber + ', ';
+                        //var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
+			var house_number= obj['house_number'] ? obj['house_number'] : "";
+                        if (house_number && house_number.length > 0) {
+                            house_number = house_number + ', ';
                         }
                         var is_in = '';
                         if (obj['is_in'] || obj['is_in_place']) {
@@ -816,9 +810,9 @@ this.sources=[{
                             /*else if (obj['adm1_name']){
                             					is_in=obj['adm1_name'];
                             					}*/
-                            return housenumber + '' + obj['name'] + is_in;
+                            return house_number + '' + obj['name'] + is_in;
                         } else {
-                            return housenumber + '' + obj['name'];
+                            return house_number + '' + obj['name'];
                         }
                     }
                 },
@@ -827,7 +821,7 @@ this.sources=[{
                 source: this.geocoding.ttAdapter(),
                 templates: {
                     empty: this.locationBias? '': Handlebars.compile('<div class="empty-message">{{l10n "nosuggestion" currentLanguage}}</div>'),
-                    suggestion: Handlebars.compile('{{#if name}}<p>{{#if country_code}}<img src="img/{{country_code}}.png" alt={{country_code}} class="flag-autocomplete"/>{{/if}}{{#if_number_after country_code }}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong> {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}}{{#if houseNumber}}{{houseNumber}}</span>{{/if}}{{else}} {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}} {{#if houseNumber}}{{houseNumber}}</span>{{/if}}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong>{{/if_number_after}}{{#if is_in}}<span class="isin-autocomplete">, {{#if_eq is_in_zip.length 1}} {{is_in_zip}}{{/if_eq}} {{is_in}}</span> {{else}}{{#if adm1_name}}<span class="isin-autocomplete">, {{adm1_name}}</span>{{/if}}{{/if}}</p>{{/if}}'),
+                    suggestion: Handlebars.compile('{{#if name}}<p>{{#if country_code}}<img src="img/{{country_code}}.png" alt={{country_code}} class="flag-autocomplete"/>{{/if}}{{#if_number_after country_code }}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong> {{#if house_number}}{{house_number}}</span>{{/if}}{{else}} {{#if house_number}}{{house_number}} </span>{{/if}}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong>{{/if_number_after}}{{#if is_in}}<span class="isin-autocomplete">, {{#if_eq is_in_zip.length 1}} {{is_in_zip}}{{/if_eq}} {{is_in}}</span> {{else}}{{#if adm1_name}}<span class="isin-autocomplete">, {{adm1_name}}</span>{{/if}}{{/if}}</p>{{/if}}'),
                     footer: this.locationBias?'':'<div class="footer">powered by <a href="https://www.gisgraphy.com/">Gisgraphy.com</a></div>'
                 }
             }]
@@ -839,18 +833,22 @@ this.sources=[{
 	{
 		        name: this.ELEMENT_ID + '2',
 		        displayKey: function(obj) {
-		            if (obj && obj['country_code'] && obj['country_code'].length == 2 && $.inArray(obj['country_code'], NAME_HOUSE_COUNTRYCODE) >= 0) {
+if (obj && obj['label']){
+	return obj['label'];
+}
+		            /*if (obj && obj['country_code'] && obj['country_code'].length == 2 && $.inArray(obj['country_code'], NAME_HOUSE_COUNTRYCODE) >= 0) {
 		                var addressFormated = obj['name'];
-		                var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
-		                if (housenumber && housenumber.length > 0) {
-		                    addressFormated += ' ' + housenumber;
+		                 //var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
+				var house_number= obj['house_number'] ? obj['house_number'] : "";
+		                if (house_number && house_number.length > 0) {
+		                    addressFormated += ' ' + house_number;
 		                }
 		                if (obj['is_in'] || obj['is_in_place']) {
 		                    if (obj['is_in_place']) {
 		                        addressFormated += ', ' + obj['is_in_place'];
 		                    }
 		                    var zip = '';
-		                    if (obj['is_in_zip'] && obj['is_in_zip'].length == 1) {
+		                    if (obj['is_in_zip'] && obj['is_in_zip'].length >= 1) {
 		                        addressFormated += ', ' + obj['is_in_zip'][0] + ' ';
 		                    }
 		                    if (obj['is_in']) {
@@ -860,9 +858,10 @@ this.sources=[{
 		                return addressFormated;
 
 		            } else {
-		                var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
-		                if (housenumber && housenumber.length > 0) {
-		                    housenumber = housenumber + ', ';
+		               //var housenumber = extractHouseNumber($('#' + this.name + '-inputSearch').val());
+				var house_number= obj['house_number'] ? obj['house_number'] : "";
+		                if (house_number && house_number.length > 0) {
+		                    house_number = house_number + ', ';
 		                }
 		                var is_in = '';
 		                if (obj['is_in'] || obj['is_in_place']) {
@@ -870,27 +869,27 @@ this.sources=[{
 		                        is_in += ', ' + obj['is_in_place'];
 		                    }
 		                    var zip = '';
-		                    if (obj['is_in_zip'] && obj['is_in_zip'].length == 1) {
+		                    if (obj['is_in_zip'] && obj['is_in_zip'].length >= 1) {
 		                        is_in += ', ' + obj['is_in_zip'][0];
 		                    }
 		                    if (obj['is_in']) {
 		                        is_in += ', ' + obj['is_in'];
 		                    }
-		                    /*else if (obj['adm1_name']){
+		                    //else if (obj['adm1_name']){
 		                    					is_in=obj['adm1_name'];
-		                    					}*/
-		                    return housenumber + '' + obj['name'] + is_in;
+		                    					}
+		                    return house_number + '' + obj['name'] + is_in;
 		                } else {
-		                    return housenumber + '' + obj['name'];
+		                    return house_number + '' + obj['name'];
 		                }
-		            }
+		            }*/
 		        },
 		        // `ttAdapter` wraps the suggestion engine in an adapter that
 		        // is compatible with the typeahead jQuery plugin
 		        source: this.geocoding2.ttAdapter(),
 		        templates: {
 		            empty: Handlebars.compile('<div class="empty-message">{{l10n "nosuggestion" currentLanguage}}</div>'),
-		            suggestion: Handlebars.compile('{{#if name}}<p>{{#if country_code}}<img src="img/{{country_code}}.png" alt={{country_code}} class="flag-autocomplete"/>{{/if}}{{#if_number_after country_code }}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong> {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}}{{#if houseNumber}}{{houseNumber}}</span>{{/if}}{{else}} {{{housenumber house_numbers "' + this.inputSearchNodeID + '"}}} {{#if houseNumber}}{{houseNumber}}</span>{{/if}}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong>{{/if_number_after}}{{#if is_in}}<span class="isin-autocomplete">, {{#if_eq is_in_zip.length 1}} {{is_in_zip}}{{/if_eq}} {{is_in}}</span> {{else}}{{#if adm1_name}}<span class="isin-autocomplete">, {{adm1_name}}</span>{{/if}}{{/if}}</p>{{/if}}'),
+		            suggestion: Handlebars.compile('{{#if name}}<p>{{#if country_code}}<img src="img/{{country_code}}.png" alt={{country_code}} class="flag-autocomplete"/>{{/if}}{{#if_number_after country_code }}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong> {{#if house_number}}{{house_number}} </span>{{/if}}{{else}} {{#if house_number}}{{house_number}} </span>{{/if}}<strong>{{name}}{{#if_eq zipcode.length 1}} ({{zipcode}}){{/if_eq}}</strong>{{/if_number_after}}{{#if is_in}}<span class="isin-autocomplete">, {{#if_eq is_in_zip.length 1}} {{is_in_zip}}{{/if_eq}} {{is_in}}</span> {{else}}{{#if adm1_name}}<span class="isin-autocomplete">, {{adm1_name}}</span>{{/if}}{{/if}}</p>{{/if}}'),
 		            footer: '<div class="footer">powered by <a href="https://www.gisgraphy.com/">Gisgraphy.com</a></div>'
 		        }
 		    }
@@ -951,7 +950,7 @@ $('input.typeahead').parent().css('z-index', 3000);
                         if (!this.itemSelected) {
                             //        var selectedValue = $('input.typeahead').data().ttView.dropdownView.getFirstSuggestion().datum.id;
                             //      $("#value_id").val(selectedValue);
-                           // console.log('enter pressed : ' + this.itemSelected);
+                            console.log('enter pressed : ' + this.itemSelected);
                             this.doGeocoding();
                             $('#' + this.inputSearchNodeID).typeahead('close');
                             //        $('#gisgraphy-leaflet-form').submit();
@@ -975,30 +974,36 @@ $('input.typeahead').parent().css('z-index', 3000);
         autocompleteGisgraphyCounter++;
 
         var doOnAutocompleted = $.proxy(function(obj, datum, name) {
-            //console.log('doOnAutocompleted');
+            console.log('doOnAutocompleted');
             if (datum && datum.poiType && this.allowPoiSelection) {
                 $('#' + this.placetypeNodeID + ' option[value="' + datum.poiType + '"]').prop('selected', true);
             } else {
                 $('#' + this.placetypeNodeID + ' option[value=""]').prop('selected', true);
             }
             /*if (typeof map != 'undefined' && datum && datum.lat && datum.lng){
-            		//console.log('moving to '+datum.lat+','+datum.lng);
+            		console.log('moving to '+datum.lat+','+datum.lng);
                                             map.panTo(new L.LatLng(datum.lat,datum.lng));
             }*/
-            if (datum.house_numbers && datum.house_numbers.length > 0) {
-                var coord = getHouseNumbercoordinate(datum.house_numbers, obj.currentTarget.id);
-                if (coord && coord.hasOwnProperty("lat") && coord.hasOwnProperty("long")) {
+           // if (datum.house_numbers && datum.house_numbers.length > 0) {
+                var coord = {
+                        "lat": datum.lat,
+                        "long":  datum.lng,
+                        "number": datum.house_number
+                    };
+		//getHouseNumbercoordinate(datum.house_numbers, obj.currentTarget.id);
+               /* if (coord && coord.hasOwnProperty("lat") && coord.hasOwnProperty("long")) {
                     this.result = datum;
                     this.result.house_coordinate = coord;
                     moveCenterOfMapTo(coord.lat, coord.long, datum.placetype);
                 } else {
+*/
                     moveCenterOfMapTo(datum.lat, datum.lng, datum.placetype);
                     this.result = datum;
-                }
-            } else {
+                //}
+          //  } else {
                 moveCenterOfMapTo(datum.lat, datum.lng, datum.placetype);
                 this.result = datum;
-            }
+           // }
             this.itemSelected = true;
             /*console.log('selected');
             console.log(obj);
@@ -1011,30 +1016,36 @@ $('input.typeahead').parent().css('z-index', 3000);
         }, this);
 
         var doOnSelect = $.proxy(function(obj, datum, name) {
-            //console.log('doOnSelect');
+            console.log('doOnSelect');
             if (datum && datum.poiType && this.allowPoiSelection) {
                 $('#' + this.placetypeNodeID + ' option[value="' + datum.poiType + '"]').prop('selected', true);
             } else {
                 $('#' + this.placetypeNodeID + ' option[value=""]').prop('selected', true);
             }
             /*if (typeof map != 'undefined' && datum && datum.lat && datum.lng){
-            		//console.log('moving to '+datum.lat+','+datum.lng);
+            		console.log('moving to '+datum.lat+','+datum.lng);
                                             map.panTo(new L.LatLng(datum.lat,datum.lng));
             }*/
-            if (datum.house_numbers && datum.house_numbers.length > 0) {
-                var coord = getHouseNumbercoordinate(datum.house_numbers, obj.currentTarget.id);
-                if (coord && coord.hasOwnProperty("lat") && coord.hasOwnProperty("long")) {
+           //if (datum.house_numbers && datum.house_numbers.length > 0) {
+               // var coord = getHouseNumbercoordinate(datum.house_numbers, obj.currentTarget.id);
+ var coord ={
+                        "lat": datum.lat,
+                        "long":  datum.lng,
+                        "number": datum.house_number
+                    };
+               /* if (coord && coord.hasOwnProperty("lat") && coord.hasOwnProperty("long")) {
                     this.result = datum;
                     this.result.house_coordinate = coord;
                     moveCenterOfMapTo(coord.lat, coord.long, datum.placetype);
                 } else {
+
                     moveCenterOfMapTo(datum.lat, datum.lng, datum.placetype);
                     this.result = datum;
                 }
-            } else {
+            } else {*/
                 moveCenterOfMapTo(datum.lat, datum.lng, datum.placetype);
                 this.result = datum;
-            }
+           // }
             this.itemSelected = true;
             /*console.log('selected');
             console.log(obj);
@@ -1051,18 +1062,24 @@ $('input.typeahead').parent().css('z-index', 3000);
         }, this);
 
         var doOnChoose = $.proxy(function(obj, datum, name) {
-           // console.log('doOnChosse');
+            console.log('doOnChosse');
             if (datum && datum.poiType && this.allowPoiSelection) {
                 $('#' + this.placetypeNodeID + ' option[value="' + datum.poiType + '"]').prop('selected', true);
             } else {
                 $('#' + this.placetypeNodeID + ' option[value=""]').prop('selected', true);
             }
             /*if (typeof map != 'undefined' && datum && datum.lat && datum.lng){
-            		//console.log('moving to '+datum.lat+','+datum.lng);
+            		console.log('moving to '+datum.lat+','+datum.lng);
                                             map.panTo(new L.LatLng(datum.lat,datum.lng));
             }*/
-            if (datum.house_numbers && datum.house_numbers.length > 0) {
+ var coord = {
+                        "lat": datum.lat,
+                        "long":  datum.lng,
+                        "number": datum.house_number
+                    };
+           /* if (datum.house_numbers && datum.house_numbers.length > 0) {
                 var coord = getHouseNumbercoordinate(datum.house_numbers, obj.currentTarget.id);
+		
                 if (coord && coord.hasOwnProperty("lat") && coord.hasOwnProperty("long")) {
                     this.result = datum;
                     this.result.house_coordinate = coord;
@@ -1071,10 +1088,10 @@ $('input.typeahead').parent().css('z-index', 3000);
                     moveCenterOfMapTo(datum.lat, datum.lng, datum.placetype);
                     this.result = datum;
                 }
-            } else {
+            } else {*/
                 moveCenterOfMapTo(datum.lat, datum.lng, datum.placetype);
                 this.result = datum;
-            }
+           // }
             this.itemSelected = true;
             /*console.log('selected');
             console.log(obj);
@@ -1152,7 +1169,7 @@ $('input.typeahead').parent().css('z-index', 3000);
                         address["name"] = datum.name;
                     }
                     if (hnCoord && hnCoord["lat"] && hnCoord["long"]) {
-                        address["houseNumber"] = hnCoord.number;
+                        address["house_number"] = hnCoord.number;
                         address["lat"] = hnCoord.lat;
                         address["lng"] = hnCoord.long;
                     } else {
@@ -1179,7 +1196,7 @@ $('input.typeahead').parent().css('z-index', 3000);
                     "lat": address.lat,
                     "lng": address.lng,
                     "distance": address.distance,
-                    "houseNumber": address.houseiNumber,
+                    "house_number": address.house_Number,
                     "zipcode": zips,
                 };
             }
@@ -1225,9 +1242,9 @@ function convertDMS(input) {
     var obj;
     var matches = input.match(/((\d+)\s?[:°dD]*\s?(\d+)\s?\s?[:'′]*\s?(\d+([.]\d+)?)?\s?[:\"″]*\s?([NnSs])\s?([,;]\s?)?(\d+)\s?[:°dD]*\s?(\d+)\s?[:'′]*\s?(\d+([.]\d+)?)?\s?[:\"″]*\s?([EeWw]))/);
     if (matches) {
-        //for (var i=0;i<matches.length;i++){
-		//console.log(matches[i]);
-	//}
+        /*for (var i=0;i<matches.length;i++){
+		console.log(matches[i]);
+	}*/
         lat = convertToDecimal(matches[2], matches[3], matches[4], matches[6]);
         long = convertToDecimal(matches[8], matches[9], matches[10], matches[12]);
         obj = {
@@ -1313,56 +1330,17 @@ function convertToLatLong(str) {
     return obj;
 }
 
-//num_pattern = /(((?:(?:\b\d{1,3}))\b(?:[\s,;]+)(?!(?:st\b|th\b|rd\b|nd\b))(?=\w+))|\s(?:\b\d{1,3}$))/i;
-num_pattern = /((((?:\b\d{1,4}[\-\–\一]\d{1,4}))\b(?:[\s,\.;]+)(?!(?:st\b|th\b|rd\b|nd\b|street\b|avenue\b|de\b|Januar\b|janvier\b|enero\b|Gennaio\b|Februar\b|Febbraio\b|f[ée]vrier\b|febrero\b|M[aä]rz\b|mars\b|marzo\b|A[pvb]ril[e]?\b|Mai\b|mayo\b|maggio\b|juni[o]?\b|juin\b|Giugno\ß|juli[o]?\b|juillet\b|Luglio\b|august\b|ao[uû]t\b|agosto\b|September\b|sept[i]?embre\b|Settembre\b|o[ckt]tober\b|o[tc]t[ou]bre\b|november\b|nov[i]?embre\b|de[cz]ember\b|d[ie]ec[i]embre\b|dicembre\b))(?=\w+))|(?:^\b\d{1,4}(?:[\s,\.;]?(?:[a-d]\b[\s,\.;])?)\b)(?:[\s,\.;]?(?:bis|ter)?)(?:[\s,\.;]|,)(?!(?:st\b|th\b|rd\b|nd\b|street\b$|avenue\b$|de\b|Januar\b|janvier\b|enero\b|Gennaio\b|Februar\b|Febbraio\b|f[ée]vrier\b|febrero\b|M[aä]rz\b|mars\b|marzo\b|A[pvb]ril[e]?\b|Mai\b|mayo\b|maggio\b|juni[o]?\b|juin\b|Giugno\ß|juli[o]?\b|juillet\b|Luglio\b|august\b|ao[uû]t\b|agosto\b|September\b|sept[i]?embre\b|Settembre\b|o[ckt]tober\b|o[tc]t[ou]bre\b|november\b|nov[i]?embre\b|de[cz]ember\b|d[ie]ec[i]embre\b|dicembre\b))|(((?:\b\d{1,4}(?:[\s,\.;]?(?:[a-d]\b)?)))\b(?:[\s,\.;]+)(?!(?:st\b|th\b|rd\b|nd\b|street\b|avenue\b|de\b|Januar\b|janvier\b|enero\b|Gennaio\b|Februar\b|Febbraio\b|f[ée]vrier\b|febrero\b|M[aä]rz\b|mars\b|marzo\b|A[pvb]ril[e]?\b|Mai\b|mayo\b|maggio\b|juni[o]?\b|juin\b|Giugno\ß|juli[o]?\b|juillet\b|Luglio\b|august\b|ao[uû]t\b|agosto\b|September\b|sept[i]?embre\b|Settembre\b|o[ckt]tober\b|o[tc]t[ou]bre\b|november\b|nov[i]?embre\b|de[cz]ember\b|d[ie]ec[i]embre\b|dicembre\b))(?=\w+))|[\s,\.;]?(?:\b\d{1,4}[\s,\.;]?(?:[a-d])?\b$))/i;
-var num_p = new RegExp(num_pattern);
 var re_clean_last = /[,\s]+$/i
 
-function extractHouseNumber(str) {
-    if (!str) {
-        return '';
-    }
-    res = str.trim().replace(re_clean_last,"").match(num_p);
-    if (res && res.length >= 0) {
-        res = res[0].replace(/\W+/g, "").trim();
-        //console.log('find "' + res + '" in "' + str + '"');
-        return res;
-    } else {
-        return '';
-    }
-}
 
-function getHouseNumbercoordinate(house_numbers, autocompleteid) {
-    var found = false;
-    var number = extractHouseNumber($('#' + autocompleteid).val());
-    if (house_numbers && number.length >= 0) {
-        coord = {};
-        $.each(house_numbers, function(key, value) {
-            var hnArray = value.split(':');
-            if (number == hnArray[0]) {
-                if (hnArray[1] && !found) {
-                    var latLongAsStr = hnArray[1].split(',');
-                   // console.log('found house number :' + hnArray[0] + ' is at ' + latLongAsStr[0] + ' and ' + latLongAsStr[1]);
-                    found = true;
-                    coord = {
-                        "lat": latLongAsStr[1],
-                        "long": latLongAsStr[0],
-                        "number": number
-                    };
-                }
-            }
-        });
-        return coord;
-    }
-}
-
-function replaceHouseNumber(str) {
+function clean(str) {
     if (!str) {
         return str;
     }
-    strReplaced = str.trim().replace(re_clean_last,"").replace(num_pattern, "").trim();
-    //console.log(str + '=>' + strReplaced);
+    strReplaced = str.trim().replace(re_clean_last,"").trim();
+    console.log(str + '=>' + strReplaced);
     return strReplaced;
 }
+
 
 NAME_HOUSE_COUNTRYCODE = ["DE", "BE", "HR", "IS", "LV", "NL", "NO", "NZ", "PL", "RU", "SI", "SK", "SW", "TR"];

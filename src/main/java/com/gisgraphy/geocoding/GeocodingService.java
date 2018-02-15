@@ -556,7 +556,8 @@ public class GeocodingService implements IGeocodingService {
 				} else {
 					candidateNormalized = HouseNumberUtil.normalizeNumberToInt(candidate.getNumber());
 				}
-				if (candidateNormalized!=null && candidateNormalized == houseNumberToFindAsInt){
+				logger.error("candidateNormalized='"+candidateNormalized+"' and houseNumberToFindAsInt='"+houseNumberToFindAsInt+"'");
+				if (candidateNormalized!=null && houseNumberToFindAsInt != null &&  candidateNormalized.intValue() == houseNumberToFindAsInt.intValue()){
 					logger.info("house number candidate found : "+candidate.getNumber());
 					HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation(candidate.getLocation(),houseNumberToFindAsInt);
 					result.setApproximative(false);
@@ -719,7 +720,7 @@ public class GeocodingService implements IGeocodingService {
 							//if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
 							//count them as street that has same streetname
 							boolean doInterpolation = false;
-							if (allowInterpolation(solrResponseDto) ){
+							if (isInterpolationPossible(solrResponseDto) ){
 								doInterpolation=true;
 							}
 							HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
@@ -767,7 +768,7 @@ public class GeocodingService implements IGeocodingService {
 							List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
 							if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
 								boolean doInterpolation = false;
-								if (allowInterpolation(solrResponseDto) ){
+								if (isInterpolationPossible(solrResponseDto) ){
 									doInterpolation=true;
 								}
 								HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
@@ -795,7 +796,7 @@ public class GeocodingService implements IGeocodingService {
 				  List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
 					if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
 						boolean doInterpolation = false;
-						if (allowInterpolation(solrResponseDto) ){
+						if (isInterpolationPossible(solrResponseDto) ){
 							doInterpolation=true;
 						}
 						HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
@@ -863,7 +864,7 @@ public class GeocodingService implements IGeocodingService {
 		}
 	}
 
-	protected boolean allowInterpolation(SolrResponseDto solrResponseDto) {
+	protected boolean isInterpolationPossible(SolrResponseDto solrResponseDto) {
 		return 
 				solrResponseDto.getAzimuth_start()!=null && 
 				solrResponseDto.getAzimuth_end()!=null &&

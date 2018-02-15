@@ -1739,27 +1739,30 @@ public class FulltextSearchEngineTest extends
     	updated = fullTextSearchEngineTest.updateFeed(null, null);
     	Assert.assertNull(updated);
     	
-    	 actual = createGisgraphySearchEntry();
+    	 actual = createGisgraphySearchEntry(null);
 		
     	updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+    	Assert.assertEquals(2, updated.getResponse().getDocs().size());
+    	//HN found
     	Assert.assertEquals(2, updated.getResponse().getDocs().get(0).getLat(),0.00001);
     	Assert.assertEquals(31, updated.getResponse().getDocs().get(0).getLng(),0.00001);
     	Assert.assertEquals("11", updated.getResponse().getDocs().get(0).getHouseNumber());
     	
-    	
+    	//HN found
     	Assert.assertEquals(5, updated.getResponse().getDocs().get(1).getLat(),0.00001);
     	Assert.assertEquals(41, updated.getResponse().getDocs().get(1).getLng(),0.00001);
     	Assert.assertEquals("11", updated.getResponse().getDocs().get(1).getHouseNumber());
     	
 
-   	 actual = createGisgraphySearchEntry();
+   	 actual = createGisgraphySearchEntry(null);
    	updated = fullTextSearchEngineTest.updateFeed(actual, "13");
+   	Assert.assertEquals(2, updated.getResponse().getDocs().size());
    	//no HN found
-   	Assert.assertEquals(98, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+   	Assert.assertEquals(78, updated.getResponse().getDocs().get(0).getLat(),0.00001);
 	Assert.assertEquals(120, updated.getResponse().getDocs().get(0).getLng(),0.00001);
 	Assert.assertEquals(null, updated.getResponse().getDocs().get(0).getHouseNumber());
 	
-	
+	//hn found
 	Assert.assertEquals(6, updated.getResponse().getDocs().get(1).getLat(),0.00001);
 	Assert.assertEquals(43, updated.getResponse().getDocs().get(1).getLng(),0.00001);
 	Assert.assertEquals("13", updated.getResponse().getDocs().get(1).getHouseNumber());
@@ -1767,7 +1770,7 @@ public class FulltextSearchEngineTest extends
     	
     }
 
-	protected GisgraphySearchResult createGisgraphySearchEntry() {
+	protected GisgraphySearchResult createGisgraphySearchEntry(String name) {
 		GisgraphySearchResult actual;
 		actual = new GisgraphySearchResult();
     	GisgraphySearchResponse solrResponse =new GisgraphySearchResponse();
@@ -1778,8 +1781,9 @@ public class FulltextSearchEngineTest extends
     	houseNumbers.add("11:31,2");
     	houseNumbers.add("12:32,3");
 		gisgraphySearchEntry1.setHouseNumbers(houseNumbers );
-		gisgraphySearchEntry1.setLat(98);
+		gisgraphySearchEntry1.setLat(78);
 		gisgraphySearchEntry1.setLng(120);
+		gisgraphySearchEntry1.setName(name);
 		docs.add(gisgraphySearchEntry1 );
 		
 		
@@ -1791,13 +1795,197 @@ public class FulltextSearchEngineTest extends
 		gisgraphySearchEntry2.setHouseNumbers(houseNumbers2);
 		gisgraphySearchEntry2.setLat(88);
 		gisgraphySearchEntry2.setLng(110);
+		gisgraphySearchEntry2.setName(name);
 		docs.add(gisgraphySearchEntry2);
 		
 		
-		solrResponse.setDocs(docs );
+		solrResponse.setDocs(docs);
 		actual.setResponse(solrResponse);
 		return actual;
 	}
+	
+	
+	
+	
+	protected GisgraphySearchEntry createGisgraphySearchEntry1(long featureId, String name,boolean withHNFound) {
+    	GisgraphySearchEntry gisgraphySearchEntry1 = new GisgraphySearchEntry();
+    	List<String> houseNumbers = new ArrayList<String>();
+    	if (withHNFound){
+    	houseNumbers.add("10:30,1");
+    	houseNumbers.add("11:31,2");
+    	houseNumbers.add("12:32,3");
+    	} else {
+    		houseNumbers.add("110:34,4");
+        	houseNumbers.add("111:35,5");
+        	houseNumbers.add("112:36,6");
+    	}
+		gisgraphySearchEntry1.setHouseNumbers(houseNumbers );
+		gisgraphySearchEntry1.setLat(78);
+		gisgraphySearchEntry1.setLng(120);
+		gisgraphySearchEntry1.setName(name);
+		gisgraphySearchEntry1.setFeatureId(featureId);
+		gisgraphySearchEntry1.setIsIn("isIn");
+		return gisgraphySearchEntry1;
+	}
+	
+	
+	 @Test
+	    public void testUpdateFeed_dedup(){
+	    	GisgraphySearchResult actual = new GisgraphySearchResult();
+	    	FullTextSearchEngine fullTextSearchEngineTest = new FullTextSearchEngine(
+	    			new MultiThreadedHttpConnectionManager());
+	    	
+	    	///name1/name1/name1
+	    	GisgraphySearchResponse solrResponse =new GisgraphySearchResponse();
+	    	List<GisgraphySearchEntry> docs = new ArrayList<GisgraphySearchEntry>();
+	    	docs.add(createGisgraphySearchEntry1(1,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(2,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(3,"name1",false));
+	    	solrResponse.setDocs(docs);
+	    	actual.setResponse(solrResponse);
+	    	GisgraphySearchResult updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+	    	Assert.assertEquals(1, updated.getResponse().getDocs().size());
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(0).getHouseNumber());
+	    	Assert.assertEquals(3, updated.getResponse().getDocs().get(0).getFeatureId());
+	    	
+	    	
+	    	///name1/name1(HN)/name1
+	    	 solrResponse =new GisgraphySearchResponse();
+	    	 docs = new ArrayList<GisgraphySearchEntry>();
+	    	docs.add(createGisgraphySearchEntry1(1,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(2,"name1",true));
+	    	docs.add(createGisgraphySearchEntry1(3,"name1",false));
+	    	solrResponse.setDocs(docs);
+	    	actual.setResponse(solrResponse);
+	    	 updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+	    	Assert.assertEquals(1, updated.getResponse().getDocs().size());
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	    	Assert.assertEquals(31, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	    	Assert.assertEquals("11", updated.getResponse().getDocs().get(0).getHouseNumber());
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(0).getFeatureId());
+	    	
+	    	///name1/name1/name1(HN)
+	    	 solrResponse =new GisgraphySearchResponse();
+	    	 docs = new ArrayList<GisgraphySearchEntry>();
+	    	docs.add(createGisgraphySearchEntry1(1,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(2,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(3,"name1",true));
+	    	solrResponse.setDocs(docs);
+	    	actual.setResponse(solrResponse);
+	    	 updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+	    	Assert.assertEquals(1, updated.getResponse().getDocs().size());
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	    	Assert.assertEquals(31, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	    	Assert.assertEquals("11", updated.getResponse().getDocs().get(0).getHouseNumber());
+	    	Assert.assertEquals(3, updated.getResponse().getDocs().get(0).getFeatureId());
+	    	
+	    	///name1/name1/name1//name2/name2(HN)
+	    	 solrResponse =new GisgraphySearchResponse();
+	    	docs = new ArrayList<GisgraphySearchEntry>();
+	    	docs.add(createGisgraphySearchEntry1(1,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(2,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(3,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(4,"name2",false));
+	    	docs.add(createGisgraphySearchEntry1(5,"name2",true));
+	    	solrResponse.setDocs(docs);
+	    	actual.setResponse(solrResponse);
+	    	 updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().size());
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(0).getHouseNumber());
+	    	Assert.assertEquals(3, updated.getResponse().getDocs().get(0).getFeatureId());
+	    	
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(1).getLat(),0.00001);
+	    	Assert.assertEquals(31, updated.getResponse().getDocs().get(1).getLng(),0.00001);
+	    	Assert.assertEquals("11", updated.getResponse().getDocs().get(1).getHouseNumber());
+	    	Assert.assertEquals(5, updated.getResponse().getDocs().get(1).getFeatureId());
+	    	
+	    	///name1//name2/
+	    	 solrResponse =new GisgraphySearchResponse();
+	    	docs = new ArrayList<GisgraphySearchEntry>();
+	    	docs.add(createGisgraphySearchEntry1(1,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(2,"name2",false));
+	    	solrResponse.setDocs(docs);
+	    	actual.setResponse(solrResponse);
+	    	 updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().size());
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(0).getHouseNumber());
+	    	Assert.assertEquals(1, updated.getResponse().getDocs().get(0).getFeatureId());
+	    	
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(1).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(1).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(1).getHouseNumber());
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(1).getFeatureId());
+	    	
+	    	
+	    	///name1/name1//name2/name2
+	    	 solrResponse =new GisgraphySearchResponse();
+	    	docs = new ArrayList<GisgraphySearchEntry>();
+	    	docs.add(createGisgraphySearchEntry1(1,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(2,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(3,"name2",false));
+	    	docs.add(createGisgraphySearchEntry1(4,"name2",false));
+	    	solrResponse.setDocs(docs);
+	    	actual.setResponse(solrResponse);
+	    	 updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().size());
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(0).getHouseNumber());
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(0).getFeatureId());
+	    	
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(1).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(1).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(1).getHouseNumber());
+	    	Assert.assertEquals(4, updated.getResponse().getDocs().get(1).getFeatureId());
+	    	
+	    	
+	    	///null/null(HN)//null/name1/name1(HN)
+	    	 solrResponse =new GisgraphySearchResponse();
+	    	docs = new ArrayList<GisgraphySearchEntry>();
+	    	docs.add(createGisgraphySearchEntry1(1,null,false));
+	    	docs.add(createGisgraphySearchEntry1(2,null,true));
+	    	docs.add(createGisgraphySearchEntry1(3,null,false));
+	    	docs.add(createGisgraphySearchEntry1(4,"name1",false));
+	    	docs.add(createGisgraphySearchEntry1(5,"name1",true));
+	    	solrResponse.setDocs(docs);
+	    	actual.setResponse(solrResponse);
+	    	 updated = fullTextSearchEngineTest.updateFeed(actual, "11");
+	    	Assert.assertEquals(4, updated.getResponse().getDocs().size());
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(0).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(0).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(0).getHouseNumber());
+	    	Assert.assertEquals(1, updated.getResponse().getDocs().get(0).getFeatureId());
+	    	
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(1).getLat(),0.00001);
+	    	Assert.assertEquals(31, updated.getResponse().getDocs().get(1).getLng(),0.00001);
+	    	Assert.assertEquals("11", updated.getResponse().getDocs().get(1).getHouseNumber());
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(1).getFeatureId());
+	    	
+	    	Assert.assertEquals(78, updated.getResponse().getDocs().get(2).getLat(),0.00001);
+	    	Assert.assertEquals(120, updated.getResponse().getDocs().get(2).getLng(),0.00001);
+	    	Assert.assertEquals(null, updated.getResponse().getDocs().get(2).getHouseNumber());
+	    	Assert.assertEquals(3, updated.getResponse().getDocs().get(2).getFeatureId());
+	    	
+	    	Assert.assertEquals(2, updated.getResponse().getDocs().get(3).getLat(),0.00001);
+	    	Assert.assertEquals(31, updated.getResponse().getDocs().get(3).getLng(),0.00001);
+	    	Assert.assertEquals("11", updated.getResponse().getDocs().get(3).getHouseNumber());
+	    	Assert.assertEquals(5, updated.getResponse().getDocs().get(3).getFeatureId());
+	    	
+	    	
+	    	
+	    	
+	    	
+	    }
+
+	
+	
+	
 
     @Test
     public void testReturnFields() {
