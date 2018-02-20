@@ -285,6 +285,7 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
 			lastName=entry.getName();
 			lastIsin = entry.getIsIn();
 			lastLocation=curLoc;	
+			entry.setLabel(GeocodingHelper.processLabel(entry));
 		}
 		if (candidate!=null){
 			//logger.debug("adding last candidate"+candidate.getFeatureId()+" - "+candidate.getLabel());

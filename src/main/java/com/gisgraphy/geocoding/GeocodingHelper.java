@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gisgraphy.domain.valueobject.HouseNumberAddressDto;
+import com.gisgraphy.fulltext.suggest.GisgraphySearchEntry;
 
 
 /**
@@ -72,6 +73,26 @@ public class GeocodingHelper {
 			}
 	};
 	
+	private static List<String> NAME_HOUSE_COUNTRYCODE = new ArrayList<String>() {
+        {
+            add("DE");
+            add("BE");
+            add("HR");
+            add("IS");
+            add("LV");
+            add("NL");
+            add("NO");
+            add("NZ");
+            add("PL");
+            add("RU");
+            add("SI");
+            add("SK");
+            add("SW");
+            add("TR");
+        }
+    };
+
+	
 	public static HouseNumberAddressDto findHouseNumber(String address,
 			String countryCode) {
 		if (address == null) {
@@ -119,5 +140,45 @@ public class GeocodingHelper {
 		}
 
 	}
+	
+	public static String processLabel(GisgraphySearchEntry entry) {
+	    if (entry ==null ){
+	        return null;
+	    }
+        StringBuilder addressFormated = new StringBuilder();
+        if (entry.getCountryCode() != null && NAME_HOUSE_COUNTRYCODE.contains(entry.getCountryCode().toUpperCase())) {
+            if (entry.getName() !=null){
+                addressFormated.append(entry.getName());
+            }
+            if (entry.getHouseNumber()!=null){
+                addressFormated.append(" ").append(entry.getHouseNumber());
+            }
+
+        } else {
+            if (entry.getHouseNumber()!=null) {
+                addressFormated.append(entry.getHouseNumber()).append(", ");
+            }
+            if (entry.getName() !=null){
+                addressFormated.append(entry.getName());
+            }
+
+        }
+        if (entry.getIsIn() !=null || entry.getIsInPlace()!=null) {
+            if (entry.getIsInPlace()!=null) {
+                addressFormated.append(", ").append(entry.getIsInPlace());
+            }
+            if (entry.getIsInZip()!=null && entry.getIsInZip().size()>0) {
+                addressFormated.append(", ").append(entry.getIsInZip().get(0));
+            } else if (entry.getZipCodes() !=null && entry.getZipCodes().size() > 0){
+                addressFormated.append(", ").append(entry.getZipCodes().get(0));
+            }
+            if (entry.getIsIn()!=null) {
+                addressFormated.append(", ").append(entry.getIsIn());
+            }
+        }
+        return addressFormated.toString();
+
+    }
+
 
 }
