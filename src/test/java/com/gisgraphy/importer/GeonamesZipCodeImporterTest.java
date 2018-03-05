@@ -732,6 +732,10 @@ public class GeonamesZipCodeImporterTest {
     	EasyMock.expect(admDaoMock.ListByShape(EasyMock.anyObject(Point.class), EasyMock.anyObject(String.class))).andReturn(adms);
     	EasyMock.replay(admDaoMock);
     	importer.setAdmDao(admDaoMock);
+    	IGisFeatureDao gisFeatureDao = EasyMock.createMock(IGisFeatureDao.class);
+    	EasyMock.expect(gisFeatureDao.save(EasyMock.anyObject(City.class))).andStubReturn(new City());;
+    	EasyMock.replay(gisFeatureDao);
+    	importer.setGisFeatureDao(gisFeatureDao);
     	
     	
     	ImporterConfig importerConfig = new ImporterConfig();
@@ -754,7 +758,6 @@ public class GeonamesZipCodeImporterTest {
     	Assert.assertNotNull(city.getZipCodes());
     	Assert.assertEquals(1, city.getZipCodes().size());
     	Assert.assertEquals(new ZipCode("post","fr"), city.getZipCodes().iterator().next());
-    	EasyMock.verify(cityDaoMock);
     	EasyMock.verify(admDaoMock);
     	EasyMock.verify(idGenerator);
     	

@@ -129,7 +129,7 @@ public class OpenStreetMapHouseNumberFileRetrieverTest {
     OpenStreetMapHouseNumberFileRetriever openStreetMapHouseNumberFileRetriever = new OpenStreetMapHouseNumberFileRetriever();
 	openStreetMapHouseNumberFileRetriever.setInternationalisationService(createMockInternationalisationService());
 	ImporterConfig importerConfig = new ImporterConfig();
-	importerConfig.setOpenstreetMaphouseNumbersDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/openstreetmap/version_3_0/");
+	importerConfig.setOpenstreetMaphouseNumbersDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/import/openstreetmap/housenumbers/");
 	
 	// create a temporary directory to download files
 	File tempDir = FileHelper.createTempDir(this.getClass()

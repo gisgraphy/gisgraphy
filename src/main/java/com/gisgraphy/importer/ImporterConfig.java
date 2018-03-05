@@ -1985,6 +1985,13 @@ public class ImporterConfig {
 	    			return false;
 	    		}
 	    	}
+	    	//osm adms
+            filenames = getOpenStreetMapAdmDownloadFilesListFromOption();
+            for (String filename:filenames){
+                if (!checkUrl(getOpenstreetMapAdmDownloadURL()+filename)){
+                    return false;
+                }
+            }
 	    	}
     	if (quattroshapesImporterEnabled){
     		filenames = getQuattroshapesFilesDownloadFilesListFromOption();

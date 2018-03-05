@@ -130,7 +130,7 @@ public class OpenStreetMapFileRetrieverTest {
 	OpenStreetMapFileRetriever openStreetMapFileRetriever = new OpenStreetMapFileRetriever();
 	openStreetMapFileRetriever.setInternationalisationService(createMockInternationalisationService());
 	ImporterConfig importerConfig = new ImporterConfig();
-	importerConfig.setOpenstreetMapDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/openstreetmap/version_3_0/");
+	importerConfig.setOpenstreetMapDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/import/openstreetmap/housenumbers/");
 	
 	// create a temporary directory to download files
 	File tempDir = FileHelper.createTempDir(this.getClass()

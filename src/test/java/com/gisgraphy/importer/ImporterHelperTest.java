@@ -223,7 +223,7 @@ public class ImporterHelperTest {
 			assertEquals("wrongnumber of files created ", 13, tempDir.listFiles().length);
 
 			File[] fileToBeImported = ImporterHelper.listCountryFilesToImport(tempDirectoryPath);
-			assertEquals(1, fileToBeImported.length);
+			assertEquals(2, fileToBeImported.length);
 			assertEquals("When " + ImporterHelper.ALLCOUTRY_FILENAME + "is present, only this file should be return", ImporterHelper.ALLCOUTRY_FILENAME, fileToBeImported[0].getName());
 
 			assertTrue(" the ImporterHelper.ALLCOUTRY_FILENAME can not be deleted ", badFilePatternWithALLCountriesPattern.delete());
@@ -350,7 +350,7 @@ public class ImporterHelperTest {
 	
 	@Test
 	public void testDownload() throws FileNotFoundException{
-		ImporterHelper.download("https://www.gisgraphy.com/protectfiles/test.php", "/tmp/testdl.txt");
+		ImporterHelper.download("https://download.gisgraphy.com/import/openstreetmap/housenumbers/NU.gis", "/tmp/testdl.txt");
 	}
 	
 	@Test

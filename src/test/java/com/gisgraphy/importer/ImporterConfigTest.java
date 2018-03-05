@@ -47,7 +47,6 @@ import com.gisgraphy.test.GisgraphyTestHelper;
 public class ImporterConfigTest {
 
 	public static final String GISGRAPHY_DOWNLOAD_SERVER = "http://download.gisgraphy.com";
-	public static final String GISGRAPHY_DOWNLOAD_SERVER2 = "http://dl.gisgraphy.com";
 	public static String accessiblePath;
 	public static String pathNotAccessible;
 	public static String filePath;
@@ -329,15 +328,15 @@ public class ImporterConfigTest {
 		importerConfig.setOpenAddressesFilesToDownload(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
 		
-		String baseUrl = GISGRAPHY_DOWNLOAD_SERVER2;
+		String baseUrl = GISGRAPHY_DOWNLOAD_SERVER;
 		importerConfig.setGeonamesDownloadURL("http://download.geonames.org/export/dump/");
-		importerConfig.setOpenstreetMapDownloadURL(baseUrl+"/streets/");
-		importerConfig.setOpenAddressesDownloadURL(baseUrl+"/openaddresses/");
-		importerConfig.setOpenstreetMapCitiesDownloadURL(baseUrl+"/cities/");
-		importerConfig.setOpenstreetMapAdmDownloadURL(baseUrl+"/adms/");
-		importerConfig.setOpenstreetMapPoisDownloadURL(baseUrl+"/pois/");
-		importerConfig.setOpenstreetMaphouseNumbersDownloadURL(baseUrl+"/housenumbers/");
-		importerConfig.setQuattroshapesDownloadURL(baseUrl+"/quattroshapes/");
+		importerConfig.setOpenstreetMapDownloadURL(baseUrl+"/import/openstreetmap/streets/");
+		importerConfig.setOpenAddressesDownloadURL(baseUrl+"/import/openstreetmap/openaddresses/");
+		importerConfig.setOpenstreetMapCitiesDownloadURL(baseUrl+"/import/openstreetmap/cities/");
+		importerConfig.setOpenstreetMapAdmDownloadURL(baseUrl+"/import/openstreetmap/adms/");
+		importerConfig.setOpenstreetMapPoisDownloadURL(baseUrl+"/import/openstreetmap/pois/");
+		importerConfig.setOpenstreetMaphouseNumbersDownloadURL(baseUrl+"/import/openstreetmap/housenumbers/");
+		importerConfig.setQuattroshapesDownloadURL(baseUrl+"/import/quattroshapes/");
 		
 		assertTrue("when all the condition are ok the function should return true when retrieve files is true", importerConfig.isConfigCorrectForImport());
 		

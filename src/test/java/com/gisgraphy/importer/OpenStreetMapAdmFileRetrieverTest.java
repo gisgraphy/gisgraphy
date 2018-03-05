@@ -130,7 +130,7 @@ public class OpenStreetMapAdmFileRetrieverTest {
     	 OpenStreetMapAdmFileRetriever openStreetMapAdmFileRetriever = new OpenStreetMapAdmFileRetriever();
     	 openStreetMapAdmFileRetriever.setInternationalisationService(createMockInternationalisationService());
 	ImporterConfig importerConfig = new ImporterConfig();
-	importerConfig.setOpenstreetMapAdmDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/openstreetmap/version_3_0/");
+	importerConfig.setOpenstreetMapAdmDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/import/openstreetmap/adms/");
 	
 	// create a temporary directory to download files
 	File tempDir = FileHelper.createTempDir(this.getClass()

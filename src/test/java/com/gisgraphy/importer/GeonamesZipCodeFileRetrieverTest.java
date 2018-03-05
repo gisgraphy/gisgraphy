@@ -59,7 +59,7 @@ public class GeonamesZipCodeFileRetrieverTest {
 	}
 
 	importerConfig.setGeonamesZipCodeDir(tempDir.getAbsolutePath());
-	importerConfig.setGeonamesFilesToDownload("FR.zip");
+	importerConfig.setGeonamesZipFilesToDownload("FR.zip");
 	geonamesZipCodeFileRetriever.setImporterConfig(importerConfig);
 	List<NameValueDTO<Integer>> list = geonamesZipCodeFileRetriever.rollback();
 	assertEquals(1, list.size());
@@ -92,7 +92,7 @@ public class GeonamesZipCodeFileRetrieverTest {
 	String fileTobeDownload = "ZW.zip";
 	List<String> filesToDownload =new ArrayList<String>();
 	filesToDownload.add(fileTobeDownload);
-	importerConfig.setGeonamesFilesToDownload(fileTobeDownload);
+	importerConfig.setGeonamesZipFilesToDownload(fileTobeDownload);
 	GeonamesZipCodeFileRetriever geonamesZipCodeFileRetriever = new GeonamesZipCodeFileRetriever();
 	geonamesZipCodeFileRetriever.setImporterConfig(importerConfig);
 	Assert.assertEquals("getFilesToDownload should return the importerConfig Option",filesToDownload, geonamesZipCodeFileRetriever.getFilesToDownload());
@@ -144,7 +144,7 @@ public class GeonamesZipCodeFileRetrieverTest {
 	List<String> filesToDownload =new ArrayList<String>();
 	String fileTobeDownload = "AD.zip";
 	filesToDownload.add(fileTobeDownload);
-	importerConfig.setGeonamesFilesToDownload(fileTobeDownload);
+	importerConfig.setGeonamesZipFilesToDownload(fileTobeDownload);
 	importerConfig.setRetrieveFiles(true);
 
 	importerConfig.setGeonamesZipCodeDir(tempDir.getAbsolutePath());

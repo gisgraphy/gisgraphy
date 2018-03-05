@@ -1538,7 +1538,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("city name is not correct", street.getIs_in(), address.getCity());
 	Assert.assertEquals("countrycode is not correct", street.getCountry_code(), address.getCountryCode());
 	Assert.assertEquals("country is not correct", CountryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase()), address.getCountry());
-	Assert.assertEquals("Adm Name should not be the deeper one but the is_inadm one", street.getIs_in_adm(), address.getState());
+	Assert.assertEquals("Adm Name should not be the deeper one but the is_in_adm one", street.getIs_in_adm(), address.getState());
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
 	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
 	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());

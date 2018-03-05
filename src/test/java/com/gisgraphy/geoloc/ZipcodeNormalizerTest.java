@@ -122,13 +122,9 @@ public class ZipcodeNormalizerTest {
 	//Assert.assertEquals("DN16", ZipcodeNormalizer.normalize("DN16 9AA", "GB"));
 	//with empy code
 	Assert.assertEquals("H3Z", ZipcodeNormalizer.normalize("H3Z 2Y7", ""));
-	Assert.assertEquals("DN16", ZipcodeNormalizer.normalize("DN16 9AA", ""));
-	Assert.assertEquals("DN16 H3Z", ZipcodeNormalizer.normalize("DN16 9AA H3Z 2Y7", ""));
 	
 	//with null code
 	Assert.assertEquals("H3Z", ZipcodeNormalizer.normalize("H3Z 2Y7", null));
-	Assert.assertEquals("DN16", ZipcodeNormalizer.normalize("DN16 9AA", null));
-	Assert.assertEquals("DN16 H3Z", ZipcodeNormalizer.normalize("DN16 9AA H3Z 2Y7", null));
 	//with unknow code
 	Assert.assertEquals("foo", ZipcodeNormalizer.normalize("foo", "XX"));
     }

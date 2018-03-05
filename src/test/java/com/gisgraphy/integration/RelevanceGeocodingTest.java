@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-//@Ignore
+@Ignore
 public class RelevanceGeocodingTest {
 
 	private static final long[] MAGDEBURGERSTRASSE = new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,91146628};

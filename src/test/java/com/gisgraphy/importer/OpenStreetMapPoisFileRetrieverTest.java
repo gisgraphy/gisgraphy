@@ -108,7 +108,7 @@ public class OpenStreetMapPoisFileRetrieverTest {
 	    	OpenStreetMapPoisFileRetriever openStreetMapPoiFileRetriever = new OpenStreetMapPoisFileRetriever();
 		openStreetMapPoiFileRetriever.setInternationalisationService(createMockInternationalisationService());
 		ImporterConfig importerConfig = new ImporterConfig();
-		importerConfig.setOpenstreetMapPoisDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/openstreetmap/version_3_0/");
+		importerConfig.setOpenstreetMapPoisDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/import/openstreetmap/pois/");
 		
 		// create a temporary directory to download files
 		File tempDir = FileHelper.createTempDir(this.getClass()

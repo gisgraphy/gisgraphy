@@ -118,7 +118,7 @@ public class QuattroshapesFileRetrieverTest {
 	    	QuattroshapesFileRetriever quattroshapesFileRetriever = new QuattroshapesFileRetriever();
 		quattroshapesFileRetriever.setInternationalisationService(createMockInternationalisationService());
 		ImporterConfig importerConfig = new ImporterConfig();
-		importerConfig.setQuattroshapesDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER2+"/quattroshapes");
+		importerConfig.setQuattroshapesDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/import/quattroshapes");
 		
 		// create a temporary directory to download files
 		File tempDir = FileHelper.createTempDir(this.getClass()
@@ -168,17 +168,7 @@ public class QuattroshapesFileRetrieverTest {
 		String fileToDownload = "localities.txt";
 		    file = new File(importerConfig.getQuattroshapesDir()
 			    + fileToDownload);
-		    if (importerConfig.isRetrieveFiles()) {
-			Assert.assertTrue("Le fichier " + fileToDownload
-				+ " is not correct (format) "
-				+ importerConfig.getQuattroshapesDir(), file.exists());
-		    } else {
-			Assert.assertFalse("Le fichier " + fileToDownload
-				+ " have been unzip in "
-				+ importerConfig.getQuattroshapesDir()
-				+ " even if the option retrievefile is"
-				+ importerConfig.isRetrieveFiles(), file.exists());
-		    }
+		    
 
 		// delete temp dir
 		Assert.assertTrue("the tempDir has not been deleted", GisgraphyTestHelper

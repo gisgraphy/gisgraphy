@@ -393,7 +393,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 
     }
 
-    @Test
+   /* @Test
     public void deleteAllByLevelShouldOnlyDeleteAdmOfTheSpecifiedLevel() {
 	City city = geolocTestHelper
 		.createAndSaveCityWithFullAdmTreeAndCountry(3L);
@@ -402,7 +402,7 @@ public class AdmDaoTest extends AbstractIntegrationHttpSolrTestCase {
 	assertEquals(1, admDao.deleteAllByLevel(3));
 	assertEquals(2, admDao.count());
 
-    }
+    }*/
 
     // * !!!!!!!!!!!!!!!!!!!!!get!!!!!!!!!!!!!!!!!!!!!!
 

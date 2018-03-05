@@ -754,10 +754,10 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			
 		"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[2]/.='admGPalternateFR']",
+			+ "'][./str[1]/.='admGPalternateFR']",
 			"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]/.='admGPalternate']",
+			+ "'][./str[2]/.='admGPalternate']",
 		"//*[@name='" + FullTextFields.ADM2NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()
 			+ "FR'][./str[1]/.='admGPalternateFR']"
@@ -1001,10 +1001,10 @@ public class SolRSynchroniserTest extends AbstractIntegrationHttpSolrTestCase {
 			+ "'][.='"+country.getArea()+"']",
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[2]/.='"+alternateName.getName()+"']",
+			+ "'][./str[1]/.='"+alternateName.getName()+"']",
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_SUFFIX.getValue()
-			+ "'][./str[1]/.='"+alternateNameLocalized.getName()+"']",
+			+ "'][./str[2]/.='"+alternateNameLocalized.getName()+"']",
 			
 		"//*[@name='" + FullTextFields.NAME.getValue()
 			+ FullTextFields.ALTERNATE_NAME_DYNA_SUFFIX.getValue()

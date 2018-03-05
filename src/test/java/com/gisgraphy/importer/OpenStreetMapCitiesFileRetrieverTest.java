@@ -129,7 +129,7 @@ public class OpenStreetMapCitiesFileRetrieverTest {
     	OpenStreetMapCitiesFileRetriever openStreetMapCitiesFileRetriever = new OpenStreetMapCitiesFileRetriever();
 	openStreetMapCitiesFileRetriever.setInternationalisationService(createMockInternationalisationService());
 	ImporterConfig importerConfig = new ImporterConfig();
-	importerConfig.setOpenstreetMapCitiesDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/openstreetmap/version_3_0/");
+	importerConfig.setOpenstreetMapCitiesDownloadURL(ImporterConfigTest.GISGRAPHY_DOWNLOAD_SERVER+"/import/openstreetmap/cities/");
 	
 	// create a temporary directory to download files
 	File tempDir = FileHelper.createTempDir(this.getClass()

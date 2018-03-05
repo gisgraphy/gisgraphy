@@ -57,44 +57,7 @@ public class ZipCodeDaoTest extends AbstractIntegrationHttpSolrTestCase{
 		Assert.assertTrue(actual.size()==0);
 	}
 	
-	@Test
-	public void testGetByCodeAndCountrySmart_gb(){
-		String code = "code1";
-		String countryCode = "FR";
-		
-		String smartCode = "DN16";
-		String smartCountryCode = "GB";
-		
-		ZipCode smartZip = new ZipCode(smartCode,"fr");
-		ZipCode zip1 = new ZipCode(code,"fr");
-		
-		GisFeature gisFeature = GisgraphyTestHelper.createGisFeature("asciiname", 3F, 4F, 1L);
-		gisFeature.setCountryCode(countryCode);
-		gisFeature.addZipCode(zip1);
-		gisFeatureDao.save(gisFeature);
-		
-		GisFeature smartGisFeature = GisgraphyTestHelper.createGisFeature("asciiname", 3F, 4F, 2L);
-		smartGisFeature.setCountryCode(smartCountryCode);
-		smartGisFeature.addZipCode(smartZip);
-		gisFeatureDao.save(smartGisFeature);
-		
-		//common case
-		List<ZipCode> actual = zipCodeDao.getByCodeAndCountrySmart(code, countryCode);
-		Assert.assertEquals(zip1, actual.get(0));
-		actual = zipCodeDao.getByCodeAndCountrySmart(code, "DE");
-		Assert.assertNotNull(actual);
-		Assert.assertTrue(actual.size()==0);
-		
-		//smart case
-		 actual = zipCodeDao.getByCodeAndCountrySmart(smartCode, smartCountryCode);
-		Assert.assertEquals("smart search for zipCode should handle strictly equals countrycode",smartZip, actual.get(0));
-		
-		 actual = zipCodeDao.getByCodeAndCountrySmart("dn16", smartCountryCode);
-		 Assert.assertEquals("smart search for zipCode should be case insensitive",smartZip, actual.get(0));
-		 
-		 actual = zipCodeDao.getByCodeAndCountrySmart("DN16 9AA", smartCountryCode);
-		 Assert.assertEquals("smart search for zipCode should search for code that starts with",smartZip, actual.get(0));
-	}
+	
 	
 	@Test
 	public void testGetByCodeAndCountrySmart_ca(){
