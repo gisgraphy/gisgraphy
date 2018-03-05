@@ -394,7 +394,7 @@ public class FulltextQuerySolrHelper {
 
 
 			
-			NESTED_QUERY_TEMPLATE = in.readLine();
+			SUGGEST_QUERY_TEMPLATE = in.readLine();
 			//NESTED_QUERY_TEMPLATE=in.readLine();
 				//ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
 				

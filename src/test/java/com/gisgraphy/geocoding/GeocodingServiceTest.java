@@ -259,6 +259,7 @@ public class GeocodingServiceTest {
 	geocodingService.setAddressParser(mockAddressParserService);
 	String rawAddress = "truc foo";
 	AddressQuery query = new AddressQuery(rawAddress, "ac");
+	query.setPostal(true);
 	AddressResultsDto addressResultsDto = geocodingService.geocode(query);
 //	Assert.assertEquals("Parsed address should be set when the address paresed is not null",addressList.get(0), addressResultsDto.getParsedAddress());
 	Assert.assertTrue(GeocodeAdressCalled);
@@ -1392,6 +1393,19 @@ public class GeocodingServiceTest {
     	Assert.assertNull(service.searchHouseNumber(null, houseNumbers,"FR", true));
     	Assert.assertNull(service.searchHouseNumber(null, null,"FR", true));
     }
+    
+    @Test
+    public void searchHouseNumber_SN(){
+        GeocodingService service = new GeocodingService();
+        List<HouseNumberDto> houseNumbers = new ArrayList<HouseNumberDto>();
+        HouseNumberDto number1 = new HouseNumberDto(GeolocHelper.createPoint(2D, 3D), "SN");
+        houseNumbers.add(number1);
+        
+        HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,"3", true);
+        Assert.assertNull(result);
+    }
+    
+    
     
   /*  @Test
     public void findCitiesInText() {

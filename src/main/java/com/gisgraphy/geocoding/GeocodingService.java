@@ -235,7 +235,7 @@ public class GeocodingService implements IGeocodingService {
 		AddressResultsDto addressResultDto = null;
 		logger.debug("is postal address : " +query.isPostal());
 		boolean needParsing = needParsing(query.getAddress());
-		if ((gisgraphyConfig.useAddressParserWhenGeocoding || query.isPostal()) && needParsing) {
+		if ((gisgraphyConfig.useAddressParserWhenGeocoding && query.isPostal()) && needParsing) {
 			try {
 				logger.debug("address parser is enabled");
 				addressResultDto = addressParser.execute(addressQuery);
@@ -549,31 +549,33 @@ public class GeocodingService implements IGeocodingService {
 		logger.info("will analyze HN  : "+sb.toString());
 		
 		for (HouseNumberDto candidate :houseNumbersList){
-			if (candidate != null && candidate.getNumber()!=null){
-				Integer candidateNormalized;
-				if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
-					candidateNormalized = HouseNumberUtil.normalizeSkCzNumberToInt(candidate.getNumber());
-				} else {
-					candidateNormalized = HouseNumberUtil.normalizeNumberToInt(candidate.getNumber());
-				}
-				logger.error("candidateNormalized='"+candidateNormalized+"' and houseNumberToFindAsInt='"+houseNumberToFindAsInt+"'");
-				if (candidateNormalized!=null && houseNumberToFindAsInt != null &&  candidateNormalized.intValue() == houseNumberToFindAsInt.intValue()){
-					logger.info("house number candidate found : "+candidate.getNumber());
-					HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation(candidate.getLocation(),houseNumberToFindAsInt);
-					result.setApproximative(false);
-					return result;
-				} else if (candidateNormalized < houseNumberToFindAsInt ){
-					if (nearestLower ==null || candidateNormalized > nearestLower){
-						nearestLower = candidateNormalized;
-						nearestHouseLower = candidate;
-					}
-				} else if (candidateNormalized > houseNumberToFindAsInt){
-					if (nearestUpper == null || candidateNormalized < nearestUpper){
-						nearestUpper = candidateNormalized;
-						nearestHouseUpper = candidate;
-					}
-				}
-		}
+		    if (candidate != null && candidate.getNumber()!=null){
+		        Integer candidateNormalized;
+		        if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
+		            candidateNormalized = HouseNumberUtil.normalizeSkCzNumberToInt(candidate.getNumber());
+		        } else {
+		            candidateNormalized = HouseNumberUtil.normalizeNumberToInt(candidate.getNumber());
+		        }
+		        logger.error("candidateNormalized='"+candidateNormalized+"' and houseNumberToFindAsInt='"+houseNumberToFindAsInt+"'");
+		        if (candidateNormalized!=null){
+		            if (houseNumberToFindAsInt != null &&  candidateNormalized.intValue() == houseNumberToFindAsInt.intValue()){
+		                logger.info("house number candidate found : "+candidate.getNumber());
+		                HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation(candidate.getLocation(),houseNumberToFindAsInt);
+		                result.setApproximative(false);
+		                return result;
+		            } else if (candidateNormalized < houseNumberToFindAsInt ){
+		                if (nearestLower ==null || candidateNormalized > nearestLower){
+		                    nearestLower = candidateNormalized;
+		                    nearestHouseLower = candidate;
+		                }
+		            } else if (candidateNormalized > houseNumberToFindAsInt){
+		                if (nearestUpper == null || candidateNormalized < nearestUpper){
+		                    nearestUpper = candidateNormalized;
+		                    nearestHouseUpper = candidate;
+		                }
+		            }
+		        }
+		    }
 		}
 		logger.info("no exact house number candidate found for "+houseNumberToFindAsInt);
 		//do interpolation
