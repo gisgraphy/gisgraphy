@@ -68,6 +68,7 @@ import com.gisgraphy.fulltext.SolrResponseDtoDistanceComparator;
 import com.gisgraphy.geoloc.ZipcodeNormalizer;
 import com.gisgraphy.helper.CountryDetector;
 import com.gisgraphy.helper.CountryDetectorDto;
+import com.gisgraphy.helper.CountryInfo;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.StringHelper;
 import com.gisgraphy.importer.ImporterConfig;
@@ -625,6 +626,9 @@ public class GeocodingService implements IGeocodingService {
 			address.setLng(response.getLng());
 			address.setId(response.getFeature_id());
 			address.setGeocodingLevel(GeocodingLevels.COUNTRY);
+			if (response.getCountry_code()!=null){
+			    address.setCountry(CountryInfo.countryLookupMap.get(response.getCountry_code().toUpperCase()));
+			}
 			addresses.add(address);
 		}
 		return new AddressResultsDto(addresses, 0L);
@@ -670,6 +674,9 @@ public class GeocodingService implements IGeocodingService {
 				address.setId(solrResponseDto.getFeature_id());
 				String countryCode = solrResponseDto.getCountry_code();
 				address.setCountryCode(countryCode);
+				if (countryCode!=null){
+	                address.setCountry(CountryInfo.countryLookupMap.get(countryCode.toUpperCase()));
+	            }
 				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Adm.class.getSimpleName())) {
 					address.setState(solrResponseDto.getName());
 				}else if (solrResponseDto.getAdm1_name() != null) {

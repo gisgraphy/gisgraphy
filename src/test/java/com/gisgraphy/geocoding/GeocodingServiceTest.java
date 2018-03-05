@@ -53,6 +53,7 @@ import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
 import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
+import com.gisgraphy.helper.CountryInfo;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.importer.ImporterConfig;
 import com.gisgraphy.importer.LabelGenerator;
@@ -1536,7 +1537,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("street type is not correct", street.getStreet_type(), address.getStreetType());
 	Assert.assertEquals("city name is not correct", street.getIs_in(), address.getCity());
 	Assert.assertEquals("countrycode is not correct", street.getCountry_code(), address.getCountryCode());
-	
+	Assert.assertEquals("country is not correct", CountryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase()), address.getCountry());
 	Assert.assertEquals("Adm Name should not be the deeper one but the is_inadm one", street.getIs_in_adm(), address.getState());
 	Assert.assertEquals("place is not correct", street.getIs_in_place(), address.getDependentLocality());
 	Assert.assertFalse("formated Postal is not correct should not contains streettype",  address.getFormatedPostal().contains(address.getStreetType()));
@@ -1767,6 +1768,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("zipcode is not correct", city.getZipcodes().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should be the lower one", city.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", city.getCountry_code(), address.getCountryCode());
+	Assert.assertEquals("country is not correct", CountryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase()), address.getCountry());
 	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", city.getFully_qualified_name(), address.getFormatedFull());
     }
@@ -1799,6 +1801,7 @@ public class GeocodingServiceTest {
 	Assert.assertEquals("zipcode is not correct", citySubdivision.getZipcodes().iterator().next(), address.getZipCode());
 	Assert.assertEquals("Adm Name should be the lower one", citySubdivision.getAdm1_name(), address.getState());
 	Assert.assertEquals("countrycode is not correct", citySubdivision.getCountry_code(), address.getCountryCode());
+	Assert.assertEquals("country is not correct", CountryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase()), address.getCountry());
 	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
 	Assert.assertEquals("formated full is not correct", citySubdivision.getFully_qualified_name(), address.getFormatedFull());
     }
@@ -1829,6 +1832,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("score is not correct", adm.getScore(), address.getScore());
     	Assert.assertEquals("Adm Name should be the deeper one", adm.getName(), address.getState());
     	Assert.assertEquals("countrycode is not correct", adm.getCountry_code(), address.getCountryCode());
+    	Assert.assertEquals("country is not correct", CountryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase()), address.getCountry());
     	
     	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
     	Assert.assertEquals("formated full is not correct", adm.getFully_qualified_name(), address.getFormatedFull());
@@ -1859,6 +1863,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals("score is not correct", feature.getScore(), address.getScore());
     	Assert.assertEquals("Adm Name should be the lower one", feature.getAdm1_name(), address.getState());
     	Assert.assertEquals("countrycode is not correct", feature.getCountry_code(), address.getCountryCode());
+    	Assert.assertEquals("country is not correct", CountryInfo.countryLookupMap.get(address.getCountryCode().toUpperCase()), address.getCountry());
     	Assert.assertNotNull("formated Postal is not correct ", address.getFormatedPostal());
     	Assert.assertEquals("formated full is not correct", feature.getFully_qualified_name(), address.getFormatedFull());
     }
