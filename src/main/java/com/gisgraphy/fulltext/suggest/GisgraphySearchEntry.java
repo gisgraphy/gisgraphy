@@ -22,6 +22,8 @@ public class GisgraphySearchEntry {
 
     @JsonProperty("country_code")
     private String countryCode;
+    
+    private String country;
 
     @JsonProperty("is_in")
     private String isIn;
@@ -140,14 +142,13 @@ public class GisgraphySearchEntry {
         this.zipCodes = zipCodes;
     }
 
-
-    public String getCountry() {
-        if (countryCode!=null){
-            return CountryInfo.countryLookupMap.get(countryCode.toUpperCase());
-        }
-        return null;
+    public void setCountry(String country){
+        this.country = country;
     }
 
+    public String getCountry() {
+       return country;
+    }
 
     @JsonProperty("house_number")
     public String getHouseNumber() {

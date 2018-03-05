@@ -25,7 +25,6 @@ package com.gisgraphy.fulltext;
 import static com.gisgraphy.helper.StringHelper.isEmptyString;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -40,11 +39,7 @@ import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.params.ModifiableSolrParams;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.module.SimpleModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +47,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
-import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.repository.GisFeatureDao;
 import com.gisgraphy.domain.valueobject.Constants;
@@ -63,6 +57,7 @@ import com.gisgraphy.fulltext.suggest.GisgraphySearchResponseHeader;
 import com.gisgraphy.fulltext.suggest.GisgraphySearchResult;
 import com.gisgraphy.geocoding.GeocodingHelper;
 import com.gisgraphy.geoloc.ZipcodeNormalizer;
+import com.gisgraphy.helper.CountryInfo;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.service.IStatsUsageService;
 import com.gisgraphy.service.ServiceException;
@@ -285,6 +280,9 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
 			lastName=entry.getName();
 			lastIsin = entry.getIsIn();
 			lastLocation=curLoc;	
+			 if (entry.getCountryCode()!=null){
+	                entry.setCountry(CountryInfo.countryLookupMap.get(entry.getCountryCode().toUpperCase()));
+	         }
 			entry.setLabel(GeocodingHelper.processLabel(entry));
 		}
 		if (candidate!=null){

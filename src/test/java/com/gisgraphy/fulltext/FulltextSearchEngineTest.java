@@ -1743,6 +1743,7 @@ public class FulltextSearchEngineTest extends
 		
     	updated = fullTextSearchEngineTest.updateFeed(actual, "11");
     	Assert.assertEquals(2, updated.getResponse().getDocs().size());
+    	Assert.assertEquals("France", updated.getResponse().getDocs().get(0).getCountry());
     	//HN found
     	Assert.assertEquals(2, updated.getResponse().getDocs().get(0).getLat(),0.00001);
     	Assert.assertEquals(31, updated.getResponse().getDocs().get(0).getLng(),0.00001);
@@ -1784,6 +1785,7 @@ public class FulltextSearchEngineTest extends
 		gisgraphySearchEntry1.setLat(78);
 		gisgraphySearchEntry1.setLng(120);
 		gisgraphySearchEntry1.setName(name);
+		gisgraphySearchEntry1.setCountryCode("fr");
 		docs.add(gisgraphySearchEntry1 );
 		
 		
@@ -1796,6 +1798,7 @@ public class FulltextSearchEngineTest extends
 		gisgraphySearchEntry2.setLat(88);
 		gisgraphySearchEntry2.setLng(110);
 		gisgraphySearchEntry2.setName(name);
+		gisgraphySearchEntry2.setCountryCode("fr");
 		docs.add(gisgraphySearchEntry2);
 		
 		
