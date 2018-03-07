@@ -84,7 +84,7 @@ public class RelevanceGeocodingTest {
 	@SuppressWarnings("serial")
 	List<String> countryTest = new ArrayList<String>(){
 		{
-			//add("FR");
+			add("FR");
 			//add("GB");
 			add("DE");
 			//add("US");
@@ -1290,7 +1290,7 @@ public class RelevanceGeocodingTest {
 			address.setCitySubdivision("paris 15e");
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectById(2970479L,addressResultsDto.getResult(), address.toString());
+			isFirstCorrectById(VAUGIRARD_QUATER_ID,addressResultsDto.getResult(), address.toString());
 		}
 	}
 
