@@ -281,8 +281,9 @@ public class FulltextQuerySolrHelper {
 			} else if (query.getPlaceTypes()==null || query.getPlaceTypes().length==0){
 					bqField=CITY_ADM_BOOST_QUERY;//we force boost to city because it is not a 'Typed' query
 				}
-			 else if (isAdministrative(query.getPlaceTypes())){
-				bqField=CITY_BOOST_QUERY;//we force nothin  because it is admin query
+			// if one word, name is more important than type and we want to find adm as cities without boost
+			 else if (isAdministrative(query.getPlaceTypes()) && hasManyWords(query)){
+				bqField=CITY_BOOST_QUERY;//we force nothing  because it is admin query
 			} 
 			
 			
@@ -339,6 +340,10 @@ public class FulltextQuerySolrHelper {
 
 		return parameters;
 	}
+
+    protected static boolean hasManyWords(FulltextQuery query) {
+        return query.getQuery().trim().split(" ").length >1;
+    }
 
 	public static void setFQPlacetype(FulltextQuery query,
 			ModifiableSolrParams parameters) {

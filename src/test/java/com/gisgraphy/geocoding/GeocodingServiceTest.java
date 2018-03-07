@@ -21,8 +21,6 @@
  ******************************************************************************/
 package com.gisgraphy.geocoding;
 
-import static com.gisgraphy.fulltext.Constants.ADDRESSES_PLACETYPE;
-import static com.gisgraphy.fulltext.FulltextQuerySolrHelper.NUMBER_OF_STREET_TO_RETRIEVE;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
@@ -44,14 +42,11 @@ import com.gisgraphy.addressparser.StructuredAddressQuery;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
 import com.gisgraphy.addressparser.exception.AddressParserException;
 import com.gisgraphy.addressparser.format.BasicAddressFormater;
-import com.gisgraphy.addressparser.format.DisplayMode;
 import com.gisgraphy.domain.valueobject.GisgraphyConfig;
 import com.gisgraphy.domain.valueobject.Pagination;
 import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.fulltext.FulltextQuery;
-import com.gisgraphy.fulltext.FulltextQuerySolrHelper;
 import com.gisgraphy.fulltext.FulltextResultsDto;
-import com.gisgraphy.fulltext.IFullTextSearchEngine;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.CountryInfo;
 import com.gisgraphy.helper.GeolocHelper;
@@ -1255,6 +1250,7 @@ public class GeocodingServiceTest {
     	HouseNumberDtoInterpolation result = service.searchHouseNumber(2, houseNumbers,"FR", true);
     	Assert.assertEquals(4D, result.getExactLocation().getX(),0.0001);
     	Assert.assertEquals(5D, result.getExactLocation().getY(),0.0001);
+    	Assert.assertEquals(0, result.getHouseNumberDif().intValue());
     	
     }
     
@@ -1281,6 +1277,7 @@ public class GeocodingServiceTest {
     	Assert.assertEquals(6D, result.getHigherLocation().getX(),0.001);
     	Assert.assertEquals(7D, result.getHigherLocation().getY(),0.001);
     	Assert.assertEquals(5, result.getHigherNumber().intValue());
+    	Assert.assertEquals(1, result.getHouseNumberDif().intValue());
     	
     	result = service.searchHouseNumber(1, houseNumbers,"FR", true);
     	Assert.assertNull(result.getExactLocation());
@@ -1290,8 +1287,9 @@ public class GeocodingServiceTest {
     	Assert.assertEquals(2D, result.getHigherLocation().getX(),0.001);
     	Assert.assertEquals(3D, result.getHigherLocation().getY(),0.001);
     	Assert.assertEquals(2, result.getHigherNumber().intValue());
+    	Assert.assertEquals(1, result.getHouseNumberDif().intValue());
     	
-    	result = service.searchHouseNumber(7, houseNumbers,"FR", true);
+    	result = service.searchHouseNumber(8, houseNumbers,"FR", true);
     	Assert.assertNull(result.getExactLocation());
     	Assert.assertNull(result.getExactNumber());
     	Assert.assertEquals(8D, result.getLowerLocation().getX(),0.001);
@@ -1300,6 +1298,7 @@ public class GeocodingServiceTest {
     	Assert.assertNull(null, result.getHigherLocation());
     	Assert.assertNull(null, result.getHigherLocation());
     	Assert.assertNull(result.getHigherNumber());
+    	Assert.assertEquals(-2, result.getHouseNumberDif().intValue());
     }
     
     @Test
@@ -1566,9 +1565,9 @@ public class GeocodingServiceTest {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in",null);
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in",null,111L,"1", "2");
 	streets.add(street);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in",null);
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in",null,222L,"1", "2");
 	streets.add(street2);
 	
 	// exercise
@@ -1586,9 +1585,9 @@ public class GeocodingServiceTest {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "2");
 	streets.add(street);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"1", "2");
 	streets.add(street2);
 	
 	// exercise
@@ -1602,13 +1601,676 @@ public class GeocodingServiceTest {
     }
     
     @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_noHouseThenHouse() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,null, null);
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"4", "5");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "2");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_HouseThenNoHouse() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"4", "5");
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,null, null);
+    streets.add(street);
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "2");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    }
+    
+    
+    
+   /*----------------------------------------------------------------one street with multiple segment-----------------------------*/ 
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnFirstSegment() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"4", "5");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "2");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnSecondSegment() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "8");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be set because there is interpolation","8", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_higherOnSecondSegment() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "10");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_LowerOnSecondSegment() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "6");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_LowerOnfirstSegment() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"2", "4");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "1");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_higherOnfirstSegment() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"2", "4");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "5");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(1, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    /*----------------------------------------------------------------Several street second not null name--------------------------------*/
+    
+    
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnFirstSegment_Then_otherWithNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"4", "5");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",333L,"1", "3");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "2");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnSecondSegment_Then_otherWithNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",333L,"7", "9");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "8");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be set because there is interpolation","8", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","8", addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_higherOnSecondSegment_Then_otherWithNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",333L,"7", "9");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "10");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_LowerOnSecondSegment_Then_otherWithNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",333L,"7", "9");
+    streets.add(street3);
+    
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "6");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_LowerOnfirstSegment_Then_otherWithNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"2", "4");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",333L,"2", "4");
+    streets.add(street3);
+    
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "1");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_higherOnfirstSegment_Then_otherWithNotName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"2", "4");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",333L,"2", "4");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "5");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    /*----------------------------------------------------------------Several street second null name--------------------------------*/
+    
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnFirstSegment_Then_otherWithNotNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"4", "5");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name2","is_in","is_in_place",333L,"1", "3");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "2");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnSecondSegment_Then_otherWithNotNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name2","is_in","is_in_place",333L,"7", "9");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "8");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be set because there is interpolation","8", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","8", addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_higherOnSecondSegment_Then_otherWithNotNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name2","is_in","is_in_place",333L,"7", "9");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "10");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_LowerOnSecondSegment_Then_otherWithNotNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name2","is_in","is_in_place",333L,"7", "9");
+    streets.add(street3);
+    
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "6");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_LowerOnfirstSegment_Then_otherWithNotNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"2", "4");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name2","is_in","is_in_place",333L,"2", "4");
+    streets.add(street3);
+    
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "1");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_higherOnfirstSegment_Then_otherWithNotNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"2", "4");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"7", "9");
+    streets.add(street2);
+    SolrResponseDto street3 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name2","is_in","is_in_place",333L,"2", "4");
+    streets.add(street3);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "5");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    Assert.assertEquals("house number should be not be set (only interpolation does",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("the second segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("Coordinate should be the house one, not the street",5F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",4f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    /*-------------------------------------------*/
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnFirstSegment_nullNameFirst() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",222L,"4", "5");
+    streets.add(street2);
+   
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "2");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",222L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set only interpolation and exact does",null, addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",3F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",2f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    /*-------------------------------------------*/
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_same_InterpolationOnFirstSegment_nullNamethenNullName() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",111L,"1", "3");
+    streets.add(street);
+    SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet(null,"is_in","is_in_place",333L,"1", "3");
+    streets.add(street2);
+    
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(streets, "2");
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",111L, addressResultsDto.getResult().get(0).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(0).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(0).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(0).getLng().floatValue(),0.0001);
+    
+    
+    
+    Assert.assertEquals("the first segment should be return because the interpolation is done on the first segment",333L, addressResultsDto.getResult().get(1).getSourceId().intValue());
+    Assert.assertEquals("house number should be set because there is interpolation","2", addressResultsDto.getResult().get(1).getHouseNumber());
+    Assert.assertEquals("Coordinate should be the house one, not the street",4F, addressResultsDto.getResult().get(1).getLat().floatValue(),0.0001);
+    Assert.assertEquals("Coordinate should be the house one, not the street",3f, addressResultsDto.getResult().get(1).getLng().floatValue(),0.0001);
+    
+    }
+    
+    
+    
+    
+    
+    @Test
     public void buildAddressResultDtoFromSolrResponseDto_street_duplicate_differentIsInPlace() {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "2");
 	streets.add(street);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place2");
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place2",222L,"1", "2");
 	streets.add(street2);
 	
 	// exercise
@@ -1626,9 +2288,9 @@ public class GeocodingServiceTest {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> streets = new ArrayList<SolrResponseDto>();
-	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in","is_in_place");
+	SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in","is_in_place",111L,"1", "2");
 	streets.add(street);
-	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("is_in2","is_in_place");
+	SolrResponseDto street2 = GisgraphyTestHelper.createSolrResponseDtoForStreet("street Name","is_in2","is_in_place",222L,"1", "2");
 	streets.add(street2);
 	
 	// exercise
@@ -1715,7 +2377,7 @@ public class GeocodingServiceTest {
     }
     
     @Test
-    public void buildAddressResultDtoFromSolrResponseDto_severalType() {
+    public void buildAddressResultDtoFromSolrResponseDto_severalType_StreetthenCity() {
 	// setup
 	GeocodingService geocodingService = new GeocodingService();
 	List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
@@ -1740,6 +2402,63 @@ public class GeocodingServiceTest {
 	
 	
     }
+    
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_severalType_cityThenStreet() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
+    SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
+    SolrResponseDto street = GisgraphyTestHelper.createSolrResponseDtoForStreetFQDN("is_in");
+    results.add(city);
+    results.add(street);
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(results, null);
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Address address1 = addressResultsDto.getResult().get(0);
+    Address address2 = addressResultsDto.getResult().get(1);
+    Assert.assertEquals("id is not correct for address 2", city.getFeature_id(), address1.getId());
+    Assert.assertEquals("id is not correct for address 1", street.getFeature_id(), address2.getId());
+    
+    Assert.assertEquals("source id is not correct for address 2", city.getOpenstreetmap_id(), address1.getSourceId());
+    Assert.assertEquals("source id is not correct for address 1", street.getOpenstreetmap_id(), address2.getSourceId());
+    
+    
+    }
+    
+    @Test
+    public void buildAddressResultDtoFromSolrResponseDto_severalType_cityThenAdm() {
+    // setup
+    GeocodingService geocodingService = new GeocodingService();
+    List<SolrResponseDto> results = new ArrayList<SolrResponseDto>();
+    SolrResponseDto city = GisgraphyTestHelper.createSolrResponseDtoForCity();
+    SolrResponseDto adm = GisgraphyTestHelper.createSolrResponseDtoForAdm();
+    results.add(city);
+    results.add(adm);
+    // exercise
+    AddressResultsDto addressResultsDto = geocodingService.buildAddressResultDtoFromSolrResponseDto(results, null);
+
+    // verify
+    Assert.assertNotNull("qtime should not be null", addressResultsDto.getQTime());
+    Assert.assertNotNull("results should not be null, but at least empty list", addressResultsDto.getResult());
+    Assert.assertEquals(2, addressResultsDto.getResult().size());
+    Address address1 = addressResultsDto.getResult().get(0);
+    Address address2 = addressResultsDto.getResult().get(1);
+    Assert.assertEquals("id is not correct for address 2", city.getFeature_id(), address1.getId());
+    Assert.assertEquals("id is not correct for address 1", adm.getFeature_id(), address2.getId());
+    
+    Assert.assertEquals("source id is not correct for address 2", city.getOpenstreetmap_id(), address1.getSourceId());
+    Assert.assertEquals("source id is not correct for address 1", adm.getOpenstreetmap_id(), address2.getSourceId());
+    
+    
+    }
+    
+    
     
     @Test
     public void buildAddressResultDtoFromSolrResponseDto_city() {
@@ -2559,7 +3278,43 @@ public class GeocodingServiceTest {
     	
     }
     
-
+    @Test
+    public void testReplaceGermanSynonyms(){
+        GeocodingService service = new GeocodingService();
+        
+        //no str
+        Assert.assertEquals("foo",service.replaceGermanSynonyms("foo"));
+        
+        //one without point
+        Assert.assertEquals("trucstraße",service.replaceGermanSynonyms("trucStr"));
+        Assert.assertEquals("trucStrasse",service.replaceGermanSynonyms("trucStrasse"));
+        Assert.assertEquals("truc Strasse",service.replaceGermanSynonyms("truc Strasse"));
+    //  Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str"));
+        
+        //one with point
+        Assert.assertEquals("trucstraße",service.replaceGermanSynonyms("trucStr."));
+        Assert.assertEquals("trucStrasse.",service.replaceGermanSynonyms("trucStrasse."));
+        Assert.assertEquals("truc Strasse.",service.replaceGermanSynonyms("truc Strasse."));
+    //  Assert.assertEquals("truc straße",service.replaceGermanSynonyms("truc Str."));
+        
+        //one without point + other word
+        Assert.assertEquals("foo trucstraße",service.replaceGermanSynonyms("foo trucStr"));
+        Assert.assertEquals("foo trucStrasse",service.replaceGermanSynonyms("foo trucStrasse"));
+        Assert.assertEquals("foo truc Strasse",service.replaceGermanSynonyms("foo truc Strasse"));
+    //  Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str"));
+        
+        //one with point + other word
+        Assert.assertEquals("foo trucstraße",service.replaceGermanSynonyms("foo trucStr."));
+        Assert.assertEquals("foo trucStrasse.",service.replaceGermanSynonyms("foo trucStrasse."));
+        Assert.assertEquals("foo truc Strasse.",service.replaceGermanSynonyms("foo truc Strasse."));
+    //  Assert.assertEquals("foo truc straße",service.replaceGermanSynonyms("foo truc Str."));
+        
+        //two 
+        //Assert.assertEquals("foo trucstraße foo trucstraße",service.replaceGermanSynonyms("foo trucStr. foo trucStr."));
+        
+    //  Assert.assertEquals("foo truc str",service.replaceGermanSynonyms("foo truc Str."));
+    }
+    
 
    
 }

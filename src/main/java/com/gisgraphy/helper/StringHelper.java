@@ -332,6 +332,130 @@ public class StringHelper {
 		return false;
 	}
 	
+	
+	
+	/**
+     * @param expected
+     * @param actual
+     * @param tolerance the number of word that can be missing if there is more than two words specified
+     * @return
+     */
+    public static int countSameOrApprox(String expected, String actual){
+        if (actual!=null && expected!=null){
+            //remove some words
+            
+            Matcher matcherCity = CITY_PATTERN.matcher(actual);
+            StringBuffer sb = new StringBuffer();
+            if (matcherCity.find()){
+                matcherCity.appendReplacement(sb, "");
+                matcherCity.appendTail(sb);
+                actual = sb.toString().trim();
+            }
+            
+            matcherCity = CITY_PATTERN.matcher(expected);
+            sb = new StringBuffer();
+            if (matcherCity.find()){
+                matcherCity.appendReplacement(sb, "");
+                matcherCity.appendTail(sb);
+                expected = sb.toString();
+            }
+            
+            //split the strings
+            String[] actualSplited = StringHelper.removePunctuation(actual).split("[,\\s\\-\\–\\一;//]");
+            String[] expectedSplited = StringHelper.removePunctuation(expected).split("[,\\s\\-\\–\\一//]");
+            
+
+            //first we check if actual has more long words than expected
+            //saint jean is not saint jean de luz, but 'la petite maison' is ok for 'petite maison'
+            List<String> actualSplitedLong = new ArrayList<String>();
+            for (String word:actualSplited){
+                if (word.length()>3){
+                    if (word!=null){
+                        actualSplitedLong.add(normalize(word));
+                    }
+                }  else if (word.equals("st")){
+                    Matcher m =SYNONYMS_PATTERN.matcher(expected);
+                    if (m.find() && m.groupCount()>=1){
+                        actualSplitedLong.add(m.group(1).toLowerCase());
+                    }
+                } else if (StringUtils.isNumeric(word)){
+                    actualSplitedLong.add(normalize(word));
+                }
+            }
+            List<String> expectedSplitedLong = new ArrayList<String>();
+            for (String word:expectedSplited){
+                if (word.length()>3){
+                    if (word!=null){
+                        expectedSplitedLong.add(normalize(word));
+                    }
+                } else if (word.equals("st")){
+                    Matcher m =SYNONYMS_PATTERN.matcher(actual);
+                    if (m.find()&&m.groupCount()>=1){
+                        expectedSplitedLong.add(m.group(1).toLowerCase());
+                    }
+                }
+            }
+            //same number of word but are they the same ?
+            int count = 0;
+            for (String word :actualSplitedLong){
+                if(expectedSplitedLong.contains(word)){
+                    count++;
+                } else {
+                    for (String wordexpected : expectedSplitedLong){
+                        if (minDistance(wordexpected, word)<=2){
+                            count++;
+                            break;
+                        }
+                    }
+                }
+                
+            }
+
+            return count;
+        }
+        return 0;
+    }
+    
+    public static int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+     
+        // len1+1, len2+1, because finally return dp[len1][len2]
+        int[][] dp = new int[len1 + 1][len2 + 1];
+     
+        for (int i = 0; i <= len1; i++) {
+            dp[i][0] = i;
+        }
+     
+        for (int j = 0; j <= len2; j++) {
+            dp[0][j] = j;
+        }
+     
+        //iterate though, and check last char
+        for (int i = 0; i < len1; i++) {
+            char c1 = word1.charAt(i);
+            for (int j = 0; j < len2; j++) {
+                char c2 = word2.charAt(j);
+     
+                //if last two chars equal
+                if (c1 == c2) {
+                    //update dp value for +1 length
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else {
+                    int replace = dp[i][j] + 1;
+                    int insert = dp[i][j + 1] + 1;
+                    int delete = dp[i + 1][j] + 1;
+     
+                    int min = replace > insert ? insert : replace;
+                    min = delete > min ? min : delete;
+                    dp[i + 1][j + 1] = min;
+                }
+            }
+        }
+     
+        return dp[len1][len2];
+    }
+	
 	private static List<String> FR_COUNTRIES = new ArrayList<String>(){{
 		add("CA");add("FR");add("BE");add("CH");add("RE");add("GP");add("MF");add("MP");add("DZ");add("MA");add("SD");add("CD");add("CM");add("SN");add("PM");}};
 	private static List<String> EN_COUNTRIES = new ArrayList<String>(){{add("US");add("CA");add("CN");add("ID");add("IN");add("AU");add("SG");add("HK");add("IR");add("FI");add("SA");add("VI");add("FK");add("GI");add("GL");add("FO");add("AS");add("IM");add("UM");add("GB");add("UK");add("PR");add("JE");add("SH");add("GS");add("GG");}};

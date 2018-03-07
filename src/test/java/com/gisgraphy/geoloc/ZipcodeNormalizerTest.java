@@ -137,5 +137,14 @@ public class ZipcodeNormalizerTest {
 		//not uk postcode
 		Assert.assertEquals("AB 9ST, Aberdeen",ZipcodeNormalizer.fixGBZipCode("AB 9ST, Aberdeen"));
 	}
+    
+    @Test
+    public void containsGBPostCode(){
+        Assert.assertTrue(ZipcodeNormalizer.containsGBPostCode("CA11 0TQ"));
+        Assert.assertTrue(ZipcodeNormalizer.containsGBPostCode("CA9 3BW"));
+        Assert.assertFalse(ZipcodeNormalizer.containsGBPostCode(null));
+        
+        
+    }
 
 }

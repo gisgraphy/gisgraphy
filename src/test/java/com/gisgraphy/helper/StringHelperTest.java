@@ -528,6 +528,21 @@ public class StringHelperTest {
     	
     }
     
+    @Test
+    public void testMinDistance(){
+        Assert.assertEquals(1,StringHelper.minDistance("grenoble","grenobl"));
+        Assert.assertEquals(1,StringHelper.minDistance("grenoble","renoble"));
+        Assert.assertEquals(1,StringHelper.minDistance("grenoble","grennoble"));
+        Assert.assertEquals(0,StringHelper.minDistance("grenoble","grenoble"));
+        Assert.assertEquals(2,StringHelper.minDistance("grenoble","grneoble"));
+    }
+    
+    @Test
+    public void countSameOrApprox(){
+        Assert.assertEquals(2,StringHelper.countSameOrApprox("docteur schweitzer grenoble","docteur schweitzer 51240 paris"));
+        Assert.assertEquals(3,StringHelper.countSameOrApprox("docteur schweitzer grenoble","docteur schweitzer grenoble"));
+    }
+    
     
 
 

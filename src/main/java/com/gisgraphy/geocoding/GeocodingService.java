@@ -92,7 +92,11 @@ import com.vividsolutions.jts.geom.Point;
 @Service
 public class GeocodingService implements IGeocodingService {
 	
+    private static final int MAX_ACCEPTABLE_DISTANCE_FOR_SAME_STREET = 12000;
 
+    private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
+
+    private static final Float MIN_SCORE_EXACT = 6f;
 	private static final String FUZZY_ACTIVE = "fuzzy:active";
 	//private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 	
@@ -133,7 +137,7 @@ public class GeocodingService implements IGeocodingService {
 	 */
 	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 
-	public static final Float SCORE_THRESHOLD_FUZZY = 3F;
+	public static final Float MIN_SCORE_THRESHOLD_FUZZY = 9F;
 
 	/*
 	 * (non-Javadoc)
@@ -283,7 +287,8 @@ public class GeocodingService implements IGeocodingService {
 					logger.error("find specific german address");
 					alternativeGermanAddress = decompounder.getOtherFormatForText(newAddress);
 					logger.error("alternativeGermanAddress= "+alternativeGermanAddress);
-					//alternativeGermanAddress = replaceGermanSynonyms(alternativeGermanAddress);
+					alternativeGermanAddress = replaceGermanSynonyms(alternativeGermanAddress);
+					
 					newAddress = StringHelper.expandStreetType(newAddress, null);
 					logger.error("new rawAddress with synonyms ="+newAddress);
 					//logger.error("new alternative with synonyms ="+alternativeGermanAddress);
@@ -295,14 +300,16 @@ public class GeocodingService implements IGeocodingService {
 			results = doSearch(newAddress,alternativeGermanAddress, countryCode, 
 					needParsing,houseNumber, false, query.getPoint(), query.getRadius(), smartstreetdetected);
 
-
-
 			//try in fuzzy
-			if (query.isFuzzy() && (results.getNumFound()==0 || (results.getResult().size()>0 && results.getResult().get(0).getScore()< SCORE_THRESHOLD_FUZZY ))){
-				results = doSearch(newAddress,alternativeGermanAddress, countryCode,
-						needParsing,houseNumber, true, query.getPoint(), query.getRadius(), smartstreetdetected);
-			}
-					
+			if (query.isFuzzy()){
+			    AddressResultsDto resultsFuzzy;
+			    if(results.getNumFound()==0 || (results.getResult().size()>0 && results.getResult().get(0).getScore()< MIN_SCORE_THRESHOLD_FUZZY )){
+			        resultsFuzzy = doSearch(newAddress,alternativeGermanAddress, countryCode,
+			                needParsing,houseNumber, true, query.getPoint(), query.getRadius(), smartstreetdetected);
+			        results = mergeExactAndFuzzy(results, newAddress,
+                            resultsFuzzy); 
+			    }
+			}	
 				
 			Long endTime = System.currentTimeMillis();
 			long qTime = endTime - startTime;
@@ -313,19 +320,29 @@ public class GeocodingService implements IGeocodingService {
 		}
 	}
 
+    protected AddressResultsDto mergeExactAndFuzzy(AddressResultsDto results,
+            String newAddress, AddressResultsDto resultsFuzzy) {
+        if (resultsFuzzy.getResult()!=null && !resultsFuzzy.getResult().isEmpty()){
+            if (results.getNumFound()!=0){
+                //add and sort
+                int countSameForExact = StringHelper.countSameOrApprox(newAddress,results.getResult().get(0).getFormatedPostal());
+                int countSameForFuzzy = StringHelper.countSameOrApprox(newAddress, resultsFuzzy.getResult().get(0).getFormatedPostal());
+                logger.error("same exact="+countSameForExact+",same for fuzzy="+countSameForFuzzy);
+                if (countSameForExact >= countSameForFuzzy){
+                    results.getResult().addAll(resultsFuzzy.getResult());
+                } else {
+                    resultsFuzzy.getResult().addAll(results.getResult());
+                    results = resultsFuzzy;
+                }
+            }
+
+        }
+        return results;
+    }
 
 	
 	
-	/*private String prepareQueryConcatenate(String rawAddress) {
-		String newAddress = rawAddress;
-		newAddress = newAddress.toLowerCase();
-		newAddress = newAddress.replaceAll(" (?:straße|str|strasse)\\b", "straße").replaceAll("[\\s]+", " ");
-		logger.error("newAddress concatenate ="+newAddress);
-		return newAddress;
-	}*/
-
 	
-
 	protected AddressResultsDto doSearch( String rawaddress,String alternativeStreetAddress,
 			String countryCode, boolean needParsing,String houseNumber, boolean fuzzy, Point point, Double radius, boolean smartStreetDetected) {
 		AddressResultsDto results;
@@ -393,31 +410,43 @@ public class GeocodingService implements IGeocodingService {
 		//filter result where name is not the same
 		if (exactMatches!=null){
 			List<SolrResponseDto> filterResults = new ArrayList<SolrResponseDto>();
+			List<SolrResponseDto> filterResultsScore = new ArrayList<SolrResponseDto>();
 			for (SolrResponseDto result: exactMatches){
 				boolean added= false;
-				if(result!=null && result.getName()!=null && (StringHelper.isSameName(rawaddress, result.getName(),1) || ZipcodeNormalizer.containsGBPostCode(rawaddress))){
+				boolean sameName = StringHelper.isSameName(rawaddress, result.getName(),1);
+                boolean containsGBPostCode = ZipcodeNormalizer.containsGBPostCode(rawaddress);
+                if((result!=null && result.getName()!=null && (sameName || containsGBPostCode))){
 					filterResults.add(result);
 					added =true;
-					logger.error("filter same name, adding "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
+					logger.error("filter same name("+sameName+","+containsGBPostCode+"), adding "+result.getScore()+" : "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
 				}
 				else if (!added){
 					for (String nameAlternate : result.getName_alternates()){
-						if (nameAlternate!=null && StringHelper.isSameName(rawaddress, nameAlternate,1)){
-							logger.error("filter same name, adding alternate "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+" :  "+nameAlternate+" / "+result.getFully_qualified_name() );
+						boolean sameName2 = StringHelper.isSameName(rawaddress, nameAlternate,1);
+                        if ((!added && nameAlternate!=null && sameName2)){
+							logger.error("filter same name("+sameName2+"), adding alternate "+result.getScore()+" :: "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+" :  "+nameAlternate+" / "+result.getFully_qualified_name() );
 							filterResults.add(result);
 							added=true;
 							break;
 						}
 					}
 					
-				}
+				} 
+                logger.error("added="+added+", score >"+(result.getScore() > MIN_SCORE_EXACT));
+                if (!added && result.getScore() > MIN_SCORE_EXACT ){//score is important for cities that are partialy specified (sint luz=>saint jean de luz, luz saint sauveur){
+				     filterResultsScore.add(result);
+				     added=true;
+	                 logger.error("filter by score, adding "+result.getScore()+" : "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
+
+				} 
 				if (!added){
-					logger.error("filter same name, ignoring :"+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
+					logger.error("filter, ignoring :"+result.getScore()+"("+(result.getScore() > MIN_SCORE_EXACT)+") : "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
 				}
 			}
-			if (!filterResults.isEmpty()){
+			//if (!filterResults.isEmpty()){
+			filterResults.addAll(filterResultsScore);
 				exactMatches = filterResults;
-			}
+			//}
 			
 		}
 		logger.error("-------------------exact--------------------------");
@@ -486,13 +515,14 @@ public class GeocodingService implements IGeocodingService {
 		address.setHouseNumber(null);
 		address.setHouseNumberInfo(null);
 		String rawAddress = addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA);
+		logger.error("flatenized address="+rawAddress);
 		boolean fuzzy = false;
 		if (rawAddress!=null){
 			if (!isEmptyString(address.getStreetName())){
 				//search for street
 				//buildAddress string
 				streets = doSearchStreet(rawAddress,countryCode,false,null,null);
-				if (streets==null || streets.size()==0){
+				if (streets==null || streets.size()==0|| (streets.size()>0 && streets.get(0).getScore()< MIN_SCORE_THRESHOLD_FUZZY)){
 					//retry in fuzzy
 					streets = doSearchStreet(rawAddress,countryCode,true,null,null);
 					fuzzy = true;
@@ -590,21 +620,27 @@ public class GeocodingService implements IGeocodingService {
 			logger.info(" higher : "+nearestUpper);
 			result.setHigherLocation(nearestHouseUpper.getLocation());
 			result.setHigherNumber(nearestUpper);
+			result.setHouseNumberDif(nearestUpper - houseNumberToFindAsInt);
 		}
 		if (nearestHouseLower != null){
 			logger.info(" lower : "+nearestLower);
 			result.setLowerLocation(nearestHouseLower.getLocation());
 			result.setLowerNumber(nearestLower);
+			if (nearestUpper==null || Math.abs(nearestLower - houseNumberToFindAsInt)< Math.abs(result.getHouseNumberDif())){
+			    result.setHouseNumberDif(nearestLower - houseNumberToFindAsInt);
+			}
 		}
-			//this do interpolation, but if the street is not a line or is curve the point will be out
+			//Do interpolation, but if the street is not a line or is curve the point will be out
 			if (doInterpolation){
 				if (nearestHouseLower !=null && nearestHouseUpper != null){
 					Point location = GeolocHelper.interpolatedPoint(nearestHouseLower.getLocation(), nearestHouseUpper.getLocation(), nearestUpper, nearestLower, houseNumberToFindAsInt);
 					if (location !=null){
+					    logger.error("interpolated : ok");
 						result =new HouseNumberDtoInterpolation(location,houseNumberToFindAsInt);
 						result.setApproximative(true);
 						return result;
 					} else {
+					    logger.error("interpolated : ko");
 						return null;
 					}
 				}
@@ -635,236 +671,347 @@ public class GeocodingService implements IGeocodingService {
 	}
 
 	protected AddressResultsDto buildAddressResultDtoFromSolrResponseDto(List<SolrResponseDto> solResponseDtos, String houseNumberToFind) {
-		List<Address> addresses = new ArrayList<Address>();
+	    List<Address> addresses = new ArrayList<Address>();
+	    if (solResponseDtos != null && solResponseDtos.size() > 0) {
+	        if (logger.isDebugEnabled()) {
+	            logger.debug("found " + solResponseDtos.size() + " results");
+	        }
+	        String lastName=null;
+	        String lastIsin=null;
+	        Point lastLocation=null;
+	        boolean exactHousenumberFound =false;
+	        Address bestAddressWoInterpolation=null;
+	        HouseNumberDtoInterpolation bestHouseNumberWithoutInterpolation=null;
+	        int count=0;
+	        for (SolrResponseDto solrResponseDto : solResponseDtos) {
+	            count++;
+	            Address address = new Address();
+	            if (solrResponseDto == null) {
+	                continue;
+	            }
+	            if (logger.isDebugEnabled() && solrResponseDto != null) {
+	                logger.error("=>place "+solrResponseDto.getFeature_id()+"("+(solrResponseDto.getOpenstreetmap_id()==null?solrResponseDto.getFeature_id():solrResponseDto.getOpenstreetmap_id())+") : "+solrResponseDto.getName() +" in "+solrResponseDto.getIs_in());
+	            }
+	            address.setScore(solrResponseDto.getScore());
+	            if (!solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
+	                address.setName(solrResponseDto.getName());
+	            }
 
-		if (solResponseDtos != null && solResponseDtos.size() > 0) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("found " + solResponseDtos.size() + " results");
-			}
-			String lastName=null;
-			String lastIsin=null;
-			Point lastLocation=null;
-			boolean sameStreet = false;
-			boolean housenumberFound =false;
-			int count=0;
-			int numberOfStreetThatHaveTheSameName = 0;
-			for (SolrResponseDto solrResponseDto : solResponseDtos) {
-				count++;
-				Address address = new Address();
-				if (solrResponseDto == null) {
-					continue;
-				}
-				address.setScore(solrResponseDto.getScore());
-				if (!solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
-					address.setName(solrResponseDto.getName());
-				}
-				
-				if (solrResponseDto.getLat_admin_centre()!=null && solrResponseDto.getLng_admin_centre()!=null){
-					address.setLat(solrResponseDto.getLat_admin_centre());
-					address.setLng(solrResponseDto.getLng_admin_centre());
-				} else {
-					address.setLat(solrResponseDto.getLat());
-					address.setLng(solrResponseDto.getLng());
-				}
-				if (solrResponseDto.getOpenstreetmap_id()!=null){
-					address.setSourceId(solrResponseDto.getOpenstreetmap_id());
-				} else if (solrResponseDto.getFeature_id()!=null){
-					address.setSourceId(solrResponseDto.getFeature_id());
-				}  
-				address.setId(solrResponseDto.getFeature_id());
-				String countryCode = solrResponseDto.getCountry_code();
-				address.setCountryCode(countryCode);
-				if (countryCode!=null){
+	            if (solrResponseDto.getLat_admin_centre()!=null && solrResponseDto.getLng_admin_centre()!=null){
+	                address.setLat(solrResponseDto.getLat_admin_centre());
+	                address.setLng(solrResponseDto.getLng_admin_centre());
+	            } else {
+	                address.setLat(solrResponseDto.getLat());
+	                address.setLng(solrResponseDto.getLng());
+	            }
+	            if (solrResponseDto.getOpenstreetmap_id()!=null){
+	                address.setSourceId(solrResponseDto.getOpenstreetmap_id());
+	            } else if (solrResponseDto.getFeature_id()!=null){
+	                address.setSourceId(solrResponseDto.getFeature_id());
+	            }  
+	            address.setId(solrResponseDto.getFeature_id());
+	            String countryCode = solrResponseDto.getCountry_code();
+	            address.setCountryCode(countryCode);
+	            if (countryCode!=null){
 	                address.setCountry(CountryInfo.countryLookupMap.get(countryCode.toUpperCase()));
 	            }
-				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Adm.class.getSimpleName())) {
-					address.setState(solrResponseDto.getName());
-				}else if (solrResponseDto.getAdm1_name() != null) {
-					address.setState(solrResponseDto.getAdm1_name());
-				} else if (solrResponseDto.getAdm2_name() != null) {
-					address.setState(solrResponseDto.getAdm2_name());
-				} 
-				address.setAdm1Name(solrResponseDto.getAdm1_name());
-				address.setAdm2Name(solrResponseDto.getAdm2_name());
-				address.setAdm3Name(solrResponseDto.getAdm3_name());
-				address.setAdm4Name(solrResponseDto.getAdm4_name());
-				address.setAdm5Name(solrResponseDto.getAdm5_name());
-				if (solrResponseDto.getZipcodes() != null && solrResponseDto.getZipcodes().size() > 0) {
-					address.setZipCode(labelGenerator.getBestZipString(solrResponseDto.getZipcodes()));
-				} else if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
-					address.setZipCode(labelGenerator.getBestZipString(solrResponseDto.getIs_in_zip()));
-				}
-				Integer houseNumberToFindAsInt;
-				if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
-					houseNumberToFindAsInt = HouseNumberUtil.normalizeSkCzNumberToInt(houseNumberToFind);
-				} else {
-					houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
-				}
-				if (solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
-					String streetName = solrResponseDto.getName();
-					String isIn = solrResponseDto.getIs_in();
-					Point curLoc = GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat());
-					if (solrResponseDto.getIs_in_place()!=null){
-						 isIn = isIn +" "+ solrResponseDto.getIs_in_place();
-					}
-					if (!isEmptyString(streetName)){ 
-						if(streetName.equalsIgnoreCase(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin) && lastLocation!=null && !(GeolocHelper.distance(lastLocation, curLoc)>12000)){
-							logger.debug("same street");
-							sameStreet=true;//probably the same street
-							if (housenumberFound){
-								continue;
-								//do nothing it has already been found in the street
-							}else {
-								numberOfStreetThatHaveTheSameName++;
-							address.setStreetName(solrResponseDto.getName());
-							address.setStreetRef(solrResponseDto.getStreet_ref());
-							address.setCity(solrResponseDto.getIs_in());
-							setStateInAddress(solrResponseDto, address);
-							if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
-								address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
-							}
-							address.setDependentLocality(solrResponseDto.getIs_in_place());
-							//now search for houseNumber
-							List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
-							//if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
-							//count them as street that has same streetname
-							boolean doInterpolation = false;
-							if (isInterpolationPossible(solrResponseDto) ){
-								doInterpolation=true;
-							}
-							HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
-								if (houseNumber !=null){
-									if (houseNumber.isApproximative() ){
-										 if (houseNumber.getExactNumerAsString()!=null){
-											 logger.debug("found approximative "+houseNumber.getExactNumerAsString());
-										 } else {
-												logger.debug("found nothing");
-										 }
-										
-									} else if (houseNumber.getExactLocation()!=null){
-										logger.debug("found exact "+houseNumber.getExactNumerAsString());
-										housenumberFound=true;
-										address.setHouseNumber(houseNumber.getExactNumerAsString());
-										address.setLat(houseNumber.getExactLocation().getY());
-										address.setLng(houseNumber.getExactLocation().getX());
-										//remove the last results added
-										for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
-											addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
-										}
-									}
-								} else{
-									housenumberFound=false;
-								}
-							//}
-						}
-						} else { //the streetName is different,
-							logger.debug("not same street");
-							sameStreet=false;
-							//remove the last results added
-							for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
-								addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
-							}
-							numberOfStreetThatHaveTheSameName=0;
-							//populate fields
-							address.setStreetName(solrResponseDto.getName());
-							address.setCity(solrResponseDto.getIs_in());
-							setStateInAddress(solrResponseDto, address);
-							if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
-								address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
-							}
-							address.setDependentLocality(solrResponseDto.getIs_in_place());
-							//search for housenumber
-							List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
-							if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
-								boolean doInterpolation = false;
-								if (isInterpolationPossible(solrResponseDto) ){
-									doInterpolation=true;
-								}
-								HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
-							if (houseNumber !=null){
-								if (houseNumber.isApproximative()){
-									
-								} else {
-									housenumberFound=true;
-									address.setHouseNumber(houseNumber.getExactNumerAsString());
-									address.setLat(houseNumber.getExactLocation().getY());
-									address.setLng(houseNumber.getExactLocation().getX());
-								}
-							} else {
-								housenumberFound=false;
-							}
-							}
-						}
-			  } else {//streetname is null, we search for housenumber anyway
-					address.setCity(solrResponseDto.getIs_in());
-					setStateInAddress(solrResponseDto, address);
-					if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
-						address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
-					}
-					address.setDependentLocality(solrResponseDto.getIs_in_place());
-				  List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
-					if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
-						boolean doInterpolation = false;
-						if (isInterpolationPossible(solrResponseDto) ){
-							doInterpolation=true;
-						}
-						HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
-					if (houseNumber !=null){
-						if (houseNumber.isApproximative()){
-							
-						} else {
-							housenumberFound=true;
-							address.setHouseNumber(houseNumber.getExactNumerAsString());
-							address.setLat(houseNumber.getExactLocation().getY());
-							address.setLng(houseNumber.getExactLocation().getX());
-						}
-					} else {
-						housenumberFound=false;
-					}
-				}
-			  }
-					lastName=streetName;
-					lastIsin = isIn;
-					lastLocation=curLoc;
-				} else if (solrResponseDto.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
-					address.setCity(solrResponseDto.getName());
-					//populateAddressFromCity(solrResponseDto, address);
-				} else if (solrResponseDto.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())) {
-					address.setQuarter(solrResponseDto.getName());
-				}
-				 
-				if (logger.isDebugEnabled() && solrResponseDto != null) {
-					logger.debug("=>place (" + (solrResponseDto.getOpenstreetmap_id()==null?solrResponseDto.getFeature_id():solrResponseDto.getOpenstreetmap_id())+") : "+solrResponseDto.getName() +" in "+solrResponseDto.getIs_in());
-				}
-				address.getGeocodingLevel();//force calculation of geocodingLevel
-				if ((solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName()) && address.getHouseNumber()!=null) || solrResponseDto.getFully_qualified_name()==null){
-					//we need to update the labels
-					address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
-				} else {
-					address.setFormatedFull(solrResponseDto.getFully_qualified_name());
-				}
-				address.setFormatedPostal(addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA));
-				//set the street type after postal because street type is something like RESIDENTIAL and 
-				//has not the same meaning than with address parsing
-				address.setStreetType(solrResponseDto.getStreet_type());
-				//if (!sameStreet){
-					addresses.add(address);
-				//}
-					if (sameStreet && solResponseDtos.size()==count){
-						//System.out.println("need remove");
-						//remove the last results added
-						for (numberOfStreetThatHaveTheSameName--;numberOfStreetThatHaveTheSameName>=0;numberOfStreetThatHaveTheSameName--){
-							addresses.remove(addresses.size()-1-numberOfStreetThatHaveTheSameName);
-						}
-					}
-				sameStreet=false;
+	            if (solrResponseDto.getPlacetype().equalsIgnoreCase(Adm.class.getSimpleName())) {
+	                address.setState(solrResponseDto.getName());
+	            }else if (solrResponseDto.getAdm1_name() != null) {
+	                address.setState(solrResponseDto.getAdm1_name());
+	            } else if (solrResponseDto.getAdm2_name() != null) {
+	                address.setState(solrResponseDto.getAdm2_name());
+	            } 
+	            address.setAdm1Name(solrResponseDto.getAdm1_name());
+	            address.setAdm2Name(solrResponseDto.getAdm2_name());
+	            address.setAdm3Name(solrResponseDto.getAdm3_name());
+	            address.setAdm4Name(solrResponseDto.getAdm4_name());
+	            address.setAdm5Name(solrResponseDto.getAdm5_name());
+	            if (solrResponseDto.getZipcodes() != null && solrResponseDto.getZipcodes().size() > 0) {
+	                address.setZipCode(labelGenerator.getBestZipString(solrResponseDto.getZipcodes()));
+	            } else if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
+	                address.setZipCode(labelGenerator.getBestZipString(solrResponseDto.getIs_in_zip()));
+	            }
+	            Integer houseNumberToFindAsInt;
+	            if (countryCode!=null && ("SK".equalsIgnoreCase(countryCode) || "CZ".equalsIgnoreCase(countryCode))){
+	                houseNumberToFindAsInt = HouseNumberUtil.normalizeSkCzNumberToInt(houseNumberToFind);
+	            } else {
+	                houseNumberToFindAsInt = HouseNumberUtil.normalizeNumberToInt(houseNumberToFind);
+	            }
+	            if (solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName())) {
+	                String streetName = solrResponseDto.getName();
+	                String isIn = solrResponseDto.getIs_in();
+	                Point curLoc = GeolocHelper.createPoint(solrResponseDto.getLng(),solrResponseDto.getLat());
+	                if (solrResponseDto.getIs_in_place()!=null){
+	                    isIn = isIn +" "+ solrResponseDto.getIs_in_place();
+	                }
+	                if (!isEmptyString(streetName)){ 
+	                    if(streetName.equalsIgnoreCase(lastName) && isIn!=null && isIn.equalsIgnoreCase(lastIsin) && lastLocation!=null && !(GeolocHelper.distance(lastLocation, curLoc)>MAX_ACCEPTABLE_DISTANCE_FOR_SAME_STREET)){
+	                        logger.debug("same street");
+	                        if (exactHousenumberFound){
+	                            continue;
+	                            //do nothing it has already been found in the street
+	                        }else {
+	                            address.setStreetName(solrResponseDto.getName());
+	                            address.setStreetRef(solrResponseDto.getStreet_ref());
+	                            address.setCity(solrResponseDto.getIs_in());
+	                            setStateInAddress(solrResponseDto, address);
+	                            if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
+	                                address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
+	                            }
+	                            address.setDependentLocality(solrResponseDto.getIs_in_place());
+	                            //now search for houseNumber
+	                            List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
+	                            if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){ //don't verify if it is null or not because if the first streets have no house number, we won't
+	                                //count them as street that has same streetname
+	                                boolean doInterpolation = false;
+	                                if (isInterpolationPossible(solrResponseDto) ){
+	                                    doInterpolation=true;
+	                                }
+	                                HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
+	                                if (houseNumber !=null){
+	                                    logger.error("HouseNumberDtoInterpolation="+houseNumber);
+	                                    if (houseNumber.isApproximative() ){
+	                                        if (houseNumber.getExactNumerAsString()!=null){
+	                                            logger.debug("found interpolated "+houseNumber.getExactNumerAsString());
+	                                            exactHousenumberFound=false;
+	                                            address.setHouseNumber(houseNumber.getExactNumerAsString());
+	                                            address.setLat(houseNumber.getExactLocation().getY());
+	                                            address.setLng(houseNumber.getExactLocation().getX());
+	                                            bestAddressWoInterpolation = address;
+	                                            bestHouseNumberWithoutInterpolation = houseNumber;
+	                                        } else {
+	                                            logger.debug("found nearest");
+	                                            bestAddressWoInterpolation = getBestAddressWOinterpolation(houseNumber,bestHouseNumberWithoutInterpolation,address,bestAddressWoInterpolation);
+	                                            if (bestAddressWoInterpolation == address){
+	                                                logger.error("a best segment is found");
+	                                                bestHouseNumberWithoutInterpolation = houseNumber;
+	                                                if (houseNumber.getHouseNumberDif()<0 && houseNumber.getLowerLocation()!=null){
+	                                                    address.setLat(houseNumber.getLowerLocation().getY());
+	                                                    address.setLng(houseNumber.getLowerLocation().getX());
+	                                                } else if (houseNumber.getHouseNumberDif()>0 && houseNumber.getHigherLocation()!=null){
+	                                                    address.setLat(houseNumber.getHigherLocation().getY());
+	                                                    address.setLng(houseNumber.getHigherLocation().getX());
+	                                                }
+	                                            } else {
+	                                                logger.error("we keep the best segment");
+	                                            }
+	                                        }
 
-			}
-		}
-		return new AddressResultsDto(addresses, 0L);
+	                                    } else {
+	                                        logger.debug("found exact "+houseNumber.getExactNumerAsString());
+	                                        exactHousenumberFound=true;
+	                                        address.setHouseNumber(houseNumber.getExactNumerAsString());
+	                                        address.setLat(houseNumber.getExactLocation().getY());
+	                                        address.setLng(houseNumber.getExactLocation().getX());
+	                                        bestAddressWoInterpolation = address;
+	                                    }
+	                                } else{
+	                                    exactHousenumberFound=false;
+	                                }
+	                            }
+	                        }
+	                    } else { //the streetName is different,
+	                        logger.debug("not same street");
+	                        if (bestAddressWoInterpolation!=null) {
+	                            addresses.add(bestAddressWoInterpolation);
+	                        }
+
+	                        bestAddressWoInterpolation =null;
+	                        bestHouseNumberWithoutInterpolation=null;
+	                        //numberOfStreetThatHaveTheSameName=0;
+	                        //populate fields
+	                        address.setStreetName(solrResponseDto.getName());
+	                        address.setCity(solrResponseDto.getIs_in());
+	                        setStateInAddress(solrResponseDto, address);
+	                        if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
+	                            address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
+	                        }
+	                        address.setDependentLocality(solrResponseDto.getIs_in_place());
+	                        //search for housenumber
+	                        List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
+	                        if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
+	                            boolean doInterpolation = false;
+	                            if (isInterpolationPossible(solrResponseDto) ){
+	                                doInterpolation=true;
+	                            }
+	                            HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
+	                            if (houseNumber !=null){
+	                                logger.error("HouseNumberDtoInterpolation="+houseNumber);
+	                                if (houseNumber.isApproximative()){
+	                                    if (houseNumber.getExactNumerAsString()!=null){
+	                                        logger.debug("found interpolated "+houseNumber.getExactNumerAsString());
+	                                        exactHousenumberFound=false;
+	                                        address.setHouseNumber(houseNumber.getExactNumerAsString());
+	                                        address.setLat(houseNumber.getExactLocation().getY());
+	                                        address.setLng(houseNumber.getExactLocation().getX());
+	                                        bestAddressWoInterpolation = address;
+	                                        bestHouseNumberWithoutInterpolation = houseNumber;
+	                                    } else {
+	                                        logger.debug("found nearest");
+	                                        bestAddressWoInterpolation = getBestAddressWOinterpolation(houseNumber,bestHouseNumberWithoutInterpolation,address,bestAddressWoInterpolation);
+	                                        if (bestAddressWoInterpolation == address){
+	                                            logger.error("a best segment is found");
+	                                            bestHouseNumberWithoutInterpolation = houseNumber;
+	                                            if (houseNumber.getHouseNumberDif()<0 && houseNumber.getLowerLocation()!=null){
+	                                                address.setLat(houseNumber.getLowerLocation().getY());
+	                                                address.setLng(houseNumber.getLowerLocation().getX());
+	                                            } else if (houseNumber.getHouseNumberDif()>0 && houseNumber.getHigherLocation()!=null){
+	                                                address.setLat(houseNumber.getHigherLocation().getY());
+	                                                address.setLng(houseNumber.getHigherLocation().getX());
+	                                            }
+	                                        } else {
+	                                            logger.error("we keep the best segment");
+	                                        }
+
+	                                    }
+	                                } else {
+	                                    exactHousenumberFound=true;
+	                                    address.setHouseNumber(houseNumber.getExactNumerAsString());
+	                                    address.setLat(houseNumber.getExactLocation().getY());
+	                                    address.setLng(houseNumber.getExactLocation().getX());
+	                                    bestAddressWoInterpolation = address;
+	                                }
+	                            } else {
+	                                exactHousenumberFound=false;
+	                            }
+	                        }
+	                        else {
+	                            bestAddressWoInterpolation = address;
+	                            bestHouseNumberWithoutInterpolation = null;
+	                        }
+	                    }
+	                } else {//streetname is null, we search for housenumber anyway
+	                    if (bestAddressWoInterpolation!=null) {
+	                        addresses.add(bestAddressWoInterpolation);
+	                    }
+	                    bestAddressWoInterpolation =null;
+	                    bestHouseNumberWithoutInterpolation=null;
+	                    address.setCity(solrResponseDto.getIs_in());
+	                    setStateInAddress(solrResponseDto, address);
+	                    if (solrResponseDto.getIs_in_zip()!=null && solrResponseDto.getIs_in_zip().size()>=1){
+	                        address.setZipCode(solrResponseDto.getIs_in_zip().iterator().next());
+	                    }
+	                    address.setDependentLocality(solrResponseDto.getIs_in_place());
+	                    List<HouseNumberDto> houseNumbersList = solrResponseDto.getHouse_numbers();
+	                    if(houseNumberToFind!=null && houseNumbersList!=null && houseNumbersList.size()>0){
+	                        boolean doInterpolation = false;
+	                        if (isInterpolationPossible(solrResponseDto) ){
+	                            doInterpolation=true;
+	                        }
+	                        HouseNumberDtoInterpolation houseNumber = searchHouseNumber(houseNumberToFindAsInt,houseNumbersList,countryCode, doInterpolation);
+	                        if (houseNumber !=null){
+	                            logger.error("HouseNumberDtoInterpolation="+houseNumber);
+	                            if (houseNumber.isApproximative()){
+	                                if (houseNumber.getExactNumerAsString()!=null){
+	                                    logger.debug("found interpolated "+houseNumber.getExactNumerAsString());
+	                                    exactHousenumberFound=false;
+	                                    address.setHouseNumber(houseNumber.getExactNumerAsString());
+	                                    address.setLat(houseNumber.getExactLocation().getY());
+	                                    address.setLng(houseNumber.getExactLocation().getX());
+	                                    bestAddressWoInterpolation = address;
+	                                    bestHouseNumberWithoutInterpolation = houseNumber;
+	                                } else {
+	                                    logger.debug("found nearest");
+	                                    bestAddressWoInterpolation = getBestAddressWOinterpolation(houseNumber,bestHouseNumberWithoutInterpolation,address,bestAddressWoInterpolation);
+	                                    if (bestAddressWoInterpolation == address){
+	                                        logger.error("a best segment is found");
+	                                        bestHouseNumberWithoutInterpolation = houseNumber;
+	                                        if (houseNumber.getHouseNumberDif()<0 && houseNumber.getLowerLocation()!=null){
+	                                            address.setLat(houseNumber.getLowerLocation().getY());
+	                                            address.setLng(houseNumber.getLowerLocation().getX());
+	                                        } else if (houseNumber.getHouseNumberDif()>0 && houseNumber.getHigherLocation()!=null){
+	                                            address.setLat(houseNumber.getHigherLocation().getY());
+	                                            address.setLng(houseNumber.getHigherLocation().getX());
+	                                        }
+	                                    } else {
+	                                        logger.error("we keep the best segment");
+	                                    }
+
+	                                }
+	                            } else {
+	                                exactHousenumberFound=true;
+	                                address.setHouseNumber(houseNumber.getExactNumerAsString());
+	                                address.setLat(houseNumber.getExactLocation().getY());
+	                                address.setLng(houseNumber.getExactLocation().getX());
+	                                bestAddressWoInterpolation = address;
+	                                bestHouseNumberWithoutInterpolation = houseNumber;
+	                            }
+	                        } else {
+	                            exactHousenumberFound=false;
+	                        }
+	                    } else {
+	                        bestAddressWoInterpolation = address;
+	                        bestHouseNumberWithoutInterpolation = null;
+	                    }
+	                }
+	                lastName=streetName;
+	                lastIsin = isIn;
+	                lastLocation=curLoc;
+	            }      else
+	            {
+	                if (bestAddressWoInterpolation!=null) {
+	                    addresses.add(bestAddressWoInterpolation);
+	                }
+	                bestAddressWoInterpolation = null;
+	                addresses.add(address);
+	            }
+
+
+
+	            if (solrResponseDto.getPlacetype().equalsIgnoreCase(City.class.getSimpleName())){
+	                address.setCity(solrResponseDto.getName());
+	                //populateAddressFromCity(solrResponseDto, address);
+	            } else if (solrResponseDto.getPlacetype().equalsIgnoreCase(CitySubdivision.class.getSimpleName())) {
+	                address.setQuarter(solrResponseDto.getName());
+	            }
+
+
+	            address.getGeocodingLevel();//force calculation of geocodingLevel
+	            if ((solrResponseDto.getPlacetype().equalsIgnoreCase(Street.class.getSimpleName()) && address.getHouseNumber()!=null) || solrResponseDto.getFully_qualified_name()==null){
+	                //we need to update the labels
+	                address.setFormatedFull(labelGenerator.getFullyQualifiedName(address));
+	            } else {
+	                address.setFormatedFull(solrResponseDto.getFully_qualified_name());
+	            }
+	            address.setFormatedPostal(addressFormater.getEnvelopeAddress(address, DisplayMode.COMMA));
+	            //set the street type after postal because street type is something like RESIDENTIAL and 
+	            //has not the same meaning than with address parsing
+	            address.setStreetType(solrResponseDto.getStreet_type());
+	            if (solResponseDtos.size()==count){
+	                if (bestAddressWoInterpolation!=null) {
+	                    addresses.add(bestAddressWoInterpolation);
+	                }
+	            }
+
+	        }
+	    }
+	    return new AddressResultsDto(addresses, 0L);
 	}
 
-	protected void setStateInAddress(SolrResponseDto solrResponseDto,
+	protected Address getBestAddressWOinterpolation(
+	        HouseNumberDtoInterpolation candidate,
+	        HouseNumberDtoInterpolation best,
+	        Address candidateAddress,
+	        Address bestAddress
+	        ) {
+	    if (best!=null){
+	        logger.error("hndif for best = "+best.getHouseNumberDif());
+	    }else {
+	        logger.error("hndif for best = best is null");
+	    }
+	    if (candidate!=null){
+            logger.error("hndif for candidate = "+candidate.getHouseNumberDif());
+        }else {
+            logger.error("hndif for candidate = candidate is null");
+        }
+	    if (best==null || (best !=null && candidate !=null && best.getHouseNumberDif()!=null && candidate.getHouseNumberDif()!=null  && Math.abs(candidate.getHouseNumberDif()) < Math.abs(best.getHouseNumberDif()))){
+	        return candidateAddress;
+	    } 
+	    return bestAddress;
+	}
+
+    protected void setStateInAddress(SolrResponseDto solrResponseDto,
 			Address address) {
 		if (solrResponseDto.getCountry_code()!=null && solrResponseDto.getCountry_code().equalsIgnoreCase("FR") && solrResponseDto.getAdm2_name()!=null ){ //avoid france metropolitaine in state
 			address.setState(solrResponseDto.getAdm2_name());
@@ -880,7 +1027,19 @@ public class GeocodingService implements IGeocodingService {
 				Math.abs(solrResponseDto.getAzimuth_start()-solrResponseDto.getAzimuth_end()) < INTERPOLATION_CURVE_TOLERANCE;
 	}
 	
-
+protected String replaceGermanSynonyms(String alternativeGermanAddress) {
+        
+        StringBuffer sb = new StringBuffer();
+        Matcher m = GERMAN_SYNONYM_PATTEN.matcher(alternativeGermanAddress);
+          while (m.find()) {
+            m.appendReplacement(sb, "straße");
+        }
+        m.appendTail(sb);
+        String s = sb.toString();
+        s= s.replaceAll(" stra(?:(?:ss)|(?:ß))e", "strasse");
+        return s;
+    }
+    
 
 	private boolean isIntersection(Address address) {
 		return address.getStreetNameIntersection() != null;

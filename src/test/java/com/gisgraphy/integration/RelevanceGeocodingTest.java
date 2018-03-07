@@ -31,10 +31,17 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-@Ignore
+//@Ignore
 public class RelevanceGeocodingTest {
 
-	private static final long[] MAGDEBURGERSTRASSE = new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,91146628};
+	private static final long VAUGIRARD_QUATER_ID = 2142769871L;
+
+	//street, quater
+    private static final long[] VAUGIRARD_IDS = new long[]{10665004L,27728576L,VAUGIRARD_QUATER_ID,161231529L};
+
+    private static final long[] NAABSTRASSE_IDS = new long[]{280017483,28971876,372824213};
+
+    private static final long[] MAGDEBURGERSTRASSE = new long[]{83351156L,24554576L,361576252L,420600633,26934369,336289502,91146628};
 
 	private static final long[] TOUQUET = new long[]{2972304L};
 
@@ -44,7 +51,7 @@ public class RelevanceGeocodingTest {
 
 	private static final long[] DOCTEUR_SWEITZER_GRENOBLE = new long[]{488881135L,204138290L,204138293L,5990522L};
 
-	private static final long[] PLACE_VENDOME_PARIS = new long[]{4234144L,4234145L,4234146L};
+	private static final long[] PLACE_VENDOME_PARIS = new long[]{4234144L,4234145L,4234146L,372486666L};
 
 	private static final long[] CHATENAY_95190 = new long[]{3026110,138537l};//138537L;
 	private static final long[] FONTENAY_95190 = new long[]{3017922,398224l};//398224L;
@@ -56,7 +63,7 @@ public class RelevanceGeocodingTest {
 	
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";
 	//public final static String BASE_SERVER_URL ="http://127.0.0.1:8080/";
-	public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com/";
+	public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com:8080/";
 	public final static String GEOCODING_BASE_SERVER_URI ="geocoding/geocoding?address=";
 	public final static String GEOCODING_BASE_STRUCTURED_SERVER_URI ="geocoding/geocoding?";
 	public final static String FULLTEXT_BASE_SERVER_URI ="fulltext/search?q=";
@@ -68,7 +75,7 @@ public class RelevanceGeocodingTest {
 	IRestClient restClient = new RestClient();
 	
 	FulltextClient fulltextClient = new FulltextClient(BASE_SERVER_URL+"fulltext/");
-	
+	 
 	//@Autowired
 	//private IsolrClient solrClient;
 
@@ -78,6 +85,7 @@ public class RelevanceGeocodingTest {
 	List<String> countryTest = new ArrayList<String>(){
 		{
 			//add("FR");
+			//add("GB");
 			add("DE");
 			//add("US");
 		}
@@ -312,25 +320,7 @@ public class RelevanceGeocodingTest {
 	
 
 	
-	@Test
-	public void cityWith2UnnecessaryWordResults() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
-			String rawAddress = "saint omer truc";
-			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
-			Assert.assertNotNull(addressResultsDto);
-			isNoResult(addressResultsDto.getResult(), rawAddress);
-		}
-	}
 	
-	@Test
-	public void cityWith1UnnecessaryWordResults() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
-			String rawAddress = "saint omer trucfoo foobar";
-			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
-			Assert.assertNotNull(addressResultsDto);
-			isNoResult(addressResultsDto.getResult(), rawAddress);
-		}
-	}
 	
 	@Test
 	public void cityAdm() throws InterruptedException, IOException{
@@ -492,9 +482,24 @@ public class RelevanceGeocodingTest {
 			String rawAddress = "grand place  lille";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectById(123721015L,addressResultsDto.getResult(), rawAddress);
+			isOneIdsPresentInResults(new long[]{123721015L},addressResultsDto.getResult(), rawAddress);
 		}
 	}
+	
+	
+	@Test
+    public void streetIsAPopularcity() throws InterruptedException, IOException{
+        if ((countryTest.contains("FR")|| countryTest.contains("ALL")) ){
+            String rawAddress = "rue de lille bailleul";
+            AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+            Assert.assertNotNull(addressResultsDto);
+            //exact
+            isOneIdsPresentInResults(new long[]{478614439},addressResultsDto.getResult(), rawAddress);
+            //the street named as the city :rue de bailleul lille
+            isOneIdsPresentInResults(new long[]{374933447,328548308}, addressResultsDto.getResult(), rawAddress);
+        }
+    }
+	
 	
 	
 
@@ -506,9 +511,37 @@ public class RelevanceGeocodingTest {
 			Assert.assertNotNull(addressResultsDto);
 			Assert.assertEquals("13", addressResultsDto.getResult().get(0).getHouseNumber());
 			isFirstCorrectById(180331460L,addressResultsDto.getResult(), rawAddress);
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
+	
+	@Test
+    public void germanAddressIncorectZipcode() throws InterruptedException, IOException{
+	    //we have decrease mm
+        if ((countryTest.contains("DE")|| countryTest.contains("ALL")) && houseNumber){
+            String rawAddress = "Bräukerweg 17 58708 Menden";
+            AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
+            Assert.assertNotNull(addressResultsDto);
+            Assert.assertEquals("17", addressResultsDto.getResult().get(0).getHouseNumber());
+            isFirstCorrectById(152796629,addressResultsDto.getResult(), rawAddress);
+            isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+        }
+    }
+	
+	@Test
+    public void germanAddressShouldNotDecompound() throws InterruptedException, IOException{
+        if ((countryTest.contains("DE")|| countryTest.contains("ALL")) && houseNumber){
+            String rawAddress = "Rosenhain 30 53123 Bonn";
+            AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
+            Assert.assertNotNull(addressResultsDto);
+            Assert.assertEquals("30", addressResultsDto.getResult().get(0).getHouseNumber());
+            isFirstCorrectById(7833209,addressResultsDto.getResult(), rawAddress);
+            isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+        }
+    }
+	
+	
+	
 	
 	
 	@Test
@@ -518,7 +551,7 @@ public class RelevanceGeocodingTest {
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(26571893L,addressResultsDto.getResult(), rawAddress);
-			IsCorrectGeocodingLevel(GeocodingLevels.STREET, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.STREET, addressResultsDto.getResult());
 		}
 	}
 	
@@ -530,7 +563,7 @@ public class RelevanceGeocodingTest {
 			Assert.assertNotNull(addressResultsDto);
 			Assert.assertEquals("11", addressResultsDto.getResult().get(0).getHouseNumber());
 			isFirstCorrectById(26571893L,addressResultsDto.getResult(), rawAddress);
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
 	 
@@ -543,7 +576,7 @@ public class RelevanceGeocodingTest {
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(192903838L,addressResultsDto.getResult(), rawAddress);
 			Assert.assertEquals("9", addressResultsDto.getResult().get(0).getHouseNumber());
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
 	
@@ -555,7 +588,7 @@ public class RelevanceGeocodingTest {
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(192903838L,addressResultsDto.getResult(), rawAddress);
 			Assert.assertEquals("9", addressResultsDto.getResult().get(0).getHouseNumber());
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
 	
@@ -567,13 +600,13 @@ public class RelevanceGeocodingTest {
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(180331460L,addressResultsDto.getResult(), rawAddress);
 			Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 			//withoutcountrycode
 			 addressResultsDto = doGeocoding(rawAddress);
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(180331460L,addressResultsDto.getResult(), rawAddress);
 			Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
 	
@@ -585,13 +618,13 @@ public class RelevanceGeocodingTest {
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(180331460L,addressResultsDto.getResult(), rawAddress);
 			Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 			//withoutcountrycode
 			 addressResultsDto = doGeocoding(rawAddress);
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(180331460L,addressResultsDto.getResult(), rawAddress);
 			Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
 	
@@ -606,7 +639,7 @@ public class RelevanceGeocodingTest {
 			Assert.assertNotNull(addressResultsDto);
 			isFirstCorrectById(4018042L,addressResultsDto.getResult(), rawAddress);
 			Assert.assertEquals("40", addressResultsDto.getResult().get(0).getHouseNumber());
-			IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+			isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 	}
 	
@@ -750,8 +783,8 @@ public class RelevanceGeocodingTest {
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
 			
-			//should find place vendome first
-			isFirstCorrectByIds(new long[]{4234144L,4234145L,4234146L},addressResultsDto.getResult(), rawAddress);
+			//should find place or passage vendome first
+			isFirstCorrectByIds(PLACE_VENDOME_PARIS,addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -944,7 +977,7 @@ public class RelevanceGeocodingTest {
 	Assert.assertNotNull(addressResultsDto);
 	isFirstCorrectById(180331460L,addressResultsDto.getResult(), address.toString());
 	Assert.assertEquals("4", addressResultsDto.getResult().get(0).getHouseNumber());
-	IsCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
+	isCorrectGeocodingLevel(GeocodingLevels.HOUSE_NUMBER, addressResultsDto.getResult());
 		}
 		}
 	
@@ -1225,7 +1258,7 @@ public class RelevanceGeocodingTest {
 			address.setState("");
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectById(8504417L,addressResultsDto.getResult(), address.toString());
+			isFirstInExpectedIds(new long[]{8504417L,4545578227L},addressResultsDto.getResult(), address.toString());
 		}
 	}
 	
@@ -1241,7 +1274,7 @@ public class RelevanceGeocodingTest {
 			address.setCity("Paris");
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(address, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectById(2970479L,addressResultsDto.getResult(), address.toString());
+			isFirstCorrectById(VAUGIRARD_QUATER_ID,addressResultsDto.getResult(), address.toString());
 		}
 	}
 	
@@ -1454,7 +1487,7 @@ public class RelevanceGeocodingTest {
 			String rawAddress = "la defense";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectById(8504417L,addressResultsDto.getResult(), rawAddress);
+			isFirstInExpectedIds(new long[]{8504417L,4545578227L}, addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1465,8 +1498,8 @@ public class RelevanceGeocodingTest {
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
 			//Boulevard should be there
-			isOneIdsPresentInResults(new long[]{10665004L,27728576L},addressResultsDto.getResult(), rawAddress);
-			isFirstCorrectById(2970479L,addressResultsDto.getResult(), rawAddress);
+			isOneIdsPresentInResults(VAUGIRARD_IDS,addressResultsDto.getResult(), rawAddress);
+			//isFirstCorrectById(VAUGIRARD_QUATER_ID,addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1477,7 +1510,7 @@ public class RelevanceGeocodingTest {
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
 			//boulevard
-			isOneIdsPresentInResults(new long[]{10665004L,27728576L},addressResultsDto.getResult(), rawAddress);
+			isOneIdsPresentInResults(VAUGIRARD_IDS,addressResultsDto.getResult(), rawAddress);
 			//quater
 			isOneIdsPresentInResults(new long[]{2970479L},addressResultsDto.getResult(), rawAddress);
 		}
@@ -1489,7 +1522,7 @@ public class RelevanceGeocodingTest {
 			String rawAddress = "Paris 15e";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
-			isFirstCorrectById(2970479L,addressResultsDto.getResult(), rawAddress);
+			isFirstCorrectById(VAUGIRARD_QUATER_ID,addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -1606,7 +1639,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naabstraße, Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876l}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(new long[]{280017483,28971876l,372824213}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1616,7 +1649,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naab straße, Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876,372824213}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(NAABSTRASSE_IDS, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1626,7 +1659,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naab strasse, Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876,372824213}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(NAABSTRASSE_IDS, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		@Test
@@ -1635,7 +1668,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naabstrasse, Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(NAABSTRASSE_IDS, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1645,7 +1678,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naab str, Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876,372824213}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(NAABSTRASSE_IDS, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1655,7 +1688,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naabstr, Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(NAABSTRASSE_IDS, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1665,7 +1698,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naabstr., Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(NAABSTRASSE_IDS, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1677,7 +1710,7 @@ public class RelevanceGeocodingTest {
 				String rawAddress = "Naabstr., Teublitz";
 				AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
 				Assert.assertNotNull(addressResultsDto);
-				isFirstInExpectedIds(new long[]{280017483,28971876}, addressResultsDto.getResult(), rawAddress);
+				isFirstInExpectedIds(NAABSTRASSE_IDS, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1691,7 +1724,7 @@ public class RelevanceGeocodingTest {
 				Assert.assertNotNull(addressResultsDto);
 				
 				//we should find all the streets 
-				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,26590565L,145635383L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -1716,7 +1749,7 @@ public class RelevanceGeocodingTest {
 				AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
 				Assert.assertNotNull(addressResultsDto);
 				//we should find all the streets 
-				isAllIdsPresentInResults(new long[]{51268850L,22650548L,33078711L,26590565L,145635383L}, addressResultsDto.getResult(), rawAddress);
+				isAllIdsPresentInResults(new long[]{51268850L,22650548L,145635383L,26590565L}, addressResultsDto.getResult(), rawAddress);
 			}
 		}
 		
@@ -2077,6 +2110,24 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 		}
 	}
 	
+	@Test
+    public void zip_UK() throws InterruptedException, IOException{
+        if (countryTest.contains("GB")|| countryTest.contains("ALL")){
+            String rawAddress = "CA11 0TQ";
+            AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            isFirstInExpectedIds(new long[]{36860725,2647900}, addressResultsDto.getResult(), rawAddress);
+            
+            //another one
+            rawAddress = "CA9 3BW";
+            addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            isFirstInExpectedIds(new long[]{37036084}, addressResultsDto.getResult(), rawAddress);
+            
+        }
+    }
+	
+	
 	
 //
 //   __       _ _ _            _   
@@ -2230,13 +2281,13 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 }
 //------------------------------------------------------------------------------------
 	private AddressResultsDto doGeocoding (String address){
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json";
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy=true&format=json";
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		return result;
 	}
 	private AddressResultsDto doGeocodingPostal(String address){
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&postal=true";
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy=true&format=json&postal=true";
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		return result;
 	}
@@ -2245,7 +2296,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 		
 	private AddressResultsDto doGeocodingOnCountry(String address,String countryCode){
 		@SuppressWarnings("deprecation")
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&format=json&country="+countryCode;
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy=true&format=json&country="+countryCode;
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		if (result!=null && result.getNumFound()!=0){
@@ -2258,7 +2309,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 	
 	private AddressResultsDto doGeocodingOnCountry(Address address,String countryCode){
 		@SuppressWarnings("deprecation")
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_STRUCTURED_SERVER_URI+"apikey=111";//just add apikey to not to have to managed ? vs &
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_STRUCTURED_SERVER_URI+"apikey=111&fuzzy=true";//just add apikey to not to have to managed ? vs &
 		if (address.getStreetType()!=null){
 			fullURLToCall=fullURLToCall+"&streetType="+URLEncoder.encode(address.getStreetType());
 		}
@@ -2472,7 +2523,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 					return true;
 				} 
 			}
-			Assert.fail(rawAddress +": no ids were found, fisrt is "+ids.get(0)+", "+address.getFormatedFull());
+			Assert.fail(rawAddress +": no ids were found, first is "+ids.get(0)+", "+address.getFormatedFull());
 			return false;
 		}
 		Assert.fail(rawAddress +": no results were found, fisrt is null");
@@ -2513,7 +2564,7 @@ private FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeType
 	}
 	
 
-	private boolean IsCorrectGeocodingLevel(GeocodingLevels expectedLevel,List<Address> actual){
+	private boolean isCorrectGeocodingLevel(GeocodingLevels expectedLevel,List<Address> actual){
 		if(actual.size()>0 && actual.get(0)!=null){
 			Address address = actual.get(0);
 			if (expectedLevel != address.getGeocodingLevel()){

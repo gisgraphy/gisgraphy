@@ -12,7 +12,7 @@ public class HouseNumberDtoInterpolation {
 	private Integer lowerNumber;
 	private Point higherLocation;
 	private Integer HigherNumber;
-	private Integer HouseNumberDif;
+	private Integer HouseNumberDif = 0;
 	
 	private boolean approximative = false;
 	
@@ -182,6 +182,9 @@ public class HouseNumberDtoInterpolation {
 
 
 
+	/**
+	 * @return true if house has been interpolated
+	 */
 	public boolean isApproximative(){
 		return approximative;
 	}
