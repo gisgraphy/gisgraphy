@@ -103,7 +103,7 @@ public class FulltextQuerySolrHelper {
 	protected static final String SUGGEST_FQ = "placetype:city placetype:adm placetype:street";
 	protected static final String SUGGEST_FL = "name,zipcode,country_code,adm1_name,is_in,is_in_place,is_in_zip,feature_id,lat,lng,score,house_numbers";
 	
-	protected static String CITY_ADM_BOOST_QUERY="placetype:city^800 placetype:adm^600";
+	protected static String CITY_ADM_BOOST_QUERY="placetype:city^800 placetype:adm^200";
 	protected static String CITY_BOOST_QUERY="placetype:city^200";
 	protected static String STREET_BOOST_QUERY="placetype:street^150";
 	// we need to consider adm1name for andora and brooklin
@@ -118,7 +118,7 @@ public class FulltextQuerySolrHelper {
 	protected static final String FQ_LOCATION = "{!bbox "+Constants.SPATIAL_FIELD_PARAMETER+"="+GisFeature.LOCATION_COLUMN_NAME+"}";
 
 	//http://rechneronline.de/function-graphs/
-	protected static String BF_NEAREST = "recip(geodist(),0.01,3000,1)";//first number impact  the nearest (the more, the nearest got importance), two other the farest. 2/3 =>the highest score
+	protected static String BF_NEAREST = "recip(geodist(),0.5,20000,1)";//first number impact  the nearest (the more, the nearest got importance), two other the farest. 2/3 =>the highest score
 	protected static String BF_POPULATION="pow(map(population,0,0,0.009),0.7) pow(map(city_population,0,0,0.0001),0.20)";
 	//http://wiki.apache.org/solr/FunctionQuery#recip
 	
@@ -137,7 +137,7 @@ public class FulltextQuerySolrHelper {
 	 */
 	public static ModifiableSolrParams parameterize(FulltextQuery query) {
 		
-		//getConfigInFile();
+		getConfigInFile();
 		//logger.error("NESTED_QUERY_TEMPLATE : "+NESTED_QUERY_TEMPLATE);
 		//logger.error("not all words : "+NESTED_QUERY_TEMPLATE);
 		boolean spellchecker = true;
@@ -399,7 +399,7 @@ public class FulltextQuerySolrHelper {
 
 
 			
-			SUGGEST_QUERY_TEMPLATE = in.readLine();
+			CITY_ADM_BOOST_QUERY = in.readLine();
 			//NESTED_QUERY_TEMPLATE=in.readLine();
 				//ALL_ADM1_NAME_ALL_ADM2_NAME= in.readLine();
 				
