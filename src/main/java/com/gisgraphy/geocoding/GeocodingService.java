@@ -299,7 +299,6 @@ public class GeocodingService implements IGeocodingService {
 			}
 			results = doSearch(newAddress,alternativeGermanAddress, countryCode, 
 					needParsing,houseNumber, false, query.getPoint(), query.getRadius(), smartstreetdetected);
-
 			//try in fuzzy
 			if (query.isFuzzy()){
 			    AddressResultsDto resultsFuzzy;
@@ -334,9 +333,11 @@ public class GeocodingService implements IGeocodingService {
                     resultsFuzzy.getResult().addAll(results.getResult());
                     results = resultsFuzzy;
                 }
+            } else {
+                return resultsFuzzy;
             }
 
-        }
+        } 
         return results;
     }
 
@@ -669,7 +670,9 @@ public class GeocodingService implements IGeocodingService {
 		}
 		return new AddressResultsDto(addresses, 0L);
 	}
-
+	
+	
+//yes, this method is ugly, but works :)
 	protected AddressResultsDto buildAddressResultDtoFromSolrResponseDto(List<SolrResponseDto> solResponseDtos, String houseNumberToFind) {
 	    List<Address> addresses = new ArrayList<Address>();
 	    if (solResponseDtos != null && solResponseDtos.size() > 0) {
@@ -948,13 +951,14 @@ public class GeocodingService implements IGeocodingService {
 	                lastName=streetName;
 	                lastIsin = isIn;
 	                lastLocation=curLoc;
-	            }      else
-	            {
+	            }  else {
 	                if (bestAddressWoInterpolation!=null) {
 	                    addresses.add(bestAddressWoInterpolation);
 	                }
+	                logger.error("not a street");
 	                bestAddressWoInterpolation = null;
 	                addresses.add(address);
+	                logger.error("addresses size = "+addresses.size());
 	            }
 
 
