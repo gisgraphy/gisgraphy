@@ -348,7 +348,7 @@ public class GeocodingService implements IGeocodingService {
 			String countryCode, boolean needParsing,String houseNumber, boolean fuzzy, Point point, Double radius, boolean smartStreetDetected) {
 		AddressResultsDto results;
 		List<SolrResponseDto> exactMatches  ;
-		if (!smartStreetDetected){
+		if (!smartStreetDetected  || houseNumber==null){
 			 exactMatches = doSearchExact(rawaddress,
 					countryCode, fuzzy, point, radius, null);
 		} else {
