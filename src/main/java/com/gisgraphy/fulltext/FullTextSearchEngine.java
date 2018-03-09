@@ -25,6 +25,7 @@ package com.gisgraphy.fulltext;
 import static com.gisgraphy.helper.StringHelper.isEmptyString;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -39,6 +40,8 @@ import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -191,7 +194,32 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
 						throw new FullTextSearchException(message,e);
 					}
 				}
-			}
+			} /*else {
+			    try {
+                    ByteArrayOutputStream outputStreamString = new ByteArrayOutputStream();
+                    doExecuteAndSerialize(query, outputStreamString);
+                    String feed  = outputStreamString.toString(Constants.CHARSET);
+                    //  String feed = executeQueryToString(query);
+                    GisgraphySearchResult feedAsObj = mapper.readValue(feed, GisgraphySearchResult.class);
+                    if (feedAsObj !=null && feedAsObj.getResponse() != null || feedAsObj.getResponse().getDocs() !=null){
+                        List<GisgraphySearchEntry> docs = feedAsObj.getResponse().getDocs();
+                        for (GisgraphySearchEntry entry : docs){
+                            if (entry.getCountryCode()!=null){
+                                entry.setCountry(CountryInfo.countryLookupMap.get(entry.getCountryCode().toUpperCase()));
+                         } 
+                        }
+                    }
+                    mapper.writeValue(outputStream, feedAsObj);
+                    return;
+                } catch (Exception e) {
+                    String message = e.getCause()!=null?e.getCause().getMessage():e.getMessage();
+                    logger
+                    .error("An error has occurred during suggest search of query "
+                            + query + " : " + message,e);
+                    throw new FullTextSearchException(message,e);
+                }
+			    
+			}*/
 			//if no HN found, we do the common process
 		}
 		//not a suggest query, do a classical search

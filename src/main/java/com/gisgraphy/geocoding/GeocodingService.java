@@ -97,6 +97,7 @@ public class GeocodingService implements IGeocodingService {
     private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 
     private static final Float MIN_SCORE_EXACT = 6f;
+    public static final Float MIN_SCORE_THRESHOLD_FUZZY = 9F;
 	private static final String FUZZY_ACTIVE = "fuzzy:active";
 	//private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(?<=\\w)(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 	
@@ -137,7 +138,7 @@ public class GeocodingService implements IGeocodingService {
 	 */
 	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 
-	public static final Float MIN_SCORE_THRESHOLD_FUZZY = 9F;
+
 
 	/*
 	 * (non-Javadoc)
@@ -320,12 +321,12 @@ public class GeocodingService implements IGeocodingService {
 	}
 
     protected AddressResultsDto mergeExactAndFuzzy(AddressResultsDto results,
-            String newAddress, AddressResultsDto resultsFuzzy) {
-        if (resultsFuzzy.getResult()!=null && !resultsFuzzy.getResult().isEmpty()){
+            String rawAddress, AddressResultsDto resultsFuzzy) {
+        if (resultsFuzzy != null && resultsFuzzy.getResult()!=null && !resultsFuzzy.getResult().isEmpty()){
             if (results.getNumFound()!=0){
                 //add and sort
-                int countSameForExact = StringHelper.countSameOrApprox(newAddress,results.getResult().get(0).getFormatedPostal());
-                int countSameForFuzzy = StringHelper.countSameOrApprox(newAddress, resultsFuzzy.getResult().get(0).getFormatedPostal());
+                int countSameForExact = StringHelper.countSameOrApprox(rawAddress,results.getResult().get(0).getFormatedPostal());
+                int countSameForFuzzy = StringHelper.countSameOrApprox(rawAddress, resultsFuzzy.getResult().get(0).getFormatedPostal());
                 logger.error("same exact="+countSameForExact+",same for fuzzy="+countSameForFuzzy);
                 if (countSameForExact >= countSameForFuzzy){
                     results.getResult().addAll(resultsFuzzy.getResult());
@@ -434,7 +435,7 @@ public class GeocodingService implements IGeocodingService {
 					
 				} 
                 logger.error("added="+added+", score >"+(result.getScore() > MIN_SCORE_EXACT));
-                if (!added && result.getScore() > MIN_SCORE_EXACT ){//score is important for cities that are partialy specified (sint luz=>saint jean de luz, luz saint sauveur){
+                if (!added && result.getScore() > MIN_SCORE_EXACT ){//score is important for cities that are partialy specified (saint luz=>saint jean de luz, luz saint sauveur){
 				     filterResultsScore.add(result);
 				     added=true;
 	                 logger.error("filter by score, adding "+result.getScore()+" : "+(result.getOpenstreetmap_id()!=null?result.getOpenstreetmap_id():result.getFeature_id())+"-"+result.getName()+" / "+result.getFully_qualified_name() );
@@ -572,7 +573,7 @@ public class GeocodingService implements IGeocodingService {
 		HouseNumberDto nearestHouseLower = null;
 		HouseNumberDto nearestHouseUpper = null;
 		//for debug purpose, need to be removed
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (HouseNumberDto candidate :houseNumbersList){
 			if (candidate!=null){
 				sb.append(candidate.getNumber()).append(",");
@@ -1005,10 +1006,10 @@ public class GeocodingService implements IGeocodingService {
 	        logger.error("hndif for best = best is null");
 	    }
 	    if (candidate!=null){
-            logger.error("hndif for candidate = "+candidate.getHouseNumberDif());
-        }else {
-            logger.error("hndif for candidate = candidate is null");
-        }
+	        logger.error("hndif for candidate = "+candidate.getHouseNumberDif());
+	    }else {
+	        logger.error("hndif for candidate = candidate is null");
+	    }
 	    if (best==null || (best !=null && candidate !=null && best.getHouseNumberDif()!=null && candidate.getHouseNumberDif()!=null  && Math.abs(candidate.getHouseNumberDif()) < Math.abs(best.getHouseNumberDif()))){
 	        return candidateAddress;
 	    } 
@@ -1053,20 +1054,6 @@ protected String replaceGermanSynonyms(String alternativeGermanAddress) {
 
 	protected List<SolrResponseDto> findStreetInText(String text, String countryCode, Point point, boolean fuzzy, Double radius) {
 		List<SolrResponseDto> streets = findInText(text, countryCode, point, com.gisgraphy.fulltext.Constants.STREET_PLACETYPE, fuzzy, radius);
-		//now that we use bounding box it is to necessary to sort by distance 
-		/*Point location;
-		if (point != null) {
-			for (SolrResponseDto solrResponseDto : streets) {
-				Double longitude = solrResponseDto.getLng();
-				Double latitude = solrResponseDto.getLat();
-				if (latitude != null && longitude != null) {
-					location = GeolocHelper.createPoint(longitude.floatValue(), latitude.floatValue());
-					Double distance = GeolocHelper.distance(location, point);
-					solrResponseDto.setDistance(distance);
-				}
-			}
-			Collections.sort(streets, comparator);
-		}*/
 		return streets;
 	}
 

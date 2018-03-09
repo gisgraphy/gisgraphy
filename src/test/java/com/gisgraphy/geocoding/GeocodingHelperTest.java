@@ -10,7 +10,19 @@ public class GeocodingHelperTest {
 	 @Test
 	    public void findHouseNumber(){
 	    	
-	  
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("route 66",null));
+	     
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("autoroute 1",null));
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("autoroute A1",null));
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("route nationale 43",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("D 951",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("D951",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("rn 43",null));
+	     
+	     Assert.assertEquals("43", GeocodingHelper.findHouseNumber("43 route 66",null).getHouseNumber());
 	    	
 	    	Assert.assertEquals("9", GeocodingHelper.findHouseNumber("9 avenue de l'opera paris",null).getHouseNumber());
 	    	Assert.assertEquals("avenue de l'opera paris", GeocodingHelper.findHouseNumber("9 avenue de l'opera paris",null).getAddressWithoutHouseNumber());

@@ -196,6 +196,18 @@ public class RelevanceGeocodingTest {
 //	 
 	
 	
+
+    @Test
+    public void addressCityOnlyFuzzy() throws InterruptedException, IOException{
+        if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+            String rawAddress = "ochsenkopft";
+            AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            //the osm one , the geonames one
+            isFirstInExpectedIds(new long[]{2858301},addressResultsDto.getResult(), rawAddress);
+        }
+    }
+	
 	
 	@Test
 	public void cityGermanWithFrenchNameTest_2() throws InterruptedException, IOException{
@@ -485,6 +497,29 @@ public class RelevanceGeocodingTest {
 	}
 	
 	
+	/*
+	 * 
+     _                 _   _               
+ ___| |_ _ __ ___  ___| |_| | ___  ___ ___ 
+/ __| __| '__/ _ \/ _ \ __| |/ _ \/ __/ __|
+\__ \ |_| | |  __/  __/ |_| |  __/\__ \__ \
+|___/\__|_|  \___|\___|\__|_|\___||___/___/
+                                           
+
+	 */
+	//FIXME
+	/*@Test
+    public void StreetLess() throws InterruptedException, IOException{
+        if ((countryTest.contains("DE")|| countryTest.contains("ALL")) ){
+            String rawAddress = "Mannheim, D3 4";
+            AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "DE");
+            Assert.assertNotNull(addressResultsDto);
+            //https://www.openstreetmap.org/way/317583357
+            IsCorrectLocation(8.4632422,49.4883707, addressResultsDto.getResult(), 0.5);
+        }
+    }
+	*/
+	
 //		
 //	
 //           _     _                   
@@ -494,13 +529,16 @@ public class RelevanceGeocodingTest {
 // \__,_|\__,_|\__,_|_|  \___||___/___/
 //                                     
 
+	
+	
+	
 	@Test
 	public void StreetalternateCityTest() throws InterruptedException, IOException{
-		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) ){
-			String rawAddress = "grand place  lille";
-			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+		if ((countryTest.contains("DE")|| countryTest.contains("ALL")) ){
+			String rawAddress = "lindenschmitstr. munich";
+			AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
 			Assert.assertNotNull(addressResultsDto);
-			isOneIdsPresentInResults(new long[]{123721015L},addressResultsDto.getResult(), rawAddress);
+			isOneIdsPresentInResults(new long[]{439424581L},addressResultsDto.getResult(), rawAddress);
 		}
 	}
 	
@@ -862,16 +900,18 @@ public class RelevanceGeocodingTest {
 		}
 	}
 	
+	
+	
 	@Test
-	public void addressCityFuzzy() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
-			String rawAddress = "docteur schweitzer grenobe";
-			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
-			Assert.assertNotNull(addressResultsDto);
-			//the osm one , the geonames one
-			isFirstInExpectedIds(DOCTEUR_SWEITZER_GRENOBLE,addressResultsDto.getResult(), rawAddress);
-		}
-	}
+    public void addressCityFuzzy() throws InterruptedException, IOException{
+        if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+            String rawAddress = "docteur schweitzer grenobe";
+            AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+            Assert.assertNotNull(addressResultsDto);
+            //the osm one , the geonames one
+            isFirstInExpectedIds(DOCTEUR_SWEITZER_GRENOBLE,addressResultsDto.getResult(), rawAddress);
+        }
+    }
 	
 	@Test
 	public void addressCityAndStreetNameFuzzy() throws InterruptedException, IOException{
@@ -2161,6 +2201,8 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
 		}
 	}
 	
+	
+	
 /*	                     _       _                           
      ___ _ __   ___  ___(_) __ _| |   ___ __ _ ___  ___  ___ 
     / __| '_ \ / _ \/ __| |/ _` | |  / __/ _` / __|/ _ \/ __|
@@ -2169,6 +2211,18 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
     |_|                                                  
 
 	*/
+	
+	
+	@Test
+    public void RNtheGeocodingTest() throws InterruptedException, IOException{
+        if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+            //13000 is not the correct zip but the city one, correct is 13003
+            String rawAddress = "rn43 62 910";
+            AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
+            Assert.assertNotNull(addressResultsDto);
+            isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
+        }
+    }
 
 	/*FIXME
 	@Test
