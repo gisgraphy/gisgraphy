@@ -2224,7 +2224,7 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
         }
     }
 
-	/*FIXME
+	
 	@Test
     public void RouteNationaleGeocodingTest() throws InterruptedException, IOException{
         if (countryTest.contains("FR")|| countryTest.contains("ALL")){
@@ -2240,100 +2240,25 @@ public void compoundConcatenateTwoWords_concatenateSynonym3_NoCountryCode() thro
     public void D_XXXGeocodingTest() throws InterruptedException, IOException{
         if (countryTest.contains("FR")|| countryTest.contains("ALL")){
             //13000 is not the correct zip but the city one, correct is 13003
-            String rawAddress = "D 943 serques";
+            String rawAddress = "D 943 moulle";
             AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
             Assert.assertNotNull(addressResultsDto);
-            isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
+            isFirstCorrectById(152820711,addressResultsDto.getResult(), rawAddress);
         }
     }
-    
-    @Test
+	
+	@Test
     public void DXXXGeocodingTest() throws InterruptedException, IOException{
         if (countryTest.contains("FR")|| countryTest.contains("ALL")){
             //13000 is not the correct zip but the city one, correct is 13003
-            String rawAddress = "D943 serques";
+            String rawAddress = "D943 moulle";
             AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
             Assert.assertNotNull(addressResultsDto);
-            isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
+            isFirstCorrectById(152820711,addressResultsDto.getResult(), rawAddress);
         }
     }
-    
-    @Test
-    public void RNtheGeocodingTest() throws InterruptedException, IOException{
-        if (countryTest.contains("FR")|| countryTest.contains("ALL")){
-            //13000 is not the correct zip but the city one, correct is 13003
-            String rawAddress = "rn43 62 910";
-            AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
-            Assert.assertNotNull(addressResultsDto);
-            isFirstCorrectById(303318584,addressResultsDto.getResult(), rawAddress);
-        }
-    }
-	*/
-//	
-//@Test
-//public void ExactMatchShouldHaveMoreImportanceThanFuzzy(){
-//	String URLToCall = "/geocoding/?&country=DE&address=Lindenstra%C3%9Fe%203%2C%20Leonberg%2C%2071229&postal=true";
-//	String fullURLToCall = BASE_SERVER_URL+URLToCall +"&format=json";
-//	System.out.println(fullURLToCall);
-//	AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
-//	System.out.println(result.getResult());
-//	Assert.assertEquals("Lindenstraße", result.getResult().get(0).getStreetName());
-//}
-//
-//@Test
-//public void FuzzyShouldWork(){
-//	//todo /geocoding/?&country=DE&address=Rheinstra%C3%9Fe%2029%2C%20Wiesbaden%2C%2065185
-//
-//	String URLToCall = "geocoding/?&country=DE&address=Demmelsjochstr%2052%2C%20Bad%20T%C3%B6lz%2C%2083646&postal=true";
-//	String fullURLToCall = BASE_SERVER_URL+URLToCall +"&format=json";
-//	System.out.println(fullURLToCall);
-//	AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
-//	System.out.println(result.getResult());
-//	Assert.assertEquals("Demmeljochstraße", result.getResult().get(0).getStreetName());
-//	Assert.assertEquals("Bad Tölz", result.getResult().get(0).getCity());
-//}
-
-
-//@Test
-public void coefFinder(){
-	MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
-	SolrClient solrclient= new SolrClient("http://import.gisgraphy.com:8983/solr/", multiThreadedHttpConnectionManager);
-	FullTextSearchEngine engine = new FullTextSearchEngine(multiThreadedHttpConnectionManager);
-	engine.setSolrClient(solrclient);
 	
-	for (int a=1;a<=50;a++){
-		for (int b=1;b<=50;b++){
-					System.out.println("testing "+a+"-"+b);
-					boolean ok1=false;
-					boolean ok2=false;
-					String q = "_query_:\"{!edismax qf=' all_name^1.1 iso_all_name^1.3  zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5  is_in^0.9 is_in_place^0.7  is_in_adm^0.4 is_in_zip^0.2 is_in_cities^0.7 ' mm='1<1 2<1 3<1'   pf='name^1.8' ps=0 bq=' ' bf='pow(map(population,0,0,0.0001),0.3)  pow(map(city_population,0,0,0.0000001),0.3)   ' }\\\"Weihlbachstr\\\"^"+a+" Weihlbachstr~^"+b+" \\\"Flörsheim\\\"^"+a+" Flörsheim~^"+b+"\"";
-					FulltextResultsDto result  = engine.executeRawQuery(q);
-					//System.out.println(result.getResults().get(0).toString());
-					if ("Weilbacher Straße".equals(result.getResults().get(0).getName()) && "Flörsheim".equals(result.getResults().get(0).getIs_in())){
-						ok1=true;
-						System.out.println("ok1 for "+a+"-"+b);
-					}
-					
-					//
-					if (ok1){
-					 		q = "_query_:\"{!edismax qf=' all_name^1.1 iso_all_name^1.3  zipcode^1.2 all_adm1_name^0.5 all_adm2_name^0.5  is_in^0.9 is_in_place^0.7  is_in_adm^0.4 is_in_zip^0.2 is_in_cities^0.7 ' mm='1<1 2<1 3<1'   pf='name^1.8' ps=0 bq=' ' bf='pow(map(population,0,0,0.0001),0.3)  pow(map(city_population,0,0,0.0000001),0.3)   ' }\\\"Lindnstrasse\\\"^"+a+" Lindnstrasse~^"+b+" \\\"Grünheide\\\"^"+a+" Grünheide~^"+b+"\"";
-					 result  = engine.executeRawQuery(q);
-					//System.out.println(result.getResults().get(0).toString());
-					if ("Große Lindenstraße".equals(result.getResults().get(0).getName()) && "Grünheide".equals(result.getResults().get(0).getIs_in())){
-						ok2=true;
-						System.out.println("ok2 for "+a+"-"+b);
-					}
-					}
-					if (ok1 && ok2){
-						System.out.println("!!!!!!!!!!!success!!!!!!!!!!!!!!!!!!!");
-						System.out.println("ok1 et 2 for "+a+"-"+b);
-						return;
-						
-			}
-		}
-	}
 	
-}
 //------------------------------------------------------------------------------------
 
 public static void printResult(FulltextResultsDto fulltextResultsDto, int position){
