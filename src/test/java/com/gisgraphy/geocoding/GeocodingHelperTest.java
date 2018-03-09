@@ -9,7 +9,8 @@ public class GeocodingHelperTest {
 
 	 @Test
 	    public void findHouseNumber(){
-	    	
+	     Assert.assertEquals("83395 Freilassing, Reichenhallerstr.", GeocodingHelper.findHouseNumber("83395 Freilassing, Reichenhallerstr. 82 A","DE").getAddressWithoutHouseNumber());
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("route nationale 43 62910",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("route 66",null));
 	     
 	     
@@ -21,6 +22,7 @@ public class GeocodingHelperTest {
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("D 951",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("D951",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("rn 43",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("rn43 62910",null));
 	     
 	     Assert.assertEquals("43", GeocodingHelper.findHouseNumber("43 route 66",null).getHouseNumber());
 	    	
@@ -164,6 +166,7 @@ public class GeocodingHelperTest {
 	    	
 	    	Assert.assertEquals("140", GeocodingHelper.findHouseNumber("räukerweg 140 Menden 58808",null).getHouseNumber());
 	    	Assert.assertEquals("räukerweg Menden 58808", GeocodingHelper.findHouseNumber("räukerweg 140 Menden 58808",null).getAddressWithoutHouseNumber());
+	    	
 	    }
 
 }
