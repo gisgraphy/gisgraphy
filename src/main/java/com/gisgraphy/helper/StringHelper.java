@@ -1018,8 +1018,9 @@ public class StringHelper {
 			
 		}
 		
-		
-		logger.error("prepared address : "+rawAddress);
+		if (logger.isDebugEnabled()){
+		    logger.debug("prepared address : "+rawAddress);
+		}
 		return rawAddress;
 	}
 

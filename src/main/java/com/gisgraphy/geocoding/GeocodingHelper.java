@@ -21,14 +21,14 @@ public class GeocodingHelper {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 	
-	public static String ROUTE = "(?:route\\snationale\\s?|autoroute\\b\\s?[A]?|route\\s?|D\\s?|RD\\s?|RN\\s?)";
+	public static String ROUTE = "(?:route\\snationale\\s?|autoroute\\b\\s?[A]?|route\\s?|D\\s?|RD\\s?|RN\\s?|state\\shighway\\s?|US\\s?|highway\\s?|[ABCDEHIKLMNRTU]\\s?|BAB\\s?|Bundesautobahn\\s?|BR\\s?|CH\\s?|CR\\s?|IC\\s?|IP\\s?|NH\\s?|SH\\s?|PTH\\s?|PR\\s?|SR\\s?|TH\\s?|tr\\s?|US\\s?|CA\\-|AH\\s?|EV\\s?|TAH\\s?|Bundesautobahn\\s?|Bundesstraße\\s?|Reichsstraße\\s?|Landesstraße\\s?|Interstate\\s?|Hwy\\s?)";
 	
 	private static final String HN_REGEXP = "((("
 			+ "(?:\\b\\d{1,4}[\\-\\–\\一]\\d{1,4}))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
 			+ "|(?:^\\b\\d{1,4}(?:\\s?(?:[a-d]\\b\\s)?)\\b)(?:[\\s,\\.;]?(?:bis|ter)?)(?:\\s|,)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b$|avenue\\b$|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))"
-			+ "|(((?<!"+ROUTE+")(?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
-			+ "|(?<!"+ROUTE+")\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
-			+ "|(?<!"+ROUTE+")(?:\\b\\d{1,4}\\b\\s?(?:[a-d])?\\b$)"
+			+ "|(((?<!\\b"+ROUTE+")(?:\\b\\d{1,4}(?:\\s?(?:[a-d]\\b)?)))\\b(?:[\\s,\\.;]+)(?!(?:st\\b|th\\b|rd\\b|nd\\b|street\\b|avenue\\b|de\\b|Januar\\b|janvier\\b|enero\\b|Gennaio\\b|Februar\\b|Febbraio\\b|f[ée]vrier\\b|febrero\\b|M[aä]rz\\b|mars\\b|marzo\\b|A[pvb]ril[e]?\\b|Mai\\b|mayo\\b|maggio\\b|juni[o]?\\b|juin\\b|Giugno\\ß|juli[o]?\\b|juillet\\b|Luglio\\b|august\\b|ao[uû]t\\b|agosto\\b|September\\b|sept[i]?embre\\b|Settembre\\b|o[ckt]tober\\b|o[tc]t[ou]bre\\b|november\\b|nov[i]?embre\\b|de[cz]ember\\b|d[ie]ec[i]embre\\b|dicembre\\b))(?=\\w+)+?)"
+			+ "|(?<!\\b"+ROUTE+")\\s?(?:\\b\\d{1,4}\\s?(?:[a-d])?\\b$)"
+			+ "|(?<!\\b"+ROUTE+")(?:\\b\\d{1,4}\\b\\s?(?:[a-d])?\\b$)"
 			+")";
 	public final static Pattern HOUSENUMBERPATTERN = Pattern.compile(HN_REGEXP,
 			Pattern.CASE_INSENSITIVE);

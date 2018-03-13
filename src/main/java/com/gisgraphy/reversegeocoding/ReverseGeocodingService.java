@@ -113,7 +113,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 				if (houseNumberDistance!=null){
 					Address address = labelGenerator.buildAddressFromHouseNumberDistance(houseNumberDistance);
 					if (address!=null){
-						logger.info("found an address at a house number level");
+						logger.debug("found an address at a house number level");
 						List<Address> addresses = new ArrayList<Address>();
 						addresses.add(address);
 						long end = System.currentTimeMillis();

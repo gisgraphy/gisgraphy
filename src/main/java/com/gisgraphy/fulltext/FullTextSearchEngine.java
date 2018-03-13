@@ -330,11 +330,15 @@ public class FullTextSearchEngine implements IFullTextSearchEngine {
 			GisgraphySearchEntry entry) {
 		if (candidate!=null && candidate.getZipCodes()!=null && candidate.getZipCodes().size() >0 && entry.getZipCodes()==null){
 			entry.setZipCodes(candidate.getZipCodes());
-			logger.error("adding zip to "+entry);
+			if(logger.isDebugEnabled()){
+			    logger.error("adding zip to "+entry);
+			}
 		}
 		if (candidate!=null && candidate.getIsInZip()!=null && candidate.getIsInZip().size() >0 && entry.getIsInZip()==null){
 			entry.setIsInZip(candidate.getIsInZip());
-			logger.error("adding isinzip to "+entry);
+			if(logger.isDebugEnabled()){
+			    logger.error("adding isinzip to "+entry);
+			}
 		}
 	}
 

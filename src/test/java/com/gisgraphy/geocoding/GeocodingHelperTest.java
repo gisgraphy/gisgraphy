@@ -18,11 +18,27 @@ public class GeocodingHelperTest {
 	     
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("autoroute A1",null));
 	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("state highway 43",null));
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("US 43",null));
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("highway 43",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("A7 paris",null));
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("A 57 paris",null));
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("BAB 57 Munich",null));
+	     
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("route nationale 43",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("D 951",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("D951",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("rn 43",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("rn43 62910",null));
+	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("us 42",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("us42",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("ca-45",null));
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("interstate 42",null));
 	     
 	     Assert.assertEquals("43", GeocodingHelper.findHouseNumber("43 route 66",null).getHouseNumber());
 	    	

@@ -92,7 +92,7 @@
 
 	<!-- Services -->
 	<logger name="com.gisgraphy.geocoding.GeocodingService">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="RollingFileService" />
 	</logger>
 
