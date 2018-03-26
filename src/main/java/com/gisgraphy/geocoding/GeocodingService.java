@@ -557,11 +557,11 @@ public class GeocodingService implements IGeocodingService {
 				//search for street
 				//buildAddress string
 				streets = doSearchStreet(rawAddress,countryCode,false,null,null);
-				if (streets==null || streets.size()==0|| (streets.size()>0 && streets.get(0).getScore()< MIN_SCORE_THRESHOLD_FUZZY)){
+				/*if (streets==null || streets.size()==0|| (streets.size()>0 && streets.get(0).getScore()< MIN_SCORE_THRESHOLD_FUZZY)){
 					//retry in fuzzy
 					streets = doSearchStreet(rawAddress,countryCode,true,null,null);
 					fuzzy = true;
-				} 
+				} */
 
 			} else {
 				//not a street, search for city, Adm, subdivision
@@ -575,10 +575,10 @@ public class GeocodingService implements IGeocodingService {
 					}
 				}
 				streets =  doSearchExact(rawAddress, countryCode, false, null, null, placetype);
-				if (streets==null || streets.size()==0){
+				/*if (streets==null || streets.size()==0){
 					fuzzy = true;
 					streets =  doSearchExact(rawAddress, countryCode, true, null, null, placetype);
-				}
+				}*/
 			}
 		}
 		results = AddressHelper.limitNbResult(buildAddressResultDtoFromSolrResponseDto(streets, houseNumber),10);

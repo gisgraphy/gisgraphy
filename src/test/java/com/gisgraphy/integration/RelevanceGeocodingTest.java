@@ -7,21 +7,16 @@ import java.util.List;
 
 import net.sf.jstester.util.Assert;
 
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gisgraphy.addressparser.Address;
 import com.gisgraphy.addressparser.AddressResultsDto;
 import com.gisgraphy.addressparser.commons.GeocodingLevels;
-import com.gisgraphy.fulltext.FullTextSearchEngine;
 import com.gisgraphy.fulltext.FulltextClient;
 import com.gisgraphy.fulltext.FulltextQuery;
 import com.gisgraphy.fulltext.FulltextResultsDto;
-import com.gisgraphy.fulltext.SolrClient;
 import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.rest.IRestClient;
@@ -67,7 +62,7 @@ public class RelevanceGeocodingTest {
 	
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";
 	//public final static String BASE_SERVER_URL ="http://127.0.0.1:8080/";
-	public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com:8080/";
+	public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com/";
 	public final static String GEOCODING_BASE_SERVER_URI ="geocoding/geocoding?address=";
 	public final static String GEOCODING_BASE_STRUCTURED_SERVER_URI ="geocoding/geocoding?";
 	public final static String FULLTEXT_BASE_SERVER_URI ="fulltext/search?q=";
@@ -75,6 +70,8 @@ public class RelevanceGeocodingTest {
 	public final static String OUTPUT_FAIL_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output_fail.csv";
 
 	private static final boolean houseNumber = true;
+
+    private static final String FUZZY_PARAMETER = "true";
 	private static int nbTest = 0;
 	
 	IRestClient restClient = new RestClient();
@@ -2300,7 +2297,7 @@ public FulltextResultsDto doFulltextOnPlacetypes(String text,String[] placeTypes
 @SuppressWarnings("deprecation")
 public AddressResultsDto doGeocoding (String address){
     nbTest++;
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy=true&format=json";
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy="+FUZZY_PARAMETER+"&format=json";
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		return result;
@@ -2308,7 +2305,7 @@ public AddressResultsDto doGeocoding (String address){
 @SuppressWarnings("deprecation")
 public AddressResultsDto doGeocodingPostal(String address){
     nbTest++;
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy=true&format=json&postal=true";
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy="+FUZZY_PARAMETER+"&format=json&postal=true";
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		return result;
 	}
@@ -2318,7 +2315,7 @@ public AddressResultsDto doGeocodingPostal(String address){
 @SuppressWarnings("deprecation")
 	private AddressResultsDto doGeocodingOnCountry(String address,String countryCode){
         nbTest++;
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy=true&format=json&country="+countryCode;
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_SERVER_URI+URLEncoder.encode(address)+"&fuzzy="+FUZZY_PARAMETER+"&format=json&country="+countryCode;
 		System.out.println(fullURLToCall);
 		AddressResultsDto result  = restClient.get(fullURLToCall, AddressResultsDto.class, OutputFormat.JSON);
 		if (result!=null && result.getNumFound()!=0){
@@ -2332,7 +2329,7 @@ public AddressResultsDto doGeocodingPostal(String address){
 	@SuppressWarnings("deprecation")
     private AddressResultsDto doGeocodingOnCountry(Address address,String countryCode){
 	    nbTest++;
-		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_STRUCTURED_SERVER_URI+"apikey=111&fuzzy=true";//just add apikey to not to have to managed ? vs &
+		String fullURLToCall = BASE_SERVER_URL+GEOCODING_BASE_STRUCTURED_SERVER_URI+"apikey=111&fuzzy="+FUZZY_PARAMETER+"";//just add apikey to not to have to managed ? vs &
 		if (address.getStreetType()!=null){
 			fullURLToCall=fullURLToCall+"&streetType="+URLEncoder.encode(address.getStreetType());
 		}
