@@ -612,8 +612,9 @@ public class GeocodingService implements IGeocodingService {
 				sb.append(candidate.getNumber()).append(",");
 			}
 		}
-		logger.info("will analyze HN  : "+sb.toString());
-		
+		 if (logger.isDebugEnabled()){
+		     logger.debug("will analyze HN  : "+sb.toString());
+		 }
 		for (HouseNumberDto candidate :houseNumbersList){
 		    if (candidate != null && candidate.getNumber()!=null){
 		        Integer candidateNormalized;
@@ -627,7 +628,9 @@ public class GeocodingService implements IGeocodingService {
 		        }
 		        if (candidateNormalized!=null){
 		            if (houseNumberToFindAsInt != null &&  candidateNormalized.intValue() == houseNumberToFindAsInt.intValue()){
-		                logger.info("house number candidate found : "+candidate.getNumber());
+		                if (logger.isDebugEnabled()){
+		                    logger.debug("house number candidate found : "+candidate.getNumber());
+		                }
 		                HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation(candidate.getLocation(),houseNumberToFindAsInt);
 		                result.setApproximative(false);
 		                return result;
@@ -645,22 +648,30 @@ public class GeocodingService implements IGeocodingService {
 		        }
 		    }
 		}
-		logger.info("no exact house number candidate found for "+houseNumberToFindAsInt);
+		if (logger.isDebugEnabled()){
+		    logger.debug("no exact house number candidate found for "+houseNumberToFindAsInt);
+		}
 		//do interpolation
 		if (nearestHouseLower == null && nearestHouseUpper ==null){
-			logger.info(" no lower, nor upper house number found");
+		    if (logger.isDebugEnabled()){
+		        logger.debug(" no lower, nor upper house number found");
+		    }
 			return null;
 		}
 		HouseNumberDtoInterpolation result = new HouseNumberDtoInterpolation();
 		result.setApproximative(true);
 		if (nearestHouseUpper !=null){
-			logger.info(" higher : "+nearestUpper);
+		    if (logger.isDebugEnabled()){
+		        logger.debug(" higher : "+nearestUpper);
+		    }
 			result.setHigherLocation(nearestHouseUpper.getLocation());
 			result.setHigherNumber(nearestUpper);
 			result.setHouseNumberDif(nearestUpper - houseNumberToFindAsInt);
 		}
 		if (nearestHouseLower != null){
-			logger.info(" lower : "+nearestLower);
+		    if (logger.isDebugEnabled()){
+		        logger.debug(" lower : "+nearestLower);
+		    }
 			result.setLowerLocation(nearestHouseLower.getLocation());
 			result.setLowerNumber(nearestLower);
 			if (nearestUpper==null || Math.abs(nearestLower - houseNumberToFindAsInt)< Math.abs(result.getHouseNumberDif())){
