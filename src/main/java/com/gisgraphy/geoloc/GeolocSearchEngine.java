@@ -73,6 +73,8 @@ public class GeolocSearchEngine implements IGeolocSearchEngine {
     @Resource
     IRepositoryStrategy repositoryStrategy;
     
+    protected static final long LONG_REQUEST_THRESHOLD = 4000;
+    
 
     /**
      * The logger
@@ -110,8 +112,13 @@ public class GeolocSearchEngine implements IGeolocSearchEngine {
 	long end = System.currentTimeMillis();
 	long qTime = end - start;
 	if (!disableLogging){
-		logger.info(query + " took " + (qTime) + " ms and returns "
+	    if (qTime > LONG_REQUEST_THRESHOLD){
+	        logger.error(query + " took " + (qTime) + " ms and returns "
 				+ results.size() + " results");
+	    } else {
+	        logger.info(query + " took " + (qTime) + " ms and returns "
+	                + results.size() + " results");
+	    }
 	}
 	return new GeolocResultsDto(results, qTime);
 

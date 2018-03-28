@@ -138,6 +138,8 @@ public class GeocodingService implements IGeocodingService {
 	 */
 	protected static final Logger logger = LoggerFactory.getLogger(GeocodingService.class);
 
+    protected static final long LONG_REQUEST_THRESHOLD = 4000;
+
 
 
 	/*
@@ -324,8 +326,13 @@ public class GeocodingService implements IGeocodingService {
 			Long endTime = System.currentTimeMillis();
 			long qTime = endTime - startTime;
 			results.setQTime(qTime);
+			if (qTime > LONG_REQUEST_THRESHOLD){
+			    logger.error("geocoding of "+query + " and country="+countryCode+" took " + (qTime) + " ms and returns "
+	                    + results.getNumFound() + " results");
+			} else {
 			logger.info("geocoding of "+query + " and country="+countryCode+" took " + (qTime) + " ms and returns "
 					+ results.getNumFound() + " results");
+			}
 			return AddressHelper.limitNbResult(results,query.getLimitNbResult());
 		}
 	}
@@ -589,8 +596,13 @@ public class GeocodingService implements IGeocodingService {
 			Long endTime = System.currentTimeMillis();
 			long qTime = endTime - startTime;
 			results.setQTime(qTime);
-			logger.info("geocoding of "+address + " and country="+countryCode+" took " + (qTime) + " ms and returns "
-					+ results.getNumFound() + " results");
+			if (qTime > LONG_REQUEST_THRESHOLD){
+			    logger.error("geocoding of "+address + " and country="+countryCode+" took " + (qTime) + " ms and returns "
+			            + results.getNumFound() + " results");
+			} else {
+			    logger.info("geocoding of "+address + " and country="+countryCode+" took " + (qTime) + " ms and returns "
+			            + results.getNumFound() + " results");
+			}
 			return results;
 		//}
 	}

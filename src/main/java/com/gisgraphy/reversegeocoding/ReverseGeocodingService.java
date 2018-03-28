@@ -88,6 +88,7 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 
 	public static int DEFAULT_CITY_RADIUS = 30000;
 	public static int DEFAULT_STREET_RADIUS = 1000;
+	protected static final long LONG_REQUEST_THRESHOLD = 4000;
 
 	
 
@@ -118,7 +119,11 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 						addresses.add(address);
 						long end = System.currentTimeMillis();
 						long qTime = end - start;
-						logger.info(query + " took " + (qTime) + " ms and returns a result");
+						if (qTime > LONG_REQUEST_THRESHOLD){
+						    logger.error(query + " took " + (qTime) + " ms and returns a result");
+						} else {
+						    logger.info(query + " took " + (qTime) + " ms and returns a result");
+						}
 						//addressResultsDto =  new AddressResultsDto(addresses, qTime);
 						return  new AddressResultsDto(addresses, qTime);
 					}  else {
@@ -127,7 +132,11 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 						addresses.add(address);
 						long end = System.currentTimeMillis();
 						long qTime = end - start;
-						logger.info(query + " took " + (qTime) + " ms and returns a result");
+						if (qTime > LONG_REQUEST_THRESHOLD){
+                            logger.error(query + " took " + (qTime) + " ms and returns a result");
+                        } else {
+                            logger.info(query + " took " + (qTime) + " ms and returns a result");
+                        }
 						return  new AddressResultsDto(addresses, qTime);
 					}
 				}
@@ -140,7 +149,11 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 					addresses.add(address);
 					long end = System.currentTimeMillis();
 					long qTime = end - start;
-					logger.info(query + " took " + (qTime) + " ms and returns a result");
+					if (qTime > LONG_REQUEST_THRESHOLD){
+                        logger.error(query + " took " + (qTime) + " ms and returns a result");
+                    } else {
+                        logger.info(query + " took " + (qTime) + " ms and returns a result");
+                    }
 					return  new AddressResultsDto(addresses, qTime);
 				} 
 			}
@@ -171,15 +184,27 @@ public class ReverseGeocodingService implements IReverseGeocodingService {
 			long end = System.currentTimeMillis();
 			long qTime = end - start;
 			if (address==null){
-				logger.info(query + " took " + (qTime) + " ms and returns no result");
+			    if (qTime > LONG_REQUEST_THRESHOLD){
+			        logger.error(query + " took " + (qTime) + " ms and returns no result");
+                } else {
+                    logger.info(query + " took " + (qTime) + " ms and returns no result");
+                }
 			} else {
-				logger.info(query + " took " + (qTime) + " ms and returns a city : "+address.getCity());
+			    if (qTime > LONG_REQUEST_THRESHOLD){
+			        logger.error(query + " took " + (qTime) + " ms and returns a city : "+address.getCity());
+                } else {
+                    logger.info(query + " took " + (qTime) + " ms and returns a city : "+address.getCity());
+                }
 			}
 			return new AddressResultsDto(addresses, qTime);
 		}
 		long end = System.currentTimeMillis();
 		long qTime = end - start;
-		logger.info(query + " took " + (qTime) + " ms and doesn't returns no result");
+		 if (qTime > LONG_REQUEST_THRESHOLD){
+		     logger.error(query + " took " + (qTime) + " ms and doesn't returns no result");
+         } else {
+             logger.info(query + " took " + (qTime) + " ms and doesn't returns no result");
+         }
 		return new AddressResultsDto(NO_ADDRESS_LIST, qTime);
 	}
 

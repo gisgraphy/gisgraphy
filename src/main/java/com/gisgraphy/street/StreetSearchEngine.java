@@ -63,6 +63,8 @@ public class StreetSearchEngine implements IStreetSearchEngine {
 
     @Resource
     IStatsUsageService statsUsageService;
+    
+    protected static final long LONG_REQUEST_THRESHOLD = 4000;
 
     /**
      * The logger
@@ -85,8 +87,14 @@ public class StreetSearchEngine implements IStreetSearchEngine {
 
 	long end = System.currentTimeMillis();
 	long qTime = end - start;
-	logger.info(query + " took " + (qTime) + " ms and returns "
-		+ results.size() + " results");
+	if (qTime > LONG_REQUEST_THRESHOLD){
+	    logger.error(query + " took " + (qTime) + " ms and returns "
+	            + results.size() + " results");
+	} else {
+	    logger.info(query + " took " + (qTime) + " ms and returns "
+	            + results.size() + " results");
+	}
+	
 	return new StreetSearchResultsDto(results, qTime,query.getName());
 
     }
