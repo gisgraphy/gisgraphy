@@ -68,7 +68,7 @@ public class GisHelperTest {
 	
 	//other case
 	clazz = GisHelper.getClassEntityFromString("tourism");
-	System.out.println(clazz);
+	Assert.assertNotNull(clazz);
     }
     
     @Test
