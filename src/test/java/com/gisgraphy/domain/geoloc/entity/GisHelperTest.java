@@ -65,6 +65,10 @@ public class GisHelperTest {
 	// with null
 	clazz = GisHelper.getClassEntityFromString(null);
 	Assert.assertNull(clazz);
+	
+	//other case
+	clazz = GisHelper.getClassEntityFromString("tourism");
+	System.out.println(clazz);
     }
     
     @Test

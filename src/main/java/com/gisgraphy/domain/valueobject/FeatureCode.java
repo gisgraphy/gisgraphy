@@ -3525,6 +3525,57 @@ public enum FeatureCode {
 	public GisFeature getObject() {
 	    return new Veterinary();
 	}},
+	OSM_AMBULANCE{
+	    public GisFeature getObject() {
+	        return new Ambulance();
+	    }},
+    OSM_CAMPING {
+        public GisFeature getObject() {
+            return new Camping();
+        }
+    },
+    OSM_CAVE {
+        public GisFeature getObject() {
+            return new Cave();
+        }
+    },
+
+    OSM_CITYHALL {
+        public GisFeature getObject() {
+            return new CityHall();
+        }
+    },
+
+    OSM_CRAFT {
+        public GisFeature getObject() {
+            return new Craft();
+        }
+    },
+    OSM_PICNIC {
+        public GisFeature getObject() {
+            return new Picnic();
+        }
+    },
+    OSM_RESTAREA {
+        public GisFeature getObject() {
+            return new RestArea();
+        }
+    },
+    OSM_SPORT {
+        public GisFeature getObject() {
+            return new Sport();
+        }
+    },
+    OSM_TOURISM {
+        public GisFeature getObject() {
+            return new Tourism();
+        }
+    },
+    OSM_TOURISMINFO {
+        public GisFeature getObject() {
+            return new TourismInfo();
+        }
+    },
 	UNKNOW {
 		public GisFeature getObject() {
 		    return new GisFeature();

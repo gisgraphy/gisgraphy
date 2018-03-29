@@ -25,26 +25,38 @@
  */
 package com.gisgraphy.domain.valueobject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
 import static org.junit.Assert.*;
 
 import javax.annotation.Resource;
 
+import net.sf.jstester.util.Assert;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.repository.IGisDao;
 import com.gisgraphy.domain.repository.IGisFeatureDao;
 import com.gisgraphy.fulltext.AbstractIntegrationHttpSolrTestCase;
 import com.gisgraphy.helper.GeolocHelper;
+import com.gisgraphy.helper.GisHelper;
+import com.gisgraphy.helper.IntrospectionHelper;
 
 public class FeatureCodeTest extends AbstractIntegrationHttpSolrTestCase {
 
 	@Resource
 	IGisFeatureDao gisFeatureDao;
+	
+	 @Autowired
+	 protected IGisDao<? extends GisFeature>[] daos;
 
 	private static Locale localeaa = new Locale("aa");
 	private static Locale localeaacc = new Locale("aa", "dd");
@@ -134,6 +146,22 @@ public class FeatureCodeTest extends AbstractIntegrationHttpSolrTestCase {
 			}
 
 		}
+	}
+	
+	@Test
+	public void testAllClassThatExtendsGisFeatureShouldBeMapped(){
+	    List<Class<? extends GisFeature>> classList = new ArrayList<Class<? extends GisFeature>>();
+	    for (int i = 0; i < daos.length; i++) {
+	        classList.add(daos[i].getPersistenceClass());
+	    }
+	    //List<String> GisFeatureDistanceFields = inspectGisFeatureDistance();
+	    for (Class<? extends GisFeature> gisClass : classList) {
+	       if (GisHelper.getClassEntityFromString(gisClass.getSimpleName().toString())==null){
+	           Assert.fail(gisClass.getSimpleName() +" is not mapped" );
+	       } else {
+	           System.out.println(gisClass.getSimpleName() +" is mapped");
+	       }
+	    }
 	}
 
 }
