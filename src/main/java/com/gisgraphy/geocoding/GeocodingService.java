@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,7 +215,7 @@ public class GeocodingService implements IGeocodingService {
 		if (isEmptyString(rawAddress)) {
 			throw new GeocodingException("Can not geocode a null or empty address");
 		}
-	//	rawAddress = prepareQuery(rawAddress);
+		//rawAddress = prepareQuery(rawAddress);
 		//always search for country to remove it
 			CountryDetectorDto detectorDto = countryDetector.detectAndRemoveCountry(rawAddress);
 			if (detectorDto != null && detectorDto.getCountryCode()!=null){
@@ -273,7 +274,18 @@ public class GeocodingService implements IGeocodingService {
 			statsUsageService.increaseUsage(StatsUsageType.GEOCODING);
 			AddressResultsDto results;
 			rawAddress = StringHelper.prepareQuery(rawAddress);
-			HouseNumberAddressDto houseNumberAddressDto = GeocodingHelper.findHouseNumber(rawAddress, countryCode);
+			logger.debug("prepared query : "+rawAddress);
+			HouseNumberAddressDto houseNumberAddressDto = null;
+			
+		
+            if (shouldSearchHN(rawAddress)) {
+                if (logger.isDebugEnabled()){
+                    logger.debug("won't search for house number");
+                }
+	        } else {
+	            houseNumberAddressDto = GeocodingHelper.findHouseNumber(rawAddress, countryCode);
+	        }
+			//HouseNumberAddressDto houseNumberAddressDto = GeocodingHelper.findHouseNumber(rawAddress, countryCode);
 			String newAddress = rawAddress;
 			
 			String houseNumber = null;
@@ -282,10 +294,12 @@ public class GeocodingService implements IGeocodingService {
 				newAddress = houseNumberAddressDto.getAddressWithoutHouseNumber();
 			} 
 			List<String> streettypes = smartStreetDetection.getStreetTypes(newAddress);
-			for (String streettype : streettypes){
-				logger.info("found street type : "+streettype);
+			if (logger.isDebugEnabled()){
+			    for (String streettype : streettypes){
+			        logger.debug("found street type : "+streettype);
+			    }
 			}
-				boolean smartstreetdetected = false;
+			boolean smartstreetdetected = false;
 			String alternativeGermanAddress =null;
 			if (streettypes!=null && streettypes.size()==1){
 				smartstreetdetected = true;
@@ -336,6 +350,44 @@ public class GeocodingService implements IGeocodingService {
 			return AddressHelper.limitNbResult(results,query.getLimitNbResult());
 		}
 	}
+
+    protected boolean shouldSearchHN(String rawAddress) {
+        String[] words =splitDigitOrCP(rawAddress);
+        int digitOrCP = countDigitOrCP(words);
+        int count = countNotEmpty(words);
+        if (logger.isDebugEnabled()){
+            logger.debug("words / text  : "+ count+" /" +(count - digitOrCP));
+        }
+        return rawAddress != null && ((count==2 || count==3) && (count - digitOrCP == 1) );
+    }
+
+    
+    protected String[] splitDigitOrCP(String rawAddress){
+        String replaceAll = rawAddress.trim().replaceAll("(\\d+)[-\\s](\\d+)\\b", "$1$2");
+        String[] words = replaceAll.split("[,\\s]");
+        return words;
+    }
+    
+    protected int countDigitOrCP(String[] words) {
+        int countdigit = 0; 
+           for (String word:words){
+           if (word.length()>0 && StringUtils.isNumeric(word)){
+               countdigit++;
+           }
+        }
+         
+        return countdigit;
+    }
+    
+    protected int countNotEmpty(String[] words) {
+        int count = 0; 
+           for (String word:words){
+           if (word.length()>0){
+               count++;
+           }
+        }
+        return count;
+    }
 
     protected AddressResultsDto mergeExactAndFuzzy(AddressResultsDto results,
             String rawAddress, AddressResultsDto resultsFuzzy) {

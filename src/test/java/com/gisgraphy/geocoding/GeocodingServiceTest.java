@@ -2732,6 +2732,26 @@ public class GeocodingServiceTest {
        Assert.assertEquals("fuzzy match should be first","rue de la vallee verte", result.getResult().get(0).getFormatedPostal());
     }
     
+    @Test
+    public void  getNumberOfDigit(){
+        GeocodingService service = new GeocodingService();
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59 310 coutiches")));
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59310 coutiches")));
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59-310 coutiches")));
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59310 coutiches")));
+        
+        
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59 310,coutiches")));
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59310,coutiches")));
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59-310,coutiches")));
+        Assert.assertEquals(1,service.countDigitOrCP(service.splitDigitOrCP("59310,coutiches")));
+        
+        Assert.assertEquals(2,service.countDigitOrCP(service.splitDigitOrCP(" Kraków,30-036 25")));
+        Assert.assertEquals(2,service.countDigitOrCP(service.splitDigitOrCP(" Kraków,  30-036 25")));
+        
+       
+    }
+    
 
    
 }

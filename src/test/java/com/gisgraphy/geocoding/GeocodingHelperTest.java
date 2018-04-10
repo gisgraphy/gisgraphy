@@ -13,6 +13,8 @@ public class GeocodingHelperTest {
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("route nationale 43 62910",null));
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("route 66",null));
 	     
+	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("coutiches 59-310",null));
+	     
 	     
 	     Assert.assertEquals(null, GeocodingHelper.findHouseNumber("autoroute 1",null));
 	     

@@ -70,7 +70,7 @@ public class StringHelper {
 	
 	protected static final Pattern SYNONYMS_PATTERN= Pattern.compile("(saint|santa)", Pattern.CASE_INSENSITIVE);
 	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
-	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*)\\s\\b(\\d{2})[\\s-](\\d{3}\\b)");
+	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*\\s)?\\b(\\d{2})[\\s](\\d{3}\\b)");
 	private final static Pattern ZIPCONCATENATE_3_2__PATTERN = Pattern.compile("(.*)\\s\\b(\\d{3})[\\s-](\\d{2}\\b)");
 	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
 
@@ -1011,7 +1011,11 @@ public class StringHelper {
 			m = ZIPCONCATENATE_2_3_PATTERN.matcher(rawAddress);
 			if (m.find()){
 				sb = new StringBuffer();
-				m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
+				if (m.group(1)!=null){
+				    m.appendReplacement(sb,m.group(1)+" "+m.group(2)+m.group(3));
+				} else {
+				    m.appendReplacement(sb,m.group(2)+m.group(3));
+				}
 				m.appendTail(sb);
 				rawAddress = sb.toString();
 			} 

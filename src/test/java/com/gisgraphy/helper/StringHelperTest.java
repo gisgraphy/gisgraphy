@@ -379,13 +379,14 @@ public class StringHelperTest {
     
     @Test
     public void testPrepareQuery(){
-    	Assert.assertEquals("4 route nationale 43 59230 serques",StringHelper.prepareQuery("4 rn 43 59 230 serques"));
+    	Assert.assertEquals("4 route nationale 43 59230 serques",StringHelper.prepareQuery("4 rn 43 59 230 serques").replaceAll("\\s\\s", " "));
     	Assert.assertEquals("4 route nationale 43 12177 serques",StringHelper.prepareQuery("4 rn 43 121 77 serques"));
-    	Assert.assertEquals("route nationale 43 62910",StringHelper.prepareQuery("rn43 62 910"));
-    	Assert.assertEquals("4 route nationale 43 59130",StringHelper.prepareQuery("4 rn 43 59 130"));
+    	Assert.assertEquals("route nationale 43 62910",StringHelper.prepareQuery("rn43 62 910").replaceAll("\\s\\s", " "));
+    	Assert.assertEquals("4 route nationale 43 59130",StringHelper.prepareQuery("4 rn 43 59 130").replaceAll("\\s\\s", " "));
     	Assert.assertEquals("",StringHelper.prepareQuery(""));
     	Assert.assertEquals("4 route nationale 43 serques",StringHelper.prepareQuery("4 rn43 serques"));
     	Assert.assertEquals("4 route nationale 43 serques",StringHelper.prepareQuery("4 rn 43 serques"));
+    	Assert.assertEquals("59310 foo",StringHelper.prepareQuery("59 310 foo"));
     	
     	}
     

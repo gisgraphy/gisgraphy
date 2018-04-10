@@ -62,16 +62,16 @@ public class RelevanceGeocodingTest {
 	
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";
 	//public final static String BASE_SERVER_URL ="http://127.0.0.1:8080/";
-	public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com/";
+	public final static String BASE_SERVER_URL ="http://ep3.gisgraphy.com/";
 	public final static String GEOCODING_BASE_SERVER_URI ="geocoding/geocoding?address=";
 	public final static String GEOCODING_BASE_STRUCTURED_SERVER_URI ="geocoding/geocoding?";
 	public final static String FULLTEXT_BASE_SERVER_URI ="fulltext/search?q=";
 	public final static String OUTPUT_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output.csv";
 	public final static String OUTPUT_FAIL_FILE = "/home/gisgraphy/Bureau/integrationGeococodingUrls_output_fail.csv";
 
-	private static final boolean houseNumber = true;
+	private static final boolean houseNumber = false;
 
-    private static final String FUZZY_PARAMETER = "true";
+    private static final String FUZZY_PARAMETER = "false";
 	private static int nbTest = 0;
 	
 	IRestClient restClient = new RestClient();
@@ -195,8 +195,65 @@ public class RelevanceGeocodingTest {
 	
 
     @Test
-    public void addressCityOnlyFuzzy() throws InterruptedException, IOException{
+    public void addressCityZipWithMinus() throws InterruptedException, IOException{
+        if (countryTest.contains("ALL")){
+            String rawAddress = "Kraków,30-036";
+            AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            //the osm one , the geonames one
+            isFirstInExpectedIds(new long[]{3094802},addressResultsDto.getResult(), rawAddress);
+        }
+    }
+    
+    @Test
+    public void addressZipWithMinusCity() throws InterruptedException, IOException{
+        if (countryTest.contains("ALL")){
+            String rawAddress = "30-036 Kraków";
+            AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            //the osm one , the geonames one
+            isFirstInExpectedIds(new long[]{3094802},addressResultsDto.getResult(), rawAddress);
+        }
+    }
+    
+    @Test
+    public void addressZipWithOutMinusButShouldCity() throws InterruptedException, IOException{
+        if (countryTest.contains("ALL")){
+            String rawAddress = "30 036 Kraków";
+            AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            //the osm one , the geonames one
+            isFirstInExpectedIds(new long[]{3094802},addressResultsDto.getResult(), rawAddress);
+        }
+    }
+    
+    @Test
+    public void addressZipWithSpaceButShouldntCity() throws InterruptedException, IOException{
         if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+            String rawAddress = "59 310 coutiches";
+            AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            //the osm one , the geonames one
+            isFirstInExpectedIds(new long[]{3022804},addressResultsDto.getResult(), rawAddress);
+        }
+    }
+    
+    @Test
+    public void addressZipWithMinusButShouldntCity() throws InterruptedException, IOException{
+        if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+            String rawAddress = "59 310 coutiches";
+            AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
+            Assert.assertNotNull(addressResultsDto);
+            //the osm one , the geonames one
+            isFirstInExpectedIds(new long[]{3022804},addressResultsDto.getResult(), rawAddress);
+        }
+    }
+    
+    
+
+    @Test
+    public void addressCityOnlyFuzzy() throws InterruptedException, IOException{
+        if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && FUZZY_PARAMETER.equalsIgnoreCase("true")){
             String rawAddress = "ochsenkopft";
             AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
             Assert.assertNotNull(addressResultsDto);
@@ -888,7 +945,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void addressStreetNameFuzzy() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && FUZZY_PARAMETER.equalsIgnoreCase("true")){
 			String rawAddress = "docteur schweizer grenoble";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
@@ -901,7 +958,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
     public void addressCityFuzzy() throws InterruptedException, IOException{
-        if (countryTest.contains("DE")|| countryTest.contains("ALL")){
+        if ((countryTest.contains("DE")|| countryTest.contains("ALL") ) && FUZZY_PARAMETER.equalsIgnoreCase("true")){
             String rawAddress = "docteur schweitzer grenobe";
             AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
             Assert.assertNotNull(addressResultsDto);
@@ -912,7 +969,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void addressCityAndStreetNameFuzzy() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && FUZZY_PARAMETER.equalsIgnoreCase("true")){
 			String rawAddress = "docteur schweitzer grenobe";
 			AddressResultsDto addressResultsDto = doGeocodingOnCountry(rawAddress, "FR");
 			Assert.assertNotNull(addressResultsDto);
@@ -1315,7 +1372,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void structuredAddressStreetNameFuzzy() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && FUZZY_PARAMETER.equalsIgnoreCase("true")){
 				Address address = new Address();
 			address.setHouseNumber("");
 			address.setStreetName("docteur schweizer");
@@ -1332,7 +1389,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void structuredAddressCityFuzzy() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && FUZZY_PARAMETER.equalsIgnoreCase("true") ){
 				Address address = new Address();
 			address.setHouseNumber("");
 			address.setStreetName("docteur schweitzer");
@@ -1349,7 +1406,7 @@ public class RelevanceGeocodingTest {
 	
 	@Test
 	public void structuredAddressCityAndStreetNameFuzzy() throws InterruptedException, IOException{
-		if (countryTest.contains("FR")|| countryTest.contains("ALL")){
+		if ((countryTest.contains("FR")|| countryTest.contains("ALL")) && FUZZY_PARAMETER.equalsIgnoreCase("true")){
 				Address address = new Address();
 			address.setHouseNumber("");
 			address.setStreetName("docteur schweitzer");
