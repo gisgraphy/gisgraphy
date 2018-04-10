@@ -62,7 +62,7 @@ public class RelevanceGeocodingTest {
 	
 	public final static String FILEPATH = "integrationGeococodingUrls.csv";
 	//public final static String BASE_SERVER_URL ="http://127.0.0.1:8080/";
-	public final static String BASE_SERVER_URL ="http://relevance.gisgraphy.com/";
+	public final static String BASE_SERVER_URL ="http://ep3.gisgraphy.com/";
 	public final static String GEOCODING_BASE_SERVER_URI ="geocoding/geocoding?address=";
 	public final static String GEOCODING_BASE_STRUCTURED_SERVER_URI ="geocoding/geocoding?";
 	public final static String FULLTEXT_BASE_SERVER_URI ="fulltext/search?q=";
@@ -245,7 +245,7 @@ public class RelevanceGeocodingTest {
             AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
             Assert.assertNotNull(addressResultsDto);
             //the osm one , the geonames one
-            isFirstInExpectedIds(new long[]{3022804},addressResultsDto.getResult(), rawAddress);
+            isFirstInExpectedIds(new long[]{56360},addressResultsDto.getResult(), rawAddress);
         }
     }
     
@@ -258,7 +258,7 @@ public class RelevanceGeocodingTest {
             AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
             Assert.assertNotNull(addressResultsDto);
             //the osm one , the geonames one
-            isFirstInExpectedIds(new long[]{2858301},addressResultsDto.getResult(), rawAddress);
+            isFirstInExpectedIds(new long[]{56360},addressResultsDto.getResult(), rawAddress);
         }
     }
 	
