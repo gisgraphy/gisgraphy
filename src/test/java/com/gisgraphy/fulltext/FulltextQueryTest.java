@@ -272,6 +272,9 @@ public class FulltextQueryTest {
 	
 	query.withQuery("*** CAMION PLATEAU ***, 31650");
     Assert.assertEquals("CAMION PLATEAU  ,  31650", query.getQuery());
+    
+    query.withQuery("??? CAMION PLATEAU +++, 31650");
+    Assert.assertEquals("CAMION PLATEAU  ,  31650", query.getQuery());
 	
     }
     
