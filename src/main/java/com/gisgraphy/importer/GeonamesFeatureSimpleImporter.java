@@ -248,19 +248,19 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 
 	// population
 	if (!isEmptyField(fields, 14, false)) {
-	    gisFeature.setPopulation(new Integer(fields[14]));
+	    gisFeature.setPopulation(parseIntQuiet(fields[14]));
 	}
 
 	// elevation
 	if (!isEmptyField(fields, 15, false)) {
-	    gisFeature.setElevation(new Integer(fields[15]));
+	    gisFeature.setElevation(parseIntQuiet(fields[15]));
 	} else {
 	    gisFeature.setElevation(null);
 	}
 
 	// gtopo30
 	if (!isEmptyField(fields, 16, false)) {
-	    gisFeature.setGtopo30(new Integer(fields[16]));
+	    gisFeature.setGtopo30(parseIntQuiet(fields[16]));
 	}
 
 	// timeZone
@@ -409,6 +409,15 @@ public class GeonamesFeatureSimpleImporter extends AbstractSimpleImporterProcess
 	}
 	// }
 
+    }
+
+    protected Integer parseIntQuiet(String field) {
+        try {
+            return new Integer(field);
+        } catch (NumberFormatException e) {
+            logger.error("can not parse integer "+field);
+           return 0;
+        }
     }
     
     

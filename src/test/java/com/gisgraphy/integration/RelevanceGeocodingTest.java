@@ -234,7 +234,7 @@ public class RelevanceGeocodingTest {
             AddressResultsDto addressResultsDto = doGeocoding(rawAddress);
             Assert.assertNotNull(addressResultsDto);
             //the osm one , the geonames one
-            isFirstInExpectedIds(new long[]{3022804},addressResultsDto.getResult(), rawAddress);
+            isFirstInExpectedIds(new long[]{56360},addressResultsDto.getResult(), rawAddress);
         }
     }
     
