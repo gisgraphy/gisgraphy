@@ -25,6 +25,7 @@
 			<include>launch.bat</include>
 			<include>*.sh</include>
 			<include>debug.sh</include>
+			<include>startupscript</include>
 			<include>start.jar</include>
 			<include>migrationguide</include>
 			<include>installpostgresAndPostgis.sh</include>
