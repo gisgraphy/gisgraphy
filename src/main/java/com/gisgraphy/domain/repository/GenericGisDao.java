@@ -798,8 +798,8 @@ public class GenericGisDao<T extends GisFeature> extends
 						String queryString = "select count(*) from "
 							+ persistentClass.getSimpleName()+ " where countrycode='"+countryCode.toUpperCase()+"'";
 
-						Query qry = session.createQuery(queryString);
-						Long result = (Long) qry.uniqueResult();
+						Query qry = session.createSQLQuery(queryString);
+						Long result = ((BigInteger) qry.uniqueResult()).longValue();
 						return result;
 					    }
 					})).longValue();

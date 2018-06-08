@@ -40,8 +40,11 @@ import org.springframework.stereotype.Service;
 
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
+import com.gisgraphy.domain.geoloc.entity.CitySubdivision;
+import com.gisgraphy.domain.geoloc.entity.Continent;
 import com.gisgraphy.domain.geoloc.entity.Country;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
+import com.gisgraphy.domain.geoloc.entity.Street;
 import com.gisgraphy.domain.repository.AdmDao;
 import com.gisgraphy.domain.repository.CityDao;
 import com.gisgraphy.domain.repository.HouseNumberDao;
@@ -335,14 +338,14 @@ public class StatsDataManager implements IStatsDataManager{
 		long globalcount = 0;
 		for (int i = 0; i < daos.length; i++) {
 			IGisDao<? extends GisFeature> dao = daos[i];
-			if (dao.getPersistenceClass()== City.class || dao.getPersistenceClass()== Adm.class || dao.getPersistenceClass()== Country.class){
+			if (dao.getPersistenceClass()== Continent.class || dao.getPersistenceClass()== Street.class || dao.getPersistenceClass()== CitySubdivision.class || dao.getPersistenceClass()== City.class || dao.getPersistenceClass()== Adm.class || dao.getPersistenceClass()== Country.class){
 				continue;
 			}
 			long count = dao.countByCountryCode(country);
-			if (dao.getPersistenceClass()== GisFeature.class){
+			/*if (dao.getPersistenceClass()== GisFeature.class){
 				count--;//remove the country itself
-			}
-			logger.info("counting stats for pois:"+dao.getPersistenceClass().getSimpleName()+" : "+ count);
+			}*/
+			logger.error("counting stats for pois:"+dao.getPersistenceClass().getSimpleName()+" : "+ count);
 			globalcount = globalcount+ count;
 			if (withdetails){
 			countryStats.add(new StatsDataDTO("Pois:"+dao.getPersistenceClass().getSimpleName(), count));
