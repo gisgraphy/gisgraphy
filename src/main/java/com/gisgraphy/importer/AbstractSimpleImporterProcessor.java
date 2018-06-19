@@ -256,7 +256,7 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 			}
 		    } catch (Exception e) {
 			String message= "An Error occurred on Line "
-				+ readFileLine + " for " + input + " : "
+				+ readFileLine + " for " + dumpFields(input.split("\t")) + " : "
 				+ e.getMessage();
 			throw new ImporterException(
 				message, e);
@@ -269,6 +269,8 @@ public abstract class AbstractSimpleImporterProcessor implements IImporterProces
 	}
 	return readFileLine;
     }
+
+   
 
     /**
      * Process a read line of the geonames file, must be implemented by the

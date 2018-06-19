@@ -441,7 +441,6 @@ public class SolRSynchroniser implements ISolRSynchroniser {
 			if (gisFeature instanceof Adm) {
 			    adm = (Adm) gisFeature;
 			    ex.setField(FullTextFields.LEVEL.getValue(), adm.getLevel());
-			    
 			} else {
 			    adm = gisFeature.getAdm();
 			}

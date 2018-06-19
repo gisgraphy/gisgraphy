@@ -149,6 +149,7 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 		Point location=null;
 		Adm place=null;
 		String countrycode=null;
+		List<AdmDTO> admDTOs = null;
 		
 
 	
@@ -178,10 +179,15 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 		}
 		
 		//countrycode
-				if (!isEmptyField(fields, 4, true)) {
-					countrycode=fields[4].trim().toUpperCase();
-					
-				}
+		if (!isEmptyField(fields, 4, true)) {
+		    countrycode=fields[4].trim().toUpperCase();
+
+		}
+
+		//isinadm
+		if(!isEmptyField(fields, 8, false)){
+		    admDTOs = ImporterHelper.parseIsInAdm(fields[8]);
+		} 
 
 		//admin level
 		if (!isEmptyField(fields, 5, false)) {
@@ -189,13 +195,15 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 
 			try {
 				adminLevelOsm = Integer.parseInt(adminLevelAsString);
-				int level = calculateAdmLevel(countrycode,adminLevelOsm);
+				int level = calculateAdmLevelbyhierarchy(countrycode, admDTOs);
 				if (!shouldBeImported(countrycode,adminLevelOsm)){
 					return;
 				}
 				place = new Adm(level);
 				place.setCountryCode(countrycode);
 				place.setName(name);
+				populateAdmNames(place,adminLevelOsm,admDTOs);
+	            setParent(place,admDTOs);
 			} catch (NumberFormatException e) {
 				logger.error("can not parse admin level id "+adminLevelAsString);
 				return;
@@ -249,13 +257,7 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 		
 		}
 
-		//isinadm
-		if(!isEmptyField(fields, 8, false)){
-			List<AdmDTO> admDTOs = ImporterHelper.parseIsInAdm(fields[8]);
-			//current level is the osm one!
-			populateAdmNames(place,adminLevelOsm,admDTOs);
-			setParent(place,admDTOs);
-		} 
+		
 		
 
 		place.setAlternateLabels(generator.generateLabels(place));
@@ -311,6 +313,15 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 		currentOsmlevel = adminLevel;
 		return calculatedLevel;
 	}
+	   protected int calculateAdmLevelbyhierarchy(String countryCode,List<AdmDTO> dtos) {
+	       calculatedLevel = 1;
+	       for (AdmDTO dto:dtos){
+	           if (AdmStateLevelInfo.shouldBeImportedAsAdm(countryCode,dto.getLevel())){
+	               calculatedLevel++;
+	           }
+	       }
+	        return calculatedLevel;
+	    }
 
 	protected GisFeature populateAdmNames(Adm adm, int currentLevel, List<AdmDTO> admdtos) {
 		return ImporterHelper.populateAdmNames(adm, currentLevel, admdtos);

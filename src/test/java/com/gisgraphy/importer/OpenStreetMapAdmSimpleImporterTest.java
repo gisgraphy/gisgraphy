@@ -96,6 +96,42 @@ LabelGenerator generator = LabelGenerator.getInstance();
 		Assert.assertEquals(2,importer.calculateAdmLevel("DE",5));
 	}
 
+	
+	@Test
+    public void testCalculateAdmLevelByHierarchy() {
+        OpenStreetMapAdmSimpleImporter importer = new OpenStreetMapAdmSimpleImporter();
+        List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+        AdmDTO dto1 =new AdmDTO("adm1", 6, 10);
+        AdmDTO dto2 =new AdmDTO("adm2", 4, 10);
+        dtos.add(dto1);
+        dtos.add(dto2);
+        Assert.assertEquals("adm with all sup adm importable",3,importer.calculateAdmLevelbyhierarchy("FR",dtos ));
+        
+        //first adm
+        Assert.assertEquals("first adm should have level to 1",1,importer.calculateAdmLevelbyhierarchy("FR",new ArrayList<AdmDTO>()));
+        
+        dtos = new ArrayList<AdmDTO>();
+         dto1 =new AdmDTO("adm1", 3, 10);
+         dto2 =new AdmDTO("adm2", 4, 10);
+        dtos.add(dto1);
+        dtos.add(dto2);
+        Assert.assertEquals("adm with one sup adm importable",2,importer.calculateAdmLevelbyhierarchy("FR",dtos ));
+        
+        dtos = new ArrayList<AdmDTO>();
+        dto1 =new AdmDTO("adm1", 4, 10);
+        dto2 =new AdmDTO("adm", 5, 11);
+        AdmDTO dto3 =new AdmDTO("adm", 6, 11);
+        AdmDTO dto4 =new AdmDTO("adm2", 8, 10);
+       dtos.add(dto1);
+       dtos.add(dto2);
+       dtos.add(dto3);
+       dtos.add(dto4);
+       Assert.assertEquals("adm with one sup adm importable",4,importer.calculateAdmLevelbyhierarchy("FR",dtos ));
+      
+
+    }
+	
+	
 	@Test
 	public void testSetParent(){
 		List<AdmDTO> adms = new ArrayList<AdmDTO>();
