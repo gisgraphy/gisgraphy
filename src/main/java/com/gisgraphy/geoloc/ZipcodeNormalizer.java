@@ -99,10 +99,7 @@ public class ZipcodeNormalizer {
 				zipcode=zipcode.replace(m.group(0), m.group(0).replace(" ", "-"));
 			}
 		}
-		System.out.println("return new ZIP"+zipcode);
 		return zipcode;
-		
-		
 	}
     
     public static boolean containsGBPostCode(String zipcode){

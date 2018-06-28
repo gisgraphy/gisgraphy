@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.City;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.helper.FileHelper;
@@ -398,6 +399,38 @@ public class ImporterHelperTest {
 		 Assert.assertEquals("admName4", city.getAdm3Name());
 		 
 	 }
+	 
+	 @Test
+     public void populateAdmNames_ADM_With_a_level3_not_importable(){
+         List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+         AdmDTO dto1 = new AdmDTO("admName1", 3, 123L);
+         AdmDTO dto2 = new AdmDTO("admName2", 4, 123L);
+         dtos.add(dto1);
+         dtos.add(dto2);
+         Collections.sort(dtos);
+         
+         Adm city = new Adm(2);
+         city.setCountryCode("FR");
+         ImporterHelper.populateAdmNames(city, 6, dtos);
+         Assert.assertEquals("admName2", city.getAdm1Name());
+         
+     }
+	 
+	 @Test
+     public void populateAdmNames_ADM_With_a_level3_importable(){
+         List<AdmDTO> dtos = new ArrayList<AdmDTO>();
+         AdmDTO dto1 = new AdmDTO("admName1", 3, 123L);
+         AdmDTO dto2 = new AdmDTO("admName2", 4, 123L);
+         dtos.add(dto1);
+         dtos.add(dto2);
+         Collections.sort(dtos);
+         
+         Adm city = new Adm(2);
+         city.setCountryCode("AZ");
+         ImporterHelper.populateAdmNames(city, 6, dtos);
+         Assert.assertEquals("admName1", city.getAdm1Name());
+         
+     }
 	 
 	 @Test
 	 public void populateAdmNames_ManyLevels(){

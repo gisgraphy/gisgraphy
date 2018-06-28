@@ -490,7 +490,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 
 	protected OpenStreetMap findNearestStreet(String streetName, Point location, String cleanedNumber, String[] fields) {
 		//Openstreetmap has sometimes, for a  same street, several segment, so we do a fulltext search and then search for the nearest based on shape,not nearest point
-		logger.error("findNearestStreet :streetname="+streetName+" and location = "+location +" for house number "+cleanedNumber );
+		logger.debug("findNearestStreet :streetname="+streetName+" and location = "+location +" for house number "+cleanedNumber );
 		if (location == null){
 			logger.warn("findNearestStreet :location is null");
 			return null;

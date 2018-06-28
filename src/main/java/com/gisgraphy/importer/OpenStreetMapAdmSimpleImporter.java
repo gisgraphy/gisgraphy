@@ -323,10 +323,8 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 	        return calculatedLevel;
 	    }
 
-	protected GisFeature populateAdmNames(Adm adm, int currentLevel, List<AdmDTO> admdtos) {
-		return ImporterHelper.populateAdmNames(adm, currentLevel, admdtos);
-
-
+	protected GisFeature populateAdmNames(Adm adm, int currentOSMLevel, List<AdmDTO> admdtos) {
+		return ImporterHelper.populateAdmNames(adm, currentOSMLevel, admdtos);
 	}
 	
 	protected Adm setParent(Adm adm, List<AdmDTO> adms){
@@ -384,13 +382,6 @@ public class OpenStreetMapAdmSimpleImporter extends AbstractSimpleImporterProces
 
 
 
-
-	protected GisFeature populateAdmNames(GisFeature gisFeature, int currentLevel, List<AdmDTO> admdtos){
-		return ImporterHelper.populateAdmNames(gisFeature, currentLevel, admdtos);
-
-	}
-
-	
 
 	protected SolrResponseDto getAdm(String name, String countryCode) {
 		if (name==null){

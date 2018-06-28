@@ -214,6 +214,25 @@ if (Double.isNaN(maxY)){minX=lat;}
 
     }
     
+    public static float getAngle(Point p1,Point p2) {
+        double g2r = Math.PI/180;
+        double lon1 = p1.getX()* g2r;
+        double lon2 = p2.getX()* g2r;
+        double lat1=p1.getY()* g2r;
+        double lat2=p2.getY()* g2r;
+        
+        double dLon = lon2 - lon1;
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        double bearing = Math.atan2(y, x) * 180 / Math.PI;
+        
+        if(bearing < 0){
+            bearing += 360;
+        }
+
+        return new Float(bearing);
+    }
+    
    
     
   

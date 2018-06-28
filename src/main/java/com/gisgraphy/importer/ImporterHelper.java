@@ -66,6 +66,7 @@ import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.GisFeature;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
 import com.gisgraphy.domain.valueobject.AlternateNameSource;
+import com.gisgraphy.helper.AdmStateLevelInfo;
 import com.gisgraphy.helper.FeatureClassCodeHelper;
 import com.gisgraphy.helper.StringHelper;
 
@@ -166,7 +167,6 @@ public class ImporterHelper {
     public static final String ZIP_FILE_ACCEPT_REGEX_STRING = ".*(.zip)";
 
     public static final String GIS_FILE_ACCEPT_REGEX_STRING = ".*(.tar.bz2)|.*(.gis)";
-
     protected static final Logger logger = LoggerFactory.getLogger(ImporterHelper.class);
     
     private static HttpClientParams params = new HttpClientParams(){{
@@ -947,20 +947,23 @@ public class ImporterHelper {
 	}
 	
 	public static  GisFeature populateAdmNames(GisFeature gisFeature, int currentOsmLevel, List<AdmDTO> admdtos){
-		if (gisFeature ==null || admdtos ==null || admdtos.size() == 0){
-			return gisFeature;
-		}
-		int level = 1;
-		String lastName="";
-		for (AdmDTO dto: admdtos){
-			if ((dto.getLevel() < currentOsmLevel || currentOsmLevel == 0) && !lastName.equalsIgnoreCase(dto.getAdmName()) ){
-				//only if adm level < or not set
-				gisFeature.setAdmName(level++,dto.getAdmName() );
-				lastName = dto.getAdmName();
-			}
-		}
-		return gisFeature;
-		
+	    if (gisFeature ==null || admdtos ==null || admdtos.size() == 0){
+	        return gisFeature;
+	    }
+	    int level = 1;
+	    String lastName="";
+	    for (AdmDTO dto: admdtos){
+	        if ((dto.getLevel() < currentOsmLevel || currentOsmLevel == 0) && !lastName.equalsIgnoreCase(dto.getAdmName())){
+	            if (gisFeature instanceof Adm && !AdmStateLevelInfo.shouldBeImportedAsAdm(gisFeature.getCountryCode(),dto.getLevel()) ){
+	                continue;
+	            }
+	            //only if adm level < or not set
+	            gisFeature.setAdmName(level++,dto.getAdmName() );
+	            lastName = dto.getAdmName();
+	        }
+	    }
+	    return gisFeature;
+
 	}
 	
 	public static boolean isUnwantedZipCode(String zipcode){

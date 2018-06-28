@@ -453,6 +453,8 @@ public class StringHelperTest {
     	Assert.assertEquals("foo avenue",StringHelper.expandStreetType("foo ave", "US"));
     	Assert.assertEquals("foo avenue",StringHelper.expandStreetType("foo av.", "US"));
     	Assert.assertEquals("foo court",StringHelper.expandStreetType("foo Ct", "US"));
+    	Assert.assertEquals("foo street",StringHelper.expandStreetType("foo st", "US"));
+    	Assert.assertEquals("foo drive",StringHelper.expandStreetType("foo dr", "US"));
     	
     }
     

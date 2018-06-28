@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.gisgraphy.addressparser.format.BasicAddressFormater;
 import com.gisgraphy.domain.geoloc.entity.Adm;
 import com.gisgraphy.domain.geoloc.entity.AlternateName;
 import com.gisgraphy.domain.geoloc.entity.City;

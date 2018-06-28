@@ -25,6 +25,7 @@ package com.gisgraphy.domain.geoloc.entity;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.GisHelper;
 
 public class GisHelperTest {
@@ -86,6 +87,16 @@ public class GisHelperTest {
     	bbox = GisHelper.getBoundingBox("C", -90d, 0d, 40000);
     	Assert.assertFalse(bbox.contains("NaN"));
     	
+    }
+    
+    @Test
+    public void testGetAngle(){
+        float angle = GisHelper.getAngle(GeolocHelper.createPoint(-94.581213,39.099912 ), GeolocHelper.createPoint(-90.200203,38.627089));
+        
+        System.out.println(angle);
+         angle = GisHelper.getAngle(GeolocHelper.createPoint(-90.200203,38.627089),GeolocHelper.createPoint(-94.581213,39.099912 ));
+         System.out.println(angle);
+        //96.51
     }
 
 

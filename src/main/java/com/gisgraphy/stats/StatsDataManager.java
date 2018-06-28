@@ -345,7 +345,7 @@ public class StatsDataManager implements IStatsDataManager{
 			/*if (dao.getPersistenceClass()== GisFeature.class){
 				count--;//remove the country itself
 			}*/
-			logger.error("counting stats for pois:"+dao.getPersistenceClass().getSimpleName()+" : "+ count);
+			logger.info("counting stats for pois:"+dao.getPersistenceClass().getSimpleName()+" : "+ count);
 			globalcount = globalcount+ count;
 			if (withdetails){
 			countryStats.add(new StatsDataDTO("Pois:"+dao.getPersistenceClass().getSimpleName(), count));
