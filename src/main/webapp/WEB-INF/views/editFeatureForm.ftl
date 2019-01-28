@@ -11,7 +11,7 @@
 </title>
 </head>
 <body>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript" src="/scripts/v3_epoly.js"></script>
 <script type="text/javascript">
 

@@ -59,7 +59,7 @@
 		</span>
 		<div class="clear"></div>
 <!-- start ui edition -->
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript" src="/scripts/v3_epoly.js"></script>
 <script type="text/javascript">
 
@@ -462,15 +462,122 @@ function createPolylinesFromWKT(wkt){
 			<span class="searchfieldlabel"><@s.text name="street.oneway"/> : </span><@s.select name="openstreetmap.oneWay" list="%{#@java.util.LinkedHashMap@{'true' : getText('global.yes'), 'false': getText('global.no')}}" value="%{openstreetmap.oneWay}" theme="simple"/>
 		</span><br/><br/>
 		<div class="clear"></div>
+		
+<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.zipcode"/> : </span><@s.textfield name="openstreetmap.zipCode" value="%{openstreetmap.zipCode}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.lanes"/> : </span><@s.textfield name="openstreetmap.lanes" value="%{openstreetmap.lanes}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+			<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.toll"/> : </span><@s.select name="openstreetmap.oneWay" list="%{#@java.util.LinkedHashMap@{'true' : getText('global.yes'), 'false': getText('global.no')}}" value="%{openstreetmap.oneWay}" theme="simple"/>
+		</span>
+		<div class="clear"></div>
+		
+			<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.surface"/> : </span><@s.textfield name="openstreetmap.surface" value="%{openstreetmap.surface}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.speedmode"/> : </span>
+			<@s.select headerKey="" headerValue="--Choose--"  name="speedMode" list="speedModes"  multiple="false" theme="simple" value="%{openstreetmap.speedMode}" />
+			<br/>
+		</span>
+				<div class="clear"></div>
+				
+				
+			<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.maxspeed"/> : </span><@s.textfield name="openstreetmap.maxSpeed" value="%{openstreetmap.maxSpeed}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.maxspeedbackward"/> : </span><@s.textfield name="openstreetmap.maxSpeedBackward" value="%{openstreetmap.maxSpeedBackward}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.azimuthstart"/> : </span><@s.textfield name="openstreetmap.azimuthStart" value="%{openstreetmap.azimuthStart}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.azimuthend"/> : </span><@s.textfield name="openstreetmap.azimuthEnd" value="%{openstreetmap.azimuthEnd}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+			
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.adm1name"/> : </span><@s.textfield name="openstreetmap.adm1Name" value="%{openstreetmap.adm1Name}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.adm2name"/> : </span><@s.textfield name="openstreetmap.adm2Name" value="%{openstreetmap.adm2Name}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.adm3name"/> : </span><@s.textfield name="openstreetmap.adm3Name" value="%{openstreetmap.adm3Name}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.adm4name"/> : </span><@s.textfield name="openstreetmap.adm4Name" value="%{openstreetmap.adm4Name}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.adm5name"/> : </span><@s.textfield name="openstreetmap.adm5Name" value="%{openstreetmap.adm5Name}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+		
+		<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.is.inplace"/> : </span><@s.textfield name="openstreetmap.isInPlace" value="%{openstreetmap.isInPlace}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+			<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.openstreetmapId"/> : </span><@s.textfield name="openstreetmap.openstreetmapId" value="%{openstreetmap.openstreetmapId}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+		
+			<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.population"/> : </span><@s.textfield name="openstreetmap.population" value="%{openstreetmap.population}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+
+
+<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.streetref"/> : </span><@s.textfield name="openstreetmap.streetRef" value="%{openstreetmap.streetRef}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
 
 
 
-<div class="clear"></div>
+<span class="searchfield">
+			<span class="searchfieldlabel"><@s.text name="global.is.inadm"/> : </span><@s.textfield name="openstreetmap.isInAdm" value="%{openstreetmap.isInAdm}" theme="simple" size="35"/>
+		</span>
+		<div class="clear"></div>
+
+
+
+
 		<span class="searchfield">
 			<span class="searchfieldlabel"><@s.text name="global.streettype"/> : </span>
 			<@s.select headerKey="" headerValue="--Choose--"  name="streettype" list="streetTypes"  multiple="false" theme="simple" value="%{openstreetmap.streetType}" />
 			<br/>
 		</span>
+		
+		
+		
 		<br/>
 
 <div class="clear"></div>
@@ -478,9 +585,6 @@ function createPolylinesFromWKT(wkt){
 			<span class="searchfieldlabel"><@s.text name="global.is.in"/> : </span><@s.textfield name="openstreetmap.isIn" value="%{openstreetmap.isIn}" theme="simple" size="35"/>
 		</span>
 		<div class="clear"></div>
-<#if !openstreetmap?? >
-<@s.text name="gid.autogenerated"/>
-</#if>
 <br/>
 <br/>
 <div style="float:right;">

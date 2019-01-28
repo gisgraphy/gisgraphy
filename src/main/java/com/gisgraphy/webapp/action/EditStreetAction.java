@@ -41,8 +41,11 @@ import com.gisgraphy.domain.repository.CountryDao;
 import com.gisgraphy.domain.repository.IIdGenerator;
 import com.gisgraphy.domain.repository.IOpenStreetMapDao;
 import com.gisgraphy.domain.repository.ISolRSynchroniser;
+import com.gisgraphy.domain.valueobject.GISSource;
+import com.gisgraphy.domain.valueobject.SpeedMode;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.StringHelper;
+import com.gisgraphy.importer.LabelGenerator;
 import com.gisgraphy.service.IInternationalisationService;
 import com.gisgraphy.street.StreetType;
 import com.opensymphony.xwork2.ActionContext;
@@ -73,6 +76,8 @@ public class EditStreetAction extends BaseAction implements Preparable {
 	private CountryDao countryDao;
 	
 	private IIdGenerator IdGenerator;
+	
+	LabelGenerator labelGenerator = LabelGenerator.getInstance();
 	/**
 	 * The transaction manager
 	 */
@@ -94,6 +99,8 @@ public class EditStreetAction extends BaseAction implements Preparable {
 	private Float latitudeAsFloat = null;
 	private Float longitudeAsFloat = null;
 	private String streettype;
+	private String speedMode;
+	private String zipcode;
 	private Long id;
 	
 	private String errorMessage;
@@ -106,8 +113,26 @@ public class EditStreetAction extends BaseAction implements Preparable {
 	public void setStreettype(String streettype) {
 		this.streettype = streettype;
 	}
+	
+    public String getSpeedMode() {
+        return speedMode;
+    }
 
-	private String shape;
+    public void setSpeedMode(String speedMode) {
+        this.speedMode = speedMode;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+
+
+    private String shape;
 
 	/**
 	 * @return the available countries
@@ -119,6 +144,10 @@ public class EditStreetAction extends BaseAction implements Preparable {
 	public StreetType[] getStreetTypes() {
 		return StreetType.values();
 	}
+	
+	public SpeedMode[] getSpeedModes() {
+        return SpeedMode.values();
+    }
 
 	public void prepare() {
 		// we have to test httpparameter because prepare is called before the
@@ -161,16 +190,24 @@ public class EditStreetAction extends BaseAction implements Preparable {
 			    openstreetmap.setGid(generateGid());
 			}
 			openstreetmap.setLocation(processPoint());
+			openstreetmap.setSource(GISSource.PERSONAL);
 			LineString shapeProcessed = processShape();
 			openstreetmap.setShape(shapeProcessed);
 			openstreetmap.setStreetType(processStreettype());
 			openstreetmap.setLength(processLength(shapeProcessed));
+			openstreetmap.setCityConfident(true);
 			if (getFieldErrors().keySet().size() > 0) {
 				return INPUT;
 			} else {
 				startTransaction();
 				try {
 				    	StringHelper.updateOpenStreetMapEntityForIndexation(openstreetmap);
+				    	if (openstreetmap.getName() !=null){
+				    	    openstreetmap.setAlternateLabels(labelGenerator.generateLabels(openstreetmap));
+				    	    openstreetmap.setLabel(labelGenerator.generateLabel(openstreetmap));
+				    	    openstreetmap.setFullyQualifiedName(labelGenerator.getFullyQualifiedName(openstreetmap, false));
+				    	    openstreetmap.setLabelPostal(labelGenerator.generatePostal(openstreetmap));
+			            }
 					openStreetMapDao.save(openstreetmap);
 					
 				} catch (Exception e) {
@@ -242,6 +279,20 @@ public class EditStreetAction extends BaseAction implements Preparable {
 		}
 		return null;
 	}
+	
+	protected StreetType processSpeedMode() {
+        if (getSpeedMode() != null) {
+            StreetType type;
+            try {
+                type = StreetType.valueOf(getStreettype());
+                return type;
+            } catch (Exception e) {
+                logger.warn("can not determine streetType for "
+                        + getStreettype() + " : " + e);
+            }
+        }
+        return null;
+    }
 
 	protected LineString processShape() {
 		LineString lineString;
