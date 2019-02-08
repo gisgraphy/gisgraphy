@@ -15,3 +15,5 @@
 /OpenStreetMapPoisImporterTask.java
 /OpenAddressesAdvancedImporter.java
 /OpenAddressesImporterTask.java
+/TigerAdvancedImporter.java
+/TigerImporterTask.java

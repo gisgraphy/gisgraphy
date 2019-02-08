@@ -451,7 +451,7 @@ public class ImporterConfigTest {
 		countryCodes.add("FR");
 		importerConfig.setCountryCodes(countryCodes );
 		String quote2 = importerConfig.getQuote();
-		Assert.assertNotEquals(quote1, quote2);
+		Assert.assertFalse(quote1.equals(quote2));
 		
 		
 		
