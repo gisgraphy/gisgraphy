@@ -103,7 +103,7 @@ goToStep(${step});
 </@s.text>
 <br/>
 <@s.text name="gisgraphy.ask.for.dump">
-	<@s.param>http://download.gisgraphy.com/</@s.param>
+	<@s.param>https://premium.gisgraphy.com/</@s.param>
 </@s.text>
 <br/>
 <@s.text name="gisgraphy.ask.for.custom.dump">
@@ -128,6 +128,17 @@ goToStep(${step});
 					<span class="ok"><@s.text name="global.exists"/></span>
 				</#if><br/><br/>
 				<span class="labeloption"><@s.text name="import.openstretmap.directory"/> : </span>
+				<#if !TigerDownloadDirectoryAccessible>
+					<span class="ko"><@s.text name="global.not.exists"/></span>
+					<div class="tip redtip">
+						<@s.text name="import.directory.not.accesible"><@s.param>Tiger</@s.param><@s.param>${importerConfig.getTigerDir()}</@s.param></@s.text> 
+					</div>
+				<#else>
+					<span class="ok"><@s.text name="global.exists"/></span>
+				</#if><br/><br/>
+				
+				
+				<span class="labeloption"><@s.text name="import.tiger.directory"/> : </span>
 				<#if !openStreetMapDownloadDirectoryAccessible>
 					<span class="ko"><@s.text name="global.not.exists"/></span>
 					<div class="tip redtip">
@@ -136,6 +147,7 @@ goToStep(${step});
 				<#else>
 					<span class="ok"><@s.text name="global.exists"/></span>
 				</#if><br/><br/>
+				
 				
 				<span class="labeloption"><@s.text name="import.openaddresses.directory"/> : </span>
 				<#if !OpenAddressesDownloadDirectoryAccessible>
@@ -241,6 +253,18 @@ goToStep(${step});
 					<div style="margin-left: 100px;" >
 							<@s.text name="import.openaddresses"/> : <@s.radio name="openAddressesImporterEnabled" value="%{openAddressesImporterEnabled}" list="%{#@java.util.LinkedHashMap@{'true' : getText('global.yes'), 'false': getText('global.no')}}" id="disableOpenaddresses" theme="simple" />
 							 <!--<@s.checkbox value="%{openStreetMapImporterEnabled}" name="openStreetMapImporterEnabled" id="disableOpenstreetmap" theme="simple" onclick="checkHousenumber()"/> <@s.text name="import.openstreetmap"/>-->
+					</div>
+					<br/>
+					
+					<@s.text name="import.dataset.status"><@s.param>Tiger</@s.param></@s.text> :&nbsp;
+					<@s.if test="tigerImporterEnabled">
+						<span class="ok"><@s.text name="import.enabled"/></span><br/><br/>
+					</@s.if>
+					<@s.else>
+					<span class="ko"><@s.text name="import.disabled"/></span><br/><br/>
+					</@s.else>
+					<div style="margin-left: 100px;" >
+							<@s.text name="import.tiger"/> : <@s.radio name="tigerImporterEnabled" value="%{tigerImporterEnabled}" list="%{#@java.util.LinkedHashMap@{'true' : getText('global.yes'), 'false': getText('global.no')}}" id="disableOpenaddresses" theme="simple" />
 					</div>
 					<br/>
 					

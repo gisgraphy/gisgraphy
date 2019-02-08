@@ -101,6 +101,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<encoding>UTF-8</encoding> 
 				</configuration>
 			</plugin>
 			<plugin>
@@ -508,10 +509,10 @@
 
 	<repositories>
 	<!--  Our own repository -->
-		<!-- <repository>
+		 <repository>
 			<id>gisgraphy</id>
 			<url>http://gisgraphy.free.fr/mavenrepo/</url>
-		</repository>-->
+		</repository>
 		<!-- <repository>
 			<id>ibiblio</id>
 			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
@@ -596,7 +597,7 @@
 	<dependency>
 	<groupId>com.gisgraphy</groupId>
 	<artifactId>gisgraphy-commons</artifactId>
-	<version>5.0-beta2</version>
+	<version>5.0-beta3</version>
 	</dependency>
 		<dependency>
 			<groupId>${jdbc.groupId}</groupId>
@@ -1346,7 +1347,7 @@
 		<dependency>
 			<groupId>com.gisgraphy</groupId>
 			<artifactId>gisgraphy-utils</artifactId>
-			<version>5.0-beta2</version>
+			<version>5.0-beta3</version>
 			 <exclusions>
 				<exclusion>
 					<artifactId>slf4j-log4j12</artifactId>

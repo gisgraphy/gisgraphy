@@ -36,13 +36,13 @@ import com.gisgraphy.helper.GISFiler;
 
 
 /**
- * Retrieve The openaddresses files from a server
+ * Retrieve The Tiger files from a server
  * 
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
-public class OpenAddressesFileRetriever extends AbstractFileRetriever {
+public class TigerFileRetriever extends AbstractFileRetriever {
 	
-	protected static final Logger logger = LoggerFactory.getLogger(OpenAddressesFileRetriever.class);
+	protected static final Logger logger = LoggerFactory.getLogger(TigerFileRetriever.class);
 
     private GISFiler gisFiler;
     
@@ -54,7 +54,7 @@ public class OpenAddressesFileRetriever extends AbstractFileRetriever {
      * @see com.gisgraphy.domain.geoloc.importer.AbstractFileRetriever#getDownloadDirectory()
      */
     public String getDownloadDirectory() {
-	return importerConfig.getOpenAddressesDir();
+	return importerConfig.getTigerDir();
     }
 
     /* (non-Javadoc)
@@ -62,7 +62,7 @@ public class OpenAddressesFileRetriever extends AbstractFileRetriever {
      */
     public String getDownloadBaseUrl() {
 	return importerConfig
-	    .getOpenaddressesDownloadURL();
+	    .getTigerDownloadURL();
     }
     
     /* (non-Javadoc)
@@ -76,7 +76,7 @@ public class OpenAddressesFileRetriever extends AbstractFileRetriever {
 			gisFiler = new GISFiler(files[i].getAbsolutePath(),destDirectory);
 			gisFiler.process();
 		} catch (Exception e) {
-			logger.error(files[i].getAbsolutePath()+" is not a valid gis file");
+			logger.error(files[i].getAbsolutePath()+" is not a valid file "+e);
 		}
 	}
 
@@ -86,7 +86,7 @@ public class OpenAddressesFileRetriever extends AbstractFileRetriever {
 
 	for (int i = 0; i < filesToImport.length; i++) {
 	    logger.info("the files " + filesToImport[i].getName()
-		    + " will be imported for openaddresses");
+		    + " will be imported for Tiger");
 	}
     }
 
@@ -95,7 +95,7 @@ public class OpenAddressesFileRetriever extends AbstractFileRetriever {
      */
     @Override
     public boolean shouldBeSkipped() {
-	return !importerConfig.isOpenaddressesImporterEnabled();
+	return !importerConfig.isTigerImporterEnabled();
     }
 
     /* (non-Javadoc)
@@ -103,7 +103,7 @@ public class OpenAddressesFileRetriever extends AbstractFileRetriever {
      */
     @Override
     List<String> getFilesToDownload() {
-    	return importerConfig.getOpenAddressesDownloadFilesListFromOption();
+    	return importerConfig.getTigerDownloadFilesListFromOption();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class OpenAddressesFileRetriever extends AbstractFileRetriever {
 
     @Override
     public boolean isFileNotFoundTolerant() {
-	return true;
+	return false;
     }
 
 }

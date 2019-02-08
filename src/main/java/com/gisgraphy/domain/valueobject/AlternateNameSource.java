@@ -32,5 +32,5 @@ import com.gisgraphy.domain.geoloc.entity.AlternateName;
  * @author <a href="mailto:david.masclet@gisgraphy.com">David Masclet</a>
  */
 public enum AlternateNameSource {
-    PERSONAL, EMBEDED, ALTERNATENAMES_FILE, OPENSTREETMAP
+    PERSONAL, EMBEDED, ALTERNATENAMES_FILE, OPENSTREETMAP,TIGER
 }

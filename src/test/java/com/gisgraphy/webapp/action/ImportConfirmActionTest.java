@@ -163,6 +163,7 @@ public class ImportConfirmActionTest {
     	action.setImportallcountries(true);
     	 action.setConfig();
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.TIGER_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getTigerFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenAddressesFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapAdmFilesToDownload());
@@ -180,6 +181,7 @@ public class ImportConfirmActionTest {
     	action.setImportallcountries(false);
     	action.setConfig();
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapFilesToDownload());
+    	Assert.assertEquals(ImporterConfig.TIGER_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getTigerFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenAddressesFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapHouseNumberFilesToDownload());
     	Assert.assertEquals(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD, importerConfig.getOpenStreetMapCitiesFilesToDownload());
@@ -355,7 +357,7 @@ public class ImportConfirmActionTest {
     @Test
     public void enableOpenStreetMapImporter() {
 	ImporterConfig importerConfig = new ImporterConfig();
-	Assert.assertTrue(importerConfig.isGeonamesImporterEnabled());
+	Assert.assertTrue(importerConfig.isOpenstreetmapImporterEnabled());
 
 	ImportConfirmAction action = new ImportConfirmAction();
 	action.setImporterConfig(importerConfig);
@@ -366,6 +368,37 @@ public class ImportConfirmActionTest {
 	Assert.assertTrue("isOpenStreetMapImporterEnabled should return the same value as the importerConfig One ", action.isOpenStreetMapImporterEnabled());
 	Assert.assertTrue("isOpenStreetMapImporterEnabled should return the same value as the importerConfig One ", importerConfig.isOpenstreetmapImporterEnabled());
     }
+    
+    
+    @Test
+    public void disableTigerImporter() {
+    ImporterConfig importerConfig = new ImporterConfig();
+    Assert.assertTrue(importerConfig.isTigerImporterEnabled());
+
+    ImportConfirmAction action = new ImportConfirmAction();
+    action.setImporterConfig(importerConfig);
+
+    Assert.assertTrue("isTigerEnabled should return the same value as the importerConfig One ", action.isTigerImporterEnabled());
+    action.setTigerImporterEnabled(false);
+    Assert.assertFalse("isTigerEnabled should return the same value as the importerConfig One ", action.isTigerImporterEnabled());
+    Assert.assertFalse("isTigerEnabled should return the same value as the importerConfig One ", importerConfig.isTigerImporterEnabled());
+    }
+
+    @Test
+    public void enableTigerImporter() {
+    ImporterConfig importerConfig = new ImporterConfig();
+    Assert.assertTrue(importerConfig.isTigerImporterEnabled());
+
+    ImportConfirmAction action = new ImportConfirmAction();
+    action.setImporterConfig(importerConfig);
+    importerConfig.setTigerImporterEnabled(false);
+    Assert.assertFalse("isTigerEnabled should return the same value as the importerConfig One ", action.isTigerImporterEnabled());
+
+    action.setTigerImporterEnabled(true);
+    Assert.assertTrue("isTigerEnabled should return the same value as the importerConfig One ", action.isTigerImporterEnabled());
+    Assert.assertTrue("isTigerEnabled should return the same value as the importerConfig One ", importerConfig.isTigerImporterEnabled());
+    }
+    
     
     @Test
     public void enableHouseNumberImporter() {

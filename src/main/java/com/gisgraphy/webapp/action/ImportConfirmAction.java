@@ -146,6 +146,7 @@ public class ImportConfirmAction extends ActionSupport {
 		if (importallcountries) {
 			importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenAddressesFilesToDownload(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
+			importerConfig.setTigerFilesToDownload(ImporterConfig.TIGER_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapHouseNumberFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 			importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
@@ -178,6 +179,7 @@ public class ImportConfirmAction extends ActionSupport {
 				String geonamesFileList = geonamesCountryFileList.toString();
 				String geonamesZipFileList = geonamesZipCountryFileList.toString();
 				importerConfig.setOpenAddressesFilesToDownload(openstreetmapCountryFileListAsString);
+				importerConfig.setTigerFilesToDownload(ImporterConfig.TIGER_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapHouseNumberFilesToDownload(openstreetmapCountryFileListAsString);
 				importerConfig.setOpenStreetMapCitiesFilesToDownload(openstreetmapCountryFileListAsString);
@@ -190,6 +192,7 @@ public class ImportConfirmAction extends ActionSupport {
 				logger.info("Import all countries is false but no country list recieved,set list to default");
 				importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenAddressesFilesToDownload(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
+				importerConfig.setTigerFilesToDownload(ImporterConfig.TIGER_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapHouseNumberFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapCitiesFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 				importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
@@ -272,6 +275,14 @@ public class ImportConfirmAction extends ActionSupport {
 	public boolean isOpenAddressesDownloadDirectoryAccessible() {
 		return importerConfig.isOpenAddressesDirectoryAccessible();
 	}
+	
+	/**
+     * @return true if the directory with the file to import exists and is
+     *         accessible
+     */
+    public boolean isTigerDownloadDirectoryAccessible() {
+        return importerConfig.isTigerDirectoryAccessible();
+    }
 
 	/**
 	 * @return true if the regexp of the feature class/ code are correct
@@ -324,19 +335,34 @@ public class ImportConfirmAction extends ActionSupport {
 	}
 	
 	/**
-	 * @return true if he openStreetMap importer is enabled
+	 * @return true if he Openaddresses importer is enabled
 	 */
 	public boolean isOpenAddressesImporterEnabled() {
 		return importerConfig.isOpenaddressesImporterEnabled();
 	}
 
 	/**
-	 * Enable / Disable OpenStreetMap importer
+	 * Enable / Disable Openaddresses importer
 	 */
 	public void setOpenAddressesImporterEnabled(boolean openStreetMapImporter) {
 		importerConfig.setOpenAddressesImporterEnabled(openStreetMapImporter);
 	}
 	
+	
+	/**
+     * @return true if he Tiger importer is enabled
+     */
+    public boolean isTigerImporterEnabled() {
+        return importerConfig.isTigerImporterEnabled();
+    }
+
+    /**
+     * Enable / Disable Tiger importer
+     */
+    public void setTigerImporterEnabled(boolean tigerEnabled) {
+        importerConfig.setTigerImporterEnabled(tigerEnabled);
+    }
+    
 
 	/**
 	 * @return true if the house number importer is enabled

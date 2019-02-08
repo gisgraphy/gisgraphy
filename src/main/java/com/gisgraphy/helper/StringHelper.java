@@ -36,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +45,9 @@ import com.gisgraphy.compound.Decompounder;
 import com.gisgraphy.compound.Decompounder.state;
 import com.gisgraphy.domain.geoloc.entity.AlternateOsmName;
 import com.gisgraphy.domain.geoloc.entity.OpenStreetMap;
-import com.gisgraphy.helper.synonyms.SynonymsFinder;
 import com.gisgraphy.helper.synonyms.StreetTypeSynonymsManager;
+import com.gisgraphy.helper.synonyms.SynonymsFinder;
+import com.gisgraphy.importer.TigerSimpleImporter;
 
 /**
  * Provide some usefull method to compute string for autocompletion and fulltextsearch
@@ -64,7 +66,7 @@ public class StringHelper {
 	
 	protected static Pattern CITY_PATTERN = Pattern.compile("city of|city$", Pattern.CASE_INSENSITIVE);
 	
-	private static final Pattern ORDINAL_PATTERN = Pattern.compile("(\\d+)\\s?(?:rd|st|nd|th)?\\b");
+	private static final Pattern ORDINAL_NUMBER_EN_PATTERN = Pattern.compile("(\\d+)\\s?(?:rd|st|nd|th)?\\b");
 	
 	private static StreetTypeSynonymsManager synonymsManager = StreetTypeSynonymsManager.getInstance();
 	
@@ -72,9 +74,76 @@ public class StringHelper {
 	private final static Pattern RN_PATTERN = Pattern.compile("\\b(rn)\\s?(\\d{1,4}\\b)", Pattern.CASE_INSENSITIVE);
 	private final static Pattern ZIPCONCATENATE_2_3_PATTERN = Pattern.compile("(.*\\s)?\\b(\\d{2})[\\s](\\d{3}\\b)");
 	private final static Pattern ZIPCONCATENATE_3_2__PATTERN = Pattern.compile("(.*)\\s\\b(\\d{3})[\\s-](\\d{2}\\b)");
-	private static final Pattern GERMAN_SYNONYM_PATTEN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
+	private static final Pattern GERMAN_SYNONYM_PATTERN = Pattern.compile("(str\\b)[\\.]?",Pattern.CASE_INSENSITIVE);
+	private static final Pattern ORDINAL_TEXT_EN_PATTERN = Pattern.compile("((?:first|second|third)|(?:four|fif|six|seven|eigh|nin[e]?|ten|eleven|twelve|twelf|thir|twentie)(?:teen)?th)",Pattern.CASE_INSENSITIVE);
+	
 
-	private static final Pattern DIRECTION_PATTERN = Pattern.compile("((?:\\b\\s[sewn]$)|(?:^[sewn]\\b\\s))",Pattern.CASE_INSENSITIVE);
+	
+	private static final Pattern START_DIRECTION_PATTERN = Pattern.compile("^((?:N|W|E|S|NORTH[-\\s]EAST|NORTH[-\\s]WEST|NORTH|WEST|EAST|SOUTH[-\\s]EAST|SOUTH[-\\s]WEST|SOUTH|NE|NW|SE|SW)\\b)",Pattern.CASE_INSENSITIVE);
+	private static final Pattern END_DIRECTION_PATTERN = Pattern.compile("(\\b(?:N|W|E|S|NORTH[-\\s]EAST|NORTH[-\\s]WEST|NORTH|WEST|EAST|SOUTH[-\\s]EAST|SOUTH[-\\s]WEST|SOUTH|NE|NW|SE|SW)$)",Pattern.CASE_INSENSITIVE);
+	private static final Pattern STREET_PREFIX_PATTERN = Pattern.compile("^(?:(N|W|E|S|NORTH[-\\s]EAST|NORTH[-\\s]WEST|NORTH|WEST|EAST|SOUTH[-\\s]EAST|SOUTH[-\\s]WEST|SOUTH|NE|NW|SE|SW)\\b\\s)?((?:\\s?(\\b[A-Z][A-Z]\\b)\\s?)?"
+	        + "(?:\\bpth\\b|\\bsr\\b|\\bss\\b|\\bbus\\b|\\bbusiness loop\\b|\\bBusiness Interstate\\b|\\bbusiness spur\\b|\\bbusiness|\\bstate\\b|\\bcounty\\b|\\branch\\b|\\bco\\b|\\bu[.]?s[.]?|I-|\\binterstate\\b|\\bstate\\b|\\bFOREST\\b|\\brural\\b|\\brr\\b|\\bfm\\b|\\bpth\\b))",Pattern.CASE_INSENSITIVE);
+	public static final int MAX_STREET_NAME_SIZE = 250;
+
+	private static final Map<String,String> US_PREFIX_STREETNAME_NORMALIZE_MAP = new HashMap<String, String>(){
+	    {
+	        //ALWAYS in lower case, if a key is added,it should be added to STREET_PREFIX_PATTERN
+	        put("co","county");
+	        put("bus","business");//bus|business|bus loop|business loop|Business Interstate|business spur|bus spur|state|co|county|u[.]?s[.]?|I-|interstate]|state|FOREST
+	        put("bus loop","business");
+	        put("bus spur","business spur");
+	        put("u.s","us");
+	        put("u.s.","us");
+	        put("i-","interstate");
+	        put("i","interstate");
+	        put("sr","state route");
+           // put("hwy","highway");
+            put("pth","perimeter highway");
+            put("ss","strada statale");
+            put("rr","rural route");
+            put("fm","farm to market");
+            
+	    }
+	};
+	
+	public static final List<String> US_PREFIX_STREETNAME_NORMALIZE_LIST = new ArrayList<String>(){
+	    {
+	    //We only add long version, the short one will be done by the STREET_PREFIX_PATTERN
+	    addAll(US_PREFIX_STREETNAME_NORMALIZE_MAP.values());
+	    }
+	};
+	
+	
+	private static final Map<String,String> ORDINAL_EN_TEXT_NORMALIZE_MAP = new HashMap<String, String>(){
+        {
+            //ALWAYS in lower case
+            put("first","1st");
+            put("second","2nd");
+            put("third","3rd");
+            put("fourth","4th");
+            put("fifth","5th");
+            put("sixth","6th");
+            put("seventh","7th");
+            put("eighth","8th");
+            put("nineth","9th");
+            put("ninth","9th");
+            put("tenth","10th");
+            put("eleventh","11th");
+            put("twelveth", "12th");
+            put("twelfth", "12th");
+            put("thirteenth", "13th");
+            put("fourteenth", "14th");
+            put("fifteenth", "15th");
+            put("sixteenth", "16th");
+            put("seventeenth", "17th");
+            put("eighteenth", "18th");
+            put("nineteenth", "19th");
+            put("twentieth", "20th");
+            
+        }
+    };
+	
+	private static final Pattern DIRECTION_LETTER_PATTERN = Pattern.compile("((?:\\bnortheast\\b)|(?:\\bsoutheast\\b)|(?:\\bsouthwest\\b)|(?:\\bnorthwest\\b)|(?:\\b\\s[sewn]$)|(?:^[sewn]\\b\\s)|(?:\\b\\s(?:ne|nw|se|sw)$)|(?:^(?:ne|nw|se|sw)\\b\\s))",Pattern.CASE_INSENSITIVE);
 	
 	private static Decompounder decompounder = new Decompounder();
 	
@@ -494,6 +563,9 @@ public class StringHelper {
 	
 	public static boolean isSameStreetName(String expected, String actual, String countrycode){
 		if (actual!=null && expected!=null){
+		    if (expected.equalsIgnoreCase(actual)){
+		       return true;
+		    }
 			actual=expandStreetType(actual, countrycode);
 			expected=expandStreetType(expected, countrycode);
 			actual=expandStreetSynonyms(actual);
@@ -501,9 +573,17 @@ public class StringHelper {
 			if (countrycode!=null && (countrycode.equalsIgnoreCase("CA") || countrycode.equalsIgnoreCase("US"))){
 				actual=expandStreetDirections(actual);
 				expected=expandStreetDirections(expected);
+				expected = removeRoutePrefix(expected);
+				actual = removeRoutePrefix(actual);
+				
+				actual = removeDirection(actual);
+				expected = removeDirection(expected);
 			}
+            actual=expandOrdinalText(actual);
+            expected=expandOrdinalText(expected);
+            
 			boolean same = (isSameStreetName_intern(expected,actual) || 
-					(actual.replaceAll("[^0-9]", "").equals(expected.replaceAll("[^0-9]", "")) && levenstein.execute(normalize(actual).replaceAll("\\s-", ""), normalize(expected).replaceAll("\\s-", ""))<2)
+					(actual.replaceAll("[^0-9]", "").equals(expected.replaceAll("[^0-9]", "")) && levenstein.execute(normalize(actual).replaceAll("[\\s-]", ""), normalize(expected).replaceAll("[\\s-]", ""))<=2)//<=2 or simply <2 ?
 					);
 			if (same){
 				return true;
@@ -516,6 +596,20 @@ public class StringHelper {
 		}
 		return false;
 	}
+
+    protected static String removeRoutePrefix(String expected) {
+        Matcher matcherPrefix = STREET_PREFIX_PATTERN.matcher(expected);
+        if (matcherPrefix.find()){//specific for state rte
+            String prefix = matcherPrefix.group(2);
+            String dir = matcherPrefix.group(1);
+            int length = prefix.length();
+            if (dir!=null &&  !dir.equals("")){
+                length= length+dir.length()+1;
+            }
+            expected = expected.substring(length, expected.length()).trim();
+        }
+        return expected;
+    }
 	
 	public static final List<List<String>> mySynonyms = new ArrayList<List<String>>(){{
 		List<String> l1 = new ArrayList<String>(){{
@@ -554,6 +648,9 @@ public class StringHelper {
 		if (actual!=null && expected!=null){
 			if (actual.equalsIgnoreCase(expected)){ //shortcut
 				return true;
+			}
+			if (!isSameNumberRoad(expected, actual)){//all the number should be the same and in the same order
+			    return false;
 			}
 			//split the strings
 			String[] actualSplited = StringHelper.removePunctuation(actual).split("[,\\s\\-\\–\\一;//]");
@@ -600,11 +697,11 @@ public class StringHelper {
 			int countMissing = 0;
 			List<String> missingWordsInActual = new ArrayList<String>();
 			for (String word :actualSplitedLong){
-				Matcher matcher1 = ORDINAL_PATTERN.matcher(word);
+				Matcher matcher1 = ORDINAL_NUMBER_EN_PATTERN.matcher(word);
 				if (matcher1.find()){
 					boolean foundOrdinal = false;
 					for (String expectedLong:expectedSplitedLong){
-						Matcher matcher2 = ORDINAL_PATTERN.matcher(expectedLong);
+						Matcher matcher2 = ORDINAL_NUMBER_EN_PATTERN.matcher(expectedLong);
 						if (!foundOrdinal && matcher2.find()){
 							if(matcher1.group(1).equals(matcher2.group(1))){
 							foundOrdinal=true;
@@ -665,7 +762,7 @@ public class StringHelper {
 			return null;
 		}
 		street= street.trim();
-		Matcher m = DIRECTION_PATTERN.matcher(street);
+		Matcher m = DIRECTION_LETTER_PATTERN.matcher(street);
 		StringBuffer sb = new StringBuffer();
 		if (m.find()){
 			String group = m.group(1).trim();
@@ -682,7 +779,30 @@ public class StringHelper {
 			else if (group.equalsIgnoreCase("W")){
 				replacement = " west ";
 			}
-			
+			else if (group.equalsIgnoreCase("NE")){
+                replacement = " north east ";
+            }
+            else if (group.equalsIgnoreCase("SE")){
+                replacement = " south east ";
+            }
+            else if (group.equalsIgnoreCase("NW")){
+                replacement = " north west ";
+            }
+            else if (group.equalsIgnoreCase("SW")){
+                replacement = " south west ";
+            }
+            else if (group.equalsIgnoreCase("northeast")){
+                replacement = "north east";
+            }
+            else if (group.equalsIgnoreCase("northwest")){
+                replacement = "north west";
+            }
+            else if (group.equalsIgnoreCase("southwest")){
+                replacement = "south west";
+            }
+            else if (group.equalsIgnoreCase("southeast")){
+                replacement = "south east";
+            }
 			m.appendReplacement(sb, replacement);
 			m.appendTail(sb);
 			return sb.toString().trim();
@@ -705,7 +825,111 @@ public class StringHelper {
 		return street;
 	}
 	
+	 public static String removeDirection(String street){
+	     if (street!=null){
+	         street = street.trim();
+	         Matcher matcher = START_DIRECTION_PATTERN.matcher(street);
+	         if (matcher.find()){
+	             String prefix = matcher.group(1);
+	             street =  street.substring(prefix.length(), street.length()).trim();
+	         } 
+	             matcher = END_DIRECTION_PATTERN.matcher(street);
+	             if (matcher.find()){
+	                 String prefix = matcher.group(1);
+	                 street =  street.substring(0, street.length()-(prefix.length())).trim();
+	             } 
+	         
+	     }
+	     return street;
+	 }
 	 
+	 public static boolean hasDirection(String street){
+         if (street!=null){
+             street = street.trim();
+             Matcher matcher = START_DIRECTION_PATTERN.matcher(street);
+             if (matcher.find()){
+                 return true;
+             } 
+                 matcher = END_DIRECTION_PATTERN.matcher(street);
+                 if (matcher.find()){
+                     return true;
+                 } 
+             
+         }
+         return false;
+     }
+	 
+	 public static boolean isRef(String streetName){
+	     if (!isEmptyString(streetName)){
+	         streetName = streetName.toLowerCase();
+	         for (String prefix:US_PREFIX_STREETNAME_NORMALIZE_LIST){
+	             if (streetName.contains(prefix) || STREET_PREFIX_PATTERN.matcher(streetName).find()){
+	                 return true;
+	             }
+	         }
+	         
+	     }
+	     return false;
+	 }
+	 
+	 public static boolean isSameNumberRoad(String street1,String street2){
+	     Pattern numPattern = Pattern.compile("(\\d+)");
+	     Matcher m1 = numPattern.matcher(street1);
+	     Matcher m2 = numPattern.matcher(street2);
+	     while (m1.find()){
+	         //String num1 = m1.group(1);
+	         if (m2.find()){
+	           //  String num2 = m2.group(1);
+	             if (!m2.group(1).equals(m1.group(1))){
+	                 return false;
+	             }
+	         } else {
+	             return false;
+	         }
+	     }
+	     if (m2.find()){
+	         return false;
+	     }
+	     return true;
+	     
+	 }
+	 
+	 
+	 
+	 public static String getExpandedStreetPrefix(String prefix){
+	     if (!isEmptyString(prefix)){
+	         String normalize = US_PREFIX_STREETNAME_NORMALIZE_MAP.get(prefix.toLowerCase());
+	         if (normalize!=null){
+	             return normalize;
+	         }
+	     }
+	    
+	     return prefix;
+	     
+	     
+	 }
+	 
+	 public static String expandOrdinalText(String street){
+	     
+	     if (street==null){
+	            return null;
+	        }
+	        street= street.trim();
+	        Matcher m = ORDINAL_TEXT_EN_PATTERN.matcher(street);
+	        StringBuffer sb = new StringBuffer();
+	        if (m.find()){
+	            String group = m.group(1).trim();
+	            String replacement =ORDINAL_EN_TEXT_NORMALIZE_MAP.get(group.toLowerCase());
+	            if (replacement == null){
+	                return street;
+	            }
+	            m.appendReplacement(sb, replacement);
+	            m.appendTail(sb);
+	            return sb.toString().trim();
+	        }
+	        return street;
+	     
+	 }
 	
 	/**
 	 * correct the street type according the countrycode. e.g : 
@@ -714,118 +938,178 @@ public class StringHelper {
 	 * @param countryCode
 	 * @return
 	 */
-	public static String expandStreetType(String street, String countryCode) {
-		if (street==null){
-			return null;
-		}
-		street= street.trim();
-		boolean hasPoint = false;
-		if (countryCode != null ){
-			Language languageFromCountry = getLanguageFromCountryCode(countryCode);
-			if (languageFromCountry!=null){
-				List<Language> languages = new ArrayList<Language>();
-				if (languageFromCountry.toString().contains("_")){
-					for(String l:languageFromCountry.toString().split("_")){
-						languages.add(Language.valueOf(l));
-					}
-				} else {
-					languages.add(languageFromCountry);
-				}
-				
-				for (Language languageFromCountryCode: languages){
-				String word;
-				StreetTypeOrder streetTypeOrder = languageFromCountryCode.getStreetTypeOrder();
-				if (streetTypeOrder==StreetTypeOrder.typeThenName || streetTypeOrder==StreetTypeOrder.unknow){
-					SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
-					
-					if (street.indexOf(' ')>0){
-						word = street.substring(0, street.indexOf(' '));
+	 public static String expandStreetType(String street, String countryCode) {
+	     if (street==null){
+	         return null;
+	     }
+	     String dir= "";
 
-						if (word.indexOf(".")>0){
-							word = word.substring(0, word.indexOf('.'));
-							hasPoint=true;
-						}
-						if (word !=null && sf !=null){
-							String newWord = sf.normalizeSynonyms(word);
-							if (sf.hasSynonyms(word.toLowerCase())){
-								String toReplace = hasPoint?word+".":word;
-								return street.replaceFirst(toReplace,newWord);
-							}
-						}
-					}
-				}
-				if (streetTypeOrder==StreetTypeOrder.nameThenType || streetTypeOrder==StreetTypeOrder.unknow){ 
-					SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
-					word = street.substring(street.lastIndexOf(" ")+1);
-					if (word.indexOf(".")>0){
-						word = word.substring(0, word.indexOf('.'));
-						hasPoint=true;
-					}
-					if (word !=null && sf !=null) {
-						String newWord = sf.normalizeSynonyms(word);
-						if (sf.hasSynonyms(word.toLowerCase())){
-							String toReplace = hasPoint?word+".":word;
-							return street.replaceFirst(toReplace, newWord);
-						}
-					}
-				}
-			}
-			}
-		
-		}
-		//numbered road
-		if (street.indexOf(' ')>0){
-			String firstWord = street.substring(0, street.indexOf(' '));
-			hasPoint = false;
-			if (firstWord.indexOf(".")>0){
-				firstWord = firstWord.substring(0, firstWord.indexOf('.'));
-				hasPoint=true;
-			}
-			if (firstWord !=null ){
-					if (NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase())!=null){
-						String toReplace = hasPoint?firstWord+".":firstWord;
-						return street.replaceFirst(toReplace, NUMBERED_STREET_TYPE_MAP.get(firstWord.toLowerCase()));
-					}
-			}
-		}
-		StringBuffer sb = new StringBuffer();
-		Matcher m = GERMAN_SYNONYM_PATTEN.matcher(street);
-		  while (m.find()) {
-			if (countryCode!=null){
-				countryCode = countryCode.toUpperCase();
-				if (countryCode.equals("DE")|countryCode.equals("AT")){
-					m.appendReplacement(sb, "straße");
-				} else if (countryCode.equals("NL")){
-					m.appendReplacement(sb, "straat");
-				} else if (countryCode.equals("CH")){
-					m.appendReplacement(sb, "strasse");
-				}else if (countryCode.equals("DK")){
-					m.appendReplacement(sb, "stræde");
-				}else if (countryCode.equals("MD")){
-					m.appendReplacement(sb, "strada");
-				} 
-			}else {
-				//default to straße
-				m.appendReplacement(sb, "straße");
-			}
-		}
-		m.appendTail(sb);
-		String s = sb.toString();
-		return s;
-	}
-	
+	     street= street.trim();
+	     boolean hasPoint = false;
+	     if (countryCode != null ){
+	         String save = street;
+	         Language languageFromCountry = getLanguageFromCountryCode(countryCode);
+	         if (languageFromCountry!=null){
+	             List<Language> languages = new ArrayList<Language>();
+	             if (languageFromCountry.toString().contains("_")){
+	                 for(String l:languageFromCountry.toString().split("_")){
+	                     languages.add(Language.valueOf(l));
+	                 }
+	             } else {
+	                 languages.add(languageFromCountry);
+	             }
+	             String prefix = null;
+	             for (Language languageFromCountryCode: languages){
+	                 prefix = null;
+	                 String word;
+	                 String normalizePrefix = "";
+	                 String separator = "";
+	                 StreetTypeOrder streetTypeOrder = languageFromCountryCode.getStreetTypeOrder();
+	                 boolean isNorthAmericaCountryCode = countryCode!=null && (countryCode.equalsIgnoreCase("US") || countryCode.equalsIgnoreCase("CA"));
+	                 if (street.matches(".*\\d$") || (isNorthAmericaCountryCode && STREET_PREFIX_PATTERN.matcher(street).find())){
+	                     streetTypeOrder=StreetTypeOrder.typeThenName;
+	                 }
+	                 if (streetTypeOrder==StreetTypeOrder.typeThenName || streetTypeOrder==StreetTypeOrder.unknow){
+	                     SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
+
+	                     if (isNorthAmericaCountryCode){
+	                         Matcher matcherPrefix = STREET_PREFIX_PATTERN.matcher(street);
+	                         if (matcherPrefix.find()){//specific for state rte
+	                             prefix = matcherPrefix.group(2);
+	                             dir = matcherPrefix.group(1);
+	                             int length = prefix.length();
+	                             if (!isEmptyString(dir)){
+	                                 length= length+dir.length()+1;
+	                             }
+	                             street = street.substring(length, street.length()).trim();
+	                         }
+	                     }
+	                     if (street.indexOf(' ')>0){
+	                         if (isNorthAmericaCountryCode){
+	                             Matcher matcher = START_DIRECTION_PATTERN.matcher(street);
+	                             if (matcher.find()){
+	                                 dir = matcher.group(1);
+	                                 street =  street.substring(dir.length(), street.length()).trim();
+	                                 if (street.indexOf(' ')==-1){
+	                                     street=save;
+	                                     dir = "";
+	                                 }
+	                             } 
+	                         }
+	                         
+                                word = street.substring(0, street.indexOf(' '));
+                            
+
+	                         if (word.indexOf(".")>0){
+	                             word = word.substring(0, word.indexOf('.'));
+	                             hasPoint=true;
+	                         }
+	                         if (word !=null && sf !=null){
+	                             String newWord = sf.normalizeSynonyms(word);
+	                             if (sf.hasSynonyms(word.toLowerCase())){
+	                                 String toReplace = hasPoint?word+".":word; 
+
+	                                 if (!StringHelper.isEmptyString(prefix)){
+	                                     normalizePrefix = getExpandedStreetPrefix(prefix);
+	                                     separator = normalizePrefix.endsWith("-")?"":" ";
+	                                 } 
+	                                 if (!StringHelper.isEmptyString(dir)){
+	                                     dir = dir+" ";
+	                                 }else {
+	                                     dir="";
+	                                 }
+	                                 return dir+normalizePrefix+separator+street.replaceFirst(toReplace,newWord);
+	                                 //return street.replaceFirst(toReplace,newWord);
+	                             }
+	                         }
+	                     }
+	                 }
+	                 if (!StringHelper.isEmptyString(prefix)){
+	                     normalizePrefix = getExpandedStreetPrefix(prefix);
+	                     separator = normalizePrefix.endsWith("-")?"":" ";
+	                     prefix=null;
+	                 } 
+	                 if (!StringHelper.isEmptyString(dir)){
+	                     dir = dir+" ";
+	                 }else {
+	                     dir="";
+	                 }
+
+	                 street =  dir+normalizePrefix+separator+street;
+
+	                 /* normalizePrefix+separator+street;
+
+				if (prefix!=null){
+				    String normalizePrefix = expandStreetPrefix(prefix);
+                    String separator = normalizePrefix.endsWith("-")?"":" ";
+                    prefix=null;
+				street =  normalizePrefix+separator+street;
+				}*/
+
+	                 if (streetTypeOrder==StreetTypeOrder.nameThenType || streetTypeOrder==StreetTypeOrder.unknow){ 
+	                     SynonymsFinder sf = synonymsManager.getSynonymsFinderFromLanguage(languageFromCountryCode);
+	                     if (isNorthAmericaCountryCode){
+	                         Matcher matcher = END_DIRECTION_PATTERN.matcher(street);
+	                         if (matcher.find()){
+	                             dir = matcher.group(1);
+	                             street =  street.substring(0, street.length()-(dir.length())).trim();
+	                         } 
+	                     }
+	                     int lastIndex = street.lastIndexOf(" ")+1;
+	                     word = street.substring(lastIndex);
+	                     int incrPointer = 0;
+	                     if (word.indexOf(".")>0){
+	                         word = word.substring(0, word.indexOf('.'));
+	                         hasPoint=true;
+	                         incrPointer = 1;
+	                     }
+	                     if (word !=null && sf !=null) {
+	                         String newWord = sf.normalizeSynonyms(word);
+	                         if (!isEmptyString(dir)){
+	                             dir = " "+dir;
+	                         }
+	                         if (sf.hasSynonyms(word.toLowerCase())){
+	                             //String toReplace = hasPoint?word+".":word;
+
+	                             return street.substring(0, lastIndex)+newWord+street.substring(lastIndex+incrPointer+word.length())+dir;
+
+	                         }
+	                         street =  street+dir;
+	                     }
+	                 }
+	             }
+	         }
+
+	     }
+	     StringBuffer sb = new StringBuffer();
+	     Matcher m = GERMAN_SYNONYM_PATTERN.matcher(street);
+	     while (m.find()) {
+	         if (countryCode!=null){
+	             countryCode = countryCode.toUpperCase();
+	             if (countryCode.equals("DE")|countryCode.equals("AT")){
+	                 m.appendReplacement(sb, "straße");
+	             } else if (countryCode.equals("NL")){
+	                 m.appendReplacement(sb, "straat");
+	             } else if (countryCode.equals("CH")){
+	                 m.appendReplacement(sb, "strasse");
+	             }else if (countryCode.equals("DK")){
+	                 m.appendReplacement(sb, "stræde");
+	             }else if (countryCode.equals("MD")){
+	                 m.appendReplacement(sb, "strada");
+	             } 
+	         }else {
+	             //default to straße
+	             m.appendReplacement(sb, "straße");
+	         }
+	     }
+	     m.appendTail(sb);
+	     String s = sb.toString();
+	     return s;
+	 }
+
 
 	//always put in lowercase
-	private static final Map<String, String> NUMBERED_STREET_TYPE_MAP = new HashMap<String, String>(){
-		{
-			put("sr","state route");
-    		put("hwy","route");
-			put("pth","perimeter highway");
-    		put("ss","strada statale");
-		}
-		
-		
-	};
+	
 	
      
    
@@ -987,6 +1271,31 @@ public class StringHelper {
 		}
 		return false;
 	}
+	
+	
+	public static String correctStreetName(String streetName,String countryCode){
+        if (streetName!=null){
+            streetName = cleanupStreetName(streetName);//size, double space, etc
+            streetName = StringHelper.expandStreetType(streetName, countryCode);
+            if (countryCode!=null && (countryCode.equalsIgnoreCase("US") || countryCode.equalsIgnoreCase("CA"))){
+                streetName = StringHelper.expandStreetDirections(streetName);
+                streetName = StringHelper.expandOrdinalText(streetName);
+            }
+            streetName = WordUtils.capitalize(streetName.toLowerCase());
+            return streetName;
+        }
+        return null;
+    }
+	
+	public static String cleanupStreetName(String streetName){
+        if (streetName!=null){
+            if (streetName.length()>MAX_STREET_NAME_SIZE){
+                streetName = streetName.substring(0, MAX_STREET_NAME_SIZE);
+            }
+            return streetName.trim().replaceAll("[\\s]+", " ").replaceFirst("^0+(?!$)", "").trim();
+        }
+        return streetName;
+    }
 	
 	public static String prepareQuery(String rawAddress) {
 		if (rawAddress == null){

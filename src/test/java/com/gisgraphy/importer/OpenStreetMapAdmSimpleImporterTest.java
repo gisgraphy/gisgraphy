@@ -100,6 +100,10 @@ LabelGenerator generator = LabelGenerator.getInstance();
 	@Test
     public void testCalculateAdmLevelByHierarchy() {
         OpenStreetMapAdmSimpleImporter importer = new OpenStreetMapAdmSimpleImporter();
+        
+        Assert.assertEquals("if DTO is null, level should be 1",1,importer.calculateAdmLevelbyhierarchy("FR",null ));
+        
+        
         List<AdmDTO> dtos = new ArrayList<AdmDTO>();
         AdmDTO dto1 =new AdmDTO("adm1", 6, 10);
         AdmDTO dto2 =new AdmDTO("adm2", 4, 10);

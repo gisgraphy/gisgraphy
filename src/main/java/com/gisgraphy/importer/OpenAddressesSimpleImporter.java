@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.WordUtils;
 import org.hibernate.FlushMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +79,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	BasicAddressFormater formater = BasicAddressFormater.getInstance();
 
 	LabelGenerator labelGenerator = LabelGenerator.getInstance();
+	
 	String[] currentfields = null;
 
 	private static final String HASH_RESTART = null;
@@ -113,7 +113,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 
 	private static final Pattern NOT_VALID_LABEL = Pattern.compile("\\b(NULL|UNDEFINED|UNAVAILABLE)\\b",Pattern.CASE_INSENSITIVE);
 
-	public static final int MAX_NAME_SIZE = 250;
+	
 
 
 	protected boolean isZeroHouseNumber(String houseNumber){
@@ -254,8 +254,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 
 		String streetName = null;
 		if (!isUnWantedStreetName(fields[3])){
-			streetName = cleanupStreetName(fields[3]);
-			streetName = StringHelper.expandStreetType(streetName, countryCode);
+			streetName = StringHelper.correctStreetName(streetName, countryCode);
 		}
 
 
@@ -310,15 +309,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		return null;
 	}
 
-	protected String correctStreetName(String streetName,String countryCode){
-		if (streetName!=null){
-			streetName = cleanupStreetName(streetName);
-			streetName = StringHelper.expandStreetType(streetName, countryCode);
-			streetName = WordUtils.capitalize(streetName.toLowerCase());
-			return streetName;
-		}
-		return null;
-	}
+	
 	
 	public boolean isSameSearch(String streetName, Point location) {
 		return StringHelper.isSameName(lastStreetName, streetName) && lastPoint!=null && location!=null && GeolocHelper.distance(location, lastPoint)<DEFAULT_SEARCH_DISTANCE;
@@ -358,7 +349,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 			street.setSource(GISSource.OPENADDRESSES);
 			String streetName = null;
 			if (!isUnWantedStreetName(fields[3])){
-				streetName = correctStreetName(fields[3],countryCode);
+				streetName = StringHelper.correctStreetName(fields[3],countryCode);
 				street.setName(streetName);
 			}
 			if (streetName!=null){
@@ -441,15 +432,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 		return null;
 	}
 
-	protected String cleanupStreetName(String streetName){
-		if (streetName!=null){
-			if (streetName.length()>MAX_NAME_SIZE){
-				streetName = streetName.substring(0, MAX_NAME_SIZE);
-			}
-			return streetName.trim().replaceAll("[\\s]+", " ").replaceFirst("^0+(?!$)", "").trim();
-		}
-		return streetName;
-	}
+	
 
 	protected boolean isAllRequiredFieldspresent(String[] fields) {
 		if (isEmptyField(fields, 0, false)
@@ -474,16 +457,7 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 	}
 
 
-	protected boolean areTooCloseDistance(Double distance, Double distance2) {
-		if (distance!=null && distance2!=null ){
-			double min = Math.min(distance, distance2);
-			if( min!=0 &&  Math.abs(distance-distance2)/min >= 0.5){
-				return false;
-			}
-		}
-		return true;
-	}
-
+	
 
 
 
@@ -536,6 +510,9 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 					if (osm == null) {
 						logger.warn("can not find street for id "+openstreetmapId);
 					}
+					else {
+                        logger.warn("we have found a street "+osm+" that may have been found by DB for "+dumpFields(fields));
+                    }
 				}
 			}
 		} if (resultsSize > 1) {
@@ -559,9 +536,9 @@ public class OpenAddressesSimpleImporter extends AbstractSimpleImporterProcessor
 				}
 			}
 			String idsAsSTring="";
-			for (Long id:ids){
+			/*for (Long id:ids){
 				idsAsSTring = idsAsSTring+","+id;
-			}
+			}*/
 			//logger.warn("getNearestByIds : "+idsAsSTring);
 			result = openStreetMapDao.getNearestByGIds(point, ids);
 			if (result==null){

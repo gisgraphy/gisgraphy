@@ -347,6 +347,18 @@ public class GeocodingService implements IGeocodingService {
 			logger.info("geocoding of "+query + " and country="+countryCode+" took " + (qTime) + " ms and returns "
 					+ results.getNumFound() + " results");
 			}
+			if (shouldSetParseAddress(query)){
+			    try {
+	                logger.error("address parser is forced");
+	                addressResultDto = addressParser.execute(addressQuery);
+	                if (addressResultDto.getResult()!=null && addressResultDto.getResult().size() >=1){
+	                    results.setParsedAddress(addressResultDto.getResult().get(0));
+	                }
+	            } catch (AddressParserException e) {
+	                logger.error("An error occurs during parsing of address" + e.getMessage(), e);
+	            }
+			   
+            }
 			return AddressHelper.limitNbResult(results,query.getLimitNbResult());
 		}
 	}

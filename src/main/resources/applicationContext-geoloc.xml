@@ -63,6 +63,10 @@
 	<bean id="openAddressesFileRetriever"
 		class="com.gisgraphy.importer.OpenAddressesFileRetriever" parent="abstractFileRetriever" >
 	</bean>
+	
+	<bean id="tigerFileRetriever"
+		class="com.gisgraphy.importer.TigerFileRetriever" parent="abstractFileRetriever" >
+	</bean>
 
 	<bean id="geonamesLanguageImporter"
 		class="com.gisgraphy.importer.GeonamesLanguageImporter"
@@ -187,14 +191,23 @@
 		<property name="municipalityDetector" ref="municipalityDetector" />
 	</bean>
 	
-	<bean id="openAddressesImporter" class="com.gisgraphy.importer.OpenAddressesSimpleImporter"
-	parent="abstractSimpleImporterProcessor">
+	<bean id="openAddressesImporter" class="com.gisgraphy.importer.OpenAddresses${classifier}Importer"
+	parent="abstract${classifier}ImporterProcessor">
 		<property name="openStreetMapDao" ref= "openStreetMapDao" />
 		<property name="importerConfig" ref="importerConfig" />
 		<property name="solRSynchroniser" ref="solRSynchroniser"/>
 		<property name="fullTextSearchEngine" ref="fullTextSearchEngine"/>
 		<property name="houseNumberDao" ref="houseNumberDao"></property>
 		<!--<property name="openStreetMapImporter" ref="openStreetMapImporter" />-->
+	</bean>
+	
+	<bean id="tigerImporter" class="com.gisgraphy.importer.Tiger${classifier}Importer"
+	parent="abstract${classifier}ImporterProcessor">
+		<property name="openStreetMapDao" ref= "openStreetMapDao" />
+		<property name="importerConfig" ref="importerConfig" />
+		<property name="solRSynchroniser" ref="solRSynchroniser"/>
+		<property name="fullTextSearchEngine" ref="fullTextSearchEngine"/>
+		<property name="houseNumberDao" ref="houseNumberDao"></property>
 	</bean>
 	
 	<bean id="datastoreOptimizer" class="com.gisgraphy.importer.DatastoreOptimizer"
@@ -246,6 +259,7 @@
 				<ref bean="openStreetMapHouseNumberFileRetriever"/>
 				<ref bean="openStreetMapPoisFileRetriever"/>
 				
+				
 				<ref bean="geonamesLanguageImporter" />
 				<ref bean="geonamesCountryImporter" />
 
@@ -272,6 +286,10 @@
 				
 				<ref bean="openAddressesFileRetriever"/>
 				<ref bean="openAddressesImporter"/>
+				
+				
+				<ref bean="tigerFileRetriever"/>
+				<ref bean="tigerImporter" />
 				
 				<ref bean="datastoreOptimizer"/>
 			</list>
@@ -352,6 +370,7 @@
 		<property name="openStreetMapPoisDir" value="${importer.openstreetmap.pois.dir}"/>
 		<property name="geonamesZipCodeDir" value="${importer.geonames.zipcode.dir}"/>
 		<property name="quattroshapesDir" value="${importer.quattroshapes.dir}"/>
+		<property name="tigerDir" value="${importer.tiger.dir}"/>
 		
 		<property name="geonamesDownloadURL" value="${importer.geonames.downloadURL}"/>
 		<property name="geonamesZipCodeDownloadURL" value="${importer.geonames.zipcode.downloadURL}"/>
@@ -365,6 +384,7 @@
 		<property name="openStreetMapAdmFilesToDownload" value="${importer.openStreetMapAdmFilesToDownload}"/>
 		<property name="openStreetMapPoisFilesToDownload" value="${importer.openStreetMapPoisFilesToDownload}"/>
 		<property name="quattroshapesFilesToDownload" value="${importer.quattroshapesFilesToDownload}"/>
+		<property name="tigerFilesToDownload" value="${importer.tigerFilesToDownload}"/>
 		
 		
 		<property name="adm1FileName" value="${importerConfig.adm1FileName}"/>
@@ -381,10 +401,12 @@
 		<property name="openstreetMapAdmDownloadURL" value="${importer.openstreetmap.adms.downloadURL}"/>
 		<property name="openstreetMapPoisDownloadURL" value="${importer.openstreetmap.pois.downloadURL}"/>
 		<property name="quattroshapesDownloadURL" value="${importer.quattroshapes.downloadURL}"/>
+		<property name="tigerDownloadURL" value="${importer.tiger.downloadURL}"/>
 		
 		<property name="geonamesImporterEnabled" value="${importer.geonames.enabled}"/>
 		<property name="openstreetmapImporterEnabled" value="${importer.openstreetmap.enabled}"/>
 		<property name="openAddressesImporterEnabled" value="${importer.openaddresses.enabled}"/>
+		<property name="tigerImporterEnabled" value="${importer.tiger.enabled}"/>
 		<property name="openstreetmapHouseNumberImporterEnabled" value="${importer.openstreetmap.housenumber.enabled}"/>
 		<property name="quattroshapesImporterEnabled" value="${importer.openstreetmap.housenumber.enabled}"/>
 		<property name="alternateNameFeaturesFileName" value="${importerConfig.alternateNameFeaturesFileName}"/>

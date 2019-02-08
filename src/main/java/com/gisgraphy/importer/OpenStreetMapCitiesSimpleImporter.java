@@ -62,6 +62,7 @@ import com.gisgraphy.fulltext.SolrResponseDto;
 import com.gisgraphy.helper.AdmStateLevelInfo;
 import com.gisgraphy.helper.GeolocHelper;
 import com.gisgraphy.helper.StringHelper;
+import com.gisgraphy.service.ServiceException;
 import com.gisgraphy.util.StringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -623,7 +624,13 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		if (countryCode != null){
 			query.limitToCountryCode(countryCode);
 		}
-		FulltextResultsDto results = fullTextSearchEngine.executeQuery(query);
+		FulltextResultsDto results;
+        try {
+            results = fullTextSearchEngine.executeQuery(query);
+        } catch (RuntimeException e) {
+            logger.error("error executing fulltext query for "+name+" : " +e);
+            return null;
+        }
 		
 		
 		if (results != null && results.getResults()!=null && results.getResults().size()>0){
@@ -818,7 +825,13 @@ public class OpenStreetMapCitiesSimpleImporter extends AbstractSimpleImporterPro
 		if (countryCode != null){
 			query.limitToCountryCode(countryCode);
 		}
-		FulltextResultsDto results = fullTextSearchEngine.executeQuery(query);
+		FulltextResultsDto results;
+        try {
+            results = fullTextSearchEngine.executeQuery(query);
+        } catch (ServiceException e) {
+            logger.error("error executing fulltext query for "+name+" : " +e);
+            return null;
+        }
 		if (results != null){
 			for (SolrResponseDto solrResponseDto : results.getResults()) {
 				return solrResponseDto;

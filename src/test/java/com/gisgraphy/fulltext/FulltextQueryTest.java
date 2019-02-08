@@ -275,6 +275,16 @@ public class FulltextQueryTest {
     
     query.withQuery("??? CAMION PLATEAU +++, 31650");
     Assert.assertEquals("CAMION PLATEAU  ,  31650", query.getQuery());
+    
+    try {
+        query.withQuery("??????-??????");
+    } catch (Exception e) {
+        Assert.assertEquals("-", query.getQuery());
+    }
+    
+    
+    query.withQuery("Jardim Santos Dumont ||");
+    Assert.assertEquals("Jardim Santos Dumont", query.getQuery());
 	
     }
     

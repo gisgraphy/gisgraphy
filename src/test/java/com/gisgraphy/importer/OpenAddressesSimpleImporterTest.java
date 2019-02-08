@@ -1,7 +1,6 @@
 package com.gisgraphy.importer;
 
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,16 +41,7 @@ public class OpenAddressesSimpleImporterTest {
 		
 	}
 	
-	@Test
-	public void cleanupStreetName(){
-		OpenAddressesSimpleImporter importer = new OpenAddressesSimpleImporter();
-		Assert.assertEquals("1st avenue", importer.cleanupStreetName("01st  avenue "));
-		Assert.assertEquals(null, importer.cleanupStreetName(null));
-		
-		String longString = RandomStringUtils.random(OpenAddressesSimpleImporter.MAX_NAME_SIZE+10,new char[] {'e'});
-		longString = importer.cleanupStreetName(longString);
-		Assert.assertEquals("the string to test is not of the expected size the test will fail",OpenAddressesSimpleImporter.MAX_NAME_SIZE, longString.length());
-	}
+	
 	
 	@Test
 	public void isZeroHouseNumber(){

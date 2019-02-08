@@ -282,6 +282,8 @@ public class ImporterConfigTest {
 		importerConfig.setGeonamesDir(accessiblePath);
 		importerConfig.setOpenStreetMapDir(accessiblePath);
 		importerConfig.setQuattroshapesDir(accessiblePath);
+		importerConfig.setTigerDir(accessiblePath);
+		importerConfig.setOpenAddressesDir(accessiblePath);
 		importerConfig.setAcceptRegExString(ImporterConfig.ACCEPT_ALL_REGEX_OPTION);
 		//test with wrong geonamesDir
 		importerConfig.setGeonamesDir(pathNotAccessible);
@@ -291,10 +293,20 @@ public class ImporterConfigTest {
 		importerConfig.setOpenStreetMapDir(pathNotAccessible);
 		Assert.assertFalse("when openstreetmap dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
 		importerConfig.setOpenStreetMapDir(accessiblePath);
+		Assert.assertTrue(importerConfig.isOpenaddressesImporterEnabled());
 		//test with wrong Openaddresses dir
 		importerConfig.setOpenAddressesDir(pathNotAccessible);
+		
+		Assert.assertFalse(importerConfig.isOpenAddressesDirectoryAccessible());
 		Assert.assertFalse("when openaddresses dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
 		importerConfig.setOpenAddressesDir(accessiblePath);
+		Assert.assertTrue(importerConfig.isOpenAddressesDirectoryAccessible());
+		//test with wrong Tiger dir
+        importerConfig.setTigerDir(pathNotAccessible);
+        Assert.assertFalse(importerConfig.isTigerDirectoryAccessible());
+        Assert.assertFalse("when tiger dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
+        importerConfig.setTigerDir(accessiblePath);
+        Assert.assertTrue(importerConfig.isTigerDirectoryAccessible());
 		//test with wrong Openstreetmap house number dir
 		importerConfig.setOpenStreetMapHouseNumberDir(pathNotAccessible);
 		Assert.assertFalse("when openstreetmap house number dir is not ok the function should return false", importerConfig.isConfigCorrectForImport());
@@ -326,17 +338,20 @@ public class ImporterConfigTest {
 		importerConfig.setOpenStreetMapAdmFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setOpenStreetMapFilesToDownload(ImporterConfig.OPENSTREETMAP_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setOpenAddressesFilesToDownload(ImporterConfig.OPENADDRESSES_DEFAULT_FILES_TO_DOWNLOAD);
+		importerConfig.setTigerFilesToDownload(ImporterConfig.TIGER_DEFAULT_FILES_TO_DOWNLOAD);
 		importerConfig.setGeonamesFilesToDownload(ImporterConfig.GEONAMES_DEFAULT_FILES_TO_DOWNLOAD);
 		
 		String baseUrl = GISGRAPHY_DOWNLOAD_SERVER;
 		importerConfig.setGeonamesDownloadURL("http://download.geonames.org/export/dump/");
 		importerConfig.setOpenstreetMapDownloadURL(baseUrl+"/import/openstreetmap/streets/");
-		importerConfig.setOpenAddressesDownloadURL(baseUrl+"/import/openstreetmap/openaddresses/");
+		importerConfig.setTigerDownloadURL(baseUrl+"/import/tiger/");
+		importerConfig.setOpenAddressesDownloadURL(baseUrl+"/import/openaddresses/");
 		importerConfig.setOpenstreetMapCitiesDownloadURL(baseUrl+"/import/openstreetmap/cities/");
 		importerConfig.setOpenstreetMapAdmDownloadURL(baseUrl+"/import/openstreetmap/adms/");
 		importerConfig.setOpenstreetMapPoisDownloadURL(baseUrl+"/import/openstreetmap/pois/");
 		importerConfig.setOpenstreetMaphouseNumbersDownloadURL(baseUrl+"/import/openstreetmap/housenumbers/");
 		importerConfig.setQuattroshapesDownloadURL(baseUrl+"/import/quattroshapes/");
+		importerConfig.setOpenAddressesDownloadURL(baseUrl+"/import/openaddresses/");
 		
 		assertTrue("when all the condition are ok the function should return true when retrieve files is true", importerConfig.isConfigCorrectForImport());
 		
@@ -427,9 +442,7 @@ public class ImporterConfigTest {
 	Assert.assertEquals("the property has not been persist",openStreetMapFillIsInInitial, importerConfig.isOpenStreetMapFillIsIn());
 	Assert.assertEquals("the property has not been set",openStreetMapFillIsInInitial, importerConfig.isOpenStreetMapFillIsIn());
     }
-    
- 
-    @Test
+     @Test
     public void updateCountryCodeShouldUpdateQuotes(){
     	ImporterConfig importerConfig = new ImporterConfig();
     	String quote1 = importerConfig.getQuote();

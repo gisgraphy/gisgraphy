@@ -878,6 +878,11 @@ public void testGenerateLabel_Adm(){
 		zips.add("AD501");
 		
 		Assert.assertEquals("AD500", generator.getBestZipString(zips));
+		
+		zips = new HashSet<String>();
+        zips.add("02582");
+        zips.add("02598");
+        Assert.assertEquals("02582", generator.getBestZipString(zips));
 	}
 	
 

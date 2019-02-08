@@ -33,7 +33,7 @@ public class GisHelperTest {
    @Test
     public void testgetBoundingBox(){
     	Assert.assertFalse(GisHelper.getBoundingBox("alias", 51.8365537F ,7.0562314F, 10000).contains("NaN"));
-    	//System.out.println(GisHelper.getBoundingBox("alias", 48.867138600000004,2.3958578000000004, 500));
+    	//System.out.println(GisHelper.getBoundingBox("alias",  40.798802, -74.004795, 1000));
     }
 
 
@@ -92,11 +92,19 @@ public class GisHelperTest {
     @Test
     public void testGetAngle(){
         float angle = GisHelper.getAngle(GeolocHelper.createPoint(-94.581213,39.099912 ), GeolocHelper.createPoint(-90.200203,38.627089));
-        
         System.out.println(angle);
-         angle = GisHelper.getAngle(GeolocHelper.createPoint(-90.200203,38.627089),GeolocHelper.createPoint(-94.581213,39.099912 ));
+        
+        angle = GisHelper.getAngle(GeolocHelper.createPoint(-90.200203,38.627089),GeolocHelper.createPoint(-94.581213,39.099912 ));
          System.out.println(angle);
         //96.51
+         
+         angle = GisHelper.getAngle(GeolocHelper.createPoint(40.74025296594437,-73.98974788227844),GeolocHelper.createPoint(40.739976579989,-73.98995173016357 ));
+         System.out.println(angle);
+         
+         angle = GisHelper.getAngle(GeolocHelper.createPoint(40.74025296594437,-73.98974788227844),GeolocHelper.createPoint(40.739797741405944,-73.9900482896881 ));
+         System.out.println(angle);
+         
+         System.out.println(GeolocHelper.distance(GeolocHelper.createPoint(40.74025296594437,-73.98974788227844), GeolocHelper.createPoint(40.739976579989,-73.98995173016357 )));
     }
 
 

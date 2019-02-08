@@ -117,6 +117,8 @@ public class ImporterConfig {
     
     public final static String OPENSTREETMAP_POI_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
+    public final static String TIGER_DEFAULT_FILES_TO_DOWNLOAD = "US.gis";
+    
     public final static String QUATTROSHAPES_DEFAULT_FILES_TO_DOWNLOAD = "shapes.gis";
 
     public final static String GEONAMES_ALTERNATENAME_ZIP_FILE="alternateNames.zip";
@@ -192,10 +194,14 @@ public class ImporterConfig {
     private String openStreetMapPoisDir;
     
     private String geonamesZipCodeDir;
+    
+    private String tigerDir;
 
     private String openstreetMapDownloadURL;
     
     private String openAddressesDownloadURL;
+    
+    private String tigerDownloadURL;
     
     private String quattroshapesDownloadURL;
     
@@ -221,6 +227,8 @@ public class ImporterConfig {
     
     private String openAddressesFilesToDownload = "";
     
+    private String tigerFilesToDownload = "";
+    
     private String quattroshapesFilesToDownload = "";
     
     private String openStreetMapHouseNumberFilesToDownload = "";
@@ -230,12 +238,15 @@ public class ImporterConfig {
     private String openStreetMapAdmFilesToDownload = "";
     
     private String openStreetMapPoisFilesToDownload = "";
+    
 
     private boolean geonamesImporterEnabled = true;
 
     private boolean openstreetmapImporterEnabled = true;
     
     private boolean openAddressesImporterEnabled = true;
+    
+    private boolean tigerImporterEnabled = true;
     
     private boolean quattroshapesImporterEnabled = true;
     
@@ -659,6 +670,136 @@ public class ImporterConfig {
     	return splitSemiColmunStringToList(openStreetMapFilesToDownload);
     }
    
+    
+    /*
+     * 
+     *   _   _                 
+        | |_(_) __ _  ___ _ __ 
+        | __| |/ _` |/ _ \ '__|
+        | |_| | (_| |  __/ |   
+         \__|_|\__, |\___|_|   
+               |___/           
+
+     */
+    
+    
+
+    
+    
+    /**
+     * @param tigerImporterEnabled
+     *            enable or disable Tiger importer
+     */
+    @Required
+    public void setTigerImporterEnabled(boolean tigerImporterEnabled) {
+        this.tigerImporterEnabled = tigerImporterEnabled;
+    }
+    
+    /**
+     * @return true if the importer should process the import of Tiger
+     *         data
+     */
+    public boolean isTigerImporterEnabled() {
+        return tigerImporterEnabled;
+    }
+    
+  
+    
+      
+    
+    
+    /**
+     * @return The option
+     */
+    public String getTigerDownloadURL() {
+        return tigerDownloadURL;
+    }
+    
+    /**
+     * The HTTP URL of the directory Where Tiger files are to be
+     * download from
+     * 
+     * @param tigerDownloadURL
+     *            The option
+     */
+    @Required
+    public void setTigerDownloadURL(String tigerDownloadURL) {
+    if (!tigerDownloadURL.endsWith("/")) {
+        this.tigerDownloadURL = tigerDownloadURL + "/";
+    } else {
+        this.tigerDownloadURL = tigerDownloadURL;
+    }
+    logger.debug("set tigerDownloadURL to " + this.tigerDownloadURL);
+    }
+    
+   
+   
+    
+    
+    /**
+     * @return The option
+     * @see #setOpenAddressesMapDir(String)
+     */
+    public String getTigerDir() {
+        return this.tigerDir;
+    }
+    
+    /**
+     * The directory where the tiger files will be retrieved and
+     * processed. It must ends with / or \ according to the System
+     * 
+     * @param importerOpenStreetMapDir
+     *            the option
+     */
+    @Required
+    public void setTigerDir(String tigerDir) {
+    if (!tigerDir.endsWith(File.separator)) {
+        logger.debug(tigerDir + " does not end with " + File.separator);
+        this.tigerDir = tigerDir + File.separator;
+    } else {
+        this.tigerDir = tigerDir;
+    }
+    logger.debug("set tigerDir to " + this.tigerDir);
+    }
+    
+   
+    /**
+     * @return true if the directory with the file to import exists and is
+     *         accessible
+     */
+    public boolean isTigerDirectoryAccessible() {
+        return isDirectoryAccessible(getTigerDir());
+    }
+    
+  
+    
+    /**
+     * @return The option
+     */
+    public String getTigerFilesToDownload() {
+        return this.tigerFilesToDownload;
+    }
+    
+  
+    
+    @Required
+    public void setTigerFilesToDownload(String tigerFilesToDownload) {
+    if (tigerFilesToDownload == null || tigerFilesToDownload.trim().equals("")) {
+        logger.warn("the option TigerFilesToDownload is not set and will be set to his default value : " + TIGER_DEFAULT_FILES_TO_DOWNLOAD);
+        this.tigerFilesToDownload = TIGER_DEFAULT_FILES_TO_DOWNLOAD;
+    } else {
+        this.tigerFilesToDownload = tigerFilesToDownload;
+        logger.info("TigerFilesToDownload=" + this.tigerFilesToDownload);
+    }
+    }
+    
+   
+   
+    public List<String> getTigerDownloadFilesListFromOption() {
+        return splitSemiColmunStringToList(tigerFilesToDownload);
+    }
+    
+    
     
     
     
@@ -1928,8 +2069,8 @@ public class ImporterConfig {
      * @return true if the config is Ok to process the import
      */
     public boolean isConfigCorrectForImport() {
-    	boolean firstcondition =  isRegexpCorrects() && isGeonamesDownloadDirectoryAccessible() && isOpenStreetMapDownloadDirectoryAccessible() && isOpenAddressesDirectoryAccessible() && isOpenStreetMapHouseNumberDownloadDirectoryAccessible()
-    			&& isOpenStreetMapCitiesDirectoryAccessible() && isOpenStreetMapPoisDirectoryAccessible() && isQuattroshapesDirectoryAccessible();
+    	boolean firstcondition =  isRegexpCorrects() && isGeonamesDownloadDirectoryAccessible() && isOpenStreetMapDownloadDirectoryAccessible() && isTigerDirectoryAccessible() && isOpenAddressesDirectoryAccessible() && isOpenStreetMapHouseNumberDownloadDirectoryAccessible()
+    			&& isOpenStreetMapCitiesDirectoryAccessible() && isOpenStreetMapPoisDirectoryAccessible() && isQuattroshapesDirectoryAccessible() && isTigerDirectoryAccessible();
     		if (isRetrieveFiles()){
     			return firstcondition && isAllFilesDownloadables();
     		} else {
@@ -1962,6 +2103,28 @@ public class ImporterConfig {
 	    		}
 	    	}
     	}
+    	
+    	if(isOpenaddressesImporterEnabled()){
+            //openaddresses
+            filenames = getOpenAddressesDownloadFilesListFromOption();
+            for (String filename:filenames){
+                if (!checkUrl(getOpenaddressesDownloadURL()+filename)){
+                    return false;
+                }
+            }
+        }
+    	
+    	if(isTigerImporterEnabled()){
+            //Tiger number
+            filenames = getTigerDownloadFilesListFromOption();
+            for (String filename:filenames){
+                if (!checkUrl(getTigerDownloadURL()+filename)){
+                    return false;
+                }
+            }
+        }
+    	
+    	
     	
     	if(isOpenstreetmapImporterEnabled()){
     		//osmstreet

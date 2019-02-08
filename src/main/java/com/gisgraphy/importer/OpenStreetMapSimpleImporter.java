@@ -167,11 +167,6 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 	String[] fields = line.split("\t");
 
 	//
-	// old Line table has the following fields :
-	// --------------------------------------------------- 
-	//0: id; 1 name; 2 location; 3 length ;4 countrycode; 5 : gid ;
-	//6 type; 7 oneway; 8 : shape; 9 : Alternate names
-	//
 	// new table has the following fields :
 	// --------------------------------------------------- 
 	//0: id; 	1: name;	2: location; 	3: length ;	4: countrycode; 	5 : is_in; 	6: postcode; 	7: is_in_adm;
@@ -216,7 +211,7 @@ public class OpenStreetMapSimpleImporter extends AbstractSimpleImporterProcessor
 			length = new Double(fields[3].trim());
 			street.setLength(length);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+		    logger.warn("can not convert length '"+fields[4].trim()+"' for openstreetmapId "+fields[0]);
 		}
 	}
 	
