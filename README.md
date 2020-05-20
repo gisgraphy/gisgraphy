@@ -133,4 +133,4 @@ You can order our address database (or street, cities and administrative divisio
 ## License and attributions ###
 -----------------
 *   Gisgraphy is under [LGPL license V3](https://github.com/gisgraphy/gisgraphy/blob/master/LICENSE.txt).
-*   See [Attribution page](https://www.gisgraphy.com/attributions.html)Attribution page for data atributions and license.
+*   See [attribution page](https://www.gisgraphy.com/attributions.html) for data atributions and license.
