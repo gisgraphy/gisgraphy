@@ -30,7 +30,7 @@ Since 2006, [Gisgraphy](https://www.gisgraphy.com) is a free, open source framew
 Since 2006, Gisgraphy's goal is to provide a realistic alternative for geocoding and geolocalisation. Feel free to contact us at contact[at]gisgraphy.com.
 
 ## Install it locally ##
-We got Docker images and installation scripts. read the [installation guide](http://www2.gisgraphy.com/documentation/installation/index.php) to set up Gisgraphy on you own server.
+We got Docker images and installation scripts. read the [installation guide](http://www.gisgraphy.com/documentation/installation/index.php) to set up Gisgraphy on you own server.
 
 ## Webservices overview :##
 -----------------
@@ -133,4 +133,4 @@ You can order our address database (or street, cities and administrative divisio
 ## License and attributions ###
 -----------------
 *   Gisgraphy is under [LGPL license V3](https://github.com/gisgraphy/gisgraphy/blob/master/LICENSE.txt).
-*   See [Attribution page](https://www.gisgraphy.com/attributions.html)Attribution page for data atributions and license.
+*   See [attribution page](https://www.gisgraphy.com/attributions.html) for data atributions and license.
