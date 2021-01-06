@@ -79,7 +79,7 @@ public class DistanceOrder extends Order {
     public String toSqlString(Criteria criteria, CriteriaQuery criteriaQuery)
 	    throws HibernateException {
 	StringBuilder fragment = new StringBuilder();
-	fragment.append(" st_distance_sphere(");
+	fragment.append(" st_distanceSphere(");
 	fragment.append(criteriaQuery.getSQLAlias(criteria));
 	fragment.append(".location, st_geometryfromtext('");
 	fragment.append(point.toText());

@@ -81,7 +81,7 @@ public class PostgisDialectNG extends PostgreSQLDialect //implements SpatialDial
 
 		// register the spatial analysis functions
 		registerFunction("st_distance", new StandardSQLFunction("st_distance", Hibernate.DOUBLE));
-		registerFunction("st_distance_sphere", new StandardSQLFunction("st_distance_sphere", Hibernate.DOUBLE));
+		registerFunction("st_distancesphere", new StandardSQLFunction("st_distancesphere", Hibernate.DOUBLE));
 		registerFunction("st_line_locate_point", new StandardSQLFunction("st_line_locate_point", Hibernate.DOUBLE));
 		registerFunction("st_buffer", new StandardSQLFunction("st_buffer", new CustomType(new PGGeometryUserType())));
 		registerFunction("st_convexhull", new StandardSQLFunction("st_convexhull", new CustomType(new PGGeometryUserType())));

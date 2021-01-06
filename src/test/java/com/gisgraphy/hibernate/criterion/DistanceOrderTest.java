@@ -44,7 +44,7 @@ public class DistanceOrderTest  {
 		3F, 4F), true);
 	String sqlString = distanceOrder.toSqlString(null, criteriaQuery);
 	assertTrue(sqlString.contains("asc"));
-	assertTrue(sqlString.contains("st_distance_sphere"));
+	assertTrue(sqlString.contains("st_distanceSphere"));
 	EasyMock.verify(criteriaQuery);
     }
 
@@ -59,7 +59,7 @@ public class DistanceOrderTest  {
 		3F, 4F));
 	String sqlString = dorder.toSqlString(null, criteriaQuery);
 	assertTrue(sqlString.contains("asc"));
-	assertTrue(sqlString.contains("st_distance_sphere"));
+	assertTrue(sqlString.contains("st_distancesphere"));
 	EasyMock.verify(criteriaQuery);
     }
 
@@ -74,7 +74,7 @@ public class DistanceOrderTest  {
 		3F, 4F), false);
 	String sqlString = dorder.toSqlString(null, criteriaQuery);
 	assertTrue(sqlString.contains("desc"));
-	assertTrue(sqlString.contains("st_distance_sphere"));
+	assertTrue(sqlString.contains("st_distancesphere"));
 	EasyMock.verify(criteriaQuery);
     }
 

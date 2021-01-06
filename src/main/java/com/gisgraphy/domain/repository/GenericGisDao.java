@@ -669,7 +669,7 @@ public class GenericGisDao<T extends GisFeature> extends
 		   /* String bbox = "st_setSRID(cast ('BOX3D(39.875947845588854 -6.649904839690944,57.85738955675488 11.316505067046899)'as box3d), 4326)";
 		    String bbox2 = "ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";*/
 			String queryString = "from " + persistentClass.getSimpleName()
-				+ " as c  where st_distance_sphere(c.location,"+pointAsString+") < "+distance
+				+ " as c  where st_distancesphere(c.location,"+pointAsString+") < "+distance
 				//+" AND st_contains("+bbox2+",c.location)=true ";
 				+ " AND "+GisHelper.makeEnvelope("c", location.getY(),location.getX(), distance)
 	
@@ -683,7 +683,7 @@ public class GenericGisDao<T extends GisFeature> extends
 			if (countryCode!=null ){
 				queryString+=" and c.countryCode='"+countryCode+"'";
 			}
-			queryString = queryString+ " order by st_distance_sphere(c.location,"+pointAsString+")";
+			queryString = queryString+ " order by st_distancesphere(c.location,"+pointAsString+")";
 
 			Query qry = session.createQuery(queryString).setMaxResults(1);
 
@@ -706,7 +706,7 @@ public class GenericGisDao<T extends GisFeature> extends
   		  /*  String bbox = "st_setSRID(cast ('BOX3D(39.875947845588854 -6.649904839690944,57.85738955675488 11.316505067046899)'as box3d), 4326)";
   		    String bbox2 = "ST_MakeEnvelope(39.875947845588854, -6.649904839690944,57.85738955675488, 11.316505067046899, 4326)";*/
   			String queryString = "from " + persistentClass.getSimpleName()
-  				+ " as c  where st_distance_sphere(c.location,"+pointAsString+") < "+distance
+  				+ " as c  where st_distancesphere(c.location,"+pointAsString+") < "+distance
   				//+" AND st_contains("+bbox2+",c.location)=true ";
   				+ " AND "+GisHelper.makeEnvelope("c", location.getY(),location.getX(), distance)
   	
@@ -720,7 +720,7 @@ public class GenericGisDao<T extends GisFeature> extends
   			if (countryCode!=null ){
   				queryString+=" and c.countryCode='"+countryCode+"'";
   			}
-  			queryString = queryString+ " order by st_distance_sphere(c.location,"+pointAsString+")";
+  			queryString = queryString+ " order by st_distancesphere(c.location,"+pointAsString+")";
 
   			Query qry = session.createQuery(queryString);
   			if (limit >0){

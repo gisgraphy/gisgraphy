@@ -52,7 +52,7 @@ import com.vividsolutions.jts.geom.Point;
 public class SpatialProjection {
     
     public static final String DISTANCE_FUNCTION = "st_distance";
-    public static final String DISTANCE_SPHERE_FUNCTION = "st_distance_sphere";
+    public static final String DISTANCE_SPHERE_FUNCTION = "st_distanceSphere";
     public static String ST_LINE_INTERPOLATE_POINT_FUNCTION = "st_line_interpolate_point";
     public static String ST_CLOSEST_POINT = "ST_ClosestPoint";
     public static String ST_LINE_LOCATE_POINT_FUNCTION = "st_line_locate_point";

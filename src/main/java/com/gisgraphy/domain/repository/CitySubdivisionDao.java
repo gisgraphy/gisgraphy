@@ -72,9 +72,9 @@ public class CitySubdivisionDao extends GenericGisDao<CitySubdivision>
 			String queryString = "from " + persistentClass.getSimpleName()
 				+ " as c where c.cityId= "+cityId;
 				if (maxDistance !=null && maxDistance >0){
-					queryString += " and ST_Distance_Sphere(c.location, "+pointAsString+" ) < "+maxDistance;
+					queryString += " and ST_DistanceSphere(c.location, "+pointAsString+" ) < "+maxDistance;
 				}
-			queryString = queryString+ " order by ST_Distance_Sphere(c.location, "+pointAsString+" )";
+			queryString = queryString+ " order by ST_DistanceSphere(c.location, "+pointAsString+" )";
 			//we need to sort by distance due to error in osm data 
 			//eg : if we search for the nearest city of http://www.openstreetmap.org/way/27904415
 			// we can have 2 cities : http://www.openstreetmap.org/way/75509282 vs http://www.openstreetmap.org/relation/388250

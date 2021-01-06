@@ -133,7 +133,7 @@ public class PostgisDialectNG2 extends PostgreSQLDialect implements SpatialDiale
         
         
         
-		registerFunction("st_distance_sphere", new StandardSQLFunction("st_distance_sphere", StandardBasicTypes.DOUBLE));
+		registerFunction("st_distancephere", new StandardSQLFunction("st_distancesphere", StandardBasicTypes.DOUBLE));
 		registerFunction("st_line_locate_point", new StandardSQLFunction("st_line_locate_point", StandardBasicTypes.DOUBLE));
 		registerKeyword("&&");
         
