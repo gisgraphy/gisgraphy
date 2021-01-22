@@ -117,7 +117,7 @@ public class ImporterConfig {
     
     public final static String OPENSTREETMAP_POI_DEFAULT_FILES_TO_DOWNLOAD = "allcountries.gis";
     
-    public final static String TIGER_DEFAULT_FILES_TO_DOWNLOAD = "US.gis";
+    public final static String TIGER_DEFAULT_FILES_TO_DOWNLOAD = "tiger.gis";
     
     public final static String QUATTROSHAPES_DEFAULT_FILES_TO_DOWNLOAD = "shapes.gis";
 
@@ -789,7 +789,7 @@ public class ImporterConfig {
         this.tigerFilesToDownload = TIGER_DEFAULT_FILES_TO_DOWNLOAD;
     } else {
         this.tigerFilesToDownload = tigerFilesToDownload;
-        logger.info("TigerFilesToDownload=" + this.tigerFilesToDownload);
+        logger.warn("TigerFilesToDownload=" + this.tigerFilesToDownload);
     }
     }
     
