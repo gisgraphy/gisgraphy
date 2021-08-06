@@ -1472,7 +1472,7 @@
 			 <dependency>
                 <groupId>net.bull.javamelody</groupId>
                 <artifactId>javamelody-core</artifactId>
-                <version>1.31.0</version>
+                <version>1.74.0</version>
             </dependency>
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
